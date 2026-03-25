@@ -1,7 +1,7 @@
 PYTHON=.venv/bin/python
 PIP=.venv/bin/pip
 
-.PHONY: install test api migrate seed
+.PHONY: install test api migrate seed stats eval-seed
 
 install:
 	$(PIP) install -e .[dev]
@@ -17,3 +17,9 @@ migrate:
 
 seed:
 	$(PYTHON) manage.py load_seed_data
+
+stats:
+	$(PYTHON) tools/dataset_stats.py
+
+eval-seed:
+	$(PYTHON) tools/evaluate_seed_runtime.py --mode heuristic
