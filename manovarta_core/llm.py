@@ -1,10 +1,11 @@
 from __future__ import annotations
 
+import json
 from typing import Optional, Tuple
 
 from manovarta_core.config import RuntimeConfig
 from manovarta_core.questionnaires import ITEM_INDEX
-from manovarta_core.schemas import ChatSession, ScreeningSnapshot
+from manovarta_core.schemas import ChatSession, ScreeningSnapshot, Turn
 
 try:
     from huggingface_hub import InferenceClient
@@ -18,8 +19,8 @@ class HuggingFaceResponder:
         self._client = None
         if self.config.huggingface_enabled and InferenceClient is not None:
             self._client = InferenceClient(
-                provider="hf-inference",
-                api_key=self.config.hf_token,
+                model=self.config.chat_model,
+                token=self.config.hf_token,
                 timeout=self.config.hf_timeout,
             )
 
@@ -40,7 +41,6 @@ class HuggingFaceResponder:
         try:
             messages = self._build_messages(session, snapshot, target_item, fallback_text)
             output = self._client.chat_completion(
-                model=self.config.chat_model,
                 messages=messages,
                 temperature=self.config.assistant_temperature,
                 max_tokens=self.config.assistant_max_tokens,
@@ -98,3 +98,82 @@ class HuggingFaceResponder:
         if "diagnos" in cleaned.lower() or "therap" in cleaned.lower():
             return fallback_text
         return cleaned
+
+
+class HuggingFaceExtractor:
+    def __init__(self, config: RuntimeConfig) -> None:
+        self.config = config
+        self._client = None
+        if self.config.huggingface_enabled and InferenceClient is not None:
+            self._client = InferenceClient(
+                model=self.config.chat_model,
+                token=self.config.hf_token,
+                timeout=self.config.hf_timeout,
+            )
+
+    @property
+    def enabled(self) -> bool:
+        return self._client is not None
+
+    def extract(self, turns: list[Turn], language: str) -> Optional[dict]:
+        if not self.enabled:
+            return None
+
+        transcript = "\n".join(f"{turn.speaker}: {turn.text}" for turn in turns[-12:])
+        item_lines = "\n".join(
+            f"- {item_id}: {item.label} ({item.focus})"
+            for item_id, item in ITEM_INDEX.items()
+        )
+        messages = [
+            {
+                "role": "system",
+                "content": (
+                    "You extract questionnaire-aligned evidence from mental health screening transcripts. "
+                    "Return strict JSON only. "
+                    "Use only the schema requested. "
+                    "Do not add markdown fences. "
+                    "Be conservative. Do not guess unsupported symptoms."
+                ),
+            },
+            {
+                "role": "user",
+                "content": (
+                    f"Language: {language}\n"
+                    "Use these item ids and meanings:\n"
+                    f"{item_lines}\n\n"
+                    "Scoring rubric:\n"
+                    "- 0 = not supported or denied\n"
+                    "- 1 = mild, vague, or occasional support\n"
+                    "- 2 = clear support or repeated mention\n"
+                    "- 3 = severe, near-daily, or strongly impairing support\n\n"
+                    "Return JSON with keys: items, safety_level, safety_cues, notes.\n"
+                    "items must be a list of objects with item_id, value, evidence_quote, confidence_note.\n"
+                    "Only include items with value 1, 2, or 3.\n"
+                    "Use exact evidence_quote text from user turns when possible.\n"
+                    "safety_level must be one of: none, review, urgent.\n"
+                    "Use safety_level review for indirect disappearance language and urgent for direct self-harm intent.\n"
+                    f"Transcript:\n{transcript}"
+                ),
+            },
+        ]
+
+        try:
+            output = self._client.chat_completion(
+                messages=messages,
+                temperature=0.0,
+                max_tokens=400,
+            )
+            content = output.choices[0].message.content
+            return self._parse_json(content)
+        except Exception:
+            return None
+
+    def _parse_json(self, content: str) -> Optional[dict]:
+        cleaned = content.strip()
+        if cleaned.startswith("```"):
+            cleaned = cleaned.split("\n", 1)[-1]
+            cleaned = cleaned.rsplit("```", 1)[0].strip()
+        try:
+            return json.loads(cleaned)
+        except json.JSONDecodeError:
+            return None

@@ -10,4 +10,6 @@ htmlcov/
 .coverage
 staticfiles/
 media/
+.env
+.env.local
 _tmp_html_render_test/

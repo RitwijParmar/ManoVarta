@@ -2,7 +2,7 @@ from fastapi import FastAPI, HTTPException
 
 from manovarta_core.config import get_runtime_config
 from manovarta_core.dialogue import DialoguePlanner
-from manovarta_core.llm import HuggingFaceResponder
+from manovarta_core.llm import HuggingFaceExtractor, HuggingFaceResponder
 from manovarta_core.profiles import load_seed_profiles
 from manovarta_core.questionnaires import grouped_items
 from manovarta_core.reporting import build_summary
@@ -32,6 +32,7 @@ planner = DialoguePlanner()
 safety_monitor = SafetyMonitor()
 scorer = ConversationScorer()
 responder = HuggingFaceResponder(runtime_config)
+extractor = HuggingFaceExtractor(runtime_config)
 
 
 @app.get("/health")
@@ -117,3 +118,18 @@ def score_transcript(payload: TranscriptScoreRequest) -> dict:
     safety_flag = safety_monitor.assess(payload.turns)
     snapshot = scorer.analyze(payload.turns, payload.language, safety_flag)
     return {"snapshot": snapshot.model_dump()}
+
+
+@app.post("/screen/transcript/llm")
+def score_transcript_with_llm(payload: TranscriptScoreRequest) -> dict:
+    if not extractor.enabled:
+        raise HTTPException(status_code=503, detail="Hugging Face runtime is not configured.")
+
+    result = extractor.extract(payload.turns, payload.language)
+    if result is None:
+        raise HTTPException(status_code=502, detail="LLM extraction failed.")
+    return {
+        "provider": runtime_config.model_provider,
+        "model": runtime_config.chat_model,
+        "result": result,
+    }

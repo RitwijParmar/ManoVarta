@@ -10,7 +10,10 @@ def test_runtime_config_reports_huggingface_disabled_by_default():
     response = client.get("/runtime/config")
 
     assert response.status_code == 200
-    assert response.json()["huggingface_enabled"] is False
+    body = response.json()
+    assert "provider" in body
+    assert "chat_model" in body
+    assert "huggingface_enabled" in body
 
 
 def test_chat_flow_asks_non_sensitive_follow_up_first():

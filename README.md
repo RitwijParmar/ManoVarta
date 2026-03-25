@@ -61,20 +61,37 @@ source .venv/bin/activate
 pytest
 ```
 
+## Seed-data utilities
+
+```bash
+python tools/dataset_stats.py
+python tools/evaluate_seed_runtime.py --mode heuristic
+```
+
+If `HF_TOKEN` is set, you can also compare the current LLM extraction path:
+
+```bash
+python tools/evaluate_seed_runtime.py --mode llm
+```
+
 ## Optional Hugging Face hookup
 
 If you want live response drafting through Hugging Face Inference Providers, set:
 
 ```bash
 export HF_TOKEN=...
-export MANOVARTA_CHAT_MODEL=mistralai/Mistral-Nemo-Instruct-2407
+export MANOVARTA_CHAT_MODEL=Qwen/Qwen2.5-7B-Instruct
 ```
+
+You can also put the same values in a local `.env.local` file. It is ignored by git.
 
 Then verify auth with:
 
 ```bash
 python tools/hf_smoketest.py
 ```
+
+The current default live model is `Qwen/Qwen2.5-7B-Instruct` because it works through the Hugging Face chat route used in this repo. The proposal's larger research models can still be evaluated separately.
 
 ## Notes
 
