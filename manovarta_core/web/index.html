@@ -52,6 +52,20 @@
               rows="3"
               placeholder="Type a user response here..."
             ></textarea>
+            <div class="voice-bar">
+              <div class="voice-actions">
+                <button id="micButton" type="button" class="button secondary">Start voice</button>
+                <label class="toggle">
+                  <input id="autoSendToggle" type="checkbox" checked />
+                  <span>Auto-send transcript</span>
+                </label>
+                <label class="toggle">
+                  <input id="speakToggle" type="checkbox" />
+                  <span>Read assistant replies</span>
+                </label>
+              </div>
+              <p id="voiceStatus" class="voice-status">Voice ready when supported by the browser.</p>
+            </div>
             <div class="composer-actions">
               <p class="helper">The assistant stays in the chosen language and keeps the flow screening-focused.</p>
               <button type="submit" class="button primary">Send turn</button>

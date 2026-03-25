@@ -7,6 +7,7 @@ The current repository includes two layers:
 - `FastAPI` runtime endpoints for chat, transcript scoring, and summary generation
 - `Django` admin models for seed data, review workflow, and annotation support
 - optional `Hugging Face` responder path for live chat drafting when `HF_TOKEN` is configured
+- browser voice wrapper using speech recognition and speech synthesis when supported
 - Colab-ready training scripts for extractor and safety fine-tuning
 
 The goal is a credible research prototype, not a therapy product or diagnostic system.
@@ -145,8 +146,28 @@ There is also a Colab-specific walkthrough in `experiments/colab/README.md`.
 Full fine-tuning commands live in `training/README.md`.
 The ready-to-run notebook is `experiments/colab/manovarta_training_colab.ipynb`.
 
+## Saved evaluation bundle
+
+To write a durable evaluation summary into `reports/`:
+
+```bash
+python tools/generate_eval_bundle.py
+```
+
+You can optionally include a local checkpoint path:
+
+```bash
+python tools/generate_eval_bundle.py --checkpoint outputs/extractor-qwen25
+```
+
+To package trained outputs after a Colab or local run:
+
+```bash
+python tools/package_training_artifacts.py --source-dir outputs
+```
+
 ## Notes
 
 - Large-model hosting is intentionally left out of this repository.
-- Voice can be added later as a speech wrapper over the text pipeline.
+- Voice uses browser-native APIs, so it depends on microphone permission and browser support.
 - Seed data is synthetic and should be treated as pilot material only.

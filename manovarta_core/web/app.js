@@ -11,6 +11,10 @@ const languageSelect = document.getElementById("languageSelect");
 const startButton = document.getElementById("startButton");
 const chatForm = document.getElementById("chatForm");
 const downloadButton = document.getElementById("downloadButton");
+const micButton = document.getElementById("micButton");
+const autoSendToggle = document.getElementById("autoSendToggle");
+const speakToggle = document.getElementById("speakToggle");
+const voiceStatus = document.getElementById("voiceStatus");
 
 const runtimeInfo = document.getElementById("runtimeInfo");
 const summaryText = document.getElementById("summaryText");
@@ -24,6 +28,12 @@ const unresolvedList = document.getElementById("unresolvedList");
 const itemTableBody = document.getElementById("itemTableBody");
 const evidenceList = document.getElementById("evidenceList");
 
+const SpeechRecognitionCtor = window.SpeechRecognition || window.webkitSpeechRecognition || null;
+const speechSynthesisApi = window.speechSynthesis || null;
+
+let recognition = null;
+let listening = false;
+
 async function fetchRuntime() {
   const response = await fetch("/runtime/config");
   const payload = await response.json();
@@ -32,6 +42,8 @@ async function fetchRuntime() {
 
 async function startSession() {
   state.language = languageSelect.value;
+  stopListening();
+
   const response = await fetch("/chat/sessions", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -42,10 +54,12 @@ async function startSession() {
   state.exportPayload = null;
   chatLog.innerHTML = "";
   renderTurn(payload.assistant_turn);
+  maybeSpeak(payload.assistant_turn);
   sessionMeta.classList.remove("empty");
   sessionMeta.textContent = `Session ${state.sessionId} | language: ${state.language}`;
   downloadButton.disabled = true;
   resetInsightPanel();
+  updateVoiceStatus("Session ready for typed or spoken turns.");
 }
 
 function renderTurn(turn) {
@@ -150,6 +164,11 @@ async function sendTurn(event) {
     await startSession();
   }
 
+  stopListening();
+  if (speechSynthesisApi) {
+    speechSynthesisApi.cancel();
+  }
+
   renderTurn({ speaker: "user", text });
   messageInput.value = "";
 
@@ -160,6 +179,7 @@ async function sendTurn(event) {
   });
   const payload = await response.json();
   renderTurn(payload.assistant_turn);
+  maybeSpeak(payload.assistant_turn);
   await refreshExport();
 }
 
@@ -176,6 +196,146 @@ function downloadExport() {
   URL.revokeObjectURL(url);
 }
 
+function setupVoice() {
+  if (!micButton || !voiceStatus) {
+    return;
+  }
+
+  if (!SpeechRecognitionCtor) {
+    micButton.disabled = true;
+    updateVoiceStatus("Speech recognition is not available in this browser.", true);
+    return;
+  }
+
+  recognition = new SpeechRecognitionCtor();
+  recognition.interimResults = true;
+  recognition.continuous = false;
+  recognition.maxAlternatives = 1;
+  recognition.lang = mapVoiceLanguage(languageSelect.value);
+
+  recognition.onstart = () => {
+    listening = true;
+    micButton.textContent = "Stop voice";
+    updateVoiceStatus("Listening for a response...", false, true);
+  };
+
+  recognition.onresult = (event) => {
+    const transcript = Array.from(event.results)
+      .map((result) => result[0].transcript)
+      .join(" ")
+      .trim();
+    if (!transcript) {
+      return;
+    }
+
+    messageInput.value = transcript;
+    const finalResult = event.results[event.results.length - 1];
+    if (finalResult?.isFinal) {
+      updateVoiceStatus("Transcript captured.");
+      if (autoSendToggle.checked) {
+        chatForm.requestSubmit();
+      }
+    }
+  };
+
+  recognition.onerror = (event) => {
+    listening = false;
+    micButton.textContent = "Start voice";
+    updateVoiceStatus(`Voice error: ${event.error}`, true);
+  };
+
+  recognition.onend = () => {
+    listening = false;
+    micButton.textContent = "Start voice";
+    if (!voiceStatus.classList.contains("error")) {
+      updateVoiceStatus("Voice idle.");
+    }
+  };
+
+  micButton.addEventListener("click", toggleListening);
+  languageSelect.addEventListener("change", () => {
+    if (recognition) {
+      recognition.lang = mapVoiceLanguage(languageSelect.value);
+    }
+    updateVoiceStatus(`Voice language set to ${languageSelect.value}.`);
+  });
+
+  updateVoiceStatus("Voice ready when microphone access is allowed.");
+}
+
+function toggleListening() {
+  if (!recognition) {
+    return;
+  }
+  if (listening) {
+    stopListening();
+    return;
+  }
+
+  recognition.lang = mapVoiceLanguage(languageSelect.value);
+  updateVoiceStatus("Requesting microphone access...");
+  recognition.start();
+}
+
+function stopListening() {
+  if (recognition && listening) {
+    recognition.stop();
+  }
+}
+
+function maybeSpeak(turn) {
+  if (!speechSynthesisApi || !speakToggle?.checked || turn.speaker !== "assistant") {
+    return;
+  }
+
+  speechSynthesisApi.cancel();
+  const utterance = new SpeechSynthesisUtterance(turn.text);
+  utterance.lang = mapVoiceLanguage(state.language);
+  const voice = pickVoice(utterance.lang);
+  if (voice) {
+    utterance.voice = voice;
+  }
+  speechSynthesisApi.speak(utterance);
+}
+
+function pickVoice(languageTag) {
+  if (!speechSynthesisApi?.getVoices) {
+    return null;
+  }
+
+  const voices = speechSynthesisApi.getVoices();
+  if (!voices.length) {
+    return null;
+  }
+
+  const exactMatch = voices.find((entry) => entry.lang === languageTag);
+  if (exactMatch) {
+    return exactMatch;
+  }
+
+  const baseTag = languageTag.split("-")[0];
+  return voices.find((entry) => entry.lang.startsWith(baseTag)) || null;
+}
+
+function mapVoiceLanguage(languageCode) {
+  if (languageCode === "hi") {
+    return "hi-IN";
+  }
+  if (languageCode === "hinglish") {
+    return "en-IN";
+  }
+  return "en-US";
+}
+
+function updateVoiceStatus(message, isError = false, isActive = false) {
+  if (!voiceStatus) {
+    return;
+  }
+  voiceStatus.textContent = message;
+  voiceStatus.classList.toggle("error", isError);
+  voiceStatus.classList.toggle("active", isActive);
+}
+
 function escapeHtml(text) {
   return text
     .replaceAll("&", "&amp;")
@@ -188,6 +348,7 @@ function escapeHtml(text) {
 startButton.addEventListener("click", startSession);
 chatForm.addEventListener("submit", sendTurn);
 downloadButton.addEventListener("click", downloadExport);
+setupVoice();
 
 fetchRuntime().catch(() => {
   runtimeInfo.textContent = "Runtime config unavailable.";
