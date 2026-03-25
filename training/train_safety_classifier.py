@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import argparse
+import inspect
 from pathlib import Path
 import sys
 
@@ -78,19 +79,23 @@ def main() -> int:
         accuracy = float((preds == labels).mean())
         return {"accuracy": round(accuracy, 4)}
 
-    training_args = TrainingArguments(
-        output_dir=args.output_dir,
-        learning_rate=args.learning_rate,
-        num_train_epochs=args.epochs,
-        per_device_train_batch_size=args.batch_size,
-        per_device_eval_batch_size=args.batch_size,
-        evaluation_strategy="epoch",
-        save_strategy="epoch",
-        logging_steps=5,
-        bf16=use_bf16,
-        fp16=use_fp16,
-        report_to="none",
-    )
+    training_kwargs = {
+        "output_dir": args.output_dir,
+        "learning_rate": args.learning_rate,
+        "num_train_epochs": args.epochs,
+        "per_device_train_batch_size": args.batch_size,
+        "per_device_eval_batch_size": args.batch_size,
+        "save_strategy": "epoch",
+        "logging_steps": 5,
+        "bf16": use_bf16,
+        "fp16": use_fp16,
+        "report_to": "none",
+    }
+    strategy_key = "evaluation_strategy"
+    if strategy_key not in inspect.signature(TrainingArguments.__init__).parameters:
+        strategy_key = "eval_strategy"
+    training_kwargs[strategy_key] = "epoch"
+    training_args = TrainingArguments(**training_kwargs)
 
     trainer = Trainer(
         model=model,

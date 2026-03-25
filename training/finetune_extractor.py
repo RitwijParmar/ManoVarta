@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import argparse
+import inspect
 from pathlib import Path
 import sys
 
@@ -72,20 +73,24 @@ def main() -> int:
         task_type="CAUSAL_LM",
     )
 
-    training_args = TrainingArguments(
-        output_dir=args.output_dir,
-        learning_rate=args.learning_rate,
-        num_train_epochs=args.epochs,
-        per_device_train_batch_size=args.batch_size,
-        per_device_eval_batch_size=args.batch_size,
-        gradient_accumulation_steps=args.grad_accum,
-        logging_steps=5,
-        evaluation_strategy="epoch",
-        save_strategy="epoch",
-        bf16=use_bf16,
-        fp16=use_fp16,
-        report_to="none",
-    )
+    training_kwargs = {
+        "output_dir": args.output_dir,
+        "learning_rate": args.learning_rate,
+        "num_train_epochs": args.epochs,
+        "per_device_train_batch_size": args.batch_size,
+        "per_device_eval_batch_size": args.batch_size,
+        "gradient_accumulation_steps": args.grad_accum,
+        "logging_steps": 5,
+        "save_strategy": "epoch",
+        "bf16": use_bf16,
+        "fp16": use_fp16,
+        "report_to": "none",
+    }
+    strategy_key = "evaluation_strategy"
+    if strategy_key not in inspect.signature(TrainingArguments.__init__).parameters:
+        strategy_key = "eval_strategy"
+    training_kwargs[strategy_key] = "epoch"
+    training_args = TrainingArguments(**training_kwargs)
 
     trainer = SFTTrainer(
         model=model,
