@@ -1,0 +1,111 @@
+[
+  {
+    "patient_id": "MV-P007",
+    "language": "en",
+    "age": 26,
+    "occupation": "product designer",
+    "background_profile": {
+      "context": "contract uncertainty and solo living",
+      "living_situation": "studio apartment",
+      "support_system": "older sister in another city"
+    },
+    "symptom_profile": {
+      "depression_level": "moderate",
+      "anxiety_level": "mild_to_moderate"
+    },
+    "disclosure_style": "minimizing_then_specific",
+    "nuance_tags": ["contradiction across turns", "anhedonia", "appetite change"],
+    "notes": "Starts by saying things are manageable, then gives clearer mood evidence."
+  },
+  {
+    "patient_id": "MV-P008",
+    "language": "hi",
+    "age": 42,
+    "occupation": "homemaker",
+    "background_profile": {
+      "context": "elder care and household load",
+      "living_situation": "joint family home",
+      "support_system": "one neighbour she trusts"
+    },
+    "symptom_profile": {
+      "depression_level": "mild",
+      "anxiety_level": "moderate"
+    },
+    "disclosure_style": "duty_bound",
+    "nuance_tags": ["somatic stress", "irritability", "trouble relaxing"],
+    "notes": "Frames distress through body tension and daily strain, not diagnostic words."
+  },
+  {
+    "patient_id": "MV-P009",
+    "language": "hinglish",
+    "age": 21,
+    "occupation": "engineering student",
+    "background_profile": {
+      "context": "exam backlog and hostel pressure",
+      "living_situation": "shared hostel room",
+      "support_system": "two close gaming friends"
+    },
+    "symptom_profile": {
+      "depression_level": "mild",
+      "anxiety_level": "high"
+    },
+    "disclosure_style": "fast_and_jumpy",
+    "nuance_tags": ["code-mixing", "panic anticipation", "restlessness"],
+    "notes": "Anxiety jumps from body sensations to catastrophic future talk."
+  },
+  {
+    "patient_id": "MV-P010",
+    "language": "en",
+    "age": 31,
+    "occupation": "hospital nurse",
+    "background_profile": {
+      "context": "rotating night shifts and emotional exhaustion",
+      "living_situation": "shares apartment with colleague",
+      "support_system": "one trusted coworker"
+    },
+    "symptom_profile": {
+      "depression_level": "moderate_to_high",
+      "anxiety_level": "moderate",
+      "safety_signal": "review"
+    },
+    "disclosure_style": "flat_then_frank",
+    "nuance_tags": ["night shift fatigue", "hopeless phrasing", "review safety cue"],
+    "notes": "Uses passive disappearance language but denies an active plan."
+  },
+  {
+    "patient_id": "MV-P011",
+    "language": "hi",
+    "age": 24,
+    "occupation": "call center trainee",
+    "background_profile": {
+      "context": "night training schedule and family debt pressure",
+      "living_situation": "shared paying guest room",
+      "support_system": "cousin in the same city"
+    },
+    "symptom_profile": {
+      "depression_level": "moderate",
+      "anxiety_level": "moderate"
+    },
+    "disclosure_style": "apologetic",
+    "nuance_tags": ["oversleeping", "worthlessness", "concentration drift"],
+    "notes": "Self-blame appears faster than direct sadness language."
+  },
+  {
+    "patient_id": "MV-P012",
+    "language": "hinglish",
+    "age": 29,
+    "occupation": "sales executive",
+    "background_profile": {
+      "context": "recent breakup and heavy travel schedule",
+      "living_situation": "with parents",
+      "support_system": "one office friend"
+    },
+    "symptom_profile": {
+      "depression_level": "moderate",
+      "anxiety_level": "moderate"
+    },
+    "disclosure_style": "guarded_then_open",
+    "nuance_tags": ["relationship loss", "social withdrawal", "mixed low mood and worry"],
+    "notes": "Starts with routine disruption, then names social withdrawal and future worry."
+  }
+]

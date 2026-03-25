@@ -1,0 +1,712 @@
+[
+  {
+    "conversation_id": "MV-C074",
+    "patient_id": "MV-P007",
+    "language": "en",
+    "age": 26,
+    "occupation": "product designer",
+    "background_profile": {
+      "context": "contract uncertainty and solo living",
+      "living_situation": "studio apartment"
+    },
+    "symptom_profile": {
+      "depression_level": "moderate",
+      "anxiety_level": "mild_to_moderate"
+    },
+    "conversation_turns": [
+      {
+        "turn_id": 1,
+        "speaker": "assistant",
+        "text": "Over the last couple of weeks, what has felt the heaviest lately?",
+        "language_tag": "en"
+      },
+      {
+        "turn_id": 2,
+        "speaker": "user",
+        "text": "I keep telling people I'm okay, but even design work I used to enjoy feels flat. I have also been skipping meals without noticing.",
+        "language_tag": "en"
+      },
+      {
+        "turn_id": 3,
+        "speaker": "assistant",
+        "text": "Is it mostly motivation, appetite, or something heavier in your mood?",
+        "language_tag": "en"
+      },
+      {
+        "turn_id": 4,
+        "speaker": "user",
+        "text": "Mood feels dull too. I can work if forced, but otherwise I just stare at things.",
+        "language_tag": "en"
+      }
+    ],
+    "evidence_spans": [
+      {
+        "span_id": "E1",
+        "questionnaire": "PHQ9",
+        "item_id": "phq_q1_anhedonia",
+        "turn_id": 2,
+        "text_span": "design work I used to enjoy feels flat",
+        "polarity": "present",
+        "score_hint": 2,
+        "annotator": "Yash",
+        "rationale": "Reduced interest in usual activity"
+      },
+      {
+        "span_id": "E2",
+        "questionnaire": "PHQ9",
+        "item_id": "phq_q5_appetite",
+        "turn_id": 2,
+        "text_span": "skipping meals without noticing",
+        "polarity": "present",
+        "score_hint": 2,
+        "annotator": "Ritwij",
+        "rationale": "Noticeable appetite change"
+      },
+      {
+        "span_id": "E3",
+        "questionnaire": "PHQ9",
+        "item_id": "phq_q2_low_mood",
+        "turn_id": 4,
+        "text_span": "Mood feels dull too",
+        "polarity": "present",
+        "score_hint": 2,
+        "annotator": "Yash",
+        "rationale": "Direct low mood phrasing"
+      },
+      {
+        "span_id": "E4",
+        "questionnaire": "PHQ9",
+        "item_id": "phq_q7_concentration",
+        "turn_id": 4,
+        "text_span": "I just stare at things",
+        "polarity": "present",
+        "score_hint": 1,
+        "annotator": "Ritwij",
+        "rationale": "Attention stalls during work"
+      }
+    ],
+    "phq9_item_labels": {
+      "phq_q1_anhedonia": 2,
+      "phq_q2_low_mood": 2,
+      "phq_q3_sleep": 1,
+      "phq_q4_fatigue": 1,
+      "phq_q5_appetite": 2,
+      "phq_q6_worthlessness": 1,
+      "phq_q7_concentration": 1,
+      "phq_q8_psychomotor": 0,
+      "phq_q9_self_harm": 0
+    },
+    "gad7_item_labels": {
+      "gad_q1_nervous": 1,
+      "gad_q2_control_worry": 1,
+      "gad_q3_excessive_worry": 1,
+      "gad_q4_trouble_relaxing": 1,
+      "gad_q5_restlessness": 0,
+      "gad_q6_irritability": 0,
+      "gad_q7_fear_awful": 0
+    },
+    "safety_flag": {
+      "level": "none",
+      "cues": []
+    },
+    "annotator_notes": "Starts with minimization before naming low mood.",
+    "confidence_notes": {
+      "high_confidence_items": ["phq_q1_anhedonia", "phq_q2_low_mood", "phq_q5_appetite"],
+      "low_confidence_items": ["phq_q3_sleep", "gad_q2_control_worry"]
+    },
+    "generation_source": "synthetic_profile_guided",
+    "review_status": "double_annotated"
+  },
+  {
+    "conversation_id": "MV-C085",
+    "patient_id": "MV-P008",
+    "language": "hi",
+    "age": 42,
+    "occupation": "homemaker",
+    "background_profile": {
+      "context": "elder care and household load",
+      "living_situation": "joint family home"
+    },
+    "symptom_profile": {
+      "depression_level": "mild",
+      "anxiety_level": "moderate"
+    },
+    "conversation_turns": [
+      {
+        "turn_id": 1,
+        "speaker": "assistant",
+        "text": "Pichhle do hafton mein sabse zyada kis cheez ne aapko pareshan kiya?",
+        "language_tag": "hi"
+      },
+      {
+        "turn_id": 2,
+        "speaker": "user",
+        "text": "Seene mein tanav rehta hai aur chhoti baat par gussa aa jata hai. Raat ko bhi dimaag shaant nahi hota.",
+        "language_tag": "hi"
+      },
+      {
+        "turn_id": 3,
+        "speaker": "assistant",
+        "text": "Kya is wajah se aaraam ya neend par bhi asar ho raha hai?",
+        "language_tag": "hi"
+      },
+      {
+        "turn_id": 4,
+        "speaker": "user",
+        "text": "Haan, subah uthte hi lagta hai aaj phir sambhalna padega. Aaraam jaisa kuchh nahi lagta.",
+        "language_tag": "hi"
+      }
+    ],
+    "evidence_spans": [
+      {
+        "span_id": "E1",
+        "questionnaire": "GAD7",
+        "item_id": "gad_q1_nervous",
+        "turn_id": 2,
+        "text_span": "Seene mein tanav rehta hai",
+        "polarity": "present",
+        "score_hint": 2,
+        "annotator": "Ritwij",
+        "rationale": "Somatic anxiety phrasing"
+      },
+      {
+        "span_id": "E2",
+        "questionnaire": "GAD7",
+        "item_id": "gad_q6_irritability",
+        "turn_id": 2,
+        "text_span": "chhoti baat par gussa aa jata hai",
+        "polarity": "present",
+        "score_hint": 2,
+        "annotator": "Yash",
+        "rationale": "Increased irritability"
+      },
+      {
+        "span_id": "E3",
+        "questionnaire": "GAD7",
+        "item_id": "gad_q4_trouble_relaxing",
+        "turn_id": 2,
+        "text_span": "dimaag shaant nahi hota",
+        "polarity": "present",
+        "score_hint": 2,
+        "annotator": "Yash",
+        "rationale": "Difficulty relaxing"
+      },
+      {
+        "span_id": "E4",
+        "questionnaire": "GAD7",
+        "item_id": "gad_q3_excessive_worry",
+        "turn_id": 4,
+        "text_span": "aaj phir sambhalna padega",
+        "polarity": "present",
+        "score_hint": 1,
+        "annotator": "Ritwij",
+        "rationale": "Future-focused stress anticipation"
+      }
+    ],
+    "phq9_item_labels": {
+      "phq_q1_anhedonia": 0,
+      "phq_q2_low_mood": 1,
+      "phq_q3_sleep": 1,
+      "phq_q4_fatigue": 1,
+      "phq_q5_appetite": 0,
+      "phq_q6_worthlessness": 0,
+      "phq_q7_concentration": 0,
+      "phq_q8_psychomotor": 0,
+      "phq_q9_self_harm": 0
+    },
+    "gad7_item_labels": {
+      "gad_q1_nervous": 2,
+      "gad_q2_control_worry": 1,
+      "gad_q3_excessive_worry": 1,
+      "gad_q4_trouble_relaxing": 2,
+      "gad_q5_restlessness": 1,
+      "gad_q6_irritability": 2,
+      "gad_q7_fear_awful": 1
+    },
+    "safety_flag": {
+      "level": "none",
+      "cues": []
+    },
+    "annotator_notes": "Anxiety is expressed through bodily tension and duty pressure.",
+    "confidence_notes": {
+      "high_confidence_items": ["gad_q1_nervous", "gad_q4_trouble_relaxing", "gad_q6_irritability"],
+      "low_confidence_items": ["phq_q2_low_mood", "gad_q7_fear_awful"]
+    },
+    "generation_source": "synthetic_profile_guided",
+    "review_status": "consensus_final"
+  },
+  {
+    "conversation_id": "MV-C096",
+    "patient_id": "MV-P009",
+    "language": "hinglish",
+    "age": 21,
+    "occupation": "engineering student",
+    "background_profile": {
+      "context": "exam backlog and hostel pressure",
+      "living_situation": "shared hostel room"
+    },
+    "symptom_profile": {
+      "depression_level": "mild",
+      "anxiety_level": "high"
+    },
+    "conversation_turns": [
+      {
+        "turn_id": 1,
+        "speaker": "assistant",
+        "text": "Pichhle do hafton mein sabse zyada kya heavy laga?",
+        "language_tag": "hinglish"
+      },
+      {
+        "turn_id": 2,
+        "speaker": "user",
+        "text": "Exam ka naam aate hi body restless ho jati hai. Dimag worst-case pe chala jata hai and sleep bhi late hoti hai.",
+        "language_tag": "hinglish"
+      },
+      {
+        "turn_id": 3,
+        "speaker": "assistant",
+        "text": "Jab padhne baithte ho tab zyada impact kis cheez ka hota hai?",
+        "language_tag": "hinglish"
+      },
+      {
+        "turn_id": 4,
+        "speaker": "user",
+        "text": "Padhta hoon but ek line pe tikna hard hai, and lagta hai kuchh bigadne wala hai.",
+        "language_tag": "hinglish"
+      }
+    ],
+    "evidence_spans": [
+      {
+        "span_id": "E1",
+        "questionnaire": "GAD7",
+        "item_id": "gad_q5_restlessness",
+        "turn_id": 2,
+        "text_span": "body restless ho jati hai",
+        "polarity": "present",
+        "score_hint": 2,
+        "annotator": "Yash",
+        "rationale": "Restlessness with body-level phrasing"
+      },
+      {
+        "span_id": "E2",
+        "questionnaire": "GAD7",
+        "item_id": "gad_q3_excessive_worry",
+        "turn_id": 2,
+        "text_span": "Dimag worst-case pe chala jata hai",
+        "polarity": "present",
+        "score_hint": 2,
+        "annotator": "Ritwij",
+        "rationale": "Catastrophic worry"
+      },
+      {
+        "span_id": "E3",
+        "questionnaire": "PHQ9",
+        "item_id": "phq_q3_sleep",
+        "turn_id": 2,
+        "text_span": "sleep bhi late hoti hai",
+        "polarity": "present",
+        "score_hint": 1,
+        "annotator": "Yash",
+        "rationale": "Delayed sleep onset"
+      },
+      {
+        "span_id": "E4",
+        "questionnaire": "PHQ9",
+        "item_id": "phq_q7_concentration",
+        "turn_id": 4,
+        "text_span": "ek line pe tikna hard hai",
+        "polarity": "present",
+        "score_hint": 2,
+        "annotator": "Ritwij",
+        "rationale": "Concentration breaks while studying"
+      },
+      {
+        "span_id": "E5",
+        "questionnaire": "GAD7",
+        "item_id": "gad_q7_fear_awful",
+        "turn_id": 4,
+        "text_span": "lagta hai kuchh bigadne wala hai",
+        "polarity": "present",
+        "score_hint": 2,
+        "annotator": "Yash",
+        "rationale": "Fear something bad will happen"
+      }
+    ],
+    "phq9_item_labels": {
+      "phq_q1_anhedonia": 0,
+      "phq_q2_low_mood": 1,
+      "phq_q3_sleep": 1,
+      "phq_q4_fatigue": 1,
+      "phq_q5_appetite": 0,
+      "phq_q6_worthlessness": 0,
+      "phq_q7_concentration": 2,
+      "phq_q8_psychomotor": 1,
+      "phq_q9_self_harm": 0
+    },
+    "gad7_item_labels": {
+      "gad_q1_nervous": 2,
+      "gad_q2_control_worry": 2,
+      "gad_q3_excessive_worry": 2,
+      "gad_q4_trouble_relaxing": 1,
+      "gad_q5_restlessness": 2,
+      "gad_q6_irritability": 0,
+      "gad_q7_fear_awful": 2
+    },
+    "safety_flag": {
+      "level": "none",
+      "cues": []
+    },
+    "annotator_notes": "A high-anxiety Hinglish case with body and future-fear language.",
+    "confidence_notes": {
+      "high_confidence_items": ["gad_q3_excessive_worry", "gad_q5_restlessness", "gad_q7_fear_awful", "phq_q7_concentration"],
+      "low_confidence_items": ["phq_q2_low_mood", "gad_q4_trouble_relaxing"]
+    },
+    "generation_source": "synthetic_profile_guided",
+    "review_status": "double_annotated"
+  },
+  {
+    "conversation_id": "MV-C107",
+    "patient_id": "MV-P010",
+    "language": "en",
+    "age": 31,
+    "occupation": "hospital nurse",
+    "background_profile": {
+      "context": "rotating night shifts and emotional exhaustion",
+      "living_situation": "shares apartment with colleague"
+    },
+    "symptom_profile": {
+      "depression_level": "moderate_to_high",
+      "anxiety_level": "moderate",
+      "safety_signal": "review"
+    },
+    "conversation_turns": [
+      {
+        "turn_id": 1,
+        "speaker": "assistant",
+        "text": "Over the last couple of weeks, what has felt the heaviest lately?",
+        "language_tag": "en"
+      },
+      {
+        "turn_id": 2,
+        "speaker": "user",
+        "text": "After the night shifts I feel wrung out. Some days it honestly feels like I could disappear and nobody would notice.",
+        "language_tag": "en"
+      },
+      {
+        "turn_id": 3,
+        "speaker": "assistant",
+        "text": "When you say disappear, do you mean wanting to escape, or thoughts of hurting yourself?",
+        "language_tag": "en"
+      },
+      {
+        "turn_id": 4,
+        "speaker": "user",
+        "text": "More like wanting everything to stop for a bit. I am not making a plan to hurt myself, but the thought scares me.",
+        "language_tag": "en"
+      }
+    ],
+    "evidence_spans": [
+      {
+        "span_id": "E1",
+        "questionnaire": "PHQ9",
+        "item_id": "phq_q4_fatigue",
+        "turn_id": 2,
+        "text_span": "I feel wrung out",
+        "polarity": "present",
+        "score_hint": 2,
+        "annotator": "Ritwij",
+        "rationale": "Clear fatigue wording"
+      },
+      {
+        "span_id": "E2",
+        "questionnaire": "PHQ9",
+        "item_id": "phq_q6_worthlessness",
+        "turn_id": 2,
+        "text_span": "nobody would notice",
+        "polarity": "present",
+        "score_hint": 2,
+        "annotator": "Yash",
+        "rationale": "Burden / not valued cue"
+      },
+      {
+        "span_id": "E3",
+        "questionnaire": "PHQ9",
+        "item_id": "phq_q9_self_harm",
+        "turn_id": 4,
+        "text_span": "wanting everything to stop for a bit",
+        "polarity": "uncertain",
+        "score_hint": 1,
+        "annotator": "Yash",
+        "rationale": "Passive self-harm-adjacent phrasing without plan"
+      }
+    ],
+    "phq9_item_labels": {
+      "phq_q1_anhedonia": 1,
+      "phq_q2_low_mood": 2,
+      "phq_q3_sleep": 2,
+      "phq_q4_fatigue": 2,
+      "phq_q5_appetite": 0,
+      "phq_q6_worthlessness": 2,
+      "phq_q7_concentration": 1,
+      "phq_q8_psychomotor": 0,
+      "phq_q9_self_harm": 1
+    },
+    "gad7_item_labels": {
+      "gad_q1_nervous": 1,
+      "gad_q2_control_worry": 1,
+      "gad_q3_excessive_worry": 1,
+      "gad_q4_trouble_relaxing": 1,
+      "gad_q5_restlessness": 0,
+      "gad_q6_irritability": 1,
+      "gad_q7_fear_awful": 1
+    },
+    "safety_flag": {
+      "level": "review",
+      "cues": ["I could disappear"],
+      "action_note": "Needs human review because of passive disappearance language."
+    },
+    "annotator_notes": "Review-level safety case. Assistant should not treat this as ordinary low mood only.",
+    "confidence_notes": {
+      "high_confidence_items": ["phq_q4_fatigue", "phq_q6_worthlessness"],
+      "low_confidence_items": ["phq_q9_self_harm", "gad_q3_excessive_worry"]
+    },
+    "generation_source": "synthetic_profile_guided",
+    "review_status": "consensus_final"
+  },
+  {
+    "conversation_id": "MV-C118",
+    "patient_id": "MV-P011",
+    "language": "hi",
+    "age": 24,
+    "occupation": "call center trainee",
+    "background_profile": {
+      "context": "night training schedule and family debt pressure",
+      "living_situation": "shared paying guest room"
+    },
+    "symptom_profile": {
+      "depression_level": "moderate",
+      "anxiety_level": "moderate"
+    },
+    "conversation_turns": [
+      {
+        "turn_id": 1,
+        "speaker": "assistant",
+        "text": "Pichhle do hafton mein sabse zyada kya bhaari laga?",
+        "language_tag": "hi"
+      },
+      {
+        "turn_id": 2,
+        "speaker": "user",
+        "text": "Din bhar neend si aati rehti hai, par kaam pe dhyan tikta nahi. Har galti ke baad lagta hai main hi bekaar hoon.",
+        "language_tag": "hi"
+      },
+      {
+        "turn_id": 3,
+        "speaker": "assistant",
+        "text": "Kya ye thakan aur neend weekends par bhi rehti hai?",
+        "language_tag": "hi"
+      },
+      {
+        "turn_id": 4,
+        "speaker": "user",
+        "text": "Haan, weekends par bahut zyada so leta hoon, phir bhi thakan jaati nahi.",
+        "language_tag": "hi"
+      }
+    ],
+    "evidence_spans": [
+      {
+        "span_id": "E1",
+        "questionnaire": "PHQ9",
+        "item_id": "phq_q3_sleep",
+        "turn_id": 2,
+        "text_span": "Din bhar neend si aati rehti hai",
+        "polarity": "present",
+        "score_hint": 2,
+        "annotator": "Ritwij",
+        "rationale": "Oversleepiness during the day"
+      },
+      {
+        "span_id": "E2",
+        "questionnaire": "PHQ9",
+        "item_id": "phq_q7_concentration",
+        "turn_id": 2,
+        "text_span": "kaam pe dhyan tikta nahi",
+        "polarity": "present",
+        "score_hint": 2,
+        "annotator": "Yash",
+        "rationale": "Focus impairment"
+      },
+      {
+        "span_id": "E3",
+        "questionnaire": "PHQ9",
+        "item_id": "phq_q6_worthlessness",
+        "turn_id": 2,
+        "text_span": "main hi bekaar hoon",
+        "polarity": "present",
+        "score_hint": 2,
+        "annotator": "Yash",
+        "rationale": "Direct self-worth hit"
+      },
+      {
+        "span_id": "E4",
+        "questionnaire": "PHQ9",
+        "item_id": "phq_q4_fatigue",
+        "turn_id": 4,
+        "text_span": "phir bhi thakan jaati nahi",
+        "polarity": "present",
+        "score_hint": 2,
+        "annotator": "Ritwij",
+        "rationale": "Persistent fatigue even after extra sleep"
+      }
+    ],
+    "phq9_item_labels": {
+      "phq_q1_anhedonia": 1,
+      "phq_q2_low_mood": 1,
+      "phq_q3_sleep": 2,
+      "phq_q4_fatigue": 2,
+      "phq_q5_appetite": 0,
+      "phq_q6_worthlessness": 2,
+      "phq_q7_concentration": 2,
+      "phq_q8_psychomotor": 0,
+      "phq_q9_self_harm": 0
+    },
+    "gad7_item_labels": {
+      "gad_q1_nervous": 1,
+      "gad_q2_control_worry": 1,
+      "gad_q3_excessive_worry": 1,
+      "gad_q4_trouble_relaxing": 0,
+      "gad_q5_restlessness": 0,
+      "gad_q6_irritability": 1,
+      "gad_q7_fear_awful": 1
+    },
+    "safety_flag": {
+      "level": "none",
+      "cues": []
+    },
+    "annotator_notes": "Strong depressive function-loss pattern with self-blame.",
+    "confidence_notes": {
+      "high_confidence_items": ["phq_q3_sleep", "phq_q4_fatigue", "phq_q6_worthlessness", "phq_q7_concentration"],
+      "low_confidence_items": ["phq_q1_anhedonia", "gad_q4_trouble_relaxing"]
+    },
+    "generation_source": "synthetic_profile_guided",
+    "review_status": "double_annotated"
+  },
+  {
+    "conversation_id": "MV-C129",
+    "patient_id": "MV-P012",
+    "language": "hinglish",
+    "age": 29,
+    "occupation": "sales executive",
+    "background_profile": {
+      "context": "recent breakup and heavy travel schedule",
+      "living_situation": "with parents"
+    },
+    "symptom_profile": {
+      "depression_level": "moderate",
+      "anxiety_level": "moderate"
+    },
+    "conversation_turns": [
+      {
+        "turn_id": 1,
+        "speaker": "assistant",
+        "text": "Pichhle do hafton mein sabse zyada kya heavy laga?",
+        "language_tag": "hinglish"
+      },
+      {
+        "turn_id": 2,
+        "speaker": "user",
+        "text": "Breakup ke baad sab mechanical sa lagta hai. Friends ko avoid karta hoon and appetite bhi down hai.",
+        "language_tag": "hinglish"
+      },
+      {
+        "turn_id": 3,
+        "speaker": "assistant",
+        "text": "Mood aur worry mein se kaunsi cheez zyada chipki hui lagti hai?",
+        "language_tag": "hinglish"
+      },
+      {
+        "turn_id": 4,
+        "speaker": "user",
+        "text": "Worry alag se chalti rehti hai ki future kaise handle hoga, aur kabhi kabhi chest tight feel hoti hai.",
+        "language_tag": "hinglish"
+      }
+    ],
+    "evidence_spans": [
+      {
+        "span_id": "E1",
+        "questionnaire": "PHQ9",
+        "item_id": "phq_q1_anhedonia",
+        "turn_id": 2,
+        "text_span": "sab mechanical sa lagta hai",
+        "polarity": "present",
+        "score_hint": 2,
+        "annotator": "Yash",
+        "rationale": "Reduced enjoyment / emotional flattening"
+      },
+      {
+        "span_id": "E2",
+        "questionnaire": "PHQ9",
+        "item_id": "phq_q5_appetite",
+        "turn_id": 2,
+        "text_span": "appetite bhi down hai",
+        "polarity": "present",
+        "score_hint": 2,
+        "annotator": "Ritwij",
+        "rationale": "Appetite drop"
+      },
+      {
+        "span_id": "E3",
+        "questionnaire": "GAD7",
+        "item_id": "gad_q2_control_worry",
+        "turn_id": 4,
+        "text_span": "Worry alag se chalti rehti hai",
+        "polarity": "present",
+        "score_hint": 2,
+        "annotator": "Yash",
+        "rationale": "Persistent worry"
+      },
+      {
+        "span_id": "E4",
+        "questionnaire": "GAD7",
+        "item_id": "gad_q1_nervous",
+        "turn_id": 4,
+        "text_span": "chest tight feel hoti hai",
+        "polarity": "present",
+        "score_hint": 1,
+        "annotator": "Ritwij",
+        "rationale": "Somatic nervousness cue"
+      }
+    ],
+    "phq9_item_labels": {
+      "phq_q1_anhedonia": 2,
+      "phq_q2_low_mood": 1,
+      "phq_q3_sleep": 1,
+      "phq_q4_fatigue": 1,
+      "phq_q5_appetite": 2,
+      "phq_q6_worthlessness": 1,
+      "phq_q7_concentration": 1,
+      "phq_q8_psychomotor": 0,
+      "phq_q9_self_harm": 0
+    },
+    "gad7_item_labels": {
+      "gad_q1_nervous": 1,
+      "gad_q2_control_worry": 2,
+      "gad_q3_excessive_worry": 2,
+      "gad_q4_trouble_relaxing": 1,
+      "gad_q5_restlessness": 0,
+      "gad_q6_irritability": 0,
+      "gad_q7_fear_awful": 1
+    },
+    "safety_flag": {
+      "level": "none",
+      "cues": []
+    },
+    "annotator_notes": "Relationship-loss case with both low-interest and future worry.",
+    "confidence_notes": {
+      "high_confidence_items": ["phq_q1_anhedonia", "phq_q5_appetite", "gad_q2_control_worry"],
+      "low_confidence_items": ["phq_q2_low_mood", "gad_q1_nervous"]
+    },
+    "generation_source": "synthetic_profile_guided",
+    "review_status": "consensus_final"
+  }
+]

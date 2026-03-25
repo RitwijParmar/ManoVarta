@@ -13,14 +13,14 @@ if str(PROJECT_ROOT) not in sys.path:
 
 from manovarta_core.config import get_runtime_config
 from manovarta_core.llm import HuggingFaceExtractor
+from manovarta_core.seed_data import load_seed_conversations
 from manovarta_core.safety import SafetyMonitor
 from manovarta_core.scoring import ConversationScorer
 from manovarta_core.schemas import Turn
 
 
 def load_gold_conversations():
-    path = PROJECT_ROOT / "data" / "seed" / "conversations.json"
-    return json.loads(path.read_text(encoding="utf-8"))
+    return load_seed_conversations()
 
 
 def build_turns(payload):

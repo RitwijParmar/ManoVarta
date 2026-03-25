@@ -65,6 +65,7 @@ pytest
 
 ```bash
 python tools/dataset_stats.py
+python tools/validate_seed_data.py
 python tools/evaluate_seed_runtime.py --mode heuristic
 ```
 
@@ -75,6 +76,14 @@ python tools/evaluate_seed_runtime.py --mode llm
 python tools/evaluate_seed_runtime.py --mode llm --model moonshotai/Kimi-K2-Instruct
 python tools/compare_llm_baselines.py
 ```
+
+## Annotation workflow helpers
+
+```bash
+python tools/build_annotation_packets.py
+```
+
+This exports a compact JSONL packet with transcript turns, metadata, and blank slots for a second annotation pass.
 
 ## Optional Hugging Face hookup
 
@@ -100,6 +109,17 @@ The current default split is:
 - structured extraction: `CohereLabs/aya-expanse-32b`
 
 That split keeps latency reasonable while using the stronger multilingual model where it matters most.
+
+## Optional Colab encoder work
+
+If you want to test the Hindi-sensitive encoder path on GPU:
+
+```bash
+pip install -e .[gpu]
+python tools/semantic_safety_eval.py --model ai4bharat/IndicBERT-v3-1B
+```
+
+There is also a Colab-specific walkthrough in `experiments/colab/README.md`.
 
 ## Notes
 

@@ -22,6 +22,10 @@ dev = [
   "httpx==0.28.1",
   "pytest==8.3.5",
 ]
+gpu = [
+  "torch>=2.2",
+  "transformers>=4.45",
+]
 
 [tool.setuptools.packages.find]
 include = ["manovarta_core*", "manovarta_admin*", "screening*"]
