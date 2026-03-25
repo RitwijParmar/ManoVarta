@@ -72,6 +72,8 @@ If `HF_TOKEN` is set, you can also compare the current LLM extraction path:
 
 ```bash
 python tools/evaluate_seed_runtime.py --mode llm
+python tools/evaluate_seed_runtime.py --mode llm --model moonshotai/Kimi-K2-Instruct
+python tools/compare_llm_baselines.py
 ```
 
 ## Optional Hugging Face hookup

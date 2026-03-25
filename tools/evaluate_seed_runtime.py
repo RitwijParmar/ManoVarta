@@ -4,6 +4,7 @@ import json
 import os
 import sys
 from collections import defaultdict
+from contextlib import contextmanager
 from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
@@ -80,6 +81,24 @@ def evaluate_llm(conversations):
     return predictions
 
 
+@contextmanager
+def temporary_env(name, value):
+    old = os.getenv(name)
+    if value is None:
+        yield
+        return
+    os.environ[name] = value
+    try:
+        get_runtime_config.cache_clear()
+        yield
+    finally:
+        if old is None:
+            os.environ.pop(name, None)
+        else:
+            os.environ[name] = old
+        get_runtime_config.cache_clear()
+
+
 def summarize(conversations, predictions, mode):
     per_language = defaultdict(lambda: {"covered": 0, "exact": 0, "absolute_error": 0, "count": 0})
     for payload, predicted in zip(conversations, predictions):
@@ -109,17 +128,19 @@ def summarize(conversations, predictions, mode):
 def main() -> int:
     parser = argparse.ArgumentParser(description="Evaluate seed conversations against current runtime.")
     parser.add_argument("--mode", choices=["heuristic", "llm"], default="heuristic")
+    parser.add_argument("--model", help="Optional override for MANOVARTA_EXTRACTION_MODEL in llm mode.")
     args = parser.parse_args()
 
     conversations = load_gold_conversations()
-    if args.mode == "heuristic":
-        predictions = evaluate_heuristic(conversations)
-    else:
-        predictions = evaluate_llm(conversations)
+    with temporary_env("MANOVARTA_EXTRACTION_MODEL", args.model):
+        if args.mode == "heuristic":
+            predictions = evaluate_heuristic(conversations)
+        else:
+            predictions = evaluate_llm(conversations)
 
-    report = summarize(conversations, predictions, args.mode)
-    if args.mode == "llm":
-        report["model"] = get_runtime_config().extraction_model
+        report = summarize(conversations, predictions, args.mode)
+        if args.mode == "llm":
+            report["model"] = get_runtime_config().extraction_model
     print(json.dumps(report, indent=2, ensure_ascii=False))
     return 0
 

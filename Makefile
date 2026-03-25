@@ -1,7 +1,7 @@
 PYTHON=.venv/bin/python
 PIP=.venv/bin/pip
 
-.PHONY: install test api migrate seed stats eval-seed
+.PHONY: install test api migrate seed stats eval-seed compare-baselines
 
 install:
 	$(PIP) install -e .[dev]
@@ -23,3 +23,6 @@ stats:
 
 eval-seed:
 	$(PYTHON) tools/evaluate_seed_runtime.py --mode heuristic
+
+compare-baselines:
+	$(PYTHON) tools/compare_llm_baselines.py
