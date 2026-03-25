@@ -24,12 +24,18 @@ def main() -> int:
     try:
         import torch
         from transformers import AutoModelForCausalLM, AutoTokenizer
+        from peft import AutoPeftModelForCausalLM
     except ImportError as exc:  # pragma: no cover
         raise SystemExit("Install training extras first: pip install -e .[train]") from exc
 
     args = parse_args()
     tokenizer = AutoTokenizer.from_pretrained(args.model_path, trust_remote_code=True)
-    model = AutoModelForCausalLM.from_pretrained(args.model_path, trust_remote_code=True, device_map="auto")
+    model_path = Path(args.model_path)
+    adapter_config = model_path / "adapter_config.json"
+    if adapter_config.exists():
+        model = AutoPeftModelForCausalLM.from_pretrained(args.model_path, trust_remote_code=True, device_map="auto")
+    else:
+        model = AutoModelForCausalLM.from_pretrained(args.model_path, trust_remote_code=True, device_map="auto")
     model.eval()
 
     eval_path = Path(args.eval_file)

@@ -10,7 +10,6 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 CANDIDATES = [
     "CohereLabs/aya-expanse-32b",
     "moonshotai/Kimi-K2-Instruct",
-    "deepseek-ai/DeepSeek-V3.1",
     "Qwen/Qwen2.5-7B-Instruct",
 ]
 
@@ -18,8 +17,11 @@ CANDIDATES = [
 def run_eval(model: str):
     env = os.environ.copy()
     env["MANOVARTA_EXTRACTION_MODEL"] = model
+    python_bin = PROJECT_ROOT / ".venv" / "bin" / "python"
+    if not python_bin.exists():
+        python_bin = Path(sys.executable)
     result = subprocess.run(
-        [str(PROJECT_ROOT / ".venv" / "bin" / "python"), str(PROJECT_ROOT / "tools" / "evaluate_seed_runtime.py"), "--mode", "llm"],
+        [str(python_bin), str(PROJECT_ROOT / "tools" / "evaluate_seed_runtime.py"), "--mode", "llm"],
         cwd=PROJECT_ROOT,
         env=env,
         capture_output=True,

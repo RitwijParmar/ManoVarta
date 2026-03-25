@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import importlib
+import importlib.metadata
 import subprocess
 import sys
 from pathlib import Path
@@ -7,7 +8,7 @@ from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 REQUIRED_IMPORTS = {
-    "pydantic": "pydantic>=2.10,<3.0",
+    "pydantic": "pydantic>=2.10,<=2.12.3",
     "huggingface_hub": "huggingface_hub>=1.3.0,<2.0",
     "dotenv": "python-dotenv>=1.0,<2.0",
     "torch": "torch>=2.2",
@@ -27,12 +28,36 @@ def run(cmd: list[str]) -> None:
     subprocess.run(cmd, check=True)
 
 
+def ensure_packaging():
+    try:
+        from packaging.requirements import Requirement
+        from packaging.version import Version
+    except ImportError:
+        run([sys.executable, "-m", "pip", "install", "-q", "packaging>=24.0"])
+        from packaging.requirements import Requirement
+        from packaging.version import Version
+    return Requirement, Version
+
+
+def needs_install(module_name: str, package_spec: str, requirement_cls, version_cls) -> bool:
+    try:
+        importlib.import_module(module_name)
+    except ImportError:
+        return True
+
+    requirement = requirement_cls(package_spec)
+    try:
+        installed = importlib.metadata.version(requirement.name)
+    except importlib.metadata.PackageNotFoundError:
+        return True
+    return version_cls(installed) not in requirement.specifier
+
+
 def main() -> int:
+    requirement_cls, version_cls = ensure_packaging()
     missing = []
     for module_name, package_spec in REQUIRED_IMPORTS.items():
-        try:
-            importlib.import_module(module_name)
-        except ImportError:
+        if needs_install(module_name, package_spec, requirement_cls, version_cls):
             missing.append(package_spec)
 
     run([sys.executable, "-m", "pip", "install", "-q", "-e", str(PROJECT_ROOT), "--no-deps"])
