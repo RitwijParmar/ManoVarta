@@ -17,17 +17,20 @@ def parse_args():
     parser.add_argument("--lora-r", type=int, default=16)
     parser.add_argument("--lora-alpha", type=int, default=32)
     parser.add_argument("--use-4bit", action="store_true")
+    parser.add_argument("--precision", choices=["auto", "bf16", "fp16", "fp32"], default="auto")
     return parser.parse_args()
 
 
 def main() -> int:
     try:
+        import torch
         from datasets import load_dataset
         from peft import LoraConfig
         from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig, TrainingArguments
         from trl import SFTTrainer
     except ImportError as exc:  # pragma: no cover
         raise SystemExit("Install training extras first: pip install -e .[train]") from exc
+    from training.runtime_utils import pick_precision
 
     args = parse_args()
     dataset = load_dataset(
@@ -39,12 +42,13 @@ def main() -> int:
     if tokenizer.pad_token is None:
         tokenizer.pad_token = tokenizer.eos_token
 
+    use_bf16, use_fp16 = pick_precision(torch, args.precision)
     quantization_config = None
     if args.use_4bit:
         quantization_config = BitsAndBytesConfig(
             load_in_4bit=True,
             bnb_4bit_quant_type="nf4",
-            bnb_4bit_compute_dtype="bfloat16",
+            bnb_4bit_compute_dtype=torch.bfloat16 if use_bf16 else torch.float16,
         )
 
     model = AutoModelForCausalLM.from_pretrained(
@@ -72,7 +76,8 @@ def main() -> int:
         logging_steps=5,
         evaluation_strategy="epoch",
         save_strategy="epoch",
-        bf16=True,
+        bf16=use_bf16,
+        fp16=use_fp16,
         report_to="none",
     )
 

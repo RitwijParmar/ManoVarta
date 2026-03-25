@@ -1,6 +1,7 @@
 # Colab Workbench
 
 Use this path when you want GPU-backed experiments without bloating the local runtime.
+The fastest route is to open `manovarta_training_colab.ipynb` in Colab and run cells top to bottom.
 
 ## Suggested Colab flow
 

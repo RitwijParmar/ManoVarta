@@ -29,7 +29,8 @@ python training/finetune_extractor.py \
   --model-name Qwen/Qwen2.5-7B-Instruct \
   --train-file data/processed/extractor_train.jsonl \
   --eval-file data/processed/extractor_dev.jsonl \
-  --output-dir outputs/extractor-qwen25
+  --output-dir outputs/extractor-qwen25 \
+  --precision auto
 ```
 
 ## Train safety classifier
@@ -39,7 +40,8 @@ python training/train_safety_classifier.py \
   --model-name ai4bharat/IndicBERT-v3-1B \
   --train-file data/processed/safety_train.jsonl \
   --eval-file data/processed/safety_dev.jsonl \
-  --output-dir outputs/safety-indicbert
+  --output-dir outputs/safety-indicbert \
+  --precision auto
 ```
 
 ## Evaluate extractor checkpoint

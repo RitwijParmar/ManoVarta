@@ -17,12 +17,14 @@ def parse_args():
     parser.add_argument("--epochs", type=int, default=3)
     parser.add_argument("--batch-size", type=int, default=4)
     parser.add_argument("--max-length", type=int, default=256)
+    parser.add_argument("--precision", choices=["auto", "bf16", "fp16", "fp32"], default="auto")
     return parser.parse_args()
 
 
 def main() -> int:
     try:
         import numpy as np
+        import torch
         from datasets import load_dataset
         from transformers import (
             AutoModelForSequenceClassification,
@@ -33,8 +35,10 @@ def main() -> int:
         )
     except ImportError as exc:  # pragma: no cover
         raise SystemExit("Install training extras first: pip install -e .[train]") from exc
+    from training.runtime_utils import pick_precision
 
     args = parse_args()
+    use_bf16, use_fp16 = pick_precision(torch, args.precision)
     dataset = load_dataset(
         "json",
         data_files={"train": args.train_file, "eval": args.eval_file},
@@ -77,7 +81,8 @@ def main() -> int:
         evaluation_strategy="epoch",
         save_strategy="epoch",
         logging_steps=5,
-        bf16=True,
+        bf16=use_bf16,
+        fp16=use_fp16,
         report_to="none",
     )
 

@@ -143,6 +143,7 @@ python tools/semantic_safety_eval.py --model ai4bharat/IndicBERT-v3-1B
 
 There is also a Colab-specific walkthrough in `experiments/colab/README.md`.
 Full fine-tuning commands live in `training/README.md`.
+The ready-to-run notebook is `experiments/colab/manovarta_training_colab.ipynb`.
 
 ## Notes
 
