@@ -15,7 +15,7 @@ from manovarta_core.schemas import Turn
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Evaluate an optional semantic safety encoder on the seed corpus.")
-    parser.add_argument("--model", default="google/muril-base-cased")
+    parser.add_argument("--model", default="ai4bharat/IndicBERTv2-MLM-only")
     parser.add_argument("--review-threshold", type=float, default=0.64)
     parser.add_argument("--urgent-threshold", type=float, default=0.72)
     args = parser.parse_args()

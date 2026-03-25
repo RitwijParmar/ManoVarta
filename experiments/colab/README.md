@@ -33,7 +33,7 @@ python tools/evaluate_seed_runtime.py --mode llm --model moonshotai/Kimi-K2-Inst
 Semantic safety encoder:
 
 ```bash
-python tools/semantic_safety_eval.py --model google/muril-base-cased
+python tools/semantic_safety_eval.py --model ai4bharat/IndicBERTv2-MLM-only
 ```
 
 Training exports and fine-tuning:
@@ -42,7 +42,7 @@ Training exports and fine-tuning:
 python tools/create_data_splits.py
 python tools/export_training_sets.py
 python -m training.finetune_extractor --model-name Qwen/Qwen2.5-7B-Instruct --train-file data/processed/extractor_train.jsonl --eval-file data/processed/extractor_dev.jsonl --output-dir outputs/extractor-qwen25
-python -m training.train_safety_classifier --model-name google/muril-base-cased --train-file data/processed/safety_train.jsonl --eval-file data/processed/safety_dev.jsonl --output-dir outputs/safety-indicbert
+python -m training.train_safety_classifier --model-name ai4bharat/IndicBERTv2-MLM-only --train-file data/processed/safety_train.jsonl --eval-file data/processed/safety_dev.jsonl --output-dir outputs/safety-indicbert
 ```
 
 Annotation packet export:

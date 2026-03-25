@@ -16,7 +16,7 @@ ID_TO_LABEL = {value: key for key, value in LABEL_TO_ID.items()}
 
 def parse_args():
     parser = argparse.ArgumentParser(description="Fine-tune a multilingual encoder for safety classification.")
-    parser.add_argument("--model-name", default="google/muril-base-cased")
+    parser.add_argument("--model-name", default="ai4bharat/IndicBERTv2-MLM-only")
     parser.add_argument("--train-file", required=True)
     parser.add_argument("--eval-file", required=True)
     parser.add_argument("--output-dir", required=True)
