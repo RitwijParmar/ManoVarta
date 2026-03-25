@@ -62,7 +62,8 @@ def main() -> int:
         encoded["labels"] = [LABEL_TO_ID[label] for label in batch["label"]]
         return encoded
 
-    dataset = dataset.map(preprocess, batched=True)
+    original_columns = dataset["train"].column_names
+    dataset = dataset.map(preprocess, batched=True, remove_columns=original_columns)
     collator = DataCollatorWithPadding(tokenizer=tokenizer)
 
     model = AutoModelForSequenceClassification.from_pretrained(
