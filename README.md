@@ -166,6 +166,30 @@ To package trained outputs after a Colab or local run:
 python tools/package_training_artifacts.py --source-dir outputs
 ```
 
+If you finish a Colab training run and want the repo-friendly outputs in one pass:
+
+```bash
+python tools/finalize_colab_run.py \
+  --checkpoint-path outputs/extractor-qwen25 \
+  --semantic-model ai4bharat/IndicBERTv2-MLM-only
+```
+
+That will:
+
+- run checkpoint, heuristic, semantic safety, and live LLM evaluation when available
+- save durable JSON reports under `reports/colab_run/`
+- write a Markdown bundle summary
+- package `outputs/` and `reports/colab_run/` into `artifacts/manovarta_colab_bundle.zip`
+
+If you also want a Drive copy from Colab:
+
+```bash
+python tools/finalize_colab_run.py \
+  --checkpoint-path outputs/extractor-qwen25 \
+  --semantic-model ai4bharat/IndicBERTv2-MLM-only \
+  --drive-dir /content/drive/MyDrive/ManoVartaOutputs
+```
+
 ## Notes
 
 - Large-model hosting is intentionally left out of this repository.

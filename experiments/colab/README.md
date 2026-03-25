@@ -45,6 +45,23 @@ python -m training.finetune_extractor --model-name Qwen/Qwen2.5-7B-Instruct --tr
 python -m training.train_safety_classifier --model-name ai4bharat/IndicBERTv2-MLM-only --train-file data/processed/safety_train.jsonl --eval-file data/processed/safety_dev.jsonl --output-dir outputs/safety-indicbert
 ```
 
+Finalize the run and package durable outputs:
+
+```bash
+python tools/finalize_colab_run.py \
+  --checkpoint-path outputs/extractor-qwen25 \
+  --semantic-model ai4bharat/IndicBERTv2-MLM-only
+```
+
+If Drive is mounted, you can also copy outputs, reports, and the bundle zip in one step:
+
+```bash
+python tools/finalize_colab_run.py \
+  --checkpoint-path outputs/extractor-qwen25 \
+  --semantic-model ai4bharat/IndicBERTv2-MLM-only \
+  --drive-dir /content/drive/MyDrive/ManoVartaOutputs
+```
+
 Annotation packet export:
 
 ```bash

@@ -51,3 +51,13 @@ python training/evaluate_extractor_checkpoint.py \
   --model-path outputs/extractor-qwen25 \
   --eval-file data/processed/extractor_test.jsonl
 ```
+
+## Finalize a Colab run
+
+```bash
+python tools/finalize_colab_run.py \
+  --checkpoint-path outputs/extractor-qwen25 \
+  --semantic-model ai4bharat/IndicBERTv2-MLM-only
+```
+
+That writes durable JSON reports under `reports/colab_run/` and packages the run into `artifacts/manovarta_colab_bundle.zip`.
