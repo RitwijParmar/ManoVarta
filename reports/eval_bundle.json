@@ -1,0 +1,292 @@
+{
+  "generated_at": "2026-03-25T23:26:01.411395+00:00",
+  "git_revision": "7934573",
+  "runtime": {
+    "provider": "huggingface",
+    "chat_model": "Qwen/Qwen2.5-7B-Instruct",
+    "extraction_model": "CohereLabs/aya-expanse-32b",
+    "huggingface_enabled": true,
+    "semantic_safety_model": "ai4bharat/IndicBERTv2-MLM-only"
+  },
+  "seed_summary": {
+    "profiles": 12,
+    "conversations": 12,
+    "languages": {
+      "en": 4,
+      "hi": 4,
+      "hinglish": 4
+    },
+    "review_status": {
+      "consensus_final": 6,
+      "double_annotated": 6
+    },
+    "safety_levels": {
+      "none": 8,
+      "review": 3,
+      "urgent": 1
+    }
+  },
+  "processed_summary": {
+    "extractor_dev.jsonl": 3,
+    "extractor_test.jsonl": 3,
+    "extractor_train.jsonl": 6,
+    "follow_up_dev.jsonl": 3,
+    "follow_up_test.jsonl": 3,
+    "follow_up_train.jsonl": 6,
+    "safety_dev.jsonl": 3,
+    "safety_test.jsonl": 3,
+    "safety_train.jsonl": 6,
+    "splits.json": 20
+  },
+  "reports": {
+    "heuristic": {
+      "command": [
+        "/Users/ritwij/Documents/multilingualChatbot/.venv/bin/python",
+        "/Users/ritwij/Documents/multilingualChatbot/tools/evaluate_seed_runtime.py",
+        "--mode",
+        "heuristic"
+      ],
+      "returncode": 0,
+      "status": "ok",
+      "result": {
+        "overall": {
+          "covered_items": 15,
+          "coverage_completeness": 0.078,
+          "mae": 0.467,
+          "exact_match_rate": 0.667,
+          "macro_f1": 0.194,
+          "safety_precision": 1.0,
+          "safety_recall": 1.0
+        },
+        "languages": {
+          "en": {
+            "covered_items": 6,
+            "coverage_completeness": 0.094,
+            "mae": 0.667,
+            "exact_match_rate": 0.5,
+            "macro_f1": 0.142,
+            "safety_precision": 1.0,
+            "safety_recall": 1.0
+          },
+          "hi": {
+            "covered_items": 5,
+            "coverage_completeness": 0.078,
+            "mae": 0.0,
+            "exact_match_rate": 1.0,
+            "macro_f1": 0.345,
+            "safety_precision": 0.0,
+            "safety_recall": 0.0
+          },
+          "hinglish": {
+            "covered_items": 4,
+            "coverage_completeness": 0.062,
+            "mae": 0.75,
+            "exact_match_rate": 0.5,
+            "macro_f1": 0.05,
+            "safety_precision": 1.0,
+            "safety_recall": 1.0
+          }
+        },
+        "mode": "heuristic"
+      }
+    },
+    "checkpoint": {
+      "status": "skipped",
+      "reason": "No checkpoint path provided."
+    },
+    "semantic_safety": {
+      "status": "skipped",
+      "reason": "Semantic evaluation skipped by flag."
+    },
+    "llm_primary": {
+      "command": [
+        "/Users/ritwij/Documents/multilingualChatbot/.venv/bin/python",
+        "/Users/ritwij/Documents/multilingualChatbot/tools/evaluate_seed_runtime.py",
+        "--mode",
+        "llm",
+        "--model",
+        "CohereLabs/aya-expanse-32b"
+      ],
+      "returncode": 0,
+      "status": "ok",
+      "result": {
+        "overall": {
+          "covered_items": 0,
+          "coverage_completeness": 0.0,
+          "mae": null,
+          "exact_match_rate": null,
+          "macro_f1": 0.0,
+          "safety_precision": 0.0,
+          "safety_recall": 0.0
+        },
+        "languages": {
+          "en": {
+            "covered_items": 0,
+            "coverage_completeness": 0.0,
+            "mae": null,
+            "exact_match_rate": null,
+            "macro_f1": 0.0,
+            "safety_precision": 0.0,
+            "safety_recall": 0.0
+          },
+          "hi": {
+            "covered_items": 0,
+            "coverage_completeness": 0.0,
+            "mae": null,
+            "exact_match_rate": null,
+            "macro_f1": 0.0,
+            "safety_precision": 0.0,
+            "safety_recall": 0.0
+          },
+          "hinglish": {
+            "covered_items": 0,
+            "coverage_completeness": 0.0,
+            "mae": null,
+            "exact_match_rate": null,
+            "macro_f1": 0.0,
+            "safety_precision": 0.0,
+            "safety_recall": 0.0
+          }
+        },
+        "mode": "llm",
+        "model": "CohereLabs/aya-expanse-32b"
+      }
+    },
+    "llm_baselines": {
+      "command": [
+        "/Users/ritwij/Documents/multilingualChatbot/.venv/bin/python",
+        "/Users/ritwij/Documents/multilingualChatbot/tools/compare_llm_baselines.py"
+      ],
+      "returncode": 0,
+      "status": "ok",
+      "result": [
+        {
+          "overall": {
+            "covered_items": 0,
+            "coverage_completeness": 0.0,
+            "mae": null,
+            "exact_match_rate": null,
+            "macro_f1": 0.0,
+            "safety_precision": 0.0,
+            "safety_recall": 0.0
+          },
+          "languages": {
+            "en": {
+              "covered_items": 0,
+              "coverage_completeness": 0.0,
+              "mae": null,
+              "exact_match_rate": null,
+              "macro_f1": 0.0,
+              "safety_precision": 0.0,
+              "safety_recall": 0.0
+            },
+            "hi": {
+              "covered_items": 0,
+              "coverage_completeness": 0.0,
+              "mae": null,
+              "exact_match_rate": null,
+              "macro_f1": 0.0,
+              "safety_precision": 0.0,
+              "safety_recall": 0.0
+            },
+            "hinglish": {
+              "covered_items": 0,
+              "coverage_completeness": 0.0,
+              "mae": null,
+              "exact_match_rate": null,
+              "macro_f1": 0.0,
+              "safety_precision": 0.0,
+              "safety_recall": 0.0
+            }
+          },
+          "mode": "llm",
+          "model": "CohereLabs/aya-expanse-32b"
+        },
+        {
+          "overall": {
+            "covered_items": 3,
+            "coverage_completeness": 0.016,
+            "mae": 0.333,
+            "exact_match_rate": 0.667,
+            "macro_f1": 0.02,
+            "safety_precision": 0.0,
+            "safety_recall": 0.0
+          },
+          "languages": {
+            "en": {
+              "covered_items": 0,
+              "coverage_completeness": 0.0,
+              "mae": null,
+              "exact_match_rate": null,
+              "macro_f1": 0.0,
+              "safety_precision": 0.0,
+              "safety_recall": 0.0
+            },
+            "hi": {
+              "covered_items": 0,
+              "coverage_completeness": 0.0,
+              "mae": null,
+              "exact_match_rate": null,
+              "macro_f1": 0.0,
+              "safety_precision": 0.0,
+              "safety_recall": 0.0
+            },
+            "hinglish": {
+              "covered_items": 3,
+              "coverage_completeness": 0.047,
+              "mae": 0.333,
+              "exact_match_rate": 0.667,
+              "macro_f1": 0.053,
+              "safety_precision": 0.0,
+              "safety_recall": 0.0
+            }
+          },
+          "mode": "llm",
+          "model": "moonshotai/Kimi-K2-Instruct"
+        },
+        {
+          "overall": {
+            "covered_items": 15,
+            "coverage_completeness": 0.078,
+            "mae": 0.333,
+            "exact_match_rate": 0.667,
+            "macro_f1": 0.076,
+            "safety_precision": 0.667,
+            "safety_recall": 0.5
+          },
+          "languages": {
+            "en": {
+              "covered_items": 6,
+              "coverage_completeness": 0.094,
+              "mae": 0.5,
+              "exact_match_rate": 0.5,
+              "macro_f1": 0.071,
+              "safety_precision": 1.0,
+              "safety_recall": 0.5
+            },
+            "hi": {
+              "covered_items": 5,
+              "coverage_completeness": 0.078,
+              "mae": 0.2,
+              "exact_match_rate": 0.8,
+              "macro_f1": 0.091,
+              "safety_precision": 0.0,
+              "safety_recall": 0.0
+            },
+            "hinglish": {
+              "covered_items": 4,
+              "coverage_completeness": 0.062,
+              "mae": 0.25,
+              "exact_match_rate": 0.75,
+              "macro_f1": 0.066,
+              "safety_precision": 1.0,
+              "safety_recall": 0.5
+            }
+          },
+          "mode": "llm",
+          "model": "Qwen/Qwen2.5-7B-Instruct"
+        }
+      ]
+    }
+  }
+}
