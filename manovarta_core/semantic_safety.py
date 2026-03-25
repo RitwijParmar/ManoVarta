@@ -79,8 +79,12 @@ class SemanticSafetyMonitor:
             self._backend = None
             return
 
-        tokenizer = AutoTokenizer.from_pretrained(self.config.model_name, trust_remote_code=True)
-        model = AutoModel.from_pretrained(self.config.model_name, trust_remote_code=True)
+        try:
+            tokenizer = AutoTokenizer.from_pretrained(self.config.model_name, trust_remote_code=True)
+            model = AutoModel.from_pretrained(self.config.model_name, trust_remote_code=True)
+        except OSError:  # pragma: no cover
+            self._backend = None
+            return
         model.eval()
         self._backend = (torch, tokenizer, model)
         self._review_vectors = self._encode_texts(torch, tokenizer, model, REVIEW_PROTOTYPES)

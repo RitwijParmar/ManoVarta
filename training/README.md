@@ -5,7 +5,7 @@ This folder contains Colab-friendly scripts for fine-tuning and evaluation.
 ## Recommended defaults
 
 - extractor fine-tuning base: `Qwen/Qwen2.5-7B-Instruct`
-- safety encoder fine-tuning base: `ai4bharat/IndicBERT-v3-1B`
+- safety encoder fine-tuning base: `google/muril-base-cased`
 - primary hosted evaluation model remains `CohereLabs/aya-expanse-32b`
 - second LLM baseline remains `moonshotai/Kimi-K2-Instruct`
 
@@ -17,7 +17,7 @@ The idea is simple:
 ## Setup
 
 ```bash
-pip install -e .[train]
+python tools/colab_bootstrap.py
 python tools/create_data_splits.py
 python tools/export_training_sets.py
 ```
@@ -25,7 +25,7 @@ python tools/export_training_sets.py
 ## Fine-tune extraction model
 
 ```bash
-python training/finetune_extractor.py \
+python -m training.finetune_extractor \
   --model-name Qwen/Qwen2.5-7B-Instruct \
   --train-file data/processed/extractor_train.jsonl \
   --eval-file data/processed/extractor_dev.jsonl \
@@ -36,8 +36,8 @@ python training/finetune_extractor.py \
 ## Train safety classifier
 
 ```bash
-python training/train_safety_classifier.py \
-  --model-name ai4bharat/IndicBERT-v3-1B \
+python -m training.train_safety_classifier \
+  --model-name google/muril-base-cased \
   --train-file data/processed/safety_train.jsonl \
   --eval-file data/processed/safety_dev.jsonl \
   --output-dir outputs/safety-indicbert \

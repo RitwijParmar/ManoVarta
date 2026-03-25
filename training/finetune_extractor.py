@@ -1,6 +1,12 @@
 #!/usr/bin/env python3
 import argparse
 from pathlib import Path
+import sys
+
+
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
 
 
 def parse_args():
@@ -29,7 +35,7 @@ def main() -> int:
         from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig, TrainingArguments
         from trl import SFTTrainer
     except ImportError as exc:  # pragma: no cover
-        raise SystemExit("Install training extras first: pip install -e .[train]") from exc
+        raise SystemExit(f"Install training extras first. Missing dependency: {exc.name}") from exc
     from training.runtime_utils import pick_precision
 
     args = parse_args()

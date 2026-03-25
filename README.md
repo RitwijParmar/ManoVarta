@@ -127,7 +127,7 @@ That split keeps latency reasonable while using the stronger multilingual model 
 If you want the optional semantic safety encoder in runtime, also set:
 
 ```bash
-export MANOVARTA_SEMANTIC_SAFETY_MODEL=ai4bharat/IndicBERT-v3-1B
+export MANOVARTA_SEMANTIC_SAFETY_MODEL=google/muril-base-cased
 ```
 
 That path is optional and heavier, so it is best tested in Colab first.
@@ -138,7 +138,7 @@ If you want to test the Hindi-sensitive encoder path on GPU:
 
 ```bash
 pip install -e .[gpu]
-python tools/semantic_safety_eval.py --model ai4bharat/IndicBERT-v3-1B
+python tools/semantic_safety_eval.py --model google/muril-base-cased
 ```
 
 There is also a Colab-specific walkthrough in `experiments/colab/README.md`.

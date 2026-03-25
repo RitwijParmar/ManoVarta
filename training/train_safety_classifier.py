@@ -1,6 +1,12 @@
 #!/usr/bin/env python3
 import argparse
 from pathlib import Path
+import sys
+
+
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
 
 
 LABEL_TO_ID = {"none": 0, "review": 1, "urgent": 2}
@@ -9,7 +15,7 @@ ID_TO_LABEL = {value: key for key, value in LABEL_TO_ID.items()}
 
 def parse_args():
     parser = argparse.ArgumentParser(description="Fine-tune a multilingual encoder for safety classification.")
-    parser.add_argument("--model-name", default="ai4bharat/IndicBERT-v3-1B")
+    parser.add_argument("--model-name", default="google/muril-base-cased")
     parser.add_argument("--train-file", required=True)
     parser.add_argument("--eval-file", required=True)
     parser.add_argument("--output-dir", required=True)
@@ -34,7 +40,7 @@ def main() -> int:
             TrainingArguments,
         )
     except ImportError as exc:  # pragma: no cover
-        raise SystemExit("Install training extras first: pip install -e .[train]") from exc
+        raise SystemExit(f"Install training extras first. Missing dependency: {exc.name}") from exc
     from training.runtime_utils import pick_precision
 
     args = parse_args()

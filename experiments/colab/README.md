@@ -6,9 +6,10 @@ The fastest route is to open `manovarta_training_colab.ipynb` in Colab and run c
 ## Suggested Colab flow
 
 ```bash
-git clone https://github.com/RitwijParmar/ManoVarta.git
+export GITHUB_TOKEN=...
+git clone https://oauth2:${GITHUB_TOKEN}@github.com/RitwijParmar/ManoVarta.git
 cd ManoVarta
-pip install -e .[dev,gpu,train]
+python tools/colab_bootstrap.py
 ```
 
 Optional environment setup:
@@ -32,7 +33,7 @@ python tools/evaluate_seed_runtime.py --mode llm --model moonshotai/Kimi-K2-Inst
 Semantic safety encoder:
 
 ```bash
-python tools/semantic_safety_eval.py --model ai4bharat/IndicBERT-v3-1B
+python tools/semantic_safety_eval.py --model google/muril-base-cased
 ```
 
 Training exports and fine-tuning:
@@ -40,8 +41,8 @@ Training exports and fine-tuning:
 ```bash
 python tools/create_data_splits.py
 python tools/export_training_sets.py
-python training/finetune_extractor.py --model-name Qwen/Qwen2.5-7B-Instruct --train-file data/processed/extractor_train.jsonl --eval-file data/processed/extractor_dev.jsonl --output-dir outputs/extractor-qwen25
-python training/train_safety_classifier.py --model-name ai4bharat/IndicBERT-v3-1B --train-file data/processed/safety_train.jsonl --eval-file data/processed/safety_dev.jsonl --output-dir outputs/safety-indicbert
+python -m training.finetune_extractor --model-name Qwen/Qwen2.5-7B-Instruct --train-file data/processed/extractor_train.jsonl --eval-file data/processed/extractor_dev.jsonl --output-dir outputs/extractor-qwen25
+python -m training.train_safety_classifier --model-name google/muril-base-cased --train-file data/processed/safety_train.jsonl --eval-file data/processed/safety_dev.jsonl --output-dir outputs/safety-indicbert
 ```
 
 Annotation packet export:
