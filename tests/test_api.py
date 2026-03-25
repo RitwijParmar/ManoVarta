@@ -47,3 +47,21 @@ def test_summary_endpoint_returns_structured_snapshot():
     body = summary.json()
     assert body["snapshot"]["totals"]["PHQ9"] >= 2
     assert "Session" in body["summary"]
+
+
+def test_export_endpoint_returns_rows_and_snapshot_mode():
+    start = client.post("/chat/sessions", json={"language": "en"})
+    session_id = start.json()["session_id"]
+
+    client.post(
+        f"/chat/sessions/{session_id}/turns",
+        json={"text": "I feel numb lately, my sleep is bad, and work focus keeps breaking."},
+    )
+
+    export_response = client.get(f"/chat/sessions/{session_id}/export")
+
+    assert export_response.status_code == 200
+    body = export_response.json()
+    assert body["snapshot"]["mode"] in {"heuristic", "hybrid"}
+    assert body["rows"]
+    assert body["rows"][0]["questionnaire"] in {"PHQ9", "GAD7"}

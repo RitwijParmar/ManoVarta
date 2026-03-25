@@ -1,7 +1,7 @@
 from typing import List
 
 from manovarta_core.questionnaires import ITEM_INDEX
-from manovarta_core.schemas import ChatSession, ScreeningSnapshot
+from manovarta_core.schemas import ChatSession, ScreeningSnapshot, SummaryRow
 
 
 def build_summary(session: ChatSession, snapshot: ScreeningSnapshot) -> str:
@@ -25,6 +25,27 @@ def build_summary(session: ChatSession, snapshot: ScreeningSnapshot) -> str:
         f"Observed totals: PHQ-9={snapshot.totals['PHQ9']}, GAD-7={snapshot.totals['GAD7']}. "
         f"Coverage: {touched_items}/{len(snapshot.items)} items touched. "
         f"Safety: {safety_text}. "
+        f"Mode: {snapshot.mode}. "
         f"Evidence summary: {resolved_text}. "
         f"Follow-up still needed for: {unresolved_text}."
     )
+
+
+def build_rows(snapshot: ScreeningSnapshot) -> List[SummaryRow]:
+    span_text = {span.span_id: span.text_span for span in snapshot.evidence_spans}
+    rows: List[SummaryRow] = []
+    for item_id, item in snapshot.items.items():
+        rows.append(
+            SummaryRow(
+                item_id=item_id,
+                questionnaire=item.questionnaire,
+                label=ITEM_INDEX[item_id].label,
+                value=item.value,
+                status=item.status,
+                confidence=item.confidence,
+                source=item.source,
+                evidence_quotes=[span_text[span_id] for span_id in item.evidence_span_ids if span_id in span_text][:3],
+            )
+        )
+    rows.sort(key=lambda row: (row.questionnaire, row.label))
+    return rows

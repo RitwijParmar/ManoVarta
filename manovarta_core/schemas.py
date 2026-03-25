@@ -41,6 +41,7 @@ class ItemScore(BaseModel):
     stable: bool = False
     evidence_span_ids: List[str] = Field(default_factory=list)
     contradiction_note: Optional[str] = None
+    source: Literal["none", "heuristic", "llm", "hybrid"] = "heuristic"
 
 
 class SafetyFlag(BaseModel):
@@ -57,6 +58,7 @@ class ScreeningSnapshot(BaseModel):
     unresolved_items: List[str]
     totals: Dict[str, Optional[int]]
     safety: SafetyFlag
+    mode: Literal["heuristic", "hybrid"] = "heuristic"
 
 
 class ChatSession(BaseModel):
@@ -102,3 +104,23 @@ class SummaryResponse(BaseModel):
     session_id: str
     summary: str
     snapshot: ScreeningSnapshot
+
+
+class SummaryRow(BaseModel):
+    item_id: str
+    questionnaire: Literal["PHQ9", "GAD7"]
+    label: str
+    value: Optional[int]
+    status: ItemStatus
+    confidence: float
+    source: Literal["none", "heuristic", "llm", "hybrid"]
+    evidence_quotes: List[str] = Field(default_factory=list)
+
+
+class SessionExportResponse(BaseModel):
+    session_id: str
+    language: LanguageCode
+    summary: str
+    turns: List[Turn]
+    snapshot: ScreeningSnapshot
+    rows: List[SummaryRow]

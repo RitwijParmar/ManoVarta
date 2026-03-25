@@ -2,15 +2,17 @@ from fastapi import FastAPI, HTTPException
 
 from manovarta_core.config import get_runtime_config
 from manovarta_core.dialogue import DialoguePlanner
+from manovarta_core.engine import RuntimeEngine
 from manovarta_core.llm import HuggingFaceExtractor, HuggingFaceResponder
 from manovarta_core.profiles import load_seed_profiles
 from manovarta_core.questionnaires import grouped_items
-from manovarta_core.reporting import build_summary
+from manovarta_core.reporting import build_rows, build_summary
 from manovarta_core.safety import SafetyMonitor
 from manovarta_core.scoring import ConversationScorer
 from manovarta_core.schemas import (
     ChatTurnRequest,
     ChatTurnResponse,
+    SessionExportResponse,
     SessionDetailResponse,
     StartSessionRequest,
     StartSessionResponse,
@@ -33,6 +35,7 @@ safety_monitor = SafetyMonitor()
 scorer = ConversationScorer()
 responder = HuggingFaceResponder(runtime_config)
 extractor = HuggingFaceExtractor(runtime_config)
+engine = RuntimeEngine(scorer=scorer, safety_monitor=safety_monitor, extractor=extractor)
 
 
 @app.get("/health")
@@ -78,8 +81,7 @@ def add_turn(session_id: str, payload: ChatTurnRequest) -> ChatTurnResponse:
         raise HTTPException(status_code=404, detail="Session not found.")
 
     store.add_turn(session_id, "user", payload.text, session.language)
-    safety_flag = safety_monitor.assess(session.turns)
-    snapshot = scorer.analyze(session.turns, session.language, safety_flag)
+    snapshot = engine.analyze(session.turns, session.language)
     fallback_text, asked_item = planner.next_reply(snapshot, session)
     reply_text, source = responder.compose_reply(session, snapshot, asked_item, fallback_text)
     if asked_item and asked_item not in session.asked_items:
@@ -99,8 +101,7 @@ def get_session(session_id: str) -> SessionDetailResponse:
     session = store.get(session_id)
     if session is None:
         raise HTTPException(status_code=404, detail="Session not found.")
-    safety_flag = safety_monitor.assess(session.turns)
-    snapshot = scorer.analyze(session.turns, session.language, safety_flag)
+    snapshot = engine.analyze(session.turns, session.language)
     return SessionDetailResponse(session_id=session_id, turns=session.turns, snapshot=snapshot)
 
 
@@ -109,16 +110,37 @@ def get_summary(session_id: str) -> SummaryResponse:
     session = store.get(session_id)
     if session is None:
         raise HTTPException(status_code=404, detail="Session not found.")
-    safety_flag = safety_monitor.assess(session.turns)
-    snapshot = scorer.analyze(session.turns, session.language, safety_flag)
+    snapshot = engine.analyze(session.turns, session.language)
     return SummaryResponse(session_id=session_id, summary=build_summary(session, snapshot), snapshot=snapshot)
+
+
+@app.get("/chat/sessions/{session_id}/export", response_model=SessionExportResponse)
+def export_session(session_id: str) -> SessionExportResponse:
+    session = store.get(session_id)
+    if session is None:
+        raise HTTPException(status_code=404, detail="Session not found.")
+    snapshot = engine.analyze(session.turns, session.language)
+    return SessionExportResponse(
+        session_id=session_id,
+        language=session.language,
+        summary=build_summary(session, snapshot),
+        turns=session.turns,
+        snapshot=snapshot,
+        rows=build_rows(snapshot),
+    )
 
 
 @app.post("/screen/transcript")
 def score_transcript(payload: TranscriptScoreRequest) -> dict:
+    snapshot = engine.analyze(payload.turns, payload.language)
+    return {"mode": snapshot.mode, "snapshot": snapshot.model_dump()}
+
+
+@app.post("/screen/transcript/heuristic")
+def score_transcript_heuristic(payload: TranscriptScoreRequest) -> dict:
     safety_flag = safety_monitor.assess(payload.turns)
     snapshot = scorer.analyze(payload.turns, payload.language, safety_flag)
-    return {"snapshot": snapshot.model_dump()}
+    return {"mode": snapshot.mode, "snapshot": snapshot.model_dump()}
 
 
 @app.post("/screen/transcript/llm")
