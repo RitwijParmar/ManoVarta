@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ManoVarta Runtime</title>
+    <link rel="stylesheet" href="/app-assets/app.css" />
+  </head>
+  <body>
+    <div class="shell">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">ManoVarta</p>
+          <h1>Multilingual screening demo</h1>
+          <p class="subtitle">
+            Text-first PHQ-9 and GAD-7 aligned screening with evidence spans, confidence tracking,
+            and a parallel safety pass.
+          </p>
+        </div>
+        <div class="runtime-card">
+          <p class="runtime-label">Runtime</p>
+          <div id="runtimeInfo" class="runtime-meta">Loading configuration...</div>
+        </div>
+      </header>
+
+      <main class="layout">
+        <section class="panel chat-panel">
+          <div class="panel-header">
+            <div>
+              <h2>Conversation</h2>
+              <p class="panel-subtitle">Start a session, chat naturally, and inspect the screening state live.</p>
+            </div>
+            <div class="controls">
+              <label>
+                <span>Language</span>
+                <select id="languageSelect">
+                  <option value="en">English</option>
+                  <option value="hi">Hindi</option>
+                  <option value="hinglish">Hinglish</option>
+                </select>
+              </label>
+              <button id="startButton" class="button secondary">Start new session</button>
+            </div>
+          </div>
+
+          <div id="sessionMeta" class="session-meta empty">No active session yet.</div>
+          <div id="chatLog" class="chat-log"></div>
+
+          <form id="chatForm" class="composer">
+            <textarea
+              id="messageInput"
+              rows="3"
+              placeholder="Type a user response here..."
+            ></textarea>
+            <div class="composer-actions">
+              <p class="helper">The assistant stays in the chosen language and keeps the flow screening-focused.</p>
+              <button type="submit" class="button primary">Send turn</button>
+            </div>
+          </form>
+        </section>
+
+        <aside class="panel insight-panel">
+          <div class="panel-header compact">
+            <div>
+              <h2>Structured view</h2>
+              <p class="panel-subtitle">Scores, evidence, and summary update after each turn.</p>
+            </div>
+            <button id="downloadButton" class="button ghost" disabled>Export JSON</button>
+          </div>
+
+          <div class="metrics">
+            <article class="metric-card">
+              <p class="metric-label">PHQ-9 total</p>
+              <p id="phqTotal" class="metric-value">0</p>
+            </article>
+            <article class="metric-card">
+              <p class="metric-label">GAD-7 total</p>
+              <p id="gadTotal" class="metric-value">0</p>
+            </article>
+            <article class="metric-card">
+              <p class="metric-label">Safety</p>
+              <p id="safetyLevel" class="metric-value small">none</p>
+            </article>
+            <article class="metric-card">
+              <p class="metric-label">Mode</p>
+              <p id="snapshotMode" class="metric-value small">heuristic</p>
+            </article>
+          </div>
+
+          <section class="summary-block">
+            <div class="summary-header">
+              <h3>Current summary</h3>
+              <span id="coverageText" class="chip">Coverage 0/16</span>
+            </div>
+            <p id="summaryText" class="summary-text">Start a conversation to generate the first summary.</p>
+          </section>
+
+          <section class="summary-block">
+            <div class="summary-header">
+              <h3>Priority follow-up</h3>
+              <span id="unresolvedCount" class="chip soft">0 unresolved</span>
+            </div>
+            <ul id="unresolvedList" class="plain-list">
+              <li>No unresolved items yet.</li>
+            </ul>
+          </section>
+
+          <section class="summary-block">
+            <h3>Item table</h3>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Item</th>
+                    <th>Score</th>
+                    <th>Status</th>
+                    <th>Source</th>
+                  </tr>
+                </thead>
+                <tbody id="itemTableBody">
+                  <tr>
+                    <td colspan="4" class="empty-cell">No item scores yet.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <section class="summary-block">
+            <h3>Evidence highlights</h3>
+            <ul id="evidenceList" class="evidence-list">
+              <li class="empty-cell">No evidence spans yet.</li>
+            </ul>
+          </section>
+        </aside>
+      </main>
+    </div>
+
+    <script src="/app-assets/app.js" defer></script>
+  </body>
+</html>

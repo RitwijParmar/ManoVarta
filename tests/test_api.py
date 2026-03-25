@@ -6,6 +6,13 @@ from manovarta_core.api import app
 client = TestClient(app)
 
 
+def test_root_serves_browser_demo():
+    response = client.get("/")
+
+    assert response.status_code == 200
+    assert "ManoVarta Runtime" in response.text
+
+
 def test_runtime_config_reports_huggingface_disabled_by_default():
     response = client.get("/runtime/config")
 

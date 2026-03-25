@@ -1,4 +1,8 @@
+from pathlib import Path
+
 from fastapi import FastAPI, HTTPException
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 
 from manovarta_core.config import get_runtime_config
 from manovarta_core.dialogue import DialoguePlanner
@@ -28,6 +32,8 @@ app = FastAPI(
     description="Text-first multilingual screening prototype with evidence extraction and safety checks.",
 )
 
+WEB_DIR = Path(__file__).resolve().parent / "web"
+
 runtime_config = get_runtime_config()
 store = SessionStore()
 planner = DialoguePlanner()
@@ -36,6 +42,14 @@ scorer = ConversationScorer()
 responder = HuggingFaceResponder(runtime_config)
 extractor = HuggingFaceExtractor(runtime_config)
 engine = RuntimeEngine(scorer=scorer, safety_monitor=safety_monitor, extractor=extractor)
+
+if WEB_DIR.exists():
+    app.mount("/app-assets", StaticFiles(directory=WEB_DIR), name="app-assets")
+
+
+@app.get("/", include_in_schema=False)
+def index() -> FileResponse:
+    return FileResponse(WEB_DIR / "index.html")
 
 
 @app.get("/health")
