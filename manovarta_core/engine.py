@@ -4,6 +4,7 @@ from typing import Iterable, Optional
 
 from manovarta_core.llm import HuggingFaceExtractor
 from manovarta_core.questionnaires import ITEM_INDEX
+from manovarta_core.semantic_safety import SemanticSafetyMonitor
 from manovarta_core.safety import SafetyMonitor
 from manovarta_core.schemas import EvidenceSpan, ItemScore, SafetyFlag, ScreeningSnapshot, Turn
 from manovarta_core.scoring import ConversationScorer
@@ -18,15 +19,19 @@ class RuntimeEngine:
         self,
         scorer: Optional[ConversationScorer] = None,
         safety_monitor: Optional[SafetyMonitor] = None,
+        semantic_safety_monitor: Optional[SemanticSafetyMonitor] = None,
         extractor: Optional[HuggingFaceExtractor] = None,
     ) -> None:
         self.scorer = scorer or ConversationScorer()
         self.safety_monitor = safety_monitor or SafetyMonitor()
+        self.semantic_safety_monitor = semantic_safety_monitor
         self.extractor = extractor
 
     def analyze(self, turns: Iterable[Turn], language: str, use_llm: bool = True) -> ScreeningSnapshot:
         turn_list = list(turns)
         safety_flag = self.safety_monitor.assess(turn_list)
+        if self.semantic_safety_monitor is not None:
+            safety_flag = self._merge_safety_flags(safety_flag, self.semantic_safety_monitor.assess(turn_list))
         snapshot = self.scorer.analyze(turn_list, language, safety_flag)
         if not use_llm or self.extractor is None or not self.extractor.enabled:
             return snapshot
@@ -197,6 +202,17 @@ class RuntimeEngine:
             level=dominant_level,
             cues=cues,
             rationale=" ".join(rationale_parts) or heuristic.rationale,
+            needs_human_review=dominant_level in {"review", "urgent"},
+        )
+
+    def _merge_safety_flags(self, first: SafetyFlag, second: SafetyFlag) -> SafetyFlag:
+        dominant_level = first.level if SAFETY_RANK[first.level] >= SAFETY_RANK[second.level] else second.level
+        cues = list(dict.fromkeys(first.cues + second.cues))
+        rationale_parts = [part for part in [first.rationale, second.rationale] if part]
+        return SafetyFlag(
+            level=dominant_level,
+            cues=cues,
+            rationale=" ".join(rationale_parts) or None,
             needs_human_review=dominant_level in {"review", "urgent"},
         )
 

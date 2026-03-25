@@ -1,7 +1,7 @@
 from manovarta_core.engine import RuntimeEngine
 from manovarta_core.safety import SafetyMonitor
 from manovarta_core.scoring import ConversationScorer
-from manovarta_core.schemas import Turn
+from manovarta_core.schemas import SafetyFlag, Turn
 
 
 class StubExtractor:
@@ -21,6 +21,16 @@ class StubExtractor:
             "safety_cues": ["nothing matters"],
             "notes": "Indirect hopelessness language.",
         }
+
+
+class StubSemanticMonitor:
+    def assess(self, turns):
+        return SafetyFlag(
+            level="review",
+            cues=["semantic:test"],
+            rationale="Semantic review flag.",
+            needs_human_review=True,
+        )
 
 
 def test_runtime_engine_merges_llm_output_into_snapshot():
@@ -46,3 +56,21 @@ def test_runtime_engine_merges_llm_output_into_snapshot():
     assert snapshot.items["phq_q2_low_mood"].source in {"llm", "hybrid"}
     assert snapshot.safety.level == "review"
     assert any(span.span_id.startswith("LLM-") for span in snapshot.evidence_spans)
+
+
+def test_runtime_engine_can_merge_semantic_safety_signal():
+    turns = [
+        Turn(turn_id=1, speaker="assistant", text="What has been hardest lately?", language_tag="en"),
+        Turn(turn_id=2, speaker="user", text="Mostly I am just tired.", language_tag="en"),
+    ]
+    engine = RuntimeEngine(
+        scorer=ConversationScorer(),
+        safety_monitor=SafetyMonitor(),
+        semantic_safety_monitor=StubSemanticMonitor(),
+        extractor=None,
+    )
+
+    snapshot = engine.analyze(turns, "en", use_llm=False)
+
+    assert snapshot.safety.level == "review"
+    assert "semantic:test" in snapshot.safety.cues

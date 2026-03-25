@@ -7,7 +7,7 @@ Use this path when you want GPU-backed experiments without bloating the local ru
 ```bash
 git clone https://github.com/RitwijParmar/ManoVarta.git
 cd ManoVarta
-pip install -e .[dev,gpu]
+pip install -e .[dev,gpu,train]
 ```
 
 Optional environment setup:
@@ -32,6 +32,15 @@ Semantic safety encoder:
 
 ```bash
 python tools/semantic_safety_eval.py --model ai4bharat/IndicBERT-v3-1B
+```
+
+Training exports and fine-tuning:
+
+```bash
+python tools/create_data_splits.py
+python tools/export_training_sets.py
+python training/finetune_extractor.py --model-name Qwen/Qwen2.5-7B-Instruct --train-file data/processed/extractor_train.jsonl --eval-file data/processed/extractor_dev.jsonl --output-dir outputs/extractor-qwen25
+python training/train_safety_classifier.py --model-name ai4bharat/IndicBERT-v3-1B --train-file data/processed/safety_train.jsonl --eval-file data/processed/safety_dev.jsonl --output-dir outputs/safety-indicbert
 ```
 
 Annotation packet export:

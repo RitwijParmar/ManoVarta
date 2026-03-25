@@ -7,6 +7,7 @@ The current repository includes two layers:
 - `FastAPI` runtime endpoints for chat, transcript scoring, and summary generation
 - `Django` admin models for seed data, review workflow, and annotation support
 - optional `Hugging Face` responder path for live chat drafting when `HF_TOKEN` is configured
+- Colab-ready training scripts for extractor and safety fine-tuning
 
 The goal is a credible research prototype, not a therapy product or diagnostic system.
 
@@ -85,6 +86,19 @@ python tools/build_annotation_packets.py
 
 This exports a compact JSONL packet with transcript turns, metadata, and blank slots for a second annotation pass.
 
+## Training data export
+
+```bash
+python tools/create_data_splits.py
+python tools/export_training_sets.py
+```
+
+That prepares:
+
+- extractor fine-tuning sets,
+- follow-up generation sets,
+- safety classification sets.
+
 ## Optional Hugging Face hookup
 
 If you want live response drafting through Hugging Face Inference Providers, set:
@@ -110,6 +124,14 @@ The current default split is:
 
 That split keeps latency reasonable while using the stronger multilingual model where it matters most.
 
+If you want the optional semantic safety encoder in runtime, also set:
+
+```bash
+export MANOVARTA_SEMANTIC_SAFETY_MODEL=ai4bharat/IndicBERT-v3-1B
+```
+
+That path is optional and heavier, so it is best tested in Colab first.
+
 ## Optional Colab encoder work
 
 If you want to test the Hindi-sensitive encoder path on GPU:
@@ -120,6 +142,7 @@ python tools/semantic_safety_eval.py --model ai4bharat/IndicBERT-v3-1B
 ```
 
 There is also a Colab-specific walkthrough in `experiments/colab/README.md`.
+Full fine-tuning commands live in `training/README.md`.
 
 ## Notes
 

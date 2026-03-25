@@ -11,6 +11,7 @@ from manovarta_core.llm import HuggingFaceExtractor, HuggingFaceResponder
 from manovarta_core.profiles import load_seed_profiles
 from manovarta_core.questionnaires import grouped_items
 from manovarta_core.reporting import build_rows, build_summary
+from manovarta_core.semantic_safety import SemanticSafetyConfig, SemanticSafetyMonitor
 from manovarta_core.safety import SafetyMonitor
 from manovarta_core.scoring import ConversationScorer
 from manovarta_core.schemas import (
@@ -38,10 +39,22 @@ runtime_config = get_runtime_config()
 store = SessionStore()
 planner = DialoguePlanner()
 safety_monitor = SafetyMonitor()
+semantic_safety_monitor = SemanticSafetyMonitor(
+    SemanticSafetyConfig(
+        model_name=runtime_config.semantic_safety_model,
+        review_threshold=runtime_config.semantic_safety_review_threshold,
+        urgent_threshold=runtime_config.semantic_safety_urgent_threshold,
+    )
+)
 scorer = ConversationScorer()
 responder = HuggingFaceResponder(runtime_config)
 extractor = HuggingFaceExtractor(runtime_config)
-engine = RuntimeEngine(scorer=scorer, safety_monitor=safety_monitor, extractor=extractor)
+engine = RuntimeEngine(
+    scorer=scorer,
+    safety_monitor=safety_monitor,
+    semantic_safety_monitor=semantic_safety_monitor,
+    extractor=extractor,
+)
 
 if WEB_DIR.exists():
     app.mount("/app-assets", StaticFiles(directory=WEB_DIR), name="app-assets")
@@ -64,6 +77,8 @@ def runtime_settings() -> dict:
         "chat_model": runtime_config.chat_model,
         "extraction_model": runtime_config.extraction_model,
         "huggingface_enabled": runtime_config.huggingface_enabled,
+        "semantic_safety_enabled": runtime_config.semantic_safety_enabled,
+        "semantic_safety_model": runtime_config.semantic_safety_model,
     }
 
 
