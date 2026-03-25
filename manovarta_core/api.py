@@ -45,6 +45,7 @@ def runtime_settings() -> dict:
     return {
         "provider": runtime_config.model_provider,
         "chat_model": runtime_config.chat_model,
+        "extraction_model": runtime_config.extraction_model,
         "huggingface_enabled": runtime_config.huggingface_enabled,
     }
 
@@ -130,6 +131,6 @@ def score_transcript_with_llm(payload: TranscriptScoreRequest) -> dict:
         raise HTTPException(status_code=502, detail="LLM extraction failed.")
     return {
         "provider": runtime_config.model_provider,
-        "model": runtime_config.chat_model,
+        "model": runtime_config.extraction_model,
         "result": result,
     }

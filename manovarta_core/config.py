@@ -16,6 +16,7 @@ load_dotenv(PROJECT_ROOT / ".env.local", override=False)
 class RuntimeConfig:
     model_provider: str
     chat_model: str
+    extraction_model: str
     hf_token: Optional[str]
     hf_timeout: float
     assistant_temperature: float
@@ -31,6 +32,7 @@ def get_runtime_config() -> RuntimeConfig:
     return RuntimeConfig(
         model_provider=os.getenv("MANOVARTA_MODEL_PROVIDER", "huggingface"),
         chat_model=os.getenv("MANOVARTA_CHAT_MODEL", "Qwen/Qwen2.5-7B-Instruct"),
+        extraction_model=os.getenv("MANOVARTA_EXTRACTION_MODEL", "CohereLabs/aya-expanse-32b"),
         hf_token=os.getenv("HF_TOKEN") or os.getenv("HUGGINGFACEHUB_API_TOKEN"),
         hf_timeout=float(os.getenv("MANOVARTA_HF_TIMEOUT", "30")),
         assistant_temperature=float(os.getenv("MANOVARTA_ASSISTANT_TEMPERATURE", "0.2")),

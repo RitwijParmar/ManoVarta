@@ -6,6 +6,7 @@ def _disabled_config():
     return RuntimeConfig(
         model_provider="huggingface",
         chat_model="Qwen/Qwen2.5-7B-Instruct",
+        extraction_model="CohereLabs/aya-expanse-32b",
         hf_token=None,
         hf_timeout=30.0,
         assistant_temperature=0.2,

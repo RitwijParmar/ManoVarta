@@ -118,6 +118,8 @@ def main() -> int:
         predictions = evaluate_llm(conversations)
 
     report = summarize(conversations, predictions, args.mode)
+    if args.mode == "llm":
+        report["model"] = get_runtime_config().extraction_model
     print(json.dumps(report, indent=2, ensure_ascii=False))
     return 0
 

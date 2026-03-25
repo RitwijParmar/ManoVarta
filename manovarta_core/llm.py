@@ -106,7 +106,7 @@ class HuggingFaceExtractor:
         self._client = None
         if self.config.huggingface_enabled and InferenceClient is not None:
             self._client = InferenceClient(
-                model=self.config.chat_model,
+                model=self.config.extraction_model,
                 token=self.config.hf_token,
                 timeout=self.config.hf_timeout,
             )

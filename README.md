@@ -81,6 +81,7 @@ If you want live response drafting through Hugging Face Inference Providers, set
 ```bash
 export HF_TOKEN=...
 export MANOVARTA_CHAT_MODEL=Qwen/Qwen2.5-7B-Instruct
+export MANOVARTA_EXTRACTION_MODEL=CohereLabs/aya-expanse-32b
 ```
 
 You can also put the same values in a local `.env.local` file. It is ignored by git.
@@ -91,7 +92,12 @@ Then verify auth with:
 python tools/hf_smoketest.py
 ```
 
-The current default live model is `Qwen/Qwen2.5-7B-Instruct` because it works through the Hugging Face chat route used in this repo. The proposal's larger research models can still be evaluated separately.
+The current default split is:
+
+- chat/runtime drafting: `Qwen/Qwen2.5-7B-Instruct`
+- structured extraction: `CohereLabs/aya-expanse-32b`
+
+That split keeps latency reasonable while using the stronger multilingual model where it matters most.
 
 ## Notes
 
