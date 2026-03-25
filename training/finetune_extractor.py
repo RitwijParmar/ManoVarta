@@ -44,10 +44,15 @@ def main() -> int:
         "json",
         data_files={"train": args.train_file, "eval": args.eval_file},
     )
+    for split_name in dataset.keys():
+        drop_cols = [col for col in dataset[split_name].column_names if col != "text"]
+        if drop_cols:
+            dataset[split_name] = dataset[split_name].remove_columns(drop_cols)
 
     tokenizer = AutoTokenizer.from_pretrained(args.model_name, trust_remote_code=True)
     if tokenizer.pad_token is None:
         tokenizer.pad_token = tokenizer.eos_token
+    tokenizer.padding_side = "right"
 
     use_bf16, use_fp16 = pick_precision(torch, args.precision)
     quantization_config = None
