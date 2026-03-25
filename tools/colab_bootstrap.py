@@ -7,6 +7,9 @@ from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 REQUIRED_IMPORTS = {
+    "pydantic": "pydantic>=2.10,<3.0",
+    "huggingface_hub": "huggingface_hub>=1.3.0,<2.0",
+    "dotenv": "python-dotenv>=1.0,<2.0",
     "torch": "torch>=2.2",
     "transformers": "transformers>=4.45",
     "datasets": "datasets>=3.0.0",
@@ -32,7 +35,7 @@ def main() -> int:
         except ImportError:
             missing.append(package_spec)
 
-    run([sys.executable, "-m", "pip", "install", "-q", "-e", str(PROJECT_ROOT)])
+    run([sys.executable, "-m", "pip", "install", "-q", "-e", str(PROJECT_ROOT), "--no-deps"])
     if missing:
         run([sys.executable, "-m", "pip", "install", "-q", *missing])
     else:
