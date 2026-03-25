@@ -6,6 +6,7 @@ The current repository includes two layers:
 
 - `FastAPI` runtime endpoints for chat, transcript scoring, and summary generation
 - `Django` admin models for seed data, review workflow, and annotation support
+- optional `Hugging Face` responder path for live chat drafting when `HF_TOKEN` is configured
 
 The goal is a credible research prototype, not a therapy product or diagnostic system.
 
@@ -58,6 +59,21 @@ python manage.py rebuild_snapshots
 ```bash
 source .venv/bin/activate
 pytest
+```
+
+## Optional Hugging Face hookup
+
+If you want live response drafting through Hugging Face Inference Providers, set:
+
+```bash
+export HF_TOKEN=...
+export MANOVARTA_CHAT_MODEL=mistralai/Mistral-Nemo-Instruct-2407
+```
+
+Then verify auth with:
+
+```bash
+python tools/hf_smoketest.py
 ```
 
 ## Notes

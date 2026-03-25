@@ -13,6 +13,7 @@ dependencies = [
   "uvicorn==0.34.0",
   "django==4.2.20",
   "pydantic==2.12.5",
+  "huggingface_hub==1.1.4",
 ]
 
 [project.optional-dependencies]

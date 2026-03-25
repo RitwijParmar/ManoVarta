@@ -1,6 +1,8 @@
 from fastapi import FastAPI, HTTPException
 
+from manovarta_core.config import get_runtime_config
 from manovarta_core.dialogue import DialoguePlanner
+from manovarta_core.llm import HuggingFaceResponder
 from manovarta_core.profiles import load_seed_profiles
 from manovarta_core.questionnaires import grouped_items
 from manovarta_core.reporting import build_summary
@@ -24,15 +26,26 @@ app = FastAPI(
     description="Text-first multilingual screening prototype with evidence extraction and safety checks.",
 )
 
+runtime_config = get_runtime_config()
 store = SessionStore()
 planner = DialoguePlanner()
 safety_monitor = SafetyMonitor()
 scorer = ConversationScorer()
+responder = HuggingFaceResponder(runtime_config)
 
 
 @app.get("/health")
 def health() -> dict:
     return {"status": "ok", "active_sessions": store.size()}
+
+
+@app.get("/runtime/config")
+def runtime_settings() -> dict:
+    return {
+        "provider": runtime_config.model_provider,
+        "chat_model": runtime_config.chat_model,
+        "huggingface_enabled": runtime_config.huggingface_enabled,
+    }
 
 
 @app.get("/questionnaires")
@@ -65,10 +78,17 @@ def add_turn(session_id: str, payload: ChatTurnRequest) -> ChatTurnResponse:
     store.add_turn(session_id, "user", payload.text, session.language)
     safety_flag = safety_monitor.assess(session.turns)
     snapshot = scorer.analyze(session.turns, session.language, safety_flag)
-    reply_text, asked_item = planner.next_reply(snapshot, session)
+    fallback_text, asked_item = planner.next_reply(snapshot, session)
+    reply_text, source = responder.compose_reply(session, snapshot, asked_item, fallback_text)
     if asked_item and asked_item not in session.asked_items:
         session.asked_items.append(asked_item)
-    assistant_turn = store.add_turn(session_id, "assistant", reply_text, session.language)
+    assistant_turn = store.add_turn(
+        session_id,
+        "assistant",
+        reply_text,
+        session.language,
+        notes=f"source:{source}",
+    )
     return ChatTurnResponse(session_id=session_id, assistant_turn=assistant_turn, snapshot=snapshot)
 
 

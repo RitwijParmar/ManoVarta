@@ -6,6 +6,13 @@ from manovarta_core.api import app
 client = TestClient(app)
 
 
+def test_runtime_config_reports_huggingface_disabled_by_default():
+    response = client.get("/runtime/config")
+
+    assert response.status_code == 200
+    assert response.json()["huggingface_enabled"] is False
+
+
 def test_chat_flow_asks_non_sensitive_follow_up_first():
     start = client.post("/chat/sessions", json={"language": "en"})
     assert start.status_code == 200
