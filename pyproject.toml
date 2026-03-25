@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "manovarta"
+version = "0.1.0"
+description = "Text-first multilingual screening prototype for PHQ-9 and GAD-7 aligned conversations."
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+  "fastapi==0.115.12",
+  "uvicorn==0.34.0",
+  "django==4.2.20",
+  "pydantic==2.12.5",
+]
+
+[project.optional-dependencies]
+dev = [
+  "httpx==0.28.1",
+  "pytest==8.3.5",
+]
+
+[tool.setuptools.packages.find]
+include = ["manovarta_core*", "manovarta_admin*", "screening*"]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
