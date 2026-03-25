@@ -14,3 +14,6 @@ media/
 .env.local
 _tmp_html_render_test/
 data/seed/annotation_packets*.jsonl
+data/processed/*.json
+data/processed/*.jsonl
+outputs/

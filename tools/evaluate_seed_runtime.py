@@ -1,11 +1,10 @@
 #!/usr/bin/env python3
 import argparse
-import json
 import os
 import sys
-from collections import defaultdict
 from contextlib import contextmanager
 from pathlib import Path
+import json
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 if str(PROJECT_ROOT) not in sys.path:
@@ -13,6 +12,7 @@ if str(PROJECT_ROOT) not in sys.path:
 
 from manovarta_core.config import get_runtime_config
 from manovarta_core.llm import HuggingFaceExtractor
+from manovarta_core.metrics import evaluate_item_predictions
 from manovarta_core.seed_data import load_seed_conversations
 from manovarta_core.safety import SafetyMonitor
 from manovarta_core.scoring import ConversationScorer
@@ -54,6 +54,7 @@ def evaluate_heuristic(conversations):
                 "conversation_id": payload["conversation_id"],
                 "language": payload["language"],
                 "predictions": {item_id: item.value for item_id, item in snapshot.items.items()},
+                "safety_level": snapshot.safety.level,
             }
         )
     return predictions
@@ -75,6 +76,7 @@ def evaluate_llm(conversations):
                 "conversation_id": payload["conversation_id"],
                 "language": payload["language"],
                 "predictions": item_map,
+                "safety_level": result.get("safety_level", "none"),
                 "raw": result,
             }
         )
@@ -100,28 +102,8 @@ def temporary_env(name, value):
 
 
 def summarize(conversations, predictions, mode):
-    per_language = defaultdict(lambda: {"covered": 0, "exact": 0, "absolute_error": 0, "count": 0})
-    for payload, predicted in zip(conversations, predictions):
-        gold = gold_labels(payload)
-        for item_id, gold_value in gold.items():
-            pred_value = predicted["predictions"].get(item_id)
-            if pred_value is None:
-                continue
-            bucket = per_language[payload["language"]]
-            bucket["covered"] += 1
-            bucket["count"] += 1
-            bucket["absolute_error"] += abs(pred_value - gold_value)
-            if pred_value == gold_value:
-                bucket["exact"] += 1
-
-    report = {"mode": mode, "languages": {}}
-    for language, values in per_language.items():
-        covered = values["covered"]
-        report["languages"][language] = {
-            "covered_items": covered,
-            "mae": round(values["absolute_error"] / covered, 3) if covered else None,
-            "exact_match_rate": round(values["exact"] / covered, 3) if covered else None,
-        }
+    report = evaluate_item_predictions(conversations, predictions)
+    report["mode"] = mode
     return report
 
 

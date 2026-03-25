@@ -1,7 +1,7 @@
 PYTHON=.venv/bin/python
 PIP=.venv/bin/pip
 
-.PHONY: install test api migrate seed stats eval-seed compare-baselines
+.PHONY: install test api migrate seed stats eval-seed compare-baselines splits export-train
 
 install:
 	$(PIP) install -e .[dev]
@@ -26,3 +26,9 @@ eval-seed:
 
 compare-baselines:
 	$(PYTHON) tools/compare_llm_baselines.py
+
+splits:
+	$(PYTHON) tools/create_data_splits.py
+
+export-train:
+	$(PYTHON) tools/export_training_sets.py
