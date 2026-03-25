@@ -1,0 +1,111 @@
+[
+  {
+    "patient_id": "MV-P001",
+    "language": "en",
+    "age": 23,
+    "occupation": "graduate student",
+    "background_profile": {
+      "context": "moved cities for university, deadlines building up",
+      "living_situation": "shared apartment",
+      "support_system": "talks to one close friend"
+    },
+    "symptom_profile": {
+      "depression_level": "mild_to_moderate",
+      "anxiety_level": "moderate"
+    },
+    "disclosure_style": "guarded_then_open",
+    "nuance_tags": ["academic stress", "sleep disruption", "mixed mood and worry"],
+    "notes": "Often starts with functional complaints before naming mood."
+  },
+  {
+    "patient_id": "MV-P002",
+    "language": "hi",
+    "age": 34,
+    "occupation": "school teacher",
+    "background_profile": {
+      "context": "long commute and family caregiving",
+      "living_situation": "lives with spouse and in-laws",
+      "support_system": "limited privacy at home"
+    },
+    "symptom_profile": {
+      "depression_level": "mild",
+      "anxiety_level": "moderate_to_high"
+    },
+    "disclosure_style": "polite_but_detailed",
+    "nuance_tags": ["caregiver load", "somatic anxiety", "sleep fragmentation"],
+    "notes": "Uses body language more than diagnostic words."
+  },
+  {
+    "patient_id": "MV-P003",
+    "language": "hinglish",
+    "age": 27,
+    "occupation": "software engineer",
+    "background_profile": {
+      "context": "remote work, irregular hours, social withdrawal",
+      "living_situation": "lives alone",
+      "support_system": "siblings in another city"
+    },
+    "symptom_profile": {
+      "depression_level": "moderate",
+      "anxiety_level": "moderate"
+    },
+    "disclosure_style": "dry_and_minimizing",
+    "nuance_tags": ["code-mixing", "functional decline", "indirect hopelessness"],
+    "notes": "Often says things are manageable even when evidence says otherwise."
+  },
+  {
+    "patient_id": "MV-P004",
+    "language": "en",
+    "age": 30,
+    "occupation": "customer support associate",
+    "background_profile": {
+      "context": "night shifts and financial pressure",
+      "living_situation": "lives with cousin",
+      "support_system": "limited social contact"
+    },
+    "symptom_profile": {
+      "depression_level": "moderate_to_high",
+      "anxiety_level": "mild"
+    },
+    "disclosure_style": "flat",
+    "nuance_tags": ["hopeless phrasing", "fatigue", "worthlessness"],
+    "notes": "Safety review cues may appear without direct self-harm intent."
+  },
+  {
+    "patient_id": "MV-P005",
+    "language": "hi",
+    "age": 20,
+    "occupation": "college student",
+    "background_profile": {
+      "context": "competitive exams and parental pressure",
+      "living_situation": "hostel",
+      "support_system": "one roommate"
+    },
+    "symptom_profile": {
+      "depression_level": "mild",
+      "anxiety_level": "high"
+    },
+    "disclosure_style": "fast_and_worried",
+    "nuance_tags": ["performance fear", "rumination", "restlessness"],
+    "notes": "Anxiety comes out as repeated future fear."
+  },
+  {
+    "patient_id": "MV-P006",
+    "language": "hinglish",
+    "age": 28,
+    "occupation": "marketing associate",
+    "background_profile": {
+      "context": "recent breakup and unstable routine",
+      "living_situation": "with parents",
+      "support_system": "one cousin, low family disclosure"
+    },
+    "symptom_profile": {
+      "depression_level": "moderate",
+      "anxiety_level": "moderate",
+      "safety_signal": "review"
+    },
+    "disclosure_style": "hesitant",
+    "nuance_tags": ["relationship loss", "low mood", "review-level safety cue"],
+    "notes": "May say they want to disappear without a direct plan."
+  }
+]
