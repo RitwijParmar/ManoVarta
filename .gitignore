@@ -1,0 +1,7 @@
+.DS_Store
+__pycache__/
+.pytest_cache/
+.venv/
+venv/
+*.pyc
+_tmp_html_render_test/
