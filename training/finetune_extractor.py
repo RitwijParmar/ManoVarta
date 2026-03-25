@@ -34,7 +34,7 @@ def main() -> int:
         from datasets import load_dataset
         from peft import LoraConfig
         from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig, TrainingArguments
-        from trl import SFTTrainer
+        from trl import SFTConfig, SFTTrainer
     except ImportError as exc:  # pragma: no cover
         raise SystemExit(f"Install training extras first. Missing dependency: {exc.name}") from exc
     from training.runtime_utils import pick_precision
@@ -90,18 +90,33 @@ def main() -> int:
     if strategy_key not in inspect.signature(TrainingArguments.__init__).parameters:
         strategy_key = "eval_strategy"
     training_kwargs[strategy_key] = "epoch"
-    training_args = TrainingArguments(**training_kwargs)
+    trainer_signature = inspect.signature(SFTTrainer.__init__).parameters
+    config_cls = TrainingArguments
+    config_kwargs = dict(training_kwargs)
+    if "processing_class" in trainer_signature and "dataset_text_field" not in trainer_signature:
+        config_cls = SFTConfig
+        config_kwargs["dataset_text_field"] = "text"
+        if "max_length" in inspect.signature(SFTConfig.__init__).parameters:
+            config_kwargs["max_length"] = args.max_length
+    training_args = config_cls(**config_kwargs)
 
-    trainer = SFTTrainer(
-        model=model,
-        tokenizer=tokenizer,
-        train_dataset=dataset["train"],
-        eval_dataset=dataset["eval"],
-        dataset_text_field="text",
-        max_seq_length=args.max_length,
-        peft_config=peft_config,
-        args=training_args,
-    )
+    trainer_kwargs = {
+        "model": model,
+        "train_dataset": dataset["train"],
+        "eval_dataset": dataset["eval"],
+        "peft_config": peft_config,
+        "args": training_args,
+    }
+    if "processing_class" in trainer_signature:
+        trainer_kwargs["processing_class"] = tokenizer
+    elif "tokenizer" in trainer_signature:
+        trainer_kwargs["tokenizer"] = tokenizer
+    if "dataset_text_field" in trainer_signature:
+        trainer_kwargs["dataset_text_field"] = "text"
+    if "max_seq_length" in trainer_signature:
+        trainer_kwargs["max_seq_length"] = args.max_length
+
+    trainer = SFTTrainer(**trainer_kwargs)
 
     trainer.train()
     trainer.save_model(args.output_dir)
