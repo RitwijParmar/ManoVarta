@@ -1,0 +1,339 @@
+[
+  {
+    "patient_id": "MV-P037",
+    "language": "en",
+    "age": 26,
+    "occupation": "PhD student",
+    "background_profile": {
+      "context": "advisor pressure and delayed lab results",
+      "living_situation": "shared graduate housing",
+      "support_system": "texts an older sister late at night"
+    },
+    "symptom_profile": {
+      "depression_level": "moderate",
+      "anxiety_level": "mild"
+    },
+    "disclosure_style": "guarded_then_admitting",
+    "nuance_tags": [
+      "deny_then_admit",
+      "academic pressure",
+      "late appetite recognition"
+    ],
+    "notes": "Starts by minimizing symptoms before naming flat mood, rumination, and self-blame. Nuance pack sample.",
+    "seed_metadata": {
+      "guardedness": "high_at_opening",
+      "temporal_clarity": "mixed",
+      "contradiction_pattern": "minimize_then_admit",
+      "code_mix_pattern": "none"
+    }
+  },
+  {
+    "patient_id": "MV-P038",
+    "language": "en",
+    "age": 39,
+    "occupation": "delivery supervisor",
+    "background_profile": {
+      "context": "recent separation and alternating weekends with children",
+      "living_situation": "rented basement apartment",
+      "support_system": "talks to his mother occasionally"
+    },
+    "symptom_profile": {
+      "depression_level": "mild",
+      "anxiety_level": "mild"
+    },
+    "disclosure_style": "functional_then_passive_risk",
+    "nuance_tags": [
+      "post-separation loneliness",
+      "keep-busy coping",
+      "passive disappearance language"
+    ],
+    "notes": "A realistic passive-risk case where disclosure comes only after repeated functional framing. Nuance pack sample.",
+    "seed_metadata": {
+      "guardedness": "moderate",
+      "temporal_clarity": "clear_recent",
+      "contradiction_pattern": "no_plan_but_passive_risk",
+      "code_mix_pattern": "none"
+    }
+  },
+  {
+    "patient_id": "MV-P039",
+    "language": "en",
+    "age": 29,
+    "occupation": "customer support associate",
+    "background_profile": {
+      "context": "back-to-back calls and conflict with team lead",
+      "living_situation": "lives with two roommates",
+      "support_system": "messages a college friend during breaks"
+    },
+    "symptom_profile": {
+      "depression_level": "minimal",
+      "anxiety_level": "moderate"
+    },
+    "disclosure_style": "somatic_then_emotional",
+    "nuance_tags": [
+      "somatic anxiety",
+      "rent threat",
+      "irritability after masking"
+    ],
+    "notes": "Anxiety shows up first through body tension and later through worry and irritability. Nuance pack sample.",
+    "seed_metadata": {
+      "guardedness": "low",
+      "temporal_clarity": "clear_recent",
+      "contradiction_pattern": "none",
+      "code_mix_pattern": "none"
+    }
+  },
+  {
+    "patient_id": "MV-P040",
+    "language": "en",
+    "age": 43,
+    "occupation": "warehouse picker",
+    "background_profile": {
+      "context": "overtime shifts after staffing shortage",
+      "living_situation": "lives with brother",
+      "support_system": "mainly keeps things to himself"
+    },
+    "symptom_profile": {
+      "depression_level": "mild",
+      "anxiety_level": "minimal"
+    },
+    "disclosure_style": "stoic_then_specific",
+    "nuance_tags": [
+      "minimizing opener",
+      "social withdrawal",
+      "shift fatigue"
+    ],
+    "notes": "Starts with a stoic front and then gives enough detail for anhedonia, fatigue, and sleep problems. Nuance pack sample.",
+    "seed_metadata": {
+      "guardedness": "high",
+      "temporal_clarity": "clear_recent",
+      "contradiction_pattern": "fine_enough_then_specifics",
+      "code_mix_pattern": "none"
+    }
+  },
+  {
+    "patient_id": "MV-P041",
+    "language": "hi",
+    "age": 33,
+    "occupation": "school teacher",
+    "background_profile": {
+      "context": "mother's illness and school paperwork",
+      "living_situation": "parents and younger brother",
+      "support_system": "talks to a cousin once or twice a week"
+    },
+    "symptom_profile": {
+      "depression_level": "mild",
+      "anxiety_level": "mild"
+    },
+    "disclosure_style": "somatic_and_guilt",
+    "nuance_tags": [
+      "somatic Hindi anxiety",
+      "caregiver guilt",
+      "indirect low mood"
+    ],
+    "notes": "A caregiver case where worry and guilt are expressed through physical tension and duty language. Nuance pack sample.",
+    "seed_metadata": {
+      "guardedness": "moderate",
+      "temporal_clarity": "clear_recent",
+      "contradiction_pattern": "none",
+      "code_mix_pattern": "none"
+    }
+  },
+  {
+    "patient_id": "MV-P042",
+    "language": "hi",
+    "age": 21,
+    "occupation": "college student",
+    "background_profile": {
+      "context": "hostel isolation and exam backlog",
+      "living_situation": "engineering hostel",
+      "support_system": "talks to one school friend by phone"
+    },
+    "symptom_profile": {
+      "depression_level": "moderate",
+      "anxiety_level": "minimal"
+    },
+    "disclosure_style": "deny_then_reveal",
+    "nuance_tags": [
+      "denial opening",
+      "hidden crying",
+      "hostel isolation",
+      "passive escape language"
+    ],
+    "notes": "Strong deny-then-reveal case with passive escape language in Hindi. Nuance pack sample.",
+    "seed_metadata": {
+      "guardedness": "high",
+      "temporal_clarity": "clear_recent",
+      "contradiction_pattern": "explicit_denial_then_reveal",
+      "code_mix_pattern": "none"
+    }
+  },
+  {
+    "patient_id": "MV-P043",
+    "language": "hi",
+    "age": 37,
+    "occupation": "medical store cashier",
+    "background_profile": {
+      "context": "debt pressure and repeated calls from lenders",
+      "living_situation": "wife and two children",
+      "support_system": "almost none outside immediate family"
+    },
+    "symptom_profile": {
+      "depression_level": "mild",
+      "anxiety_level": "mild"
+    },
+    "disclosure_style": "direct_after_prompt",
+    "nuance_tags": [
+      "debt threat",
+      "family burden logic",
+      "direct self-harm intent"
+    ],
+    "notes": "Urgent Hindi safety case with burden framing and concrete method ideation. Nuance pack sample.",
+    "seed_metadata": {
+      "guardedness": "low_once_prompted",
+      "temporal_clarity": "clear_recent",
+      "contradiction_pattern": "none",
+      "code_mix_pattern": "none"
+    }
+  },
+  {
+    "patient_id": "MV-P044",
+    "language": "hi",
+    "age": 30,
+    "occupation": "homemaker",
+    "background_profile": {
+      "context": "new baby and criticism from relatives",
+      "living_situation": "husband, infant, in-laws",
+      "support_system": "talks to her mother quietly at night"
+    },
+    "symptom_profile": {
+      "depression_level": "mild",
+      "anxiety_level": "mild"
+    },
+    "disclosure_style": "quiet_then_overwhelmed",
+    "nuance_tags": [
+      "postpartum pressure",
+      "judgment sensitivity",
+      "somatic trembling"
+    ],
+    "notes": "Important postpartum-flavored case without centering diagnosis labels. Nuance pack sample.",
+    "seed_metadata": {
+      "guardedness": "moderate",
+      "temporal_clarity": "mixed",
+      "contradiction_pattern": "outwardly_quiet_inwardly_overwhelmed",
+      "code_mix_pattern": "none"
+    }
+  },
+  {
+    "patient_id": "MV-P045",
+    "language": "hinglish",
+    "age": 24,
+    "occupation": "startup intern",
+    "background_profile": {
+      "context": "late-night deadlines and social comparison online",
+      "living_situation": "PG near office",
+      "support_system": "voice notes to one close friend"
+    },
+    "symptom_profile": {
+      "depression_level": "mild",
+      "anxiety_level": "mild"
+    },
+    "disclosure_style": "performing_okay",
+    "nuance_tags": [
+      "hinglish masking",
+      "doomscrolling",
+      "comparison spiral"
+    ],
+    "notes": "Code-mixed example with online comparison and performative normalcy. Nuance pack sample.",
+    "seed_metadata": {
+      "guardedness": "moderate",
+      "temporal_clarity": "clear_recent",
+      "contradiction_pattern": "jokes_then_reveals",
+      "code_mix_pattern": "english_dominant_hinglish"
+    }
+  },
+  {
+    "patient_id": "MV-P046",
+    "language": "hinglish",
+    "age": 27,
+    "occupation": "BPO employee",
+    "background_profile": {
+      "context": "night shift and family pressure to marry",
+      "living_situation": "with parents",
+      "support_system": "one cousin who knows about the night shifts"
+    },
+    "symptom_profile": {
+      "depression_level": "minimal",
+      "anxiety_level": "mild"
+    },
+    "disclosure_style": "surface_calm_then_escape",
+    "nuance_tags": [
+      "night shift hinglish",
+      "marriage pressure",
+      "passive disappearance"
+    ],
+    "notes": "A useful code-mixed passive-risk case with irritability and family-triggered stress. Nuance pack sample.",
+    "seed_metadata": {
+      "guardedness": "moderate",
+      "temporal_clarity": "clear_recent",
+      "contradiction_pattern": "chill_hai_then_escape_language",
+      "code_mix_pattern": "balanced_hinglish"
+    }
+  },
+  {
+    "patient_id": "MV-P047",
+    "language": "hinglish",
+    "age": 22,
+    "occupation": "CA exam candidate",
+    "background_profile": {
+      "context": "repeat attempt and family comparisons",
+      "living_situation": "with parents",
+      "support_system": "talks to a friend from coaching"
+    },
+    "symptom_profile": {
+      "depression_level": "mild",
+      "anxiety_level": "mild"
+    },
+    "disclosure_style": "self-correcting_and_perfectionistic",
+    "nuance_tags": [
+      "performance anxiety",
+      "overplanning",
+      "code-mixed self-doubt"
+    ],
+    "notes": "A nice self-correcting Hinglish case where productivity language hides worry and concentration problems. Nuance pack sample.",
+    "seed_metadata": {
+      "guardedness": "moderate",
+      "temporal_clarity": "clear_recent",
+      "contradiction_pattern": "normal_pressure_then_panic",
+      "code_mix_pattern": "balanced_hinglish"
+    }
+  },
+  {
+    "patient_id": "MV-P048",
+    "language": "hinglish",
+    "age": 31,
+    "occupation": "salon manager",
+    "background_profile": {
+      "context": "breakup and unstable monthly income",
+      "living_situation": "shares flat with cousin",
+      "support_system": "cousin plus one coworker"
+    },
+    "symptom_profile": {
+      "depression_level": "mild",
+      "anxiety_level": "mild"
+    },
+    "disclosure_style": "social_mask_then_crash",
+    "nuance_tags": [
+      "social masking",
+      "relationship loss",
+      "mixed depression-anxiety"
+    ],
+    "notes": "A mixed Hinglish case without safety escalation but with strong masking and pacing behavior. Nuance pack sample.",
+    "seed_metadata": {
+      "guardedness": "moderate",
+      "temporal_clarity": "clear_recent",
+      "contradiction_pattern": "smile_at_work_then_crash",
+      "code_mix_pattern": "hindi_dominant_hinglish"
+    }
+  }
+]

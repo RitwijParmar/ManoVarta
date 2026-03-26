@@ -34,6 +34,8 @@ def main() -> int:
                 "language": conversation["language"],
                 "review_status": conversation.get("review_status", "draft"),
                 "nuance_tags": profile.get("nuance_tags", []),
+                "seed_metadata": profile.get("seed_metadata", {}),
+                "conversation_metadata": conversation.get("conversation_metadata", {}),
                 "background_profile": conversation.get("background_profile", {}),
                 "symptom_profile": conversation.get("symptom_profile", {}),
                 "turns": [

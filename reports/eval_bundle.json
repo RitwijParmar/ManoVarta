@@ -1,42 +1,42 @@
 {
-  "generated_at": "2026-03-26T01:49:38.306116+00:00",
-  "git_revision": "28ed406",
+  "generated_at": "2026-03-26T23:46:52.999680+00:00",
+  "git_revision": "5865f90",
   "runtime": {
-    "provider": "huggingface",
+    "provider": "disabled",
     "chat_model": "Qwen/Qwen2.5-7B-Instruct",
     "extraction_model": "CohereLabs/aya-expanse-32b",
-    "huggingface_enabled": true,
+    "huggingface_enabled": false,
     "semantic_safety_model": "ai4bharat/IndicBERTv2-MLM-only"
   },
   "seed_summary": {
-    "profiles": 36,
-    "conversations": 36,
+    "profiles": 48,
+    "conversations": 48,
     "languages": {
-      "en": 12,
-      "hi": 12,
-      "hinglish": 12
+      "en": 16,
+      "hi": 16,
+      "hinglish": 16
     },
     "review_status": {
-      "consensus_final": 18,
-      "double_annotated": 18
+      "consensus_final": 24,
+      "double_annotated": 24
     },
     "safety_levels": {
-      "none": 26,
-      "review": 7,
-      "urgent": 3
+      "none": 34,
+      "review": 10,
+      "urgent": 4
     }
   },
   "processed_summary": {
-    "extractor_dev.jsonl": 9,
-    "extractor_test.jsonl": 9,
-    "extractor_train.jsonl": 18,
-    "follow_up_dev.jsonl": 18,
-    "follow_up_test.jsonl": 18,
-    "follow_up_train.jsonl": 24,
-    "safety_dev.jsonl": 9,
-    "safety_test.jsonl": 9,
-    "safety_train.jsonl": 18,
-    "splits.json": 44
+    "extractor_dev.jsonl": 12,
+    "extractor_test.jsonl": 12,
+    "extractor_train.jsonl": 24,
+    "follow_up_dev.jsonl": 24,
+    "follow_up_test.jsonl": 36,
+    "follow_up_train.jsonl": 36,
+    "safety_dev.jsonl": 12,
+    "safety_test.jsonl": 12,
+    "safety_train.jsonl": 24,
+    "splits.json": 56
   },
   "reports": {
     "heuristic": {
@@ -51,40 +51,40 @@
       "result": {
         "overall": {
           "covered_items": 16,
-          "coverage_completeness": 0.028,
+          "coverage_completeness": 0.021,
           "mae": 0.5,
           "exact_match_rate": 0.625,
-          "macro_f1": 0.067,
+          "macro_f1": 0.054,
           "safety_precision": 1.0,
-          "safety_recall": 0.4
+          "safety_recall": 0.357
         },
         "languages": {
           "en": {
             "covered_items": 7,
-            "coverage_completeness": 0.036,
+            "coverage_completeness": 0.027,
             "mae": 0.714,
             "exact_match_rate": 0.429,
-            "macro_f1": 0.053,
+            "macro_f1": 0.046,
             "safety_precision": 1.0,
-            "safety_recall": 0.5
+            "safety_recall": 0.4
           },
           "hi": {
             "covered_items": 5,
-            "coverage_completeness": 0.026,
+            "coverage_completeness": 0.02,
             "mae": 0.0,
             "exact_match_rate": 1.0,
-            "macro_f1": 0.123,
+            "macro_f1": 0.084,
             "safety_precision": 0.0,
             "safety_recall": 0.0
           },
           "hinglish": {
             "covered_items": 4,
-            "coverage_completeness": 0.021,
+            "coverage_completeness": 0.016,
             "mae": 0.75,
             "exact_match_rate": 0.5,
-            "macro_f1": 0.019,
+            "macro_f1": 0.014,
             "safety_precision": 1.0,
-            "safety_recall": 0.4
+            "safety_recall": 0.5
           }
         },
         "mode": "heuristic"
@@ -99,194 +99,12 @@
       "reason": "Semantic evaluation skipped by flag."
     },
     "llm_primary": {
-      "command": [
-        "/Users/ritwij/Documents/multilingualChatbot/.venv/bin/python",
-        "/Users/ritwij/Documents/multilingualChatbot/tools/evaluate_seed_runtime.py",
-        "--mode",
-        "llm",
-        "--model",
-        "CohereLabs/aya-expanse-32b"
-      ],
-      "returncode": 0,
-      "status": "ok",
-      "result": {
-        "overall": {
-          "covered_items": 8,
-          "coverage_completeness": 0.014,
-          "mae": 0.125,
-          "exact_match_rate": 0.875,
-          "macro_f1": 0.022,
-          "safety_precision": 0.0,
-          "safety_recall": 0.0
-        },
-        "languages": {
-          "en": {
-            "covered_items": 4,
-            "coverage_completeness": 0.021,
-            "mae": 0.25,
-            "exact_match_rate": 0.75,
-            "macro_f1": 0.025,
-            "safety_precision": 0.0,
-            "safety_recall": 0.0
-          },
-          "hi": {
-            "covered_items": 4,
-            "coverage_completeness": 0.021,
-            "mae": 0.0,
-            "exact_match_rate": 1.0,
-            "macro_f1": 0.039,
-            "safety_precision": 0.0,
-            "safety_recall": 0.0
-          },
-          "hinglish": {
-            "covered_items": 0,
-            "coverage_completeness": 0.0,
-            "mae": null,
-            "exact_match_rate": null,
-            "macro_f1": 0.0,
-            "safety_precision": 0.0,
-            "safety_recall": 0.0
-          }
-        },
-        "mode": "llm",
-        "model": "CohereLabs/aya-expanse-32b"
-      }
+      "status": "skipped",
+      "reason": "HF_TOKEN not configured."
     },
     "llm_baselines": {
-      "command": [
-        "/Users/ritwij/Documents/multilingualChatbot/.venv/bin/python",
-        "/Users/ritwij/Documents/multilingualChatbot/tools/compare_llm_baselines.py"
-      ],
-      "returncode": 0,
-      "status": "ok",
-      "result": [
-        {
-          "overall": {
-            "covered_items": 0,
-            "coverage_completeness": 0.0,
-            "mae": null,
-            "exact_match_rate": null,
-            "macro_f1": 0.0,
-            "safety_precision": 0.0,
-            "safety_recall": 0.0
-          },
-          "languages": {
-            "en": {
-              "covered_items": 0,
-              "coverage_completeness": 0.0,
-              "mae": null,
-              "exact_match_rate": null,
-              "macro_f1": 0.0,
-              "safety_precision": 0.0,
-              "safety_recall": 0.0
-            },
-            "hi": {
-              "covered_items": 0,
-              "coverage_completeness": 0.0,
-              "mae": null,
-              "exact_match_rate": null,
-              "macro_f1": 0.0,
-              "safety_precision": 0.0,
-              "safety_recall": 0.0
-            },
-            "hinglish": {
-              "covered_items": 0,
-              "coverage_completeness": 0.0,
-              "mae": null,
-              "exact_match_rate": null,
-              "macro_f1": 0.0,
-              "safety_precision": 0.0,
-              "safety_recall": 0.0
-            }
-          },
-          "mode": "llm",
-          "model": "CohereLabs/aya-expanse-32b"
-        },
-        {
-          "overall": {
-            "covered_items": 0,
-            "coverage_completeness": 0.0,
-            "mae": null,
-            "exact_match_rate": null,
-            "macro_f1": 0.0,
-            "safety_precision": 0.0,
-            "safety_recall": 0.0
-          },
-          "languages": {
-            "en": {
-              "covered_items": 0,
-              "coverage_completeness": 0.0,
-              "mae": null,
-              "exact_match_rate": null,
-              "macro_f1": 0.0,
-              "safety_precision": 0.0,
-              "safety_recall": 0.0
-            },
-            "hi": {
-              "covered_items": 0,
-              "coverage_completeness": 0.0,
-              "mae": null,
-              "exact_match_rate": null,
-              "macro_f1": 0.0,
-              "safety_precision": 0.0,
-              "safety_recall": 0.0
-            },
-            "hinglish": {
-              "covered_items": 0,
-              "coverage_completeness": 0.0,
-              "mae": null,
-              "exact_match_rate": null,
-              "macro_f1": 0.0,
-              "safety_precision": 0.0,
-              "safety_recall": 0.0
-            }
-          },
-          "mode": "llm",
-          "model": "moonshotai/Kimi-K2-Instruct"
-        },
-        {
-          "overall": {
-            "covered_items": 0,
-            "coverage_completeness": 0.0,
-            "mae": null,
-            "exact_match_rate": null,
-            "macro_f1": 0.0,
-            "safety_precision": 0.0,
-            "safety_recall": 0.0
-          },
-          "languages": {
-            "en": {
-              "covered_items": 0,
-              "coverage_completeness": 0.0,
-              "mae": null,
-              "exact_match_rate": null,
-              "macro_f1": 0.0,
-              "safety_precision": 0.0,
-              "safety_recall": 0.0
-            },
-            "hi": {
-              "covered_items": 0,
-              "coverage_completeness": 0.0,
-              "mae": null,
-              "exact_match_rate": null,
-              "macro_f1": 0.0,
-              "safety_precision": 0.0,
-              "safety_recall": 0.0
-            },
-            "hinglish": {
-              "covered_items": 0,
-              "coverage_completeness": 0.0,
-              "mae": null,
-              "exact_match_rate": null,
-              "macro_f1": 0.0,
-              "safety_precision": 0.0,
-              "safety_recall": 0.0
-            }
-          },
-          "mode": "llm",
-          "model": "Qwen/Qwen2.5-7B-Instruct"
-        }
-      ]
+      "status": "skipped",
+      "reason": "HF_TOKEN not configured."
     }
   }
 }
