@@ -12,6 +12,23 @@ The current repository includes two layers:
 
 The goal is a credible research prototype, not a therapy product or diagnostic system.
 
+## Dataset snapshot
+
+The checked-in synthetic annotated corpus currently includes:
+
+- `36` patient profiles
+- `36` conversation records
+- balanced language coverage: `12` English, `12` Hindi, `12` Hinglish
+- safety mix: `26` none, `7` review, `3` urgent
+
+The current processed split after export is:
+
+- extractor: `18` train / `9` dev / `9` test
+- follow-up: `24` train / `18` dev / `18` test
+- safety: `18` train / `9` dev / `9` test
+
+Everything is still synthetic pilot data, but it is now large enough to exercise the full training and evaluation pipeline without the earlier tiny-sample bottleneck.
+
 ## Project layout
 
 | Path | Purpose |
@@ -66,6 +83,7 @@ pytest
 ## Seed-data utilities
 
 ```bash
+python tools/generate_seed_scaleup.py
 python tools/dataset_stats.py
 python tools/validate_seed_data.py
 python tools/evaluate_seed_runtime.py --mode heuristic

@@ -17,6 +17,7 @@ The idea is simple:
 ## Setup
 
 ```bash
+python tools/generate_seed_scaleup.py
 python tools/colab_bootstrap.py
 python tools/create_data_splits.py
 python tools/export_training_sets.py

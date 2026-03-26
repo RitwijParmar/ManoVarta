@@ -39,6 +39,7 @@ python tools/semantic_safety_eval.py --model ai4bharat/IndicBERTv2-MLM-only
 Training exports and fine-tuning:
 
 ```bash
+python tools/generate_seed_scaleup.py
 python tools/create_data_splits.py
 python tools/export_training_sets.py
 python -m training.finetune_extractor --model-name Qwen/Qwen2.5-7B-Instruct --train-file data/processed/extractor_train.jsonl --eval-file data/processed/extractor_dev.jsonl --output-dir outputs/extractor-qwen25

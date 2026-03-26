@@ -1,0 +1,530 @@
+[
+  {
+    "patient_id": "MV-P013",
+    "language": "en",
+    "age": 31,
+    "occupation": "night-shift nurse",
+    "background_profile": {
+      "context": "rotating shifts and guilt about missed family calls",
+      "living_situation": "shared staff housing",
+      "support_system": "calls a cousin on weekends"
+    },
+    "symptom_profile": {
+      "depression_level": "mild",
+      "anxiety_level": "mild"
+    },
+    "disclosure_style": "functional_then_emotional",
+    "nuance_tags": [
+      "shift work",
+      "sleep fragmentation",
+      "mistake rumination"
+    ],
+    "notes": "Talks first about physical exhaustion before naming worry."
+  },
+  {
+    "patient_id": "MV-P014",
+    "language": "en",
+    "age": 34,
+    "occupation": "marketing coordinator",
+    "background_profile": {
+      "context": "recent layoff and rent pressure",
+      "living_situation": "one-bedroom apartment",
+      "support_system": "talks to an older brother occasionally"
+    },
+    "symptom_profile": {
+      "depression_level": "moderate",
+      "anxiety_level": "mild"
+    },
+    "disclosure_style": "shame_then_detail",
+    "nuance_tags": [
+      "financial threat",
+      "guilt",
+      "appetite dip"
+    ],
+    "notes": "Names guilt and practical fear together rather than separating depression and anxiety."
+  },
+  {
+    "patient_id": "MV-P015",
+    "language": "en",
+    "age": 28,
+    "occupation": "stay-at-home parent",
+    "background_profile": {
+      "context": "new infant and broken household routine",
+      "living_situation": "small apartment with partner and baby",
+      "support_system": "mother visits once a week"
+    },
+    "symptom_profile": {
+      "depression_level": "moderate",
+      "anxiety_level": "mild"
+    },
+    "disclosure_style": "caregiver_minimizing",
+    "nuance_tags": [
+      "postpartum stress",
+      "guilt",
+      "hypervigilance"
+    ],
+    "notes": "Presents distress through caregiving language rather than symptom terms."
+  },
+  {
+    "patient_id": "MV-P016",
+    "language": "en",
+    "age": 42,
+    "occupation": "family caregiver",
+    "background_profile": {
+      "context": "managing a parent's medical appointments alone",
+      "living_situation": "parents' house",
+      "support_system": "one sibling in another state"
+    },
+    "symptom_profile": {
+      "depression_level": "moderate",
+      "anxiety_level": "minimal"
+    },
+    "disclosure_style": "guarded_then_passive_safety",
+    "nuance_tags": [
+      "caregiver burden",
+      "passive death wish",
+      "sleep strain"
+    ],
+    "notes": "Needs direct but careful follow-up on passive self-harm language."
+  },
+  {
+    "patient_id": "MV-P017",
+    "language": "en",
+    "age": 27,
+    "occupation": "retail manager",
+    "background_profile": {
+      "context": "short staffing and angry customer complaints",
+      "living_situation": "shared house",
+      "support_system": "partner listens after shifts"
+    },
+    "symptom_profile": {
+      "depression_level": "minimal",
+      "anxiety_level": "moderate"
+    },
+    "disclosure_style": "physical_then_future_threat",
+    "nuance_tags": [
+      "restlessness",
+      "customer stress",
+      "worst-case thinking"
+    ],
+    "notes": "Anxiety shows up first as body activation and irritability."
+  },
+  {
+    "patient_id": "MV-P018",
+    "language": "en",
+    "age": 30,
+    "occupation": "doctoral student",
+    "background_profile": {
+      "context": "research delays and social withdrawal",
+      "living_situation": "campus apartment",
+      "support_system": "advisor is aware something is wrong"
+    },
+    "symptom_profile": {
+      "depression_level": "moderate_to_high",
+      "anxiety_level": "minimal"
+    },
+    "disclosure_style": "slow_build_to_specific_risk",
+    "nuance_tags": [
+      "anhedonia",
+      "psychomotor slowing",
+      "specific self-harm ideation"
+    ],
+    "notes": "Urgent case with clear escalation from passive to specific thoughts."
+  },
+  {
+    "patient_id": "MV-P019",
+    "language": "en",
+    "age": 36,
+    "occupation": "restaurant worker",
+    "background_profile": {
+      "context": "late shifts, remittance pressure, and isolation",
+      "living_situation": "shared basement apartment",
+      "support_system": "sends voice notes to family abroad"
+    },
+    "symptom_profile": {
+      "depression_level": "mild",
+      "anxiety_level": "mild"
+    },
+    "disclosure_style": "protective_of_family",
+    "nuance_tags": [
+      "financial stress",
+      "isolation",
+      "early waking"
+    ],
+    "notes": "Downplays distress to protect family, then reveals emptiness and money fear."
+  },
+  {
+    "patient_id": "MV-P020",
+    "language": "en",
+    "age": 29,
+    "occupation": "startup founder",
+    "background_profile": {
+      "context": "investor uncertainty and nonstop product deadlines",
+      "living_situation": "solo apartment",
+      "support_system": "one cofounder who knows part of the story"
+    },
+    "symptom_profile": {
+      "depression_level": "mild",
+      "anxiety_level": "mild"
+    },
+    "disclosure_style": "high_functioning_mask",
+    "nuance_tags": [
+      "catastrophizing",
+      "concentration",
+      "anhedonia"
+    ],
+    "notes": "Looks productive from outside but describes blankness and collapse narratives."
+  },
+  {
+    "patient_id": "MV-P021",
+    "language": "hi",
+    "age": 24,
+    "occupation": "सरकारी परीक्षा अभ्यर्थी",
+    "background_profile": {
+      "context": "परीक्षा की तैयारी और पारिवारिक उम्मीदें",
+      "living_situation": "माता-पिता के साथ",
+      "support_system": "एक दोस्त से कभी-कभी बात"
+    },
+    "symptom_profile": {
+      "depression_level": "mild",
+      "anxiety_level": "moderate"
+    },
+    "disclosure_style": "performance_pressure",
+    "nuance_tags": [
+      "exam stress",
+      "sleep break",
+      "family expectations"
+    ],
+    "notes": "शुरुआत घबराहट से करता है, बाद में शर्म और निराशा की बात लाता है।"
+  },
+  {
+    "patient_id": "MV-P022",
+    "language": "hi",
+    "age": 38,
+    "occupation": "गृहिणी",
+    "background_profile": {
+      "context": "घर और बुज़ुर्ग देखभाल की दोहरी जिम्मेदारी",
+      "living_situation": "संयुक्त परिवार",
+      "support_system": "पड़ोस की एक सहेली"
+    },
+    "symptom_profile": {
+      "depression_level": "mild",
+      "anxiety_level": "minimal"
+    },
+    "disclosure_style": "role_based",
+    "nuance_tags": [
+      "care burden",
+      "self-blame",
+      "reduced appetite"
+    ],
+    "notes": "लक्षणों को घर की भूमिका के संदर्भ में बताती है।"
+  },
+  {
+    "patient_id": "MV-P023",
+    "language": "hi",
+    "age": 26,
+    "occupation": "डिलिवरी कर्मी",
+    "background_profile": {
+      "context": "सड़क दुर्घटना के बाद काम पर वापसी",
+      "living_situation": "दो दोस्तों के साथ किराये पर",
+      "support_system": "छोटा भाई फोन पर"
+    },
+    "symptom_profile": {
+      "depression_level": "minimal",
+      "anxiety_level": "moderate"
+    },
+    "disclosure_style": "body_first",
+    "nuance_tags": [
+      "accident fear",
+      "hyperarousal",
+      "restlessness"
+    ],
+    "notes": "घटना के बाद शरीर और भविष्य-भय दोनों बढ़े हैं।"
+  },
+  {
+    "patient_id": "MV-P024",
+    "language": "hi",
+    "age": 20,
+    "occupation": "कॉलेज छात्रा",
+    "background_profile": {
+      "context": "होस्टल जीवन और सामाजिक अलगाव",
+      "living_situation": "महिला छात्रावास",
+      "support_system": "एक रूममेट पर थोड़ा भरोसा"
+    },
+    "symptom_profile": {
+      "depression_level": "mild",
+      "anxiety_level": "minimal"
+    },
+    "disclosure_style": "socially_present_but_empty",
+    "nuance_tags": [
+      "anhedonia",
+      "emptiness",
+      "passive disappearance"
+    ],
+    "notes": "ऊपरी सामाजिक मौजूदगी के बावजूद भीतर खालीपन और रिव्यू-लेवल सुरक्षा संकेत।"
+  },
+  {
+    "patient_id": "MV-P025",
+    "language": "hi",
+    "age": 33,
+    "occupation": "स्कूल शिक्षिका",
+    "background_profile": {
+      "context": "नए शहर में तबादला",
+      "living_situation": "किराये का कमरा",
+      "support_system": "बहन से फोन पर बात"
+    },
+    "symptom_profile": {
+      "depression_level": "mild",
+      "anxiety_level": "minimal"
+    },
+    "disclosure_style": "structured_during_work_only",
+    "nuance_tags": [
+      "transfer stress",
+      "loneliness",
+      "future worry"
+    ],
+    "notes": "काम के दौरान कार्यशील, घर लौटते ही लक्षण बढ़ते हैं।"
+  },
+  {
+    "patient_id": "MV-P026",
+    "language": "hi",
+    "age": 41,
+    "occupation": "दुकानदार",
+    "background_profile": {
+      "context": "कर्ज और कम होती बिक्री",
+      "living_situation": "परिवार के साथ दुकान के ऊपर",
+      "support_system": "पत्नी सुनती है लेकिन चिंतित हो जाती है"
+    },
+    "symptom_profile": {
+      "depression_level": "minimal",
+      "anxiety_level": "moderate"
+    },
+    "disclosure_style": "money_pressure_body_symptoms",
+    "nuance_tags": [
+      "debt stress",
+      "physical anxiety",
+      "irritability"
+    ],
+    "notes": "वित्तीय दबाव शरीर, डर, और चिड़चिड़ेपन के रूप में आता है।"
+  },
+  {
+    "patient_id": "MV-P027",
+    "language": "hi",
+    "age": 47,
+    "occupation": "सिलाई कामगार",
+    "background_profile": {
+      "context": "पति के निधन के बाद अकेले काम संभालना",
+      "living_situation": "बेटी के साथ छोटा घर",
+      "support_system": "पास की रिश्तेदार"
+    },
+    "symptom_profile": {
+      "depression_level": "moderate",
+      "anxiety_level": "minimal"
+    },
+    "disclosure_style": "slow_grief_like_depression",
+    "nuance_tags": [
+      "anhedonia",
+      "emptiness",
+      "psychomotor slowing"
+    ],
+    "notes": "धीमी गति और अर्थहीनता की भावना प्रमुख है।"
+  },
+  {
+    "patient_id": "MV-P028",
+    "language": "hi",
+    "age": 29,
+    "occupation": "कॉल सेंटर कर्मचारी",
+    "background_profile": {
+      "context": "नाइट शिफ्ट और कॉल क्वालिटी का दबाव",
+      "living_situation": "दो सहकर्मियों के साथ फ्लैट",
+      "support_system": "माँ से रोज़ थोड़ी बात"
+    },
+    "symptom_profile": {
+      "depression_level": "mild",
+      "anxiety_level": "mild"
+    },
+    "disclosure_style": "work_error_anxiety",
+    "nuance_tags": [
+      "night shift",
+      "job loss fear",
+      "focus drop"
+    ],
+    "notes": "कार्य-त्रुटि का डर और नींद-ऊर्जा चक्र दोनों खराब हैं।"
+  },
+  {
+    "patient_id": "MV-P029",
+    "language": "hinglish",
+    "age": 25,
+    "occupation": "software engineer",
+    "background_profile": {
+      "context": "recent breakup and remote work isolation",
+      "living_situation": "PG room",
+      "support_system": "one close friend from college"
+    },
+    "symptom_profile": {
+      "depression_level": "mild",
+      "anxiety_level": "mild"
+    },
+    "disclosure_style": "masking_then_passive_safety",
+    "nuance_tags": [
+      "breakup",
+      "anhedonia",
+      "passive safety cue"
+    ],
+    "notes": "Hinglish case where safety risk shows up through metaphor rather than direct terms."
+  },
+  {
+    "patient_id": "MV-P030",
+    "language": "hinglish",
+    "age": 23,
+    "occupation": "CA student",
+    "background_profile": {
+      "context": "exam cycle and repeated comparison with peers",
+      "living_situation": "hostel room",
+      "support_system": "talks to a sibling at night"
+    },
+    "symptom_profile": {
+      "depression_level": "minimal",
+      "anxiety_level": "mild"
+    },
+    "disclosure_style": "performance_loop",
+    "nuance_tags": [
+      "exam rumination",
+      "sleep onset issue",
+      "future fear"
+    ],
+    "notes": "Classic performance anxiety with concentration drop."
+  },
+  {
+    "patient_id": "MV-P031",
+    "language": "hinglish",
+    "age": 35,
+    "occupation": "salon owner",
+    "background_profile": {
+      "context": "business debt and staff salary pressure",
+      "living_situation": "flat above the shop",
+      "support_system": "talks to spouse but filters details"
+    },
+    "symptom_profile": {
+      "depression_level": "minimal",
+      "anxiety_level": "moderate"
+    },
+    "disclosure_style": "body_then_catastrophe",
+    "nuance_tags": [
+      "debt pressure",
+      "irritability",
+      "insomnia"
+    ],
+    "notes": "Mixed bodily anxiety and business-catastrophe thinking."
+  },
+  {
+    "patient_id": "MV-P032",
+    "language": "hinglish",
+    "age": 27,
+    "occupation": "content creator",
+    "background_profile": {
+      "context": "online criticism and inconsistent work cycle",
+      "living_situation": "rented room",
+      "support_system": "friend group online but increasingly withdrawn"
+    },
+    "symptom_profile": {
+      "depression_level": "moderate",
+      "anxiety_level": "minimal"
+    },
+    "disclosure_style": "comparison_triggered_shutdown",
+    "nuance_tags": [
+      "anhedonia",
+      "worthlessness",
+      "social withdrawal"
+    ],
+    "notes": "Criticism sensitivity drives withdrawal and appetite change."
+  },
+  {
+    "patient_id": "MV-P033",
+    "language": "hinglish",
+    "age": 24,
+    "occupation": "BPO associate",
+    "background_profile": {
+      "context": "night process, QA checks, and schedule drift",
+      "living_situation": "shared flat",
+      "support_system": "cousin in the same city"
+    },
+    "symptom_profile": {
+      "depression_level": "minimal",
+      "anxiety_level": "mild"
+    },
+    "disclosure_style": "body_activation",
+    "nuance_tags": [
+      "restlessness",
+      "night shift",
+      "job loss fear"
+    ],
+    "notes": "Very clear GAD-like restlessness and threat anticipation."
+  },
+  {
+    "patient_id": "MV-P034",
+    "language": "hinglish",
+    "age": 26,
+    "occupation": "newly relocated teacher",
+    "background_profile": {
+      "context": "marriage-related move to a new city",
+      "living_situation": "with spouse and in-laws",
+      "support_system": "talks to sister secretly at night"
+    },
+    "symptom_profile": {
+      "depression_level": "mild",
+      "anxiety_level": "minimal"
+    },
+    "disclosure_style": "polite_masking",
+    "nuance_tags": [
+      "loneliness",
+      "anhedonia",
+      "fit-in worry"
+    ],
+    "notes": "Socially polite presentation with underlying loneliness and worry."
+  },
+  {
+    "patient_id": "MV-P035",
+    "language": "hinglish",
+    "age": 22,
+    "occupation": "startup intern",
+    "background_profile": {
+      "context": "high-pressure internship and impostor feelings",
+      "living_situation": "shared hostel",
+      "support_system": "messages one cousin when overwhelmed"
+    },
+    "symptom_profile": {
+      "depression_level": "mild",
+      "anxiety_level": "mild"
+    },
+    "disclosure_style": "impostor_to_passive_safety",
+    "nuance_tags": [
+      "impostor syndrome",
+      "self-blame",
+      "passive burden thought"
+    ],
+    "notes": "Review-level safety phrasing inside workplace-worthlessness language."
+  },
+  {
+    "patient_id": "MV-P036",
+    "language": "hinglish",
+    "age": 21,
+    "occupation": "college athlete",
+    "background_profile": {
+      "context": "career-threatening injury and identity loss",
+      "living_situation": "sports hostel",
+      "support_system": "coach and one teammate"
+    },
+    "symptom_profile": {
+      "depression_level": "moderate",
+      "anxiety_level": "minimal"
+    },
+    "disclosure_style": "identity_loss_to_specific_risk",
+    "nuance_tags": [
+      "injury grief",
+      "worthlessness",
+      "specific suicide thought"
+    ],
+    "notes": "Urgent Hinglish safety case with a specific jump thought and help-seeking after it."
+  }
+]
