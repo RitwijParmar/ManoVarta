@@ -25,7 +25,33 @@ def parse_args():
     parser.add_argument("--batch-size", type=int, default=4)
     parser.add_argument("--max-length", type=int, default=256)
     parser.add_argument("--precision", choices=["auto", "bf16", "fp16", "fp32"], default="auto")
+    parser.add_argument("--save-strategy", choices=["epoch", "steps"], default="epoch")
+    parser.add_argument("--save-steps", type=int, default=50)
+    parser.add_argument("--save-total-limit", type=int, default=4)
+    parser.add_argument("--eval-strategy", choices=["epoch", "steps", "no"], default="epoch")
+    parser.add_argument("--eval-steps", type=int, default=50)
+    parser.add_argument("--resume-from-checkpoint", default=None)
     return parser.parse_args()
+
+
+def resolve_resume_checkpoint(output_dir: str, resume_arg: str | None) -> str | None:
+    if not resume_arg:
+        return None
+    if resume_arg != "last":
+        return resume_arg
+
+    root = Path(output_dir)
+    checkpoints = []
+    for path in root.glob("checkpoint-*"):
+        try:
+            step = int(path.name.split("-")[-1])
+        except ValueError:
+            continue
+        checkpoints.append((step, path))
+    if not checkpoints:
+        return None
+    checkpoints.sort(key=lambda item: item[0])
+    return str(checkpoints[-1][1])
 
 
 def main() -> int:
@@ -86,16 +112,21 @@ def main() -> int:
         "num_train_epochs": args.epochs,
         "per_device_train_batch_size": args.batch_size,
         "per_device_eval_batch_size": args.batch_size,
-        "save_strategy": "epoch",
+        "save_strategy": args.save_strategy,
+        "save_total_limit": args.save_total_limit,
         "logging_steps": 5,
         "bf16": use_bf16,
         "fp16": use_fp16,
         "report_to": "none",
     }
+    if args.save_strategy == "steps":
+        training_kwargs["save_steps"] = args.save_steps
     strategy_key = "evaluation_strategy"
     if strategy_key not in inspect.signature(TrainingArguments.__init__).parameters:
         strategy_key = "eval_strategy"
-    training_kwargs[strategy_key] = "epoch"
+    training_kwargs[strategy_key] = args.eval_strategy
+    if args.eval_strategy == "steps":
+        training_kwargs["eval_steps"] = args.eval_steps
     training_args = TrainingArguments(**training_kwargs)
 
     trainer_kwargs = {
@@ -114,7 +145,8 @@ def main() -> int:
 
     trainer = Trainer(**trainer_kwargs)
 
-    trainer.train()
+    resume_checkpoint = resolve_resume_checkpoint(args.output_dir, args.resume_from_checkpoint)
+    trainer.train(resume_from_checkpoint=resume_checkpoint)
     trainer.save_model(args.output_dir)
     tokenizer.save_pretrained(args.output_dir)
     print(f"saved safety checkpoint to {Path(args.output_dir).resolve()}")
