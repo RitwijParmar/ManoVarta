@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+from __future__ import annotations
+
 import argparse
 import inspect
 from pathlib import Path
@@ -24,6 +26,7 @@ def parse_args():
     parser.add_argument("--epochs", type=int, default=3)
     parser.add_argument("--batch-size", type=int, default=4)
     parser.add_argument("--max-length", type=int, default=256)
+    parser.add_argument("--device", choices=["auto", "cuda", "mps", "cpu"], default="auto")
     parser.add_argument("--precision", choices=["auto", "bf16", "fp16", "fp32"], default="auto")
     parser.add_argument("--save-strategy", choices=["epoch", "steps"], default="epoch")
     parser.add_argument("--save-steps", type=int, default=50)
@@ -68,10 +71,11 @@ def main() -> int:
         )
     except ImportError as exc:  # pragma: no cover
         raise SystemExit(f"Install training extras first. Missing dependency: {exc.name}") from exc
-    from training.runtime_utils import pick_precision
+    from training.runtime_utils import detect_device, pick_precision
 
     args = parse_args()
-    use_bf16, use_fp16 = pick_precision(torch, args.precision)
+    device = detect_device(torch, args.device)
+    use_bf16, use_fp16 = pick_precision(torch, args.precision, device=device)
     dataset = load_dataset(
         "json",
         data_files={"train": args.train_file, "eval": args.eval_file},
@@ -118,7 +122,13 @@ def main() -> int:
         "bf16": use_bf16,
         "fp16": use_fp16,
         "report_to": "none",
+        "dataloader_pin_memory": device == "cuda",
+        "optim": "adamw_torch",
     }
+    if device == "cpu":
+        training_kwargs["no_cuda"] = True
+    elif device == "mps" and "use_mps_device" in inspect.signature(TrainingArguments.__init__).parameters:
+        training_kwargs["use_mps_device"] = True
     if args.save_strategy == "steps":
         training_kwargs["save_steps"] = args.save_steps
     strategy_key = "evaluation_strategy"

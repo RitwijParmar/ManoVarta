@@ -17,6 +17,7 @@ def parse_args():
     parser.add_argument("--model-path", required=True)
     parser.add_argument("--eval-file", required=True)
     parser.add_argument("--max-new-tokens", type=int, default=400)
+    parser.add_argument("--device", choices=["auto", "cuda", "mps", "cpu"], default="auto")
     return parser.parse_args()
 
 
@@ -28,14 +29,27 @@ def main() -> int:
     except ImportError as exc:  # pragma: no cover
         raise SystemExit("Install training extras first: pip install -e .[train]") from exc
 
+    from training.runtime_utils import detect_device, pick_model_dtype
+
     args = parse_args()
+    device = detect_device(torch, args.device)
     tokenizer = AutoTokenizer.from_pretrained(args.model_path, trust_remote_code=True)
     model_path = Path(args.model_path)
     adapter_config = model_path / "adapter_config.json"
-    if adapter_config.exists():
-        model = AutoPeftModelForCausalLM.from_pretrained(args.model_path, trust_remote_code=True, device_map="auto")
+    model_kwargs = {
+        "trust_remote_code": True,
+    }
+    if device == "cuda":
+        model_kwargs["device_map"] = "auto"
     else:
-        model = AutoModelForCausalLM.from_pretrained(args.model_path, trust_remote_code=True, device_map="auto")
+        model_kwargs["torch_dtype"] = pick_model_dtype(torch, device)
+        model_kwargs["low_cpu_mem_usage"] = True
+    if adapter_config.exists():
+        model = AutoPeftModelForCausalLM.from_pretrained(args.model_path, **model_kwargs)
+    else:
+        model = AutoModelForCausalLM.from_pretrained(args.model_path, **model_kwargs)
+    if device != "cuda":
+        model.to(device)
     model.eval()
 
     eval_path = Path(args.eval_file)
@@ -45,7 +59,9 @@ def main() -> int:
 
     for example in examples:
         prompt = example["text"].rsplit("<|assistant|>", 1)[0] + "<|assistant|>\n"
-        tokens = tokenizer(prompt, return_tensors="pt").to(model.device)
+        tokens = tokenizer(prompt, return_tensors="pt")
+        target_device = model.device if hasattr(model, "device") else torch.device(device)
+        tokens = {key: value.to(target_device) for key, value in tokens.items()}
         with torch.no_grad():
             output_ids = model.generate(**tokens, max_new_tokens=args.max_new_tokens, do_sample=False)
         completion = tokenizer.decode(output_ids[0][tokens["input_ids"].shape[-1]:], skip_special_tokens=True).strip()

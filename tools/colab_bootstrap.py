@@ -9,7 +9,7 @@ from pathlib import Path
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 REQUIRED_IMPORTS = {
     "pydantic": "pydantic>=2.10,<=2.12.3",
-    "huggingface_hub": "huggingface_hub>=1.3.0,<2.0",
+    "huggingface_hub": "huggingface_hub>=0.34.0,<1.0",
     "dotenv": "python-dotenv>=1.0,<2.0",
     "torch": "torch>=2.2",
     "transformers": "transformers>=4.45",

@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+from __future__ import annotations
+
 import argparse
 import inspect
 from pathlib import Path
@@ -24,7 +26,10 @@ def parse_args():
     parser.add_argument("--lora-r", type=int, default=16)
     parser.add_argument("--lora-alpha", type=int, default=32)
     parser.add_argument("--use-4bit", action="store_true")
+    parser.add_argument("--device", choices=["auto", "cuda", "mps", "cpu"], default="auto")
     parser.add_argument("--precision", choices=["auto", "bf16", "fp16", "fp32"], default="auto")
+    parser.add_argument("--model-dtype", choices=["auto", "bf16", "fp16", "fp32"], default="auto")
+    parser.add_argument("--gradient-checkpointing", action="store_true")
     parser.add_argument("--save-strategy", choices=["epoch", "steps"], default="epoch")
     parser.add_argument("--save-steps", type=int, default=50)
     parser.add_argument("--save-total-limit", type=int, default=4)
@@ -63,7 +68,7 @@ def main() -> int:
         from trl import SFTConfig, SFTTrainer
     except ImportError as exc:  # pragma: no cover
         raise SystemExit(f"Install training extras first. Missing dependency: {exc.name}") from exc
-    from training.runtime_utils import pick_precision
+    from training.runtime_utils import detect_device, pick_model_dtype, pick_precision
 
     args = parse_args()
     dataset = load_dataset(
@@ -80,21 +85,31 @@ def main() -> int:
         tokenizer.pad_token = tokenizer.eos_token
     tokenizer.padding_side = "right"
 
-    use_bf16, use_fp16 = pick_precision(torch, args.precision)
+    device = detect_device(torch, args.device)
+    use_bf16, use_fp16 = pick_precision(torch, args.precision, device=device)
     quantization_config = None
-    if args.use_4bit:
+    if args.use_4bit and device == "cuda":
         quantization_config = BitsAndBytesConfig(
             load_in_4bit=True,
             bnb_4bit_quant_type="nf4",
             bnb_4bit_compute_dtype=torch.bfloat16 if use_bf16 else torch.float16,
         )
 
-    model = AutoModelForCausalLM.from_pretrained(
-        args.model_name,
-        trust_remote_code=True,
-        quantization_config=quantization_config,
-        device_map="auto",
-    )
+    model_kwargs = {
+        "trust_remote_code": True,
+        "quantization_config": quantization_config,
+    }
+    if quantization_config is not None:
+        model_kwargs["device_map"] = "auto"
+    else:
+        model_kwargs["torch_dtype"] = pick_model_dtype(torch, device, requested=args.model_dtype)
+        model_kwargs["low_cpu_mem_usage"] = True
+
+    model = AutoModelForCausalLM.from_pretrained(args.model_name, **model_kwargs)
+    if quantization_config is None and device != "cpu":
+        model.to(device)
+    if args.gradient_checkpointing:
+        model.gradient_checkpointing_enable()
 
     peft_config = LoraConfig(
         r=args.lora_r,
@@ -117,7 +132,14 @@ def main() -> int:
         "bf16": use_bf16,
         "fp16": use_fp16,
         "report_to": "none",
+        "gradient_checkpointing": args.gradient_checkpointing,
+        "dataloader_pin_memory": device == "cuda",
+        "optim": "adamw_torch",
     }
+    if device == "cpu":
+        training_kwargs["no_cuda"] = True
+    elif device == "mps" and "use_mps_device" in inspect.signature(TrainingArguments.__init__).parameters:
+        training_kwargs["use_mps_device"] = True
     if args.save_strategy == "steps":
         training_kwargs["save_steps"] = args.save_steps
     strategy_key = "evaluation_strategy"
