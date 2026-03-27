@@ -12,6 +12,7 @@ def _disabled_config():
         hf_timeout=30.0,
         assistant_temperature=0.2,
         assistant_max_tokens=180,
+        extraction_max_tokens=900,
         safety_max_tokens=180,
         semantic_safety_model=None,
         semantic_safety_review_threshold=0.64,

@@ -4,6 +4,7 @@ import json
 from typing import Optional, Tuple
 
 from manovarta_core.config import RuntimeConfig
+from manovarta_core.json_utils import parse_json_object
 from manovarta_core.questionnaires import ITEM_INDEX
 from manovarta_core.schemas import ChatSession, SafetyFlag, ScreeningSnapshot, Turn
 
@@ -161,7 +162,7 @@ class HuggingFaceExtractor:
             output = self._client.chat_completion(
                 messages=messages,
                 temperature=0.0,
-                max_tokens=400,
+                max_tokens=self.config.extraction_max_tokens,
             )
             content = output.choices[0].message.content
             return self._parse_json(content)
@@ -169,14 +170,7 @@ class HuggingFaceExtractor:
             return None
 
     def _parse_json(self, content: str) -> Optional[dict]:
-        cleaned = content.strip()
-        if cleaned.startswith("```"):
-            cleaned = cleaned.split("\n", 1)[-1]
-            cleaned = cleaned.rsplit("```", 1)[0].strip()
-        try:
-            return json.loads(cleaned)
-        except json.JSONDecodeError:
-            return None
+        return parse_json_object(content)
 
 
 class HuggingFaceSafetyAssessor:
@@ -255,11 +249,4 @@ class HuggingFaceSafetyAssessor:
         )
 
     def _parse_json(self, content: str) -> Optional[dict]:
-        cleaned = content.strip()
-        if cleaned.startswith("```"):
-            cleaned = cleaned.split("\n", 1)[-1]
-            cleaned = cleaned.rsplit("```", 1)[0].strip()
-        try:
-            return json.loads(cleaned)
-        except json.JSONDecodeError:
-            return None
+        return parse_json_object(content)

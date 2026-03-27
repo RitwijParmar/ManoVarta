@@ -8,6 +8,7 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
+from manovarta_core.json_utils import parse_json_object
 from manovarta_core.metrics import evaluate_item_predictions
 from manovarta_core.seed_data import load_seed_conversations
 
@@ -16,7 +17,7 @@ def parse_args():
     parser = argparse.ArgumentParser(description="Evaluate a fine-tuned extractor checkpoint on a held-out JSONL file.")
     parser.add_argument("--model-path", required=True)
     parser.add_argument("--eval-file", required=True)
-    parser.add_argument("--max-new-tokens", type=int, default=400)
+    parser.add_argument("--max-new-tokens", type=int, default=1200)
     parser.add_argument("--device", choices=["auto", "cuda", "mps", "cpu"], default="auto")
     return parser.parse_args()
 
@@ -65,7 +66,7 @@ def main() -> int:
         with torch.no_grad():
             output_ids = model.generate(**tokens, max_new_tokens=args.max_new_tokens, do_sample=False)
         completion = tokenizer.decode(output_ids[0][tokens["input_ids"].shape[-1]:], skip_special_tokens=True).strip()
-        parsed = _safe_json(completion)
+        parsed = parse_json_object(completion) or {"items": [], "safety_level": "none", "notes": "parse_error"}
         predictions.append(
             {
                 "conversation_id": example["id"],
@@ -79,18 +80,5 @@ def main() -> int:
     report["model_path"] = str(Path(args.model_path).resolve())
     print(json.dumps(report, indent=2, ensure_ascii=False))
     return 0
-
-
-def _safe_json(text: str) -> dict:
-    cleaned = text.strip()
-    if cleaned.startswith("```"):
-        cleaned = cleaned.split("\n", 1)[-1]
-        cleaned = cleaned.rsplit("```", 1)[0].strip()
-    try:
-        return json.loads(cleaned)
-    except json.JSONDecodeError:
-        return {"items": [], "safety_level": "none", "notes": "parse_error"}
-
-
 if __name__ == "__main__":
     raise SystemExit(main())

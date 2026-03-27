@@ -22,6 +22,7 @@ class RuntimeConfig:
     hf_timeout: float
     assistant_temperature: float
     assistant_max_tokens: int
+    extraction_max_tokens: int
     safety_max_tokens: int
     semantic_safety_model: Optional[str]
     semantic_safety_review_threshold: float
@@ -47,6 +48,7 @@ def get_runtime_config() -> RuntimeConfig:
         hf_timeout=float(os.getenv("MANOVARTA_HF_TIMEOUT", "30")),
         assistant_temperature=float(os.getenv("MANOVARTA_ASSISTANT_TEMPERATURE", "0.2")),
         assistant_max_tokens=int(os.getenv("MANOVARTA_ASSISTANT_MAX_TOKENS", "180")),
+        extraction_max_tokens=int(os.getenv("MANOVARTA_EXTRACTION_MAX_TOKENS", "900")),
         safety_max_tokens=int(os.getenv("MANOVARTA_SAFETY_MAX_TOKENS", "180")),
         semantic_safety_model=os.getenv("MANOVARTA_SEMANTIC_SAFETY_MODEL"),
         semantic_safety_review_threshold=float(os.getenv("MANOVARTA_SEMANTIC_REVIEW_THRESHOLD", "0.64")),
