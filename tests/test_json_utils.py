@@ -1,4 +1,4 @@
-from manovarta_core.json_utils import parse_json_object
+from manovarta_core.json_utils import parse_extractor_payload, parse_json_object
 
 
 def test_parse_json_object_handles_fenced_content():
@@ -20,3 +20,18 @@ def test_parse_json_object_recovers_first_balanced_object_with_trailing_text():
     assert payload is not None
     assert payload["safety_level"] == "review"
 
+
+def test_parse_extractor_payload_salvages_truncated_item_list():
+    payload = parse_extractor_payload(
+        '{"items": [{"item_id": "phq_q2_low_mood", "value": 1, "evidence_quote": ""}, '
+        '{"item_id": "phq_q3_sleep", "value": 2, "evidence_quote": "sleep bad"}, '
+        '{"item_id": "gad_q1_nervous", "value": 1'
+    )
+
+    assert payload is not None
+    assert [item["item_id"] for item in payload["items"]] == [
+        "phq_q2_low_mood",
+        "phq_q3_sleep",
+        "gad_q1_nervous",
+    ]
+    assert [item["value"] for item in payload["items"]] == [1, 2, 1]

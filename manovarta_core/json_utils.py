@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import re
 from typing import Any
 
 
@@ -18,6 +19,40 @@ def parse_json_object(text: str) -> dict[str, Any] | None:
         return _try_json(candidate)
 
     return None
+
+
+def parse_extractor_payload(text: str) -> dict[str, Any] | None:
+    payload = parse_json_object(text)
+    if payload is not None:
+        return payload
+
+    cleaned = strip_code_fences(text).strip()
+    if not cleaned:
+        return None
+
+    items = []
+    seen = set()
+    for match in re.finditer(
+        r'"item_id"\s*:\s*"(?P<item_id>[^"]+)"[\s\S]{0,240}?"value"\s*:\s*(?P<value>[0-3])',
+        cleaned,
+    ):
+        item_id = match.group("item_id").strip()
+        value = int(match.group("value"))
+        if not item_id or item_id in seen:
+            continue
+        seen.add(item_id)
+        items.append({"item_id": item_id, "value": value})
+
+    if not items:
+        return None
+
+    safety_match = re.search(r'"safety_level"\s*:\s*"(none|review|urgent)"', cleaned)
+    return {
+        "items": items,
+        "safety_level": safety_match.group(1) if safety_match else "none",
+        "safety_cues": [],
+        "notes": "salvaged_partial_json",
+    }
 
 
 def strip_code_fences(text: str) -> str:

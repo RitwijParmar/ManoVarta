@@ -8,7 +8,7 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-from manovarta_core.json_utils import parse_json_object
+from manovarta_core.json_utils import parse_extractor_payload
 from manovarta_core.metrics import evaluate_item_predictions
 from manovarta_core.seed_data import load_seed_conversations
 
@@ -72,7 +72,7 @@ def main() -> int:
         with torch.no_grad():
             output_ids = model.generate(**tokens, max_new_tokens=args.max_new_tokens, do_sample=False)
         completion = tokenizer.decode(output_ids[0][tokens["input_ids"].shape[-1]:], skip_special_tokens=True).strip()
-        parsed = parse_json_object(completion) or {"items": [], "safety_level": "none", "notes": "parse_error"}
+        parsed = parse_extractor_payload(completion) or {"items": [], "safety_level": "none", "notes": "parse_error"}
         predictions.append(
             {
                 "conversation_id": example["id"],

@@ -4,7 +4,7 @@ import json
 from typing import Optional, Tuple
 
 from manovarta_core.config import RuntimeConfig
-from manovarta_core.json_utils import parse_json_object
+from manovarta_core.json_utils import parse_extractor_payload, parse_json_object
 from manovarta_core.questionnaires import ITEM_INDEX
 from manovarta_core.schemas import ChatSession, SafetyFlag, ScreeningSnapshot, Turn
 
@@ -170,7 +170,7 @@ class HuggingFaceExtractor:
             return None
 
     def _parse_json(self, content: str) -> Optional[dict]:
-        return parse_json_object(content)
+        return parse_extractor_payload(content)
 
 
 class HuggingFaceSafetyAssessor:
