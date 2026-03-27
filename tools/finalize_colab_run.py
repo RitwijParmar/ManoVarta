@@ -24,8 +24,10 @@ def parse_args():
     parser.add_argument("--outputs-dir", default=str(PROJECT_ROOT / "outputs"))
     parser.add_argument("--artifacts-dir", default=str(PROJECT_ROOT / "artifacts"))
     parser.add_argument("--checkpoint-path", default=str(PROJECT_ROOT / "outputs" / "extractor-qwen25"))
+    parser.add_argument("--safety-checkpoint-path", help="Optional local safety checkpoint path.")
     parser.add_argument("--semantic-model", default="ai4bharat/IndicBERTv2-MLM-only")
     parser.add_argument("--skip-checkpoint", action="store_true")
+    parser.add_argument("--skip-safety-checkpoint", action="store_true")
     parser.add_argument("--skip-semantic", action="store_true")
     parser.add_argument("--skip-llm", action="store_true")
     parser.add_argument("--drive-dir", help="Optional directory to copy outputs, reports, and artifacts into.")
@@ -94,6 +96,7 @@ def main() -> int:
     outputs_dir = Path(args.outputs_dir)
     artifacts_dir = Path(args.artifacts_dir)
     checkpoint_path = Path(args.checkpoint_path)
+    safety_checkpoint_path = Path(args.safety_checkpoint_path) if args.safety_checkpoint_path else None
 
     reports_dir.mkdir(parents=True, exist_ok=True)
     artifacts_dir.mkdir(parents=True, exist_ok=True)
@@ -124,6 +127,28 @@ def main() -> int:
     else:
         reports["checkpoint"] = {"status": "skipped", "reason": f"Checkpoint not found: {checkpoint_path}"}
     save_payload(reports_dir, "checkpoint_eval.json", reports["checkpoint"])
+
+    if args.skip_safety_checkpoint:
+        reports["safety_checkpoint"] = {"status": "skipped", "reason": "Safety checkpoint evaluation skipped by flag."}
+    elif safety_checkpoint_path and safety_checkpoint_path.exists():
+        reports["safety_checkpoint"] = run_json_command(
+            [
+                sys.executable,
+                "-m",
+                "training.evaluate_safety_checkpoint",
+                "--model-path",
+                str(safety_checkpoint_path),
+                "--eval-file",
+                str(PROJECT_ROOT / "data" / "processed" / "safety_test.jsonl"),
+            ],
+            PROJECT_ROOT,
+        )
+    else:
+        reports["safety_checkpoint"] = {
+            "status": "skipped",
+            "reason": f"Safety checkpoint not found: {safety_checkpoint_path}" if safety_checkpoint_path else "No safety checkpoint path provided.",
+        }
+    save_payload(reports_dir, "safety_checkpoint_eval.json", reports["safety_checkpoint"])
 
     if args.skip_semantic:
         reports["semantic_safety"] = {"status": "skipped", "reason": "Semantic evaluation skipped by flag."}
