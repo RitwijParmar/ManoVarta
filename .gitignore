@@ -18,3 +18,4 @@ data/processed/*.json
 data/processed/*.jsonl
 outputs/
 artifacts/
+logs/
