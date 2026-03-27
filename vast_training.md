@@ -4,15 +4,15 @@ This path is for finishing the heavier GPU work on a rented Vast instance.
 
 ## Recommended model plan
 
-- extractor fine-tune: `CohereLabs/aya-expanse-8b`
+- default extractor fine-tune: `CohereLabs/aya-expanse-8b`
 - fallback extractor: `Qwen/Qwen3-8B`
 - runtime safety model: `Qwen/Qwen3Guard-Gen-8B`
 - optional trainable safety classifier: `ai4bharat/IndicBERTv2-MLM-only`
 
 Why this split:
 
-- `Aya Expanse 8B` is a better fit for English + Hindi symptom extraction than the small local Qwen model.
-- `Qwen3-8B` is the clean fallback if Aya access or VRAM becomes a problem.
+- `Aya Expanse 8B` is the better fit for English + Hindi symptom extraction and is worth using on a proper remote GPU.
+- `Qwen3-8B` stays as the clean fallback if Aya access or VRAM becomes a problem.
 - `Qwen3Guard-Gen-8B` is better suited for product safety gating than the weak local safety checkpoint.
 
 ## Connection
