@@ -19,6 +19,8 @@ def parse_args():
     parser.add_argument("--eval-file", required=True)
     parser.add_argument("--max-new-tokens", type=int, default=1200)
     parser.add_argument("--device", choices=["auto", "cuda", "mps", "cpu"], default="auto")
+    parser.add_argument("--limit", type=int, default=None)
+    parser.add_argument("--offset", type=int, default=0)
     return parser.parse_args()
 
 
@@ -55,6 +57,10 @@ def main() -> int:
 
     eval_path = Path(args.eval_file)
     examples = [json.loads(line) for line in eval_path.read_text(encoding="utf-8").splitlines() if line.strip()]
+    if args.offset:
+        examples = examples[args.offset:]
+    if args.limit is not None:
+        examples = examples[:args.limit]
     gold_index = {record["conversation_id"]: record for record in load_seed_conversations()}
     predictions = []
 
@@ -78,6 +84,8 @@ def main() -> int:
     gold_records = [gold_index[example["id"]] for example in examples if example["id"] in gold_index]
     report = evaluate_item_predictions(gold_records, predictions)
     report["model_path"] = str(Path(args.model_path).resolve())
+    report["example_count"] = len(examples)
+    report["offset"] = args.offset
     print(json.dumps(report, indent=2, ensure_ascii=False))
     return 0
 if __name__ == "__main__":
