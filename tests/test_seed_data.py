@@ -9,12 +9,12 @@ def test_seed_corpus_is_balanced_and_scaled():
     conversations = load_seed_conversations()
 
     assert len(profiles) >= 48
-    assert len(conversations) >= 48
+    assert len(conversations) >= 180
 
     language_counts = Counter(conversation["language"] for conversation in conversations)
-    assert language_counts["en"] >= 16
-    assert language_counts["hi"] >= 16
-    assert language_counts["hinglish"] >= 16
+    assert language_counts["en"] >= 60
+    assert language_counts["hi"] >= 60
+    assert language_counts["hinglish"] >= 60
 
     review_count = sum(
         1 for conversation in conversations if conversation.get("safety_flag", {}).get("level") == "review"
@@ -22,8 +22,8 @@ def test_seed_corpus_is_balanced_and_scaled():
     urgent_count = sum(
         1 for conversation in conversations if conversation.get("safety_flag", {}).get("level") == "urgent"
     )
-    assert review_count >= 10
-    assert urgent_count >= 4
+    assert review_count >= 30
+    assert urgent_count >= 12
 
 
 def test_split_manifest_keeps_each_language_in_all_splits():
