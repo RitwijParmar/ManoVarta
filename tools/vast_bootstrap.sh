@@ -13,7 +13,13 @@ fi
 source .venv/bin/activate
 
 python -m pip install --upgrade pip wheel setuptools
+python -m pip install \
+  torch==2.10.0 \
+  torchvision==0.25.0 \
+  torchaudio==2.10.0 \
+  --index-url https://download.pytorch.org/whl/cu128
 python -m pip install -e ".[dev,train,train-cuda]"
+python -m pip install hf_transfer
 
 python tools/generate_seed_scaleup.py
 python tools/generate_seed_nuance_pack.py
