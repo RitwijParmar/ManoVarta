@@ -54,6 +54,8 @@ def test_summary_endpoint_returns_structured_snapshot():
     assert summary.status_code == 200
     body = summary.json()
     assert body["snapshot"]["totals"]["PHQ9"] >= 2
+    assert "coverage" in body["snapshot"]
+    assert body["snapshot"]["coverage"]["next_items"]
     assert "Session" in body["summary"]
 
 
@@ -73,3 +75,26 @@ def test_export_endpoint_returns_rows_and_snapshot_mode():
     assert body["snapshot"]["mode"] in {"heuristic", "hybrid"}
     assert body["rows"]
     assert body["rows"][0]["questionnaire"] in {"PHQ9", "GAD7"}
+
+
+def test_contradiction_flow_marks_review_gate():
+    start = client.post("/chat/sessions", json={"language": "en"})
+    session_id = start.json()["session_id"]
+
+    client.post(
+        f"/chat/sessions/{session_id}/turns",
+        json={"text": "I don't keep waking up at night."},
+    )
+    turn = client.post(
+        f"/chat/sessions/{session_id}/turns",
+        json={"text": "Actually I keep waking up and my sleep schedule is messed up."},
+    )
+
+    assert turn.status_code == 200
+    snapshot = turn.json()["snapshot"]
+    sleep_item = snapshot["items"]["phq_q3_sleep"]
+    assert sleep_item["status"] == "abstained"
+    assert sleep_item["value"] is None
+    assert sleep_item["review_recommended"] is True
+    assert "phq_q3_sleep" in snapshot["coverage"]["review_items"]
+    assert snapshot["coverage"]["review_required"] is True

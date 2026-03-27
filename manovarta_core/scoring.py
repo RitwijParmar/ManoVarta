@@ -4,8 +4,8 @@ from collections import defaultdict
 from typing import Dict, Iterable, List, Optional, Tuple
 
 from manovarta_core.lexicon import HIGH_INTENSITY_CUES, LOW_INTENSITY_CUES, NEGATION_CUES, RULES, UNCERTAINTY_CUES
-from manovarta_core.questionnaires import all_items
-from manovarta_core.schemas import EvidenceSpan, ItemScore, ScreeningSnapshot, Turn
+from manovarta_core.questionnaires import ITEM_INDEX, all_items
+from manovarta_core.schemas import CoveragePlan, EvidenceSpan, ItemScore, ScreeningSnapshot, Turn
 from manovarta_core.text import extract_window, normalize_text
 
 
@@ -14,9 +14,8 @@ class ConversationScorer:
         user_turns = [turn for turn in turns if turn.speaker == "user"]
         evidence_spans = self._collect_evidence(user_turns)
         items = self._build_item_scores(evidence_spans)
-        unresolved_items = [
-            item_id for item_id, score in items.items() if score.status != "resolved"
-        ]
+        coverage = self.build_coverage(items)
+        unresolved_items = coverage.unresolved_items + coverage.partial_items + coverage.contradicted_items + coverage.abstained_items
         totals = self._build_totals(items)
         return ScreeningSnapshot(
             language=language,
@@ -25,6 +24,7 @@ class ConversationScorer:
             unresolved_items=unresolved_items,
             totals=totals,
             safety=safety_flag,
+            coverage=coverage,
         )
 
     def _collect_evidence(self, turns: List[Turn]) -> List[EvidenceSpan]:
@@ -114,22 +114,32 @@ class ConversationScorer:
                 value = None
                 status = "unresolved"
                 note = None
+                review_recommended = False
             elif contradiction:
-                value = max((span.score_hint for span in present), default=0)
-                status = "contradicted"
-                note = "Earlier and later turns point in different directions."
+                review_recommended = True
+                if confidence < 0.58:
+                    value = None
+                    status = "abstained"
+                    note = "Conflicting evidence remains unresolved. Follow-up or human review is needed before scoring."
+                else:
+                    value = max((span.score_hint for span in present), default=0)
+                    status = "contradicted"
+                    note = "Earlier and later turns point in different directions."
             elif present:
                 value = max(span.score_hint for span in present)
                 status = "resolved" if stable else "partial"
                 note = None
+                review_recommended = False
             elif absent:
                 value = 0
                 status = "resolved" if stable else "partial"
                 note = None
+                review_recommended = False
             else:
                 value = max((span.score_hint for span in uncertain), default=None)
                 status = "partial"
                 note = "Indirect evidence only."
+                review_recommended = False
 
             scores[item.item_id] = ItemScore(
                 item_id=item.item_id,
@@ -140,8 +150,38 @@ class ConversationScorer:
                 stable=stable,
                 evidence_span_ids=[span.span_id for span in item_spans],
                 contradiction_note=note,
+                review_recommended=review_recommended,
             )
         return scores
+
+    def build_coverage(self, items: Dict[str, ItemScore], next_items: Optional[List[str]] = None) -> CoveragePlan:
+        touched_items = [item_id for item_id, item in items.items() if item.evidence_span_ids]
+        resolved_items = [item_id for item_id, item in items.items() if item.status == "resolved"]
+        partial_items = [item_id for item_id, item in items.items() if item.status == "partial"]
+        contradicted_items = [item_id for item_id, item in items.items() if item.status == "contradicted"]
+        abstained_items = [item_id for item_id, item in items.items() if item.status == "abstained"]
+        unresolved_items = [item_id for item_id, item in items.items() if item.status == "unresolved"]
+        review_items = [
+            item_id for item_id, item in items.items() if item.review_recommended or item.status in {"contradicted", "abstained"}
+        ]
+        completion_ratio = round(len(resolved_items) / max(len(items), 1), 2)
+        priority_order = sorted(
+            partial_items + contradicted_items + abstained_items + unresolved_items,
+            key=lambda item_id: (-ITEM_INDEX[item_id].priority, items[item_id].confidence, item_id),
+        )
+        return CoveragePlan(
+            total_items=len(items),
+            touched_items=len(touched_items),
+            resolved_items=resolved_items,
+            partial_items=partial_items,
+            contradicted_items=contradicted_items,
+            abstained_items=abstained_items,
+            unresolved_items=unresolved_items,
+            review_items=review_items,
+            next_items=list(next_items or priority_order[:5]),
+            completion_ratio=completion_ratio,
+            review_required=bool(review_items),
+        )
 
     def _confidence(
         self,

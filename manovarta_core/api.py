@@ -131,6 +131,7 @@ def get_session(session_id: str) -> SessionDetailResponse:
     if session is None:
         raise HTTPException(status_code=404, detail="Session not found.")
     snapshot = engine.analyze(session.turns, session.language)
+    snapshot.coverage = planner.build_plan(snapshot, session)
     return SessionDetailResponse(session_id=session_id, turns=session.turns, snapshot=snapshot)
 
 
@@ -140,6 +141,7 @@ def get_summary(session_id: str) -> SummaryResponse:
     if session is None:
         raise HTTPException(status_code=404, detail="Session not found.")
     snapshot = engine.analyze(session.turns, session.language)
+    snapshot.coverage = planner.build_plan(snapshot, session)
     return SummaryResponse(session_id=session_id, summary=build_summary(session, snapshot), snapshot=snapshot)
 
 
@@ -149,6 +151,7 @@ def export_session(session_id: str) -> SessionExportResponse:
     if session is None:
         raise HTTPException(status_code=404, detail="Session not found.")
     snapshot = engine.analyze(session.turns, session.language)
+    snapshot.coverage = planner.build_plan(snapshot, session)
     return SessionExportResponse(
         session_id=session_id,
         language=session.language,

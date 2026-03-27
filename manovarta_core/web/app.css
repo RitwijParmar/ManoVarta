@@ -426,6 +426,7 @@ tr:last-child td {
 }
 
 .status-pill.contradicted,
+.status-pill.abstained,
 .status-pill.urgent {
   background: rgba(178, 58, 42, 0.12);
   color: var(--danger);

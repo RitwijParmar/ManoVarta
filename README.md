@@ -10,6 +10,8 @@ The current repository includes two layers:
 - browser voice wrapper using speech recognition and speech synthesis when supported
 - Colab-ready training scripts for extractor and safety fine-tuning
 
+The runtime now exposes an explicit coverage planner as part of the snapshot state. That planner tracks touched items, resolved items, abstained items, a follow-up queue, and a review queue so contradictory evidence is surfaced instead of being silently forced into a score.
+
 The goal is a credible research prototype, not a therapy product or diagnostic system.
 
 ## Dataset snapshot

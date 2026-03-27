@@ -25,6 +25,8 @@ const snapshotMode = document.getElementById("snapshotMode");
 const coverageText = document.getElementById("coverageText");
 const unresolvedCount = document.getElementById("unresolvedCount");
 const unresolvedList = document.getElementById("unresolvedList");
+const reviewCount = document.getElementById("reviewCount");
+const reviewList = document.getElementById("reviewList");
 const itemTableBody = document.getElementById("itemTableBody");
 const evidenceList = document.getElementById("evidenceList");
 
@@ -75,24 +77,44 @@ function renderTurn(turn) {
 
 function renderSnapshot(payload) {
   const { snapshot, summary, rows } = payload;
+  const coverage = snapshot.coverage || {
+    total_items: Object.keys(snapshot.items).length,
+    touched_items: snapshot.evidence_spans.length,
+    resolved_items: [],
+    next_items: snapshot.unresolved_items,
+    review_items: [],
+  };
   phqTotal.textContent = snapshot.totals.PHQ9 ?? 0;
   gadTotal.textContent = snapshot.totals.GAD7 ?? 0;
   safetyLevel.textContent = snapshot.safety.level;
   safetyLevel.className = `metric-value small ${snapshot.safety.level}`;
   snapshotMode.textContent = snapshot.mode;
   summaryText.textContent = summary;
-  coverageText.textContent = `Coverage ${snapshot.evidence_spans.length}/${Object.keys(snapshot.items).length}`;
-  unresolvedCount.textContent = `${snapshot.unresolved_items.length} unresolved`;
+  coverageText.textContent = `Coverage ${coverage.touched_items}/${coverage.total_items} · resolved ${coverage.resolved_items.length}`;
+  unresolvedCount.textContent = `${coverage.next_items.length} queued`;
+  reviewCount.textContent = `${coverage.review_items.length} flagged`;
 
   unresolvedList.innerHTML = "";
-  if (!snapshot.unresolved_items.length) {
-    unresolvedList.innerHTML = "<li>No unresolved items right now.</li>";
+  if (!coverage.next_items.length) {
+    unresolvedList.innerHTML = "<li>No follow-up queue right now.</li>";
   } else {
-    snapshot.unresolved_items.slice(0, 6).forEach((itemId) => {
+    coverage.next_items.slice(0, 6).forEach((itemId) => {
       const row = rows.find((entry) => entry.item_id === itemId);
       const entry = document.createElement("li");
       entry.textContent = row ? `${row.label} · ${row.status}` : itemId;
       unresolvedList.appendChild(entry);
+    });
+  }
+
+  reviewList.innerHTML = "";
+  if (!coverage.review_items.length) {
+    reviewList.innerHTML = "<li>No review flags right now.</li>";
+  } else {
+    coverage.review_items.slice(0, 6).forEach((itemId) => {
+      const row = rows.find((entry) => entry.item_id === itemId);
+      const entry = document.createElement("li");
+      entry.textContent = row ? `${row.label} · ${row.status}` : itemId;
+      reviewList.appendChild(entry);
     });
   }
 
@@ -137,9 +159,11 @@ function resetInsightPanel() {
   safetyLevel.textContent = "none";
   snapshotMode.textContent = "heuristic";
   coverageText.textContent = "Coverage 0/16";
-  unresolvedCount.textContent = "0 unresolved";
+  unresolvedCount.textContent = "0 queued";
+  reviewCount.textContent = "0 flagged";
   summaryText.textContent = "Start a conversation to generate the first summary.";
-  unresolvedList.innerHTML = "<li>No unresolved items yet.</li>";
+  unresolvedList.innerHTML = "<li>No follow-up queue yet.</li>";
+  reviewList.innerHTML = "<li>No review flags right now.</li>";
   itemTableBody.innerHTML = '<tr><td colspan="4" class="empty-cell">No item scores yet.</td></tr>';
   evidenceList.innerHTML = '<li class="empty-cell">No evidence spans yet.</li>';
 }

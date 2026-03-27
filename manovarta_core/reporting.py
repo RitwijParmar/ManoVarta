@@ -16,18 +16,22 @@ def build_summary(session: ChatSession, snapshot: ScreeningSnapshot) -> str:
             unresolved_bits.append(label)
 
     safety_text = snapshot.safety.level
-    touched_items = sum(1 for item in snapshot.items.values() if item.evidence_span_ids)
     resolved_text = "; ".join(resolved_bits[:8]) or "No stable symptom evidence yet."
     unresolved_text = ", ".join(unresolved_bits[:6]) or "None"
+    review_labels = [ITEM_INDEX[item_id].label for item_id in snapshot.coverage.review_items[:4]]
+    review_text = ", ".join(review_labels) or "None"
 
     return (
         f"Session {session.session_id} in {session.language}. "
         f"Observed totals: PHQ-9={snapshot.totals['PHQ9']}, GAD-7={snapshot.totals['GAD7']}. "
-        f"Coverage: {touched_items}/{len(snapshot.items)} items touched. "
+        f"Coverage: {snapshot.coverage.touched_items}/{snapshot.coverage.total_items} items touched, "
+        f"{len(snapshot.coverage.resolved_items)} resolved, "
+        f"{len(snapshot.coverage.abstained_items)} abstained. "
         f"Safety: {safety_text}. "
         f"Mode: {snapshot.mode}. "
         f"Evidence summary: {resolved_text}. "
-        f"Follow-up still needed for: {unresolved_text}."
+        f"Follow-up still needed for: {unresolved_text}. "
+        f"Human review focus: {review_text}."
     )
 
 

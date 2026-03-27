@@ -1,7 +1,7 @@
 from typing import Dict, Optional, Tuple
 
-from manovarta_core.questionnaires import ITEM_INDEX, all_items
-from manovarta_core.schemas import ChatSession, ScreeningSnapshot
+from manovarta_core.questionnaires import ITEM_INDEX
+from manovarta_core.schemas import ChatSession, CoveragePlan, ScreeningSnapshot
 
 
 OPENING_PROMPTS = {
@@ -112,29 +112,42 @@ class DialoguePlanner:
 
     def next_reply(self, snapshot: ScreeningSnapshot, session: ChatSession) -> Tuple[str, Optional[str]]:
         language = session.language
+        snapshot.coverage = self.build_plan(snapshot, session)
         if snapshot.safety.level == "urgent":
             return SAFETY_MESSAGES[language], None
 
-        for item in self._priority_order(snapshot, session):
+        for item in snapshot.coverage.next_items:
             if item in FOLLOW_UPS:
                 return FOLLOW_UPS[item][language], item
 
         return CLOSING_MESSAGES[language], None
 
-    def _priority_order(self, snapshot: ScreeningSnapshot, session: ChatSession):
+    def build_plan(self, snapshot: ScreeningSnapshot, session: ChatSession) -> CoveragePlan:
         scored = snapshot.items
         unresolved = [
-            item_id for item_id, item in scored.items() if item.status in {"unresolved", "partial", "contradicted"}
+            item_id
+            for item_id, item in scored.items()
+            if item.status in {"unresolved", "partial", "contradicted", "abstained"}
         ]
         unresolved = [item_id for item_id in unresolved if not self._hold_back_sensitive_item(item_id, snapshot, session)]
         unresolved.sort(
             key=lambda item_id: (
                 item_id in session.asked_items,
+                scored[item_id].status == "unresolved",
                 -ITEM_INDEX[item_id].priority,
                 scored[item_id].confidence,
             )
         )
-        return unresolved
+        return snapshot.coverage.model_copy(
+            update={
+                "next_items": unresolved[:5],
+                "review_items": [
+                    item_id for item_id, item in scored.items() if item.review_recommended or item.status in {"contradicted", "abstained"}
+                ],
+                "review_required": snapshot.safety.needs_human_review
+                or any(item.review_recommended or item.status in {"contradicted", "abstained"} for item in scored.values()),
+            }
+        )
 
     def _hold_back_sensitive_item(self, item_id: str, snapshot: ScreeningSnapshot, session: ChatSession) -> bool:
         if item_id != "phq_q9_self_harm":

@@ -70,9 +70,13 @@ class RuntimeEngine:
             llm_used = True
 
         merged_safety = self._merge_safety(base.safety, llm_result)
-        unresolved_items = [
-            item_id for item_id, item in items.items() if item.status != "resolved"
-        ]
+        coverage = self.scorer.build_coverage(items)
+        unresolved_items = (
+            coverage.unresolved_items
+            + coverage.partial_items
+            + coverage.contradicted_items
+            + coverage.abstained_items
+        )
         return ScreeningSnapshot(
             language=base.language,
             items=items,
@@ -80,6 +84,7 @@ class RuntimeEngine:
             unresolved_items=unresolved_items,
             totals=self._build_totals(items),
             safety=merged_safety,
+            coverage=coverage,
             mode="hybrid" if llm_used else base.mode,
         )
 
@@ -137,26 +142,44 @@ class RuntimeEngine:
 
         evidence_ids = list(dict.fromkeys(base.evidence_span_ids + llm_span_ids))
         if base.value is None:
+            if base.status == "abstained":
+                return base.model_copy(
+                    update={
+                        "value": None,
+                        "status": "abstained",
+                        "confidence": max(base.confidence, llm_confidence),
+                        "stable": False,
+                        "evidence_span_ids": evidence_ids,
+                        "contradiction_note": note or base.contradiction_note,
+                        "source": "hybrid",
+                        "review_recommended": True,
+                    }
+                )
+            status = "resolved" if llm_confidence >= 0.78 else "partial"
+            review_recommended = base.review_recommended and status != "resolved"
             return base.model_copy(
                 update={
                     "value": llm_value,
-                    "status": "resolved" if llm_confidence >= 0.78 else "partial",
+                    "status": status,
                     "confidence": max(base.confidence, llm_confidence),
-                    "stable": llm_confidence >= 0.82,
+                    "stable": llm_confidence >= 0.82 and status == "resolved",
                     "evidence_span_ids": evidence_ids,
                     "contradiction_note": note or None,
                     "source": "llm",
+                    "review_recommended": review_recommended,
                 }
             )
 
         if base.value == llm_value:
             return base.model_copy(
                 update={
-                    "status": "resolved",
+                    "value": None if base.status == "abstained" else base.value,
+                    "status": "abstained" if base.status == "abstained" else ("contradicted" if base.review_recommended and base.status == "contradicted" else "resolved"),
                     "confidence": max(base.confidence, llm_confidence, 0.82),
-                    "stable": True,
+                    "stable": not (base.review_recommended and base.status in {"contradicted", "abstained"}),
                     "evidence_span_ids": evidence_ids,
                     "source": "hybrid",
+                    "review_recommended": base.review_recommended or base.status == "abstained",
                 }
             )
 
@@ -165,24 +188,26 @@ class RuntimeEngine:
             return base.model_copy(
                 update={
                     "value": chosen_value,
-                    "status": "partial",
+                    "status": "abstained" if base.review_recommended else "partial",
                     "confidence": round(max(base.confidence, llm_confidence) - 0.04, 2),
                     "stable": False,
                     "evidence_span_ids": evidence_ids,
-                    "contradiction_note": "Heuristic and LLM differ slightly.",
+                    "contradiction_note": "Heuristic and LLM differ slightly." if not base.review_recommended else "Conflicting evidence still needs review.",
                     "source": "hybrid",
+                    "review_recommended": base.review_recommended,
                 }
             )
 
         return base.model_copy(
             update={
-                "value": max(base.value, llm_value),
-                "status": "contradicted",
-                "confidence": round(max(0.4, min(base.confidence, llm_confidence)), 2),
+                "value": None,
+                "status": "abstained",
+                "confidence": round(max(0.35, min(base.confidence, llm_confidence)), 2),
                 "stable": False,
                 "evidence_span_ids": evidence_ids,
-                "contradiction_note": "Heuristic and LLM disagree; review needed.",
+                "contradiction_note": "Heuristic and LLM disagree; human review needed before assigning a score.",
                 "source": "hybrid",
+                "review_recommended": True,
             }
         )
 

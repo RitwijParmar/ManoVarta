@@ -9,7 +9,7 @@ from pydantic import BaseModel, Field
 Speaker = Literal["assistant", "user"]
 LanguageCode = Literal["en", "hi", "hinglish"]
 SafetyLevel = Literal["none", "review", "urgent"]
-ItemStatus = Literal["resolved", "partial", "contradicted", "unresolved"]
+ItemStatus = Literal["resolved", "partial", "contradicted", "unresolved", "abstained"]
 
 
 class Turn(BaseModel):
@@ -42,6 +42,7 @@ class ItemScore(BaseModel):
     evidence_span_ids: List[str] = Field(default_factory=list)
     contradiction_note: Optional[str] = None
     source: Literal["none", "heuristic", "llm", "hybrid"] = "heuristic"
+    review_recommended: bool = False
 
 
 class SafetyFlag(BaseModel):
@@ -51,6 +52,20 @@ class SafetyFlag(BaseModel):
     needs_human_review: bool = False
 
 
+class CoveragePlan(BaseModel):
+    total_items: int
+    touched_items: int
+    resolved_items: List[str] = Field(default_factory=list)
+    partial_items: List[str] = Field(default_factory=list)
+    contradicted_items: List[str] = Field(default_factory=list)
+    abstained_items: List[str] = Field(default_factory=list)
+    unresolved_items: List[str] = Field(default_factory=list)
+    review_items: List[str] = Field(default_factory=list)
+    next_items: List[str] = Field(default_factory=list)
+    completion_ratio: float = Field(ge=0.0, le=1.0)
+    review_required: bool = False
+
+
 class ScreeningSnapshot(BaseModel):
     language: LanguageCode
     items: Dict[str, ItemScore]
@@ -58,6 +73,7 @@ class ScreeningSnapshot(BaseModel):
     unresolved_items: List[str]
     totals: Dict[str, Optional[int]]
     safety: SafetyFlag
+    coverage: CoveragePlan
     mode: Literal["heuristic", "hybrid"] = "heuristic"
 
 

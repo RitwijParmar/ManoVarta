@@ -44,3 +44,31 @@ def test_scoring_picks_up_hindi_worry_and_sleep():
 
     assert snapshot.items["gad_q2_control_worry"].value == 3
     assert snapshot.items["phq_q3_sleep"].value == 2
+
+
+def test_scoring_abstains_on_unresolved_contradiction():
+    turns = [
+        Turn(turn_id=1, speaker="assistant", text="How has your sleep been?", language_tag="en"),
+        Turn(
+            turn_id=2,
+            speaker="user",
+            text="I don't keep waking up at night.",
+            language_tag="en",
+        ),
+        Turn(
+            turn_id=3,
+            speaker="user",
+            text="Actually before exams I keep waking up and my sleep schedule is messed up.",
+            language_tag="en",
+        ),
+    ]
+
+    safety = SafetyMonitor().assess(turns)
+    snapshot = ConversationScorer().analyze(turns, "en", safety)
+
+    sleep_item = snapshot.items["phq_q3_sleep"]
+    assert sleep_item.status == "abstained"
+    assert sleep_item.value is None
+    assert sleep_item.review_recommended is True
+    assert "phq_q3_sleep" in snapshot.coverage.abstained_items
+    assert "phq_q3_sleep" in snapshot.coverage.review_items
