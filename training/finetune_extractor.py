@@ -25,6 +25,7 @@ def parse_args():
     parser.add_argument("--max-length", type=int, default=2048)
     parser.add_argument("--lora-r", type=int, default=16)
     parser.add_argument("--lora-alpha", type=int, default=32)
+    parser.add_argument("--target-modules", default=None)
     parser.add_argument("--use-4bit", action="store_true")
     parser.add_argument("--device", choices=["auto", "cuda", "mps", "cpu"], default="auto")
     parser.add_argument("--precision", choices=["auto", "bf16", "fp16", "fp32"], default="auto")
@@ -37,6 +38,24 @@ def parse_args():
     parser.add_argument("--eval-steps", type=int, default=50)
     parser.add_argument("--resume-from-checkpoint", default=None)
     return parser.parse_args()
+
+
+def resolve_target_modules(model_name: str, target_modules_arg: str | None) -> list[str] | None:
+    if target_modules_arg:
+        return [part.strip() for part in target_modules_arg.split(",") if part.strip()]
+
+    lowered = model_name.lower()
+    if "aya-expanse" in lowered or "command-r" in lowered:
+        return [
+            "q_proj",
+            "k_proj",
+            "v_proj",
+            "o_proj",
+            "gate_proj",
+            "up_proj",
+            "down_proj",
+        ]
+    return None
 
 
 def resolve_resume_checkpoint(output_dir: str, resume_arg: str | None) -> str | None:
@@ -111,12 +130,14 @@ def main() -> int:
     if args.gradient_checkpointing:
         model.gradient_checkpointing_enable()
 
+    target_modules = resolve_target_modules(args.model_name, args.target_modules)
     peft_config = LoraConfig(
         r=args.lora_r,
         lora_alpha=args.lora_alpha,
         lora_dropout=0.05,
         bias="none",
         task_type="CAUSAL_LM",
+        target_modules=target_modules,
     )
 
     training_kwargs = {
@@ -142,6 +163,8 @@ def main() -> int:
         training_kwargs["use_mps_device"] = True
     if args.save_strategy == "steps":
         training_kwargs["save_steps"] = args.save_steps
+    if "save_only_model" in inspect.signature(TrainingArguments.__init__).parameters:
+        training_kwargs["save_only_model"] = True
     strategy_key = "evaluation_strategy"
     if strategy_key not in inspect.signature(TrainingArguments.__init__).parameters:
         strategy_key = "eval_strategy"
