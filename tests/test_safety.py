@@ -22,3 +22,50 @@ def test_urgent_safety_handles_direct_self_harm_language():
 
     assert flag.level == "urgent"
     assert flag.needs_human_review is True
+
+
+def test_review_safety_handles_burden_language():
+    turns = [
+        Turn(
+            turn_id=1,
+            speaker="user",
+            text="Kabhi lagta hai mere bina sab theek hoga and I am just a burden at home.",
+            language_tag="hinglish",
+        ),
+    ]
+
+    flag = SafetyMonitor().assess(turns)
+
+    assert flag.level == "review"
+    assert flag.needs_human_review is True
+
+
+def test_urgent_safety_handles_method_plus_time_language():
+    turns = [
+        Turn(
+            turn_id=1,
+            speaker="user",
+            text="I keep thinking about taking all the pills tonight because nothing matters.",
+            language_tag="en",
+        ),
+    ]
+
+    flag = SafetyMonitor().assess(turns)
+
+    assert flag.level == "urgent"
+    assert flag.needs_human_review is True
+
+
+def test_safety_does_not_match_partial_word_fragments():
+    turns = [
+        Turn(
+            turn_id=1,
+            speaker="user",
+            text="Sleep is messy and I have not eaten properly for days.",
+            language_tag="en",
+        ),
+    ]
+
+    flag = SafetyMonitor().assess(turns)
+
+    assert flag.level == "none"

@@ -12,15 +12,23 @@ def normalize_text(text: str) -> str:
 
 def contains_any(text: str, phrases: Iterable[str]) -> bool:
     normalized = normalize_text(text)
-    return any(normalize_text(phrase) in normalized for phrase in phrases)
+    return any(contains_phrase(normalized, phrase, pre_normalized=True) for phrase in phrases)
 
 
 def first_match(text: str, phrases: Iterable[str]) -> Optional[str]:
-    normalized = normalize_text(text)
     for phrase in phrases:
-        if normalize_text(phrase) in normalized:
+        if contains_phrase(text, phrase):
             return phrase
     return None
+
+
+def contains_phrase(text: str, phrase: str, pre_normalized: bool = False) -> bool:
+    normalized = text if pre_normalized else normalize_text(text)
+    target = normalize_text(phrase)
+    if not target:
+        return False
+    pattern = rf"(^|\s){re.escape(target)}($|\s)"
+    return re.search(pattern, normalized) is not None
 
 
 def extract_window(text: str, phrase: str, radius: int = 32) -> str:

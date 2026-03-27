@@ -1,5 +1,5 @@
 from manovarta_core.config import RuntimeConfig
-from manovarta_core.llm import HuggingFaceExtractor, HuggingFaceResponder
+from manovarta_core.llm import HuggingFaceExtractor, HuggingFaceResponder, HuggingFaceSafetyAssessor
 
 
 def _disabled_config():
@@ -7,10 +7,12 @@ def _disabled_config():
         model_provider="huggingface",
         chat_model="Qwen/Qwen2.5-7B-Instruct",
         extraction_model="CohereLabs/aya-expanse-32b",
+        safety_model="CohereLabs/aya-expanse-32b",
         hf_token=None,
         hf_timeout=30.0,
         assistant_temperature=0.2,
         assistant_max_tokens=180,
+        safety_max_tokens=180,
         semantic_safety_model=None,
         semantic_safety_review_threshold=0.64,
         semantic_safety_urgent_threshold=0.72,
@@ -25,3 +27,8 @@ def test_huggingface_responder_stays_disabled_without_token():
 def test_huggingface_extractor_stays_disabled_without_token():
     extractor = HuggingFaceExtractor(_disabled_config())
     assert extractor.enabled is False
+
+
+def test_huggingface_safety_assessor_stays_disabled_without_token():
+    assessor = HuggingFaceSafetyAssessor(_disabled_config())
+    assert assessor.enabled is False

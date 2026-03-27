@@ -7,7 +7,7 @@ from fastapi.staticfiles import StaticFiles
 from manovarta_core.config import get_runtime_config
 from manovarta_core.dialogue import DialoguePlanner
 from manovarta_core.engine import RuntimeEngine
-from manovarta_core.llm import HuggingFaceExtractor, HuggingFaceResponder
+from manovarta_core.llm import HuggingFaceExtractor, HuggingFaceResponder, HuggingFaceSafetyAssessor
 from manovarta_core.profiles import load_seed_profiles
 from manovarta_core.questionnaires import grouped_items
 from manovarta_core.reporting import build_rows, build_summary
@@ -49,10 +49,12 @@ semantic_safety_monitor = SemanticSafetyMonitor(
 scorer = ConversationScorer()
 responder = HuggingFaceResponder(runtime_config)
 extractor = HuggingFaceExtractor(runtime_config)
+safety_assessor = HuggingFaceSafetyAssessor(runtime_config)
 engine = RuntimeEngine(
     scorer=scorer,
     safety_monitor=safety_monitor,
     semantic_safety_monitor=semantic_safety_monitor,
+    safety_assessor=safety_assessor,
     extractor=extractor,
 )
 
@@ -76,6 +78,7 @@ def runtime_settings() -> dict:
         "provider": runtime_config.model_provider,
         "chat_model": runtime_config.chat_model,
         "extraction_model": runtime_config.extraction_model,
+        "safety_model": runtime_config.safety_model,
         "huggingface_enabled": runtime_config.huggingface_enabled,
         "semantic_safety_enabled": runtime_config.semantic_safety_enabled,
         "semantic_safety_model": runtime_config.semantic_safety_model,

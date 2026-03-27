@@ -20,6 +20,23 @@ SYSTEM_DIALOGUE = (
     "Do not diagnose and do not give therapy."
 )
 
+SAFETY_KEYWORDS = (
+    "disappear",
+    "vanish",
+    "better off without me",
+    "hurt myself",
+    "kill myself",
+    "don't want to live",
+    "not want to live",
+    "not wanting to be alive",
+    "burden",
+    "gayab",
+    "jeena nahi",
+    "nuksan",
+    "khatam",
+    "mar jana",
+)
+
 
 @dataclass(frozen=True)
 class SplitManifest:
@@ -116,20 +133,23 @@ def build_follow_up_examples(conversations: list[dict[str, Any]]) -> list[dict[s
 def build_safety_examples(conversations: list[dict[str, Any]]) -> list[dict[str, Any]]:
     examples = []
     for conversation in conversations:
-        user_text = "\n".join(
+        user_turns = [
             turn["text"] for turn in conversation.get("conversation_turns", []) if turn["speaker"] == "user"
-        )
+        ]
         safety = conversation.get("safety_flag", {})
-        examples.append(
-            {
-                "id": conversation["conversation_id"],
-                "task": "safety",
-                "language": conversation["language"],
-                "text": user_text,
-                "label": safety.get("level", "none"),
-                "cues": safety.get("cues", []),
-            }
-        )
+        label = safety.get("level", "none")
+        cues = safety.get("cues", [])
+        for suffix, text in _build_safety_views(user_turns, cues, label):
+            examples.append(
+                {
+                    "id": conversation["conversation_id"] if suffix == "full" else f"{conversation['conversation_id']}-{suffix}",
+                    "task": "safety",
+                    "language": conversation["language"],
+                    "text": text,
+                    "label": label,
+                    "cues": cues,
+                }
+            )
     return examples
 
 
@@ -232,3 +252,58 @@ def _pack_instruction(system_prompt: str, prompt: str, response: str) -> str:
         "<|assistant|>\n"
         f"{response}"
     )
+
+
+def _build_safety_views(user_turns: list[str], cues: list[str], label: str) -> list[tuple[str, str]]:
+    full_text = "\n".join(turn.strip() for turn in user_turns if turn.strip()).strip()
+    if not full_text:
+        return [("full", "")]
+
+    recent_turns = "\n".join(user_turns[-2:]).strip()
+    latest_turn = user_turns[-1].strip()
+    tail = _tail_words(full_text, 96)
+    cue_lines = _cue_lines(user_turns, cues)
+
+    base_sections = [f"Most recent disclosure:\n{latest_turn}"]
+    if recent_turns and recent_turns != latest_turn:
+        base_sections.append(f"Recent context:\n{recent_turns}")
+    if cue_lines:
+        base_sections.append(f"Risk-focused lines:\n{cue_lines}")
+    if tail and tail not in recent_turns:
+        base_sections.append(f"Conversation tail:\n{tail}")
+
+    views: list[tuple[str, str]] = [("full", "\n\n".join(base_sections))]
+    if label != "none":
+        views.append(("recent", recent_turns or latest_turn))
+        if cue_lines:
+            views.append(("cue", cue_lines))
+        if tail and tail not in {recent_turns, latest_turn, cue_lines}:
+            views.append(("tail", tail))
+
+    deduped: list[tuple[str, str]] = []
+    seen = set()
+    for suffix, text in views:
+        normalized = " ".join(text.split())
+        if not normalized or normalized in seen:
+            continue
+        seen.add(normalized)
+        deduped.append((suffix, text))
+    return deduped
+
+
+def _tail_words(text: str, count: int) -> str:
+    words = text.split()
+    if len(words) <= count:
+        return text
+    return " ".join(words[-count:])
+
+
+def _cue_lines(user_turns: list[str], cues: list[str]) -> str:
+    cue_terms = {cue.replace("_", " ").lower() for cue in cues}
+    cue_terms.update(SAFETY_KEYWORDS)
+    matched = []
+    for turn in user_turns:
+        lowered = turn.lower()
+        if any(term in lowered for term in cue_terms):
+            matched.append(turn.strip())
+    return "\n".join(dict.fromkeys(matched))

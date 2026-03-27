@@ -38,3 +38,9 @@ def test_training_examples_export_for_all_tasks():
     assert safety
     assert "items" in extractor[0]["response"]
     assert safety[0]["label"] in {"none", "review", "urgent"}
+    assert "Most recent disclosure:" in safety[0]["text"]
+
+    positive_conversations = sum(
+        1 for conversation in grouped["train"] if conversation.get("safety_flag", {}).get("level") != "none"
+    )
+    assert len(safety) >= len(grouped["train"]) + positive_conversations

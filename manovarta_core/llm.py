@@ -5,7 +5,7 @@ from typing import Optional, Tuple
 
 from manovarta_core.config import RuntimeConfig
 from manovarta_core.questionnaires import ITEM_INDEX
-from manovarta_core.schemas import ChatSession, ScreeningSnapshot, Turn
+from manovarta_core.schemas import ChatSession, SafetyFlag, ScreeningSnapshot, Turn
 
 try:
     from huggingface_hub import InferenceClient
@@ -167,6 +167,92 @@ class HuggingFaceExtractor:
             return self._parse_json(content)
         except Exception:
             return None
+
+    def _parse_json(self, content: str) -> Optional[dict]:
+        cleaned = content.strip()
+        if cleaned.startswith("```"):
+            cleaned = cleaned.split("\n", 1)[-1]
+            cleaned = cleaned.rsplit("```", 1)[0].strip()
+        try:
+            return json.loads(cleaned)
+        except json.JSONDecodeError:
+            return None
+
+
+class HuggingFaceSafetyAssessor:
+    def __init__(self, config: RuntimeConfig) -> None:
+        self.config = config
+        self._client = None
+        if self.config.huggingface_enabled and InferenceClient is not None:
+            self._client = InferenceClient(
+                model=self.config.safety_model,
+                token=self.config.hf_token,
+                timeout=self.config.hf_timeout,
+            )
+
+    @property
+    def enabled(self) -> bool:
+        return self._client is not None
+
+    def assess(self, turns: list[Turn], language: str) -> Optional[SafetyFlag]:
+        if not self.enabled:
+            return None
+
+        transcript = "\n".join(
+            f"{turn.speaker}: {turn.text}"
+            for turn in turns[-12:]
+        ).strip()
+        if not transcript:
+            return None
+
+        messages = [
+            {
+                "role": "system",
+                "content": (
+                    "You are a conservative safety reviewer for a mental health screening assistant. "
+                    "Return strict JSON only. "
+                    "Use one of these levels: none, review, urgent. "
+                    "urgent means direct self-harm intent, plan, means, or immediate risk. "
+                    "review means indirect disappearance language, hopelessness with collapse, or self-harm concern without clear immediacy. "
+                    "Prefer review over none when uncertain."
+                ),
+            },
+            {
+                "role": "user",
+                "content": (
+                    f"Language: {language}\n"
+                    "Return JSON with keys: level, cues, rationale.\n"
+                    "cues must be a short list of exact quoted phrases or short descriptions.\n"
+                    "Do not include markdown.\n"
+                    f"Transcript:\n{transcript}"
+                ),
+            },
+        ]
+
+        try:
+            output = self._client.chat_completion(
+                messages=messages,
+                temperature=0.0,
+                max_tokens=self.config.safety_max_tokens,
+            )
+        except Exception:
+            return None
+
+        payload = self._parse_json(output.choices[0].message.content)
+        if not payload:
+            return None
+
+        level = payload.get("level", "none")
+        if level not in {"none", "review", "urgent"}:
+            level = "none"
+        cues = [str(cue).strip() for cue in payload.get("cues", []) if str(cue).strip()]
+        rationale = str(payload.get("rationale", "")).strip() or None
+        return SafetyFlag(
+            level=level,
+            cues=cues,
+            rationale=rationale,
+            needs_human_review=level in {"review", "urgent"},
+        )
 
     def _parse_json(self, content: str) -> Optional[dict]:
         cleaned = content.strip()

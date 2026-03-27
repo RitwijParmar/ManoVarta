@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Iterable, Optional
 
-from manovarta_core.llm import HuggingFaceExtractor
+from manovarta_core.llm import HuggingFaceExtractor, HuggingFaceSafetyAssessor
 from manovarta_core.questionnaires import ITEM_INDEX
 from manovarta_core.semantic_safety import SemanticSafetyMonitor
 from manovarta_core.safety import SafetyMonitor
@@ -20,11 +20,13 @@ class RuntimeEngine:
         scorer: Optional[ConversationScorer] = None,
         safety_monitor: Optional[SafetyMonitor] = None,
         semantic_safety_monitor: Optional[SemanticSafetyMonitor] = None,
+        safety_assessor: Optional[HuggingFaceSafetyAssessor] = None,
         extractor: Optional[HuggingFaceExtractor] = None,
     ) -> None:
         self.scorer = scorer or ConversationScorer()
         self.safety_monitor = safety_monitor or SafetyMonitor()
         self.semantic_safety_monitor = semantic_safety_monitor
+        self.safety_assessor = safety_assessor
         self.extractor = extractor
 
     def analyze(self, turns: Iterable[Turn], language: str, use_llm: bool = True) -> ScreeningSnapshot:
@@ -32,6 +34,10 @@ class RuntimeEngine:
         safety_flag = self.safety_monitor.assess(turn_list)
         if self.semantic_safety_monitor is not None:
             safety_flag = self._merge_safety_flags(safety_flag, self.semantic_safety_monitor.assess(turn_list))
+        if self.safety_assessor is not None and self.safety_assessor.enabled and safety_flag.level != "urgent":
+            assessed_flag = self.safety_assessor.assess(turn_list, language)
+            if assessed_flag is not None:
+                safety_flag = self._merge_safety_flags(safety_flag, assessed_flag)
         snapshot = self.scorer.analyze(turn_list, language, safety_flag)
         if not use_llm or self.extractor is None or not self.extractor.enabled:
             return snapshot

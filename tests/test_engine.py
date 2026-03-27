@@ -33,6 +33,18 @@ class StubSemanticMonitor:
         )
 
 
+class StubSafetyAssessor:
+    enabled = True
+
+    def assess(self, turns, language):
+        return SafetyFlag(
+            level="urgent",
+            cues=["llm-safety:test"],
+            rationale="LLM safety assessor flagged urgent intent.",
+            needs_human_review=True,
+        )
+
+
 def test_runtime_engine_merges_llm_output_into_snapshot():
     turns = [
         Turn(turn_id=1, speaker="assistant", text="What has been hardest lately?", language_tag="en"),
@@ -74,3 +86,21 @@ def test_runtime_engine_can_merge_semantic_safety_signal():
 
     assert snapshot.safety.level == "review"
     assert "semantic:test" in snapshot.safety.cues
+
+
+def test_runtime_engine_can_merge_llm_safety_signal():
+    turns = [
+        Turn(turn_id=1, speaker="assistant", text="How have evenings been?", language_tag="en"),
+        Turn(turn_id=2, speaker="user", text="I feel empty and want everything to stop.", language_tag="en"),
+    ]
+    engine = RuntimeEngine(
+        scorer=ConversationScorer(),
+        safety_monitor=SafetyMonitor(),
+        safety_assessor=StubSafetyAssessor(),
+        extractor=None,
+    )
+
+    snapshot = engine.analyze(turns, "en", use_llm=False)
+
+    assert snapshot.safety.level == "urgent"
+    assert "llm-safety:test" in snapshot.safety.cues

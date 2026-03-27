@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import argparse
+from collections import Counter
 import inspect
 from pathlib import Path
 import sys
@@ -80,6 +81,13 @@ def main() -> int:
         "json",
         data_files={"train": args.train_file, "eval": args.eval_file},
     )
+    train_labels = [LABEL_TO_ID[label] for label in dataset["train"]["label"]]
+    label_counts = Counter(train_labels)
+    total_labels = len(train_labels)
+    class_weights = torch.tensor(
+        [total_labels / (len(LABEL_TO_ID) * max(label_counts.get(label_id, 0), 1)) for label_id in range(len(LABEL_TO_ID))],
+        dtype=torch.float32,
+    )
     tokenizer = AutoTokenizer.from_pretrained(args.model_name, trust_remote_code=True)
 
     def preprocess(batch):
@@ -109,6 +117,21 @@ def main() -> int:
         preds = np.argmax(logits, axis=-1)
         accuracy = float((preds == labels).mean())
         return {"accuracy": round(accuracy, 4)}
+
+    class WeightedTrainer(Trainer):
+        def __init__(self, *args, class_weights, **kwargs):
+            super().__init__(*args, **kwargs)
+            self.class_weights = class_weights
+
+        def compute_loss(self, model, inputs, return_outputs=False, **kwargs):
+            labels = inputs.get("labels")
+            outputs = model(**inputs)
+            logits = outputs.get("logits")
+            loss_fct = torch.nn.CrossEntropyLoss(weight=self.class_weights.to(logits.device))
+            loss = loss_fct(logits.view(-1, model.config.num_labels), labels.view(-1))
+            if return_outputs:
+                return loss, outputs
+            return loss
 
     training_kwargs = {
         "output_dir": args.output_dir,
@@ -153,7 +176,7 @@ def main() -> int:
     elif "tokenizer" in trainer_signature:
         trainer_kwargs["tokenizer"] = tokenizer
 
-    trainer = Trainer(**trainer_kwargs)
+    trainer = WeightedTrainer(class_weights=class_weights, **trainer_kwargs)
 
     resume_checkpoint = resolve_resume_checkpoint(args.output_dir, args.resume_from_checkpoint)
     trainer.train(resume_from_checkpoint=resume_checkpoint)
