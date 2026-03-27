@@ -168,41 +168,42 @@ Responsibilities:
 
 ## 8. Data Roadmap
 
-The current Phase 1 seed plan is useful, but the final project needs a richer and more deliberately varied annotated set.
+The project now uses a layered data strategy instead of treating every synthetic conversation as equally strong evidence.
 
-### 8.1 Final dataset targets
+### 8.1 Current repository state
 
-Use a layered data strategy rather than a single pool.
-
-| Split | Purpose | Target Size | Annotation Level |
+| Layer | Purpose | Size | Annotation Level |
 | --- | --- | --- | --- |
-| Seed pilot | early development | 80 conversations | initial double annotation |
-| Gold evaluation set | final metrics and error analysis | 120 conversations | double annotation + consensus |
-| Development extension | prompt iteration and debugging | 60 conversations | at least one strong pass, selective consensus |
-| Weakly labeled augmentation | retrieval stress tests or prompt tuning support | 150-250 conversations | light review only |
-| Voice subset | ASR robustness testing | 24-30 matched audio/transcript conversations | transcript verified + item labels |
+| Curated core | main reviewed set for error analysis and reporting | 48 conversations | 24 consensus final + 24 double annotated |
+| Silver robustness set | broader training and prompt-stress pool | 132 conversations | draft labels carried forward from curated source |
+| Total text corpus | current working dataset | 180 conversations | mixed quality by design |
 
-### 8.2 Recommended final distribution
+Current language distribution:
 
-For the main final text dataset:
+- `60` English
+- `60` Hindi
+- `60` Hinglish
 
-- `60` profiles,
-- `3` conversation variants per profile,
-- `180` conversations total.
+Current safety distribution:
 
-Suggested language split:
+- `127` none
+- `37` review
+- `16` urgent
 
-- `72` English,
-- `72` Hindi,
-- `36` Hinglish/code-mixed.
+This is a stronger project state than the earlier tiny seed set, but it is still a synthetic pilot corpus. The curated core should be treated as the higher-trust evaluation slice, while the silver layer should be treated as a robustness-oriented development slice.
 
-Suggested gold subset:
+### 8.2 Why the corpus is split this way
 
-- `48` English,
-- `48` Hindi,
-- `24` Hinglish.
+The main risk in synthetic mental-health dialogue is not only size but uniformity. A flat `180`-conversation corpus generated in one style would look larger without becoming more useful. The current `48 + 132` structure is more honest:
 
-This keeps the final evaluation balanced without making Hinglish dominate beyond realistic team capacity.
+- the curated core preserves closer manual control over wording, evidence spans, and label logic,
+- the silver layer adds conversational messiness without pretending every sample has the same review quality,
+- training and ablation work can use both layers,
+- final metrics and close error analysis should lean more heavily on the curated core.
+
+### 8.3 Next optional stretch target
+
+If more time remains after the main demo is stable, the best extension is not another blind jump in count. It is to expand the curated core toward `60` reviewed profiles while keeping the silver layer clearly separated.
 
 ## 9. Data Nuance Expansion Plan
 
@@ -242,6 +243,12 @@ The expanded set should deliberately include:
 - low-engagement users who require several careful follow-ups,
 - safety-related phrasing that is ambiguous at first and becomes clearer later.
 
+The current silver set operationalizes this with three main variant families:
+
+- `guarded_minimize`: downplays severity early, reveals details later,
+- `functional_masking`: focuses on work, study, or family obligations before emotional content,
+- `temporal_self_correction`: states one thing first and revises it later in the conversation.
+
 ### 9.3 What to avoid
 
 - repetitive template-like conversations,
@@ -251,6 +258,12 @@ The expanded set should deliberately include:
 - perfectly clean and fully cooperative transcripts.
 
 ## 10. Annotation Roadmap
+
+The annotation strategy should stay asymmetric:
+
+- curated-core conversations are the main place for double annotation and consensus,
+- silver conversations should usually inherit the source labels and then receive spot checks,
+- disagreements in the silver layer should trigger either promotion back into a reviewed queue or exclusion from final headline metrics.
 
 ### 10.1 Annotation outputs per conversation
 

@@ -14,21 +14,24 @@ The goal is a credible research prototype, not a therapy product or diagnostic s
 
 ## Dataset snapshot
 
-The checked-in synthetic annotated corpus currently includes:
+The checked-in synthetic annotated corpus now uses a `curated core + silver extension` design:
 
 - `48` patient profiles
-- `48` conversation records
-- balanced language coverage: `16` English, `16` Hindi, `16` Hinglish
-- safety mix: `34` none, `10` review, `4` urgent
-- a dedicated nuance pack with guarded openings, deny-then-reveal cases, Hindi somatic phrasing, Hinglish code-mixing, passive disappearance language, and contradiction-style disclosures
+- `48` curated conversation records
+- `132` silver conversation variants built from the curated core
+- `180` total conversation records
+- balanced language coverage: `60` English, `60` Hindi, `60` Hinglish
+- review mix: `24` `consensus_final`, `24` `double_annotated`, `132` `draft`
+- safety mix: `127` none, `37` review, `16` urgent
+- nuance coverage that now includes guarded openings, deny-then-reveal cases, Hindi somatic phrasing, Hinglish code-mixing, passive disappearance language, contradiction-style disclosures, burden language, exam/work masking, caregiving stress, breakup narratives, and low-engagement short replies
 
 The current processed split after export is:
 
-- extractor: `24` train / `12` dev / `12` test
-- follow-up: `36` train / `24` dev / `36` test
-- safety: `24` train / `12` dev / `12` test
+- extractor: `84` train / `48` dev / `48` test
+- follow-up: `120` train / `96` dev / `144` test
+- safety: `84` train / `48` dev / `48` test
 
-Everything is still synthetic pilot data, but it is now large enough to exercise the full training and evaluation pipeline without the earlier tiny-sample bottleneck.
+Everything is still synthetic pilot data, but it is now large enough to exercise the training and evaluation pipeline without the earlier tiny-sample bottleneck. The curated core is the higher-trust subset for careful review and error analysis; the silver layer is mainly there to improve robustness to conversational variation.
 
 ## Project layout
 
@@ -40,6 +43,7 @@ Everything is still synthetic pilot data, but it is now large enough to exercise
 | `data/seed/` | seed profiles and conversations for local testing |
 | `tests/` | API and scoring tests |
 | `README_phase1.md` | proposal and Milestone 1 package summary |
+| `data_nuance_strategy.md` | rationale for the curated core, silver variants, and nuance dimensions |
 | `tools/demo_cli.py` | terminal demo loop using the same runtime logic |
 
 ## Local setup
@@ -86,12 +90,13 @@ pytest
 ```bash
 python tools/generate_seed_scaleup.py
 python tools/generate_seed_nuance_pack.py
+python tools/generate_seed_silver_variants.py
 python tools/dataset_stats.py
 python tools/validate_seed_data.py
 python tools/evaluate_seed_runtime.py --mode heuristic
 ```
 
-The nuance-pack generator adds harder disclosure patterns without overwriting the original curated packs.
+The scale-up and nuance generators add harder disclosure patterns without overwriting the original curated packs. The silver-variant generator then produces additional guarded, minimizing, and self-correcting versions for robustness experiments.
 
 If `HF_TOKEN` is set, you can also compare the current LLM extraction path:
 

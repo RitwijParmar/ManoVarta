@@ -10,6 +10,15 @@ The Phase 1 dataset is a pilot seed set for questionnaire-grounded conversationa
 - safety review,
 - future error analysis.
 
+## Current corpus layering
+
+The repository now separates the text corpus into two layers:
+
+- a curated core with stronger review status and tighter control over evidence spans,
+- a larger silver extension used to stress-test guarded disclosure, code-mixing, contradiction, and safety phrasing.
+
+This is more realistic than pretending every synthetic conversation has the same quality. Final headline metrics should lean more heavily on the curated layer, while robustness experiments can use both.
+
 ## 1. Conversation-Level Schema
 
 | Field | Type | Description |
