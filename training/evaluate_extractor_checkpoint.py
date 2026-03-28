@@ -10,9 +10,6 @@ if str(PROJECT_ROOT) not in sys.path:
 
 from manovarta_core.json_utils import parse_extractor_payload
 from manovarta_core.metrics import evaluate_item_predictions
-from manovarta_core.seed_data import load_seed_conversations
-
-
 def parse_args():
     parser = argparse.ArgumentParser(description="Evaluate a fine-tuned extractor checkpoint on a held-out JSONL file.")
     parser.add_argument("--model-path", required=True)
@@ -21,6 +18,7 @@ def parse_args():
     parser.add_argument("--device", choices=["auto", "cuda", "mps", "cpu"], default="auto")
     parser.add_argument("--limit", type=int, default=None)
     parser.add_argument("--offset", type=int, default=0)
+    parser.add_argument("--hf-token", default=None)
     return parser.parse_args()
 
 
@@ -28,7 +26,7 @@ def main() -> int:
     try:
         import torch
         from transformers import AutoModelForCausalLM, AutoTokenizer
-        from peft import AutoPeftModelForCausalLM
+        from peft import PeftConfig, PeftModel
     except ImportError as exc:  # pragma: no cover
         raise SystemExit("Install training extras first: pip install -e .[train]") from exc
 
@@ -36,21 +34,30 @@ def main() -> int:
 
     args = parse_args()
     device = detect_device(torch, args.device)
-    tokenizer = AutoTokenizer.from_pretrained(args.model_path, trust_remote_code=True)
     model_path = Path(args.model_path)
     adapter_config = model_path / "adapter_config.json"
+    hf_token = args.hf_token
     model_kwargs = {
         "trust_remote_code": True,
     }
+    if hf_token:
+        model_kwargs["token"] = hf_token
     if device == "cuda":
         model_kwargs["device_map"] = "auto"
     else:
         model_kwargs["torch_dtype"] = pick_model_dtype(torch, device)
         model_kwargs["low_cpu_mem_usage"] = True
     if adapter_config.exists():
-        model = AutoPeftModelForCausalLM.from_pretrained(args.model_path, **model_kwargs)
+        peft_config = PeftConfig.from_pretrained(args.model_path, token=hf_token)
+        base_model_path = peft_config.base_model_name_or_path
+        tokenizer = AutoTokenizer.from_pretrained(base_model_path, trust_remote_code=True, token=hf_token)
+        base_model = AutoModelForCausalLM.from_pretrained(base_model_path, **model_kwargs)
+        model = PeftModel.from_pretrained(base_model, args.model_path, token=hf_token)
     else:
+        tokenizer = AutoTokenizer.from_pretrained(args.model_path, trust_remote_code=True, token=hf_token)
         model = AutoModelForCausalLM.from_pretrained(args.model_path, **model_kwargs)
+    if tokenizer.pad_token_id is None and tokenizer.eos_token_id is not None:
+        tokenizer.pad_token = tokenizer.eos_token
     if device != "cuda":
         model.to(device)
     model.eval()
@@ -61,8 +68,8 @@ def main() -> int:
         examples = examples[args.offset:]
     if args.limit is not None:
         examples = examples[:args.limit]
-    gold_index = {record["conversation_id"]: record for record in load_seed_conversations()}
     predictions = []
+    gold_records = []
 
     for example in examples:
         prompt = example["text"].rsplit("<|assistant|>", 1)[0] + "<|assistant|>\n"
@@ -73,6 +80,7 @@ def main() -> int:
             output_ids = model.generate(**tokens, max_new_tokens=args.max_new_tokens, do_sample=False)
         completion = tokenizer.decode(output_ids[0][tokens["input_ids"].shape[-1]:], skip_special_tokens=True).strip()
         parsed = parse_extractor_payload(completion) or {"items": [], "safety_level": "none", "notes": "parse_error"}
+        gold = parse_extractor_payload(example["response"]) or {"items": [], "safety_level": "none"}
         predictions.append(
             {
                 "conversation_id": example["id"],
@@ -80,8 +88,17 @@ def main() -> int:
                 "safety_level": parsed.get("safety_level", "none"),
             }
         )
+        gold_items = {item["item_id"]: item["value"] for item in gold.get("items", []) if "item_id" in item}
+        gold_records.append(
+            {
+                "conversation_id": example["id"],
+                "language": example["language"],
+                "phq9_item_labels": {item_id: value for item_id, value in gold_items.items() if item_id.startswith("phq_")},
+                "gad7_item_labels": {item_id: value for item_id, value in gold_items.items() if item_id.startswith("gad_")},
+                "safety_flag": {"level": gold.get("safety_level", "none")},
+            }
+        )
 
-    gold_records = [gold_index[example["id"]] for example in examples if example["id"] in gold_index]
     report = evaluate_item_predictions(gold_records, predictions)
     report["model_path"] = str(Path(args.model_path).resolve())
     report["example_count"] = len(examples)
