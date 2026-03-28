@@ -25,6 +25,8 @@ def parse_args():
     parser.add_argument("--device", choices=["auto", "cuda", "mps", "cpu"], default="auto")
     parser.add_argument("--limit", type=int, default=None)
     parser.add_argument("--offset", type=int, default=0)
+    parser.add_argument("--stop-on-parse-failure", action="store_true")
+    parser.add_argument("--max-parse-failures", type=int, default=None)
     return parser.parse_args()
 
 
@@ -77,6 +79,7 @@ def main() -> int:
     todo_examples = [example for example in examples if example["id"] not in completed_ids]
     gold_index = {record["conversation_id"]: record for record in load_seed_conversations()}
 
+    stopped_due_to_parse_failure = False
     for index, example in enumerate(todo_examples, start=1):
         prompt = example["text"].rsplit("<|assistant|>", 1)[0] + "<|assistant|>\n"
         tokens = tokenizer(prompt, return_tensors="pt")
@@ -115,10 +118,30 @@ def main() -> int:
             flush=True,
         )
 
+        should_stop = False
+        if not row["parsed_ok"] and args.stop_on_parse_failure:
+            should_stop = True
+        if args.max_parse_failures is not None and summary["parse_failures"] >= args.max_parse_failures:
+            should_stop = True
+        if should_stop:
+            stopped_due_to_parse_failure = True
+            print(
+                f"stopping after parse failure recent={example['id']} "
+                f"parse_failures={summary['parse_failures']} raw={row['raw_path']}",
+                flush=True,
+            )
+            break
+
     final_summary = build_summary(prior_rows, examples, gold_index, model_path, args.offset)
+    if stopped_due_to_parse_failure:
+        final_summary["status"] = "stopped_on_parse_failure"
+    elif final_summary["completed_count"] < final_summary["example_count"]:
+        final_summary["status"] = "partial"
+    else:
+        final_summary["status"] = "completed"
     summary_path.write_text(json.dumps(final_summary, indent=2, ensure_ascii=False), encoding="utf-8")
     print(json.dumps(final_summary, indent=2, ensure_ascii=False))
-    return 0
+    return 2 if stopped_due_to_parse_failure else 0
 
 
 def load_existing_progress(progress_path: Path) -> tuple[set[str], list[dict]]:
@@ -158,6 +181,8 @@ def build_summary(
     report["completed_count"] = len(rows)
     report["offset"] = offset
     report["parse_failures"] = sum(1 for row in rows if not row.get("parsed_ok"))
+    report["parse_failure_ids"] = [row["conversation_id"] for row in rows if not row.get("parsed_ok")]
+    report["last_completed_id"] = rows[-1]["conversation_id"] if rows else None
     return report
 
 
