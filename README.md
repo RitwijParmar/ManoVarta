@@ -206,6 +206,12 @@ There is also a Colab-specific walkthrough in `experiments/colab/README.md`.
 Full fine-tuning commands live in `training/README.md`.
 The ready-to-run notebook is `experiments/colab/manovarta_training_colab.ipynb`.
 
+If you want the full remote train/eval path in one command on Colab GPU, use:
+
+```bash
+python tools/run_colab_full_pipeline.py --device cuda
+```
+
 ## Saved evaluation bundle
 
 To write a durable evaluation summary into `reports/`:

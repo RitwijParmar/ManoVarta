@@ -23,6 +23,31 @@ python tools/create_data_splits.py
 python tools/export_training_sets.py
 ```
 
+## One-shot Colab pipeline
+
+If you want a single resumable Colab command that:
+
+- exports the compact multilingual training sets,
+- fine-tunes the extractor,
+- fine-tunes safety,
+- selects the best saved safety checkpoint on the held-out test split,
+- runs staged extractor evaluation with an early parse-failure smoke test,
+- and packages the reports and artifacts,
+
+use:
+
+```bash
+python tools/run_colab_full_pipeline.py \
+  --device cuda \
+  --drive-dir /content/drive/MyDrive/ManoVartaOutputs
+```
+
+If you also have `DAIC-WOZ` mounted in Colab, add:
+
+```bash
+--daic-root /content/drive/MyDrive/DAIC-WOZ
+```
+
 For the strongest extractor train set, prefer:
 
 - `data/processed/extractor_train_best.jsonl`

@@ -25,6 +25,8 @@ def parse_args():
     parser.add_argument("--artifacts-dir", default=str(PROJECT_ROOT / "artifacts"))
     parser.add_argument("--checkpoint-path", default=str(PROJECT_ROOT / "outputs" / "extractor-qwen25"))
     parser.add_argument("--safety-checkpoint-path", help="Optional local safety checkpoint path.")
+    parser.add_argument("--checkpoint-eval-json", help="Optional saved extractor evaluation JSON to reuse instead of rerunning.")
+    parser.add_argument("--safety-eval-json", help="Optional saved safety evaluation JSON to reuse instead of rerunning.")
     parser.add_argument("--semantic-model", default="ai4bharat/IndicBERTv2-MLM-only")
     parser.add_argument("--skip-checkpoint", action="store_true")
     parser.add_argument("--skip-safety-checkpoint", action="store_true")
@@ -60,6 +62,19 @@ def save_payload(reports_dir: Path, filename: str, payload: dict) -> None:
     path = reports_dir / filename
     path.write_text(json.dumps(payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     print(path)
+
+
+def load_saved_report(path_str: str | None, *, label: str) -> dict | None:
+    if not path_str:
+        return None
+    path = Path(path_str)
+    if not path.exists():
+        return {"status": "skipped", "reason": f"{label} report not found: {path}"}
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        return {"status": "error", "stderr": f"Invalid JSON in {path}: {exc}"}
+    return {"status": "ok", "result": payload, "source": str(path.resolve())}
 
 
 def build_bundle(reports: dict, semantic_model: str) -> dict:
@@ -111,6 +126,8 @@ def main() -> int:
 
     if args.skip_checkpoint:
         reports["checkpoint"] = {"status": "skipped", "reason": "Checkpoint evaluation skipped by flag."}
+    elif args.checkpoint_eval_json:
+        reports["checkpoint"] = load_saved_report(args.checkpoint_eval_json, label="Extractor checkpoint")
     elif checkpoint_path.exists():
         reports["checkpoint"] = run_json_command(
             [
@@ -130,6 +147,8 @@ def main() -> int:
 
     if args.skip_safety_checkpoint:
         reports["safety_checkpoint"] = {"status": "skipped", "reason": "Safety checkpoint evaluation skipped by flag."}
+    elif args.safety_eval_json:
+        reports["safety_checkpoint"] = load_saved_report(args.safety_eval_json, label="Safety checkpoint")
     elif safety_checkpoint_path and safety_checkpoint_path.exists():
         reports["safety_checkpoint"] = run_json_command(
             [

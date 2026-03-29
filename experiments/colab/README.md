@@ -3,6 +3,14 @@
 Use this path when you want GPU-backed experiments without bloating the local runtime.
 The fastest route is to open `manovarta_training_colab.ipynb` in Colab and run cells top to bottom.
 
+If you prefer one unattended command instead of stepping through the notebook, use:
+
+```bash
+python tools/run_colab_full_pipeline.py \
+  --device cuda \
+  --drive-dir /content/drive/MyDrive/ManoVartaOutputs
+```
+
 ## Suggested Colab flow
 
 ```bash
@@ -45,6 +53,13 @@ python tools/export_training_sets.py
 python -m training.finetune_extractor --model-name Qwen/Qwen2.5-7B-Instruct --train-file data/processed/extractor_train.jsonl --eval-file data/processed/extractor_dev.jsonl --output-dir outputs/extractor-qwen25
 python -m training.train_safety_classifier --model-name ai4bharat/IndicBERTv2-MLM-only --train-file data/processed/safety_train.jsonl --eval-file data/processed/safety_dev.jsonl --output-dir outputs/safety-indicbert
 ```
+
+The unattended wrapper above is preferred now because it:
+
+- trains from `extractor_train_best.jsonl` by default,
+- keeps extractor evaluation resumable,
+- stops early if the extractor smoke eval hits parse failures,
+- and auto-selects the strongest saved safety checkpoint.
 
 Finalize the run and package durable outputs:
 
