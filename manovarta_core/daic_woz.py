@@ -23,7 +23,7 @@ ANGLE_NOTE_RE = re.compile(r"\s*<[^>]+>")
 
 
 def load_daic_conversations(root: Path) -> dict[str, list[dict[str, Any]]]:
-    root = Path(root)
+    root = resolve_daic_root(root)
     split_metadata = load_daic_split_metadata(root)
     grouped: dict[str, list[dict[str, Any]]] = {"train": [], "dev": [], "test": []}
 
@@ -42,11 +42,26 @@ def load_daic_conversations(root: Path) -> dict[str, list[dict[str, Any]]]:
 
 
 def load_daic_split_metadata(root: Path) -> dict[str, dict[str, dict[str, Any]]]:
-    root = Path(root)
+    root = resolve_daic_root(root)
     return {
         split_name: _load_split_table(_resolve_split_csv(root, split_name), split_name)
         for split_name in ("train", "dev", "test")
     }
+
+
+def resolve_daic_root(root: Path) -> Path:
+    root = Path(root)
+    if _has_daic_split_csvs(root):
+        return root
+
+    for candidate in _candidate_daic_roots(root):
+        if _has_daic_split_csvs(candidate):
+            return candidate
+
+    raise FileNotFoundError(
+        f"Could not find DAIC-WOZ split CSVs under {root}. "
+        "Expected train/dev/test split CSV files somewhere inside the provided root."
+    )
 
 
 def load_daic_transcript(path: Path) -> list[dict[str, Any]]:
@@ -121,6 +136,26 @@ def _resolve_split_csv(root: Path, split_name: str) -> Path:
         if candidate.exists():
             return candidate
     raise FileNotFoundError(f"Could not find DAIC-WOZ split CSV for {split_name} under {root}")
+
+
+def _candidate_daic_roots(root: Path) -> list[Path]:
+    candidates: list[Path] = []
+    for pattern in ("train_split_Depression_AVEC2017.csv", "train_split.csv"):
+        for match in sorted(root.rglob(pattern)):
+            parent = match.parent
+            if parent not in candidates:
+                candidates.append(parent)
+    return candidates
+
+
+def _has_daic_split_csvs(root: Path) -> bool:
+    return all(
+        any(
+            (root / filename).exists()
+            for filename in (f"{split_name}_split_Depression_AVEC2017.csv", f"{split_name}_split.csv")
+        )
+        for split_name in ("train", "dev", "test")
+    )
 
 
 def _load_split_table(path: Path, split_name: str) -> dict[str, dict[str, Any]]:

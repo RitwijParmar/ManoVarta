@@ -3,7 +3,7 @@ import subprocess
 import sys
 from pathlib import Path
 
-from manovarta_core.daic_woz import load_daic_conversations
+from manovarta_core.daic_woz import load_daic_conversations, resolve_daic_root
 
 
 def _write_text(path: Path, content: str) -> None:
@@ -120,3 +120,11 @@ def test_export_training_sets_writes_daic_auxiliary_files(tmp_path: Path):
     assert set(parsed.keys()) == {"items", "safety_level"}
     assert parsed["safety_level"] == "none"
     assert any(item["item_id"] == "phq_q2_low_mood" for item in parsed["items"])
+
+
+def test_resolve_daic_root_finds_nested_dataset(tmp_path: Path):
+    nested_root = _build_daic_fixture(tmp_path / "downloads" / "DAIC-WOZ")
+
+    resolved = resolve_daic_root(tmp_path / "downloads")
+
+    assert resolved == nested_root
