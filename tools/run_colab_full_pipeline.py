@@ -10,6 +10,10 @@ from pathlib import Path
 
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
+DEFAULT_REPORTS_DIR = PROJECT_ROOT / "reports" / "colab_run"
+DEFAULT_ARTIFACTS_DIR = PROJECT_ROOT / "artifacts"
+DEFAULT_EXTRACTOR_OUTPUT = PROJECT_ROOT / "outputs" / "colab" / "extractor-qwen25-7b-compact"
+DEFAULT_SAFETY_OUTPUT = PROJECT_ROOT / "outputs" / "colab" / "safety-indicbert"
 
 
 def parse_args() -> argparse.Namespace:
@@ -20,10 +24,10 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--device", choices=["auto", "cuda", "mps", "cpu"], default="cuda")
     parser.add_argument("--daic-root", default=None, help="Optional DAIC-WOZ root directory for English auxiliary supervision.")
     parser.add_argument("--drive-dir", default=None, help="Optional Drive directory to copy outputs, reports, and artifacts into.")
-    parser.add_argument("--reports-dir", default=str(PROJECT_ROOT / "reports" / "colab_run"))
-    parser.add_argument("--artifacts-dir", default=str(PROJECT_ROOT / "artifacts"))
+    parser.add_argument("--reports-dir", default=str(DEFAULT_REPORTS_DIR))
+    parser.add_argument("--artifacts-dir", default=str(DEFAULT_ARTIFACTS_DIR))
     parser.add_argument("--extractor-model", default="Qwen/Qwen2.5-7B-Instruct")
-    parser.add_argument("--extractor-output", default=str(PROJECT_ROOT / "outputs" / "colab" / "extractor-qwen25-7b-compact"))
+    parser.add_argument("--extractor-output", default=str(DEFAULT_EXTRACTOR_OUTPUT))
     parser.add_argument("--extractor-epochs", type=int, default=2)
     parser.add_argument("--extractor-batch-size", type=int, default=1)
     parser.add_argument("--extractor-grad-accum", type=int, default=8)
@@ -32,7 +36,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--extractor-max-new-tokens", type=int, default=900)
     parser.add_argument("--disable-extractor-4bit", action="store_true")
     parser.add_argument("--safety-model", default="ai4bharat/IndicBERTv2-MLM-only")
-    parser.add_argument("--safety-output", default=str(PROJECT_ROOT / "outputs" / "colab" / "safety-indicbert"))
+    parser.add_argument("--safety-output", default=str(DEFAULT_SAFETY_OUTPUT))
     parser.add_argument("--safety-epochs", type=int, default=4)
     parser.add_argument("--safety-batch-size", type=int, default=8)
     parser.add_argument("--safety-save-steps", type=int, default=10)
@@ -58,6 +62,21 @@ def checkpoint_step(path: Path) -> int:
         except ValueError:
             return -1
     return 10**9
+
+
+def configure_storage_paths(args: argparse.Namespace) -> None:
+    if not args.drive_dir:
+        return
+
+    drive_root = Path(args.drive_dir)
+    if args.reports_dir == str(DEFAULT_REPORTS_DIR):
+        args.reports_dir = str(drive_root / "reports" / "colab_run")
+    if args.artifacts_dir == str(DEFAULT_ARTIFACTS_DIR):
+        args.artifacts_dir = str(drive_root / "artifacts")
+    if args.extractor_output == str(DEFAULT_EXTRACTOR_OUTPUT):
+        args.extractor_output = str(drive_root / "outputs" / "colab" / DEFAULT_EXTRACTOR_OUTPUT.name)
+    if args.safety_output == str(DEFAULT_SAFETY_OUTPUT):
+        args.safety_output = str(drive_root / "outputs" / "colab" / DEFAULT_SAFETY_OUTPUT.name)
 
 
 def iter_candidate_checkpoints(root: Path) -> list[Path]:
@@ -311,6 +330,7 @@ def finalize(args: argparse.Namespace, extractor_dir: Path, extractor_eval_json:
 
 def main() -> int:
     args = parse_args()
+    configure_storage_paths(args)
     reports_dir = Path(args.reports_dir)
     reports_dir.mkdir(parents=True, exist_ok=True)
 

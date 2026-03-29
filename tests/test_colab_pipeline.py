@@ -1,6 +1,16 @@
 from pathlib import Path
 
-from tools.run_colab_full_pipeline import checkpoint_step, pick_best_safety_report
+from argparse import Namespace
+
+from tools.run_colab_full_pipeline import (
+    DEFAULT_ARTIFACTS_DIR,
+    DEFAULT_EXTRACTOR_OUTPUT,
+    DEFAULT_REPORTS_DIR,
+    DEFAULT_SAFETY_OUTPUT,
+    checkpoint_step,
+    configure_storage_paths,
+    pick_best_safety_report,
+)
 
 
 def test_checkpoint_step_sorts_named_checkpoints_and_final_dir():
@@ -37,3 +47,20 @@ def test_pick_best_safety_report_prefers_macro_f1_then_accuracy_then_step():
     best = pick_best_safety_report(reports)
 
     assert best["checkpoint_name"] == "checkpoint-25"
+
+
+def test_configure_storage_paths_redirects_defaults_into_drive_dir():
+    args = Namespace(
+        drive_dir="/tmp/drive-root",
+        reports_dir=str(DEFAULT_REPORTS_DIR),
+        artifacts_dir=str(DEFAULT_ARTIFACTS_DIR),
+        extractor_output=str(DEFAULT_EXTRACTOR_OUTPUT),
+        safety_output=str(DEFAULT_SAFETY_OUTPUT),
+    )
+
+    configure_storage_paths(args)
+
+    assert args.reports_dir == "/tmp/drive-root/reports/colab_run"
+    assert args.artifacts_dir == "/tmp/drive-root/artifacts"
+    assert args.extractor_output.endswith("/tmp/drive-root/outputs/colab/extractor-qwen25-7b-compact")
+    assert args.safety_output.endswith("/tmp/drive-root/outputs/colab/safety-indicbert")
