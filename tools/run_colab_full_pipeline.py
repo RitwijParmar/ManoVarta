@@ -301,11 +301,14 @@ def run_extractor_eval(args: argparse.Namespace, extractor_dir: Path, reports_di
 
 
 def finalize(args: argparse.Namespace, extractor_dir: Path, extractor_eval_json: Path, safety_dir: Path, safety_eval_json: Path, reports_dir: Path) -> None:
+    outputs_dir = extractor_dir.parents[1] if len(extractor_dir.parents) > 1 else extractor_dir.parent
     cmd = [
         args.python,
         str(PROJECT_ROOT / "tools" / "finalize_colab_run.py"),
         "--checkpoint-path",
         str(extractor_dir),
+        "--outputs-dir",
+        str(outputs_dir),
         "--checkpoint-eval-json",
         str(extractor_eval_json),
         "--safety-checkpoint-path",

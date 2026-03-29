@@ -99,6 +99,11 @@ def copy_tree_if_present(source: Path, target: Path) -> None:
     if not source.exists():
         return
     destination = target / source.name
+    try:
+        if source.resolve() == destination.resolve():
+            return
+    except FileNotFoundError:
+        pass
     if destination.exists():
         shutil.rmtree(destination)
     shutil.copytree(source, destination)
