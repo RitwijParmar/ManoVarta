@@ -7,6 +7,7 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
+from manovarta_core.daic_woz import load_daic_conversations
 from manovarta_core.seed_data import load_seed_conversations, load_seed_profiles
 from manovarta_core.training_data import (
     assign_conversations_to_splits,
@@ -24,6 +25,11 @@ def main() -> int:
         "--output-dir",
         default=str(PROJECT_ROOT / "data" / "processed"),
         help="Directory for JSONL outputs.",
+    )
+    parser.add_argument(
+        "--daic-root",
+        default=None,
+        help="Optional DAIC-WOZ root directory. When provided, writes auxiliary English extractor sets and an augmented train set.",
     )
     args = parser.parse_args()
 
@@ -43,6 +49,23 @@ def main() -> int:
         print(
             f"{split_name}: extractor={len(extractor_examples)} "
             f"follow_up={len(follow_up_examples)} safety={len(safety_examples)}"
+        )
+
+    if args.daic_root:
+        daic_conversations = load_daic_conversations(Path(args.daic_root))
+        daic_train_examples = build_extractor_examples(daic_conversations["train"])
+        daic_dev_examples = build_extractor_examples(daic_conversations["dev"])
+        daic_test_examples = build_extractor_examples(daic_conversations["test"])
+        write_jsonl(output_dir / "extractor_daic_train.jsonl", daic_train_examples)
+        write_jsonl(output_dir / "extractor_daic_dev.jsonl", daic_dev_examples)
+        write_jsonl(output_dir / "extractor_daic_test.jsonl", daic_test_examples)
+
+        augmented_train = build_extractor_examples(split_conversations["train"]) + daic_train_examples
+        write_jsonl(output_dir / "extractor_train_augmented_daic.jsonl", augmented_train)
+        print(
+            "daic auxiliary: "
+            f"train={len(daic_train_examples)} dev={len(daic_dev_examples)} "
+            f"test={len(daic_test_examples)} augmented_train={len(augmented_train)}"
         )
     return 0
 

@@ -129,6 +129,32 @@ That prepares:
 - follow-up generation sets,
 - safety classification sets.
 
+You can optionally add `DAIC-WOZ` as an auxiliary English-only extractor source:
+
+```bash
+python tools/export_training_sets.py --daic-root /path/to/DAIC-WOZ
+```
+
+That writes:
+
+- `extractor_daic_train.jsonl`
+- `extractor_daic_dev.jsonl`
+- `extractor_daic_test.jsonl`
+- `extractor_train_augmented_daic.jsonl`
+
+The DAIC export is intentionally kept separate from the main multilingual split. It is best used to improve English depression-item extraction, not to claim better Hindi or Hinglish coverage.
+
+## How to improve Hindi and Hinglish
+
+`DAIC-WOZ` helps mostly with English PHQ-style supervision. For Hindi and Hinglish, the higher-return path is:
+
+- add more gold reviewed Hindi and Hinglish conversations, especially off-by-one severity cases
+- add more code-mixed, guarded, somatic, and contradiction-heavy examples
+- use Aya or Qwen as a teacher to draft Hindi and Hinglish variants, then manually review them
+- keep the multilingual test split separate from any English-only auxiliary corpus
+
+In other words: use `DAIC-WOZ` to sharpen the English extractor, but improve Hindi and Hinglish with targeted multilingual data rather than hoping an English interview corpus transfers cleanly.
+
 ## Optional Hugging Face hookup
 
 If you want live response drafting through Hugging Face Inference Providers, set:
