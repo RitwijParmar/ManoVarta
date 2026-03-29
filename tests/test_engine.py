@@ -23,6 +23,21 @@ class StubExtractor:
         }
 
 
+class CompactStubExtractor:
+    enabled = True
+
+    def extract(self, turns, language):
+        return {
+            "items": [
+                {
+                    "item_id": "phq_q2_low_mood",
+                    "value": 2,
+                }
+            ],
+            "safety_level": "high_caution",
+        }
+
+
 class StubSemanticMonitor:
     def assess(self, turns):
         return SafetyFlag(
@@ -68,6 +83,29 @@ def test_runtime_engine_merges_llm_output_into_snapshot():
     assert snapshot.items["phq_q2_low_mood"].source in {"llm", "hybrid"}
     assert snapshot.safety.level == "review"
     assert any(span.span_id.startswith("LLM-") for span in snapshot.evidence_spans)
+
+
+def test_runtime_engine_handles_compact_llm_payload():
+    turns = [
+        Turn(turn_id=1, speaker="assistant", text="What has been hardest lately?", language_tag="en"),
+        Turn(
+            turn_id=2,
+            speaker="user",
+            text="Everything feels heavy and I do not enjoy much now.",
+            language_tag="en",
+        ),
+    ]
+    engine = RuntimeEngine(
+        scorer=ConversationScorer(),
+        safety_monitor=SafetyMonitor(),
+        extractor=CompactStubExtractor(),
+    )
+
+    snapshot = engine.analyze(turns, "en")
+
+    assert snapshot.mode == "hybrid"
+    assert snapshot.items["phq_q2_low_mood"].value == 2
+    assert snapshot.safety.level == "review"
 
 
 def test_runtime_engine_can_merge_semantic_safety_signal():

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from typing import Iterable, Optional
 
+from manovarta_core.json_utils import normalize_safety_level
 from manovarta_core.llm import HuggingFaceExtractor, HuggingFaceSafetyAssessor
 from manovarta_core.questionnaires import ITEM_INDEX
 from manovarta_core.semantic_safety import SemanticSafetyMonitor
@@ -108,8 +109,16 @@ class RuntimeEngine:
         if not user_turns:
             return None
 
-        turn = self._match_turn(user_turns, quote) or user_turns[-1]
-        span_text = quote or turn.text[:160]
+        turn = self._match_turn(user_turns, quote)
+        span_text = quote
+        if turn is None:
+            heuristic_span = self._match_snapshot_span(snapshot, item_id)
+            if heuristic_span is not None:
+                turn = next((candidate for candidate in user_turns if candidate.turn_id == heuristic_span.turn_id), None)
+                span_text = heuristic_span.text_span
+        if turn is None:
+            turn = user_turns[-1]
+        span_text = span_text or turn.text[:160]
         return EvidenceSpan(
             span_id=f"LLM-{turn.turn_id}-{offset}",
             questionnaire=ITEM_INDEX[item_id].questionnaire,
@@ -139,9 +148,11 @@ class RuntimeEngine:
         matched_quote: str,
         note: str,
     ) -> ItemScore:
-        llm_confidence = 0.7
+        llm_confidence = 0.62
         if matched_quote:
-            llm_confidence += 0.1
+            llm_confidence += 0.12
+        if llm_span_ids and not matched_quote:
+            llm_confidence += 0.06
         if llm_value >= 2:
             llm_confidence += 0.06
         llm_confidence = round(min(llm_confidence, 0.9), 2)
@@ -189,11 +200,23 @@ class RuntimeEngine:
                 }
             )
 
-        if abs(base.value - llm_value) <= 1 and not base.stable:
-            chosen_value = llm_value if llm_confidence >= base.confidence else base.value
+        if abs(base.value - llm_value) <= 1:
+            calibrated_value = self._calibrate_value(base.value, llm_value, base.confidence, llm_confidence)
+            if base.stable:
+                return base.model_copy(
+                    update={
+                        "value": calibrated_value if llm_confidence > 0.78 and llm_span_ids else base.value,
+                        "status": "resolved",
+                        "confidence": round(max(base.confidence, llm_confidence) - 0.02, 2),
+                        "stable": True,
+                        "evidence_span_ids": evidence_ids,
+                        "source": "hybrid",
+                        "review_recommended": False,
+                    }
+                )
             return base.model_copy(
                 update={
-                    "value": chosen_value,
+                    "value": calibrated_value,
                     "status": "abstained" if base.review_recommended else "partial",
                     "confidence": round(max(base.confidence, llm_confidence) - 0.04, 2),
                     "stable": False,
@@ -217,10 +240,29 @@ class RuntimeEngine:
             }
         )
 
+    def _match_snapshot_span(self, snapshot: ScreeningSnapshot, item_id: str) -> Optional[EvidenceSpan]:
+        item = snapshot.items.get(item_id)
+        if item is None:
+            return None
+        span_index = {span.span_id: span for span in snapshot.evidence_spans}
+        for span_id in item.evidence_span_ids:
+            if span_id in span_index:
+                return span_index[span_id]
+        return None
+
+    def _calibrate_value(
+        self,
+        heuristic_value: int,
+        llm_value: int,
+        heuristic_confidence: float,
+        llm_confidence: float,
+    ) -> int:
+        total = max(heuristic_confidence, 0.01) + max(llm_confidence, 0.01)
+        weighted = ((heuristic_value * heuristic_confidence) + (llm_value * llm_confidence)) / total
+        return int(round(max(0.0, min(3.0, weighted))))
+
     def _merge_safety(self, heuristic: SafetyFlag, llm_result: dict) -> SafetyFlag:
-        llm_level = llm_result.get("safety_level", "none")
-        if llm_level not in SAFETY_RANK:
-            llm_level = "none"
+        llm_level = normalize_safety_level(llm_result.get("safety_level", "none"))
         llm_cues = [str(cue) for cue in llm_result.get("safety_cues", []) if str(cue).strip()]
         dominant_level = heuristic.level if SAFETY_RANK[heuristic.level] >= SAFETY_RANK[llm_level] else llm_level
         cues = list(dict.fromkeys(heuristic.cues + llm_cues))

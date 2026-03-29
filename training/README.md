@@ -23,12 +23,19 @@ python tools/create_data_splits.py
 python tools/export_training_sets.py
 ```
 
+For the strongest extractor train set, prefer:
+
+- `data/processed/extractor_train_best.jsonl`
+- or `data/processed/extractor_train_best_augmented_daic.jsonl` if you export with `--daic-root`
+
+Those exports use the compact JSON schema and upweight Hindi/Hinglish examples so English auxiliary data does not dominate the multilingual objective.
+
 ## Fine-tune extraction model
 
 ```bash
 python -m training.finetune_extractor \
   --model-name Qwen/Qwen2.5-7B-Instruct \
-  --train-file data/processed/extractor_train.jsonl \
+  --train-file data/processed/extractor_train_best.jsonl \
   --eval-file data/processed/extractor_dev.jsonl \
   --output-dir outputs/extractor-qwen25 \
   --precision auto

@@ -116,4 +116,7 @@ def test_export_training_sets_writes_daic_auxiliary_files(tmp_path: Path):
 
     train_row = json.loads((output_dir / "extractor_daic_train.jsonl").read_text(encoding="utf-8").splitlines()[0])
     assert train_row["language"] == "en"
-    assert "DAIC-WOZ auxiliary supervision" in train_row["response"]
+    parsed = json.loads(train_row["response"])
+    assert set(parsed.keys()) == {"items", "safety_level"}
+    assert parsed["safety_level"] == "none"
+    assert any(item["item_id"] == "phq_q2_low_mood" for item in parsed["items"])

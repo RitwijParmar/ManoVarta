@@ -129,6 +129,11 @@ That prepares:
 - follow-up generation sets,
 - safety classification sets.
 
+For the extractor, the export now also writes a stronger train set:
+
+- `extractor_train_best.jsonl`: compact-schema supervision with extra Hindi and Hinglish weighting
+- `extractor_train_best_augmented_daic.jsonl`: same idea plus capped English `DAIC-WOZ` auxiliary data when `--daic-root` is provided
+
 You can optionally add `DAIC-WOZ` as an auxiliary English-only extractor source:
 
 ```bash

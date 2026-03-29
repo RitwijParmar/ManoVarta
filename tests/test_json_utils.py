@@ -1,4 +1,4 @@
-from manovarta_core.json_utils import parse_extractor_payload, parse_json_object
+from manovarta_core.json_utils import normalize_safety_level, parse_extractor_payload, parse_json_object
 
 
 def test_parse_json_object_handles_fenced_content():
@@ -35,3 +35,19 @@ def test_parse_extractor_payload_salvages_truncated_item_list():
         "gad_q1_nervous",
     ]
     assert [item["value"] for item in payload["items"]] == [1, 2, 1]
+
+
+def test_parse_extractor_payload_normalizes_compact_schema_and_safety_aliases():
+    payload = parse_extractor_payload(
+        '{"items": [{"item_id": "phq_q2_low_mood", "value": 2}], "safety_level": "high_caution"}'
+    )
+
+    assert payload is not None
+    assert payload["items"] == [{"item_id": "phq_q2_low_mood", "value": 2}]
+    assert payload["safety_level"] == "review"
+
+
+def test_normalize_safety_level_maps_aliases():
+    assert normalize_safety_level("high_caution") == "review"
+    assert normalize_safety_level("crisis") == "urgent"
+    assert normalize_safety_level("safe") == "none"

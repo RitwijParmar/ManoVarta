@@ -4,7 +4,7 @@ import json
 from typing import Optional, Tuple
 
 from manovarta_core.config import RuntimeConfig
-from manovarta_core.json_utils import parse_extractor_payload, parse_json_object
+from manovarta_core.json_utils import normalize_safety_level, parse_extractor_payload, parse_json_object
 from manovarta_core.questionnaires import ITEM_INDEX
 from manovarta_core.schemas import ChatSession, SafetyFlag, ScreeningSnapshot, Turn
 
@@ -133,7 +133,9 @@ class HuggingFaceExtractor:
                     "Return strict JSON only. "
                     "Use only the schema requested. "
                     "Do not add markdown fences. "
-                    "Be conservative. Do not guess unsupported symptoms."
+                    "Be conservative. Do not guess unsupported symptoms. "
+                    "Use safety_level exactly as one of: none, review, urgent. "
+                    "Never invent alternate labels like high_caution or moderate_risk."
                 ),
             },
             {
@@ -147,10 +149,9 @@ class HuggingFaceExtractor:
                     "- 1 = mild, vague, or occasional support\n"
                     "- 2 = clear support or repeated mention\n"
                     "- 3 = severe, near-daily, or strongly impairing support\n\n"
-                    "Return JSON with keys: items, safety_level, safety_cues, notes.\n"
-                    "items must be a list of objects with item_id, value, evidence_quote, confidence_note.\n"
+                    "Return JSON with keys: items, safety_level.\n"
+                    "items must be a list of objects with item_id and value only.\n"
                     "Only include items with value 1, 2, or 3.\n"
-                    "Use exact evidence_quote text from user turns when possible.\n"
                     "safety_level must be one of: none, review, urgent.\n"
                     "Use safety_level review for indirect disappearance language and urgent for direct self-harm intent.\n"
                     f"Transcript:\n{transcript}"
@@ -237,8 +238,7 @@ class HuggingFaceSafetyAssessor:
             return None
 
         level = payload.get("level", "none")
-        if level not in {"none", "review", "urgent"}:
-            level = "none"
+        level = normalize_safety_level(level)
         cues = [str(cue).strip() for cue in payload.get("cues", []) if str(cue).strip()]
         rationale = str(payload.get("rationale", "")).strip() or None
         return SafetyFlag(

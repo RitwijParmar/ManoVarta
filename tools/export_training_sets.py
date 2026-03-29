@@ -11,6 +11,7 @@ from manovarta_core.daic_woz import load_daic_conversations
 from manovarta_core.seed_data import load_seed_conversations, load_seed_profiles
 from manovarta_core.training_data import (
     assign_conversations_to_splits,
+    build_best_extractor_train_examples,
     build_extractor_examples,
     build_follow_up_examples,
     build_profile_splits,
@@ -31,6 +32,12 @@ def main() -> int:
         default=None,
         help="Optional DAIC-WOZ root directory. When provided, writes auxiliary English extractor sets and an augmented train set.",
     )
+    parser.add_argument(
+        "--extractor-style",
+        choices=["compact", "verbose"],
+        default="compact",
+        help="Extractor supervision style. compact is recommended for better schema stability.",
+    )
     args = parser.parse_args()
 
     output_dir = Path(args.output_dir)
@@ -40,7 +47,7 @@ def main() -> int:
     split_conversations = assign_conversations_to_splits(conversations, split_manifest)
 
     for split_name, split_records in split_conversations.items():
-        extractor_examples = build_extractor_examples(split_records)
+        extractor_examples = build_extractor_examples(split_records, schema_style=args.extractor_style)
         follow_up_examples = build_follow_up_examples(split_records)
         safety_examples = build_safety_examples(split_records)
         write_jsonl(output_dir / f"extractor_{split_name}.jsonl", extractor_examples)
@@ -51,21 +58,33 @@ def main() -> int:
             f"follow_up={len(follow_up_examples)} safety={len(safety_examples)}"
         )
 
+    best_train = build_best_extractor_train_examples(
+        build_extractor_examples(split_conversations["train"], schema_style=args.extractor_style)
+    )
+    write_jsonl(output_dir / "extractor_train_best.jsonl", best_train)
+    print(f"best train: extractor={len(best_train)}")
+
     if args.daic_root:
         daic_conversations = load_daic_conversations(Path(args.daic_root))
-        daic_train_examples = build_extractor_examples(daic_conversations["train"])
-        daic_dev_examples = build_extractor_examples(daic_conversations["dev"])
-        daic_test_examples = build_extractor_examples(daic_conversations["test"])
+        daic_train_examples = build_extractor_examples(daic_conversations["train"], schema_style=args.extractor_style)
+        daic_dev_examples = build_extractor_examples(daic_conversations["dev"], schema_style=args.extractor_style)
+        daic_test_examples = build_extractor_examples(daic_conversations["test"], schema_style=args.extractor_style)
         write_jsonl(output_dir / "extractor_daic_train.jsonl", daic_train_examples)
         write_jsonl(output_dir / "extractor_daic_dev.jsonl", daic_dev_examples)
         write_jsonl(output_dir / "extractor_daic_test.jsonl", daic_test_examples)
 
-        augmented_train = build_extractor_examples(split_conversations["train"]) + daic_train_examples
+        augmented_train = build_extractor_examples(split_conversations["train"], schema_style=args.extractor_style) + daic_train_examples
         write_jsonl(output_dir / "extractor_train_augmented_daic.jsonl", augmented_train)
+        best_augmented_train = build_best_extractor_train_examples(
+            build_extractor_examples(split_conversations["train"], schema_style=args.extractor_style),
+            auxiliary_english_examples=daic_train_examples,
+        )
+        write_jsonl(output_dir / "extractor_train_best_augmented_daic.jsonl", best_augmented_train)
         print(
             "daic auxiliary: "
             f"train={len(daic_train_examples)} dev={len(daic_dev_examples)} "
-            f"test={len(daic_test_examples)} augmented_train={len(augmented_train)}"
+            f"test={len(daic_test_examples)} augmented_train={len(augmented_train)} "
+            f"best_augmented_train={len(best_augmented_train)}"
         )
     return 0
 

@@ -4,6 +4,27 @@ import json
 import re
 from typing import Any
 
+SAFETY_LEVEL_ALIASES = {
+    "none": "none",
+    "safe": "none",
+    "low": "none",
+    "low_risk": "none",
+    "lowrisk": "none",
+    "review": "review",
+    "caution": "review",
+    "moderate": "review",
+    "medium": "review",
+    "needs_review": "review",
+    "need_review": "review",
+    "high_caution": "review",
+    "highcaution": "review",
+    "urgent": "urgent",
+    "high": "urgent",
+    "severe": "urgent",
+    "crisis": "urgent",
+    "immediate": "urgent",
+}
+
 
 def parse_json_object(text: str) -> dict[str, Any] | None:
     cleaned = strip_code_fences(text).strip()
@@ -24,7 +45,7 @@ def parse_json_object(text: str) -> dict[str, Any] | None:
 def parse_extractor_payload(text: str) -> dict[str, Any] | None:
     payload = parse_json_object(text)
     if payload is not None:
-        return payload
+        return normalize_extractor_payload(payload)
 
     cleaned = strip_code_fences(text).strip()
     if not cleaned:
@@ -46,12 +67,51 @@ def parse_extractor_payload(text: str) -> dict[str, Any] | None:
     if not items:
         return None
 
-    safety_match = re.search(r'"safety_level"\s*:\s*"(none|review|urgent)"', cleaned)
-    return {
+    safety_match = re.search(r'"safety_level"\s*:\s*"([^"]+)"', cleaned)
+    return normalize_extractor_payload({
         "items": items,
         "safety_level": safety_match.group(1) if safety_match else "none",
         "safety_cues": [],
         "notes": "salvaged_partial_json",
+    })
+
+
+def normalize_safety_level(value: Any) -> str:
+    text = str(value or "").strip().lower().replace("-", "_").replace(" ", "_")
+    return SAFETY_LEVEL_ALIASES.get(text, "none")
+
+
+def normalize_extractor_payload(payload: dict[str, Any]) -> dict[str, Any] | None:
+    if not isinstance(payload, dict):
+        return None
+
+    items = []
+    seen = set()
+    for item in payload.get("items", []):
+        if not isinstance(item, dict):
+            continue
+        item_id = str(item.get("item_id", "")).strip()
+        if not item_id or item_id in seen:
+            continue
+        try:
+            value = int(item.get("value"))
+        except (TypeError, ValueError):
+            continue
+        if value < 0 or value > 3:
+            continue
+        normalized_item = {"item_id": item_id, "value": value}
+        if "evidence_quote" in item and str(item.get("evidence_quote", "")).strip():
+            normalized_item["evidence_quote"] = str(item["evidence_quote"]).strip()
+        if "confidence_note" in item and str(item.get("confidence_note", "")).strip():
+            normalized_item["confidence_note"] = str(item["confidence_note"]).strip()
+        items.append(normalized_item)
+        seen.add(item_id)
+
+    return {
+        "items": items,
+        "safety_level": normalize_safety_level(payload.get("safety_level", "none")),
+        "safety_cues": [str(cue).strip() for cue in payload.get("safety_cues", []) if str(cue).strip()],
+        "notes": str(payload.get("notes", "")).strip(),
     }
 
 

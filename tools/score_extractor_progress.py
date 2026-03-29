@@ -10,7 +10,7 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-from manovarta_core.json_utils import parse_extractor_payload
+from manovarta_core.json_utils import normalize_safety_level, parse_extractor_payload
 from manovarta_core.metrics import evaluate_item_predictions
 
 
@@ -56,7 +56,7 @@ def main() -> int:
         {
             "conversation_id": row["conversation_id"],
             "predictions": row.get("predictions", {}),
-            "safety_level": row.get("safety_level", "none"),
+            "safety_level": normalize_safety_level(row.get("safety_level", "none")),
         }
         for row in progress_rows
     ]

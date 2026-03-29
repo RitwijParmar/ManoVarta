@@ -94,6 +94,16 @@ def maybe_checkpoint_report(checkpoint_path: Optional[str]) -> dict:
     )
 
 
+def maybe_saved_report(path: Path, *, label: str) -> dict:
+    if not path.exists():
+        return {"status": "skipped", "reason": f"{label} report not found: {path}"}
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        return {"status": "error", "stderr": f"Invalid JSON in {path}: {exc}"}
+    return {"status": "ok", "result": payload, "source": str(path)}
+
+
 def build_bundle(args) -> dict:
     config = get_runtime_config()
     bundle = {
@@ -115,6 +125,10 @@ def build_bundle(args) -> dict:
         [sys.executable, str(PROJECT_ROOT / "tools" / "evaluate_seed_runtime.py"), "--mode", "heuristic"]
     )
     bundle["reports"]["checkpoint"] = maybe_checkpoint_report(args.checkpoint)
+    bundle["reports"]["aya_colab_a100"] = maybe_saved_report(
+        PROJECT_ROOT / "reports" / "aya_colab_eval_a100_20260328.json",
+        label="Aya Colab A100",
+    )
 
     if args.skip_semantic:
         bundle["reports"]["semantic_safety"] = {"status": "skipped", "reason": "Semantic evaluation skipped by flag."}

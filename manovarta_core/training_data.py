@@ -11,7 +11,7 @@ from manovarta_core.questionnaires import ITEM_INDEX
 
 SYSTEM_EXTRACTION = (
     "You extract questionnaire-aligned evidence from multilingual screening transcripts. "
-    "Return strict JSON only with keys: items, safety_level, safety_cues, notes."
+    "Return strict JSON only with keys: items and safety_level."
 )
 
 SYSTEM_DIALOGUE = (
@@ -87,11 +87,15 @@ def assign_conversations_to_splits(
     return grouped
 
 
-def build_extractor_examples(conversations: list[dict[str, Any]]) -> list[dict[str, Any]]:
+def build_extractor_examples(
+    conversations: list[dict[str, Any]],
+    *,
+    schema_style: str = "compact",
+) -> list[dict[str, Any]]:
     examples = []
     for conversation in conversations:
-        prompt = _extractor_prompt(conversation)
-        response = json.dumps(_extractor_target(conversation), ensure_ascii=False)
+        prompt = _extractor_prompt(conversation, schema_style=schema_style)
+        response = json.dumps(_extractor_target(conversation, schema_style=schema_style), ensure_ascii=False)
         examples.append(
             {
                 "id": conversation["conversation_id"],
@@ -103,6 +107,29 @@ def build_extractor_examples(conversations: list[dict[str, Any]]) -> list[dict[s
             }
         )
     return examples
+
+
+def build_best_extractor_train_examples(
+    multilingual_examples: list[dict[str, Any]],
+    auxiliary_english_examples: list[dict[str, Any]] | None = None,
+) -> list[dict[str, Any]]:
+    by_language: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    for example in multilingual_examples:
+        by_language[example.get("language", "en")].append(example)
+
+    language_weights = {"en": 1, "hi": 2, "hinglish": 2}
+    rebalanced: list[dict[str, Any]] = []
+    for language in ("en", "hi", "hinglish"):
+        bucket = by_language.get(language, [])
+        repeats = language_weights.get(language, 1)
+        for _ in range(repeats):
+            rebalanced.extend(dict(example) for example in bucket)
+
+    if auxiliary_english_examples:
+        aux_cap = max(1, round(len(rebalanced) * 0.5))
+        rebalanced.extend(dict(example) for example in auxiliary_english_examples[:aux_cap])
+
+    return _interleave_by_language(rebalanced)
 
 
 def build_follow_up_examples(conversations: list[dict[str, Any]]) -> list[dict[str, Any]]:
@@ -184,22 +211,33 @@ def _three_way_split(patient_ids: list[str]) -> tuple[list[str], list[str], list
     return train, dev, test
 
 
-def _extractor_prompt(conversation: dict[str, Any]) -> str:
+def _extractor_prompt(conversation: dict[str, Any], *, schema_style: str = "compact") -> str:
     transcript = _transcript_text(conversation.get("conversation_turns", []))
     item_lines = "\n".join(
         f"- {item_id}: {item.label} ({item.focus})"
         for item_id, item in ITEM_INDEX.items()
     )
+    schema_instructions = (
+        "Return JSON with keys: items, safety_level.\n"
+        "items must be a list of objects with item_id and value only.\n"
+        "Only include supported items in items.\n"
+        "Only include items with value 1, 2, or 3.\n"
+        "safety_level must be one of none, review, urgent."
+    )
+    if schema_style != "compact":
+        schema_instructions = (
+            "Return JSON with items, safety_level, safety_cues, notes.\n"
+            "Only include supported items in items.\n"
+        )
     return (
         f"Language: {conversation['language']}\n"
         f"Use these item ids:\n{item_lines}\n\n"
-        "Return JSON with items, safety_level, safety_cues, notes.\n"
-        "Only include supported items in items.\n"
+        f"{schema_instructions}\n"
         f"Transcript:\n{transcript}"
     )
 
 
-def _extractor_target(conversation: dict[str, Any]) -> dict[str, Any]:
+def _extractor_target(conversation: dict[str, Any], *, schema_style: str = "compact") -> dict[str, Any]:
     span_index = defaultdict(list)
     for span in conversation.get("evidence_spans", []):
         span_index[span["item_id"]].append(span)
@@ -212,21 +250,26 @@ def _extractor_target(conversation: dict[str, Any]) -> dict[str, Any]:
         if value <= 0:
             continue
         spans = span_index.get(item_id, [])
-        items.append(
-            {
-                "item_id": item_id,
-                "value": value,
-                "evidence_quote": spans[0]["text_span"] if spans else "",
-                "confidence_note": conversation.get("annotator_notes", "") or "Annotated seed evidence.",
-            }
-        )
+        if schema_style == "compact":
+            items.append({"item_id": item_id, "value": value})
+        else:
+            items.append(
+                {
+                    "item_id": item_id,
+                    "value": value,
+                    "evidence_quote": spans[0]["text_span"] if spans else "",
+                    "confidence_note": conversation.get("annotator_notes", "") or "Annotated seed evidence.",
+                }
+            )
 
-    return {
+    target = {
         "items": items,
         "safety_level": conversation.get("safety_flag", {}).get("level", "none"),
-        "safety_cues": conversation.get("safety_flag", {}).get("cues", []),
-        "notes": conversation.get("annotator_notes", ""),
     }
+    if schema_style != "compact":
+        target["safety_cues"] = conversation.get("safety_flag", {}).get("cues", [])
+        target["notes"] = conversation.get("annotator_notes", "")
+    return target
 
 
 def _follow_up_prompt(language: str, turns: list[dict[str, Any]]) -> str:
@@ -252,6 +295,23 @@ def _pack_instruction(system_prompt: str, prompt: str, response: str) -> str:
         "<|assistant|>\n"
         f"{response}"
     )
+
+
+def _interleave_by_language(records: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    buckets: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    for record in records:
+        buckets[record.get("language", "en")].append(record)
+
+    ordered: list[dict[str, Any]] = []
+    active = True
+    while active:
+        active = False
+        for language in ("en", "hi", "hinglish"):
+            bucket = buckets.get(language, [])
+            if bucket:
+                ordered.append(bucket.pop(0))
+                active = True
+    return ordered
 
 
 def _build_safety_views(user_turns: list[str], cues: list[str], label: str) -> list[tuple[str, str]]:
