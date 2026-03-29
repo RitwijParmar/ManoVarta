@@ -14,7 +14,7 @@ def test_daic_continue_configure_storage_paths_redirects_defaults_into_drive_dir
     configure_storage_paths(args)
 
     assert args.reports_dir == "/tmp/drive-root/reports/colab_daic_continue"
-    assert args.extractor_output.endswith("/tmp/drive-root/outputs/colab/extractor-qwen25-7b-compact-daic-continue")
+    assert args.extractor_output.endswith("/tmp/drive-root/outputs/colab/extractor-aya-8b-compact-daic-continue")
 
 
 def test_resolve_adapter_helpers_use_adapter_tokenizer_when_present(tmp_path):

@@ -11,7 +11,7 @@ from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_REPORTS_DIR = PROJECT_ROOT / "reports" / "colab_daic_continue"
-DEFAULT_EXTRACTOR_OUTPUT = PROJECT_ROOT / "outputs" / "colab" / "extractor-qwen25-7b-compact-daic-continue"
+DEFAULT_EXTRACTOR_OUTPUT = PROJECT_ROOT / "outputs" / "colab" / "extractor-aya-8b-compact-daic-continue"
 
 
 def parse_args() -> argparse.Namespace:
@@ -25,7 +25,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--drive-dir", default=None, help="Optional Drive directory for outputs and reports.")
     parser.add_argument("--reports-dir", default=str(DEFAULT_REPORTS_DIR))
     parser.add_argument("--extractor-output", default=str(DEFAULT_EXTRACTOR_OUTPUT))
-    parser.add_argument("--extractor-model", default="Qwen/Qwen2.5-7B-Instruct")
+    parser.add_argument("--extractor-model", default="CohereLabs/aya-expanse-8b")
     parser.add_argument("--extractor-epochs", type=int, default=1)
     parser.add_argument("--extractor-batch-size", type=int, default=1)
     parser.add_argument("--extractor-grad-accum", type=int, default=8)
