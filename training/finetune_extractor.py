@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import argparse
 import inspect
+import json
 from pathlib import Path
 import sys
 
@@ -15,6 +16,11 @@ if str(PROJECT_ROOT) not in sys.path:
 def parse_args():
     parser = argparse.ArgumentParser(description="LoRA fine-tune a chat model for structured evidence extraction.")
     parser.add_argument("--model-name", default="Qwen/Qwen2.5-7B-Instruct")
+    parser.add_argument(
+        "--init-adapter",
+        default=None,
+        help="Optional path to an existing LoRA adapter checkpoint to continue training from.",
+    )
     parser.add_argument("--train-file", required=True)
     parser.add_argument("--eval-file", required=True)
     parser.add_argument("--output-dir", required=True)
@@ -58,6 +64,30 @@ def resolve_target_modules(model_name: str, target_modules_arg: str | None) -> l
     return None
 
 
+def resolve_adapter_base_model(init_adapter: str | None) -> str | None:
+    if not init_adapter:
+        return None
+    adapter_path = Path(init_adapter)
+    config_path = adapter_path / "adapter_config.json"
+    if not config_path.exists():
+        raise FileNotFoundError(f"Missing adapter_config.json under {adapter_path}")
+    config = json.loads(config_path.read_text(encoding="utf-8"))
+    base_model = config.get("base_model_name_or_path")
+    if not base_model:
+        raise ValueError(f"adapter_config.json under {adapter_path} is missing base_model_name_or_path")
+    return str(base_model)
+
+
+def resolve_tokenizer_source(model_name: str, init_adapter: str | None) -> str:
+    if not init_adapter:
+        return model_name
+    adapter_path = Path(init_adapter)
+    if (adapter_path / "tokenizer_config.json").exists():
+        return str(adapter_path)
+    base_model = resolve_adapter_base_model(init_adapter)
+    return base_model or model_name
+
+
 def resolve_resume_checkpoint(output_dir: str, resume_arg: str | None) -> str | None:
     if not resume_arg:
         return None
@@ -82,7 +112,7 @@ def main() -> int:
     try:
         import torch
         from datasets import load_dataset
-        from peft import LoraConfig
+        from peft import LoraConfig, PeftModel
         from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig, TrainingArguments
         from trl import SFTConfig, SFTTrainer
     except ImportError as exc:  # pragma: no cover
@@ -99,7 +129,10 @@ def main() -> int:
         if drop_cols:
             dataset[split_name] = dataset[split_name].remove_columns(drop_cols)
 
-    tokenizer = AutoTokenizer.from_pretrained(args.model_name, trust_remote_code=True)
+    base_model_name = resolve_adapter_base_model(args.init_adapter) or args.model_name
+    tokenizer_source = resolve_tokenizer_source(args.model_name, args.init_adapter)
+
+    tokenizer = AutoTokenizer.from_pretrained(tokenizer_source, trust_remote_code=True)
     if tokenizer.pad_token is None:
         tokenizer.pad_token = tokenizer.eos_token
     tokenizer.padding_side = "right"
@@ -124,21 +157,25 @@ def main() -> int:
         model_kwargs["torch_dtype"] = pick_model_dtype(torch, device, requested=args.model_dtype)
         model_kwargs["low_cpu_mem_usage"] = True
 
-    model = AutoModelForCausalLM.from_pretrained(args.model_name, **model_kwargs)
+    model = AutoModelForCausalLM.from_pretrained(base_model_name, **model_kwargs)
     if quantization_config is None and device != "cpu":
         model.to(device)
+    if args.init_adapter:
+        model = PeftModel.from_pretrained(model, args.init_adapter, is_trainable=True)
     if args.gradient_checkpointing:
         model.gradient_checkpointing_enable()
 
-    target_modules = resolve_target_modules(args.model_name, args.target_modules)
-    peft_config = LoraConfig(
-        r=args.lora_r,
-        lora_alpha=args.lora_alpha,
-        lora_dropout=0.05,
-        bias="none",
-        task_type="CAUSAL_LM",
-        target_modules=target_modules,
-    )
+    peft_config = None
+    if not args.init_adapter:
+        target_modules = resolve_target_modules(args.model_name, args.target_modules)
+        peft_config = LoraConfig(
+            r=args.lora_r,
+            lora_alpha=args.lora_alpha,
+            lora_dropout=0.05,
+            bias="none",
+            task_type="CAUSAL_LM",
+            target_modules=target_modules,
+        )
 
     training_kwargs = {
         "output_dir": args.output_dir,
@@ -185,9 +222,10 @@ def main() -> int:
         "model": model,
         "train_dataset": dataset["train"],
         "eval_dataset": dataset["eval"],
-        "peft_config": peft_config,
         "args": training_args,
     }
+    if peft_config is not None:
+        trainer_kwargs["peft_config"] = peft_config
     if "processing_class" in trainer_signature:
         trainer_kwargs["processing_class"] = tokenizer
     elif "tokenizer" in trainer_signature:
