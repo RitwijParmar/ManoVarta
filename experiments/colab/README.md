@@ -49,10 +49,14 @@ Training exports and fine-tuning:
 ```bash
 python tools/generate_seed_scaleup.py
 python tools/create_data_splits.py
+python tools/fetch_daic_woz.py --output-dir /content/drive/MyDrive/DAIC-WOZ
 python tools/export_training_sets.py
 python -m training.finetune_extractor --model-name Qwen/Qwen2.5-7B-Instruct --train-file data/processed/extractor_train.jsonl --eval-file data/processed/extractor_dev.jsonl --output-dir outputs/extractor-qwen25
 python -m training.train_safety_classifier --model-name ai4bharat/IndicBERTv2-MLM-only --train-file data/processed/safety_train.jsonl --eval-file data/processed/safety_dev.jsonl --output-dir outputs/safety-indicbert
 ```
+
+The fetch helper uses the official source index:
+`https://dcapswoz.ict.usc.edu/wwwdaicwoz/`
 
 The unattended wrapper above is preferred now because it:
 

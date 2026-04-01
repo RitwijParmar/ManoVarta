@@ -48,6 +48,14 @@ If you also have `DAIC-WOZ` mounted in Colab, add:
 --daic-root /content/drive/MyDrive/DAIC-WOZ
 ```
 
+To fetch from the USC DAIC-WOZ index directly in Colab:
+
+```bash
+python tools/fetch_daic_woz.py --output-dir /content/drive/MyDrive/DAIC-WOZ
+# Optional sample session zips:
+python tools/fetch_daic_woz.py --output-dir /content/drive/MyDrive/DAIC-WOZ --session-split train --max-session-zips 5
+```
+
 For the strongest extractor train set, prefer:
 
 - `data/processed/extractor_train_best.jsonl`

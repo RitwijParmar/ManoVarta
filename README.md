@@ -137,8 +137,14 @@ For the extractor, the export now also writes a stronger train set:
 You can optionally add `DAIC-WOZ` as an auxiliary English-only extractor source:
 
 ```bash
+python tools/fetch_daic_woz.py --output-dir data/external/DAIC-WOZ
+# Optional: pull a small sample of train session zips.
+python tools/fetch_daic_woz.py --output-dir data/external/DAIC-WOZ --session-split train --max-session-zips 5
 python tools/export_training_sets.py --daic-root /path/to/DAIC-WOZ
 ```
+
+The official DAIC-WOZ source index used by the helper script is:
+`https://dcapswoz.ict.usc.edu/wwwdaicwoz/`
 
 That writes:
 
