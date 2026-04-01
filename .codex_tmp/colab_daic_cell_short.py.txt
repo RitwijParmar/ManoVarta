@@ -1,0 +1,52 @@
+from google.colab import drive
+from pathlib import Path
+import subprocess, sys
+
+drive.mount('/content/drive', force_remount=True)
+R=Path('/content/drive/MyDrive'); O=R/'ManoVartaOutputs'; P=Path('/content/ManoVarta')
+if P.exists():
+    subprocess.run(['git','-C',str(P),'fetch','origin'],check=True)
+    subprocess.run(['git','-C',str(P),'checkout','main'],check=True)
+    subprocess.run(['git','-C',str(P),'pull','--ff-only','origin','main'],check=True)
+else:
+    subprocess.run(['git','clone','https://github.com/RitwijParmar/ManoVarta.git',str(P)],check=True)
+subprocess.run([sys.executable,'tools/colab_bootstrap.py'],cwd=P,check=True)
+
+def first(*ps):
+    for p in ps:
+        p=Path(p)
+        if p.exists(): return p
+
+def daic(root):
+    d=root/'DAIC-WOZ'
+    if d.exists(): return d
+    for name in ['DAIC-WOZ','DAIC_WOZ','DAIC','daic','DAIC-WOZ_Depression','DAICWOZ','DAIC-WOZ_Depression_Dataset']:
+        ms=sorted(root.rglob(name))
+        if ms: return ms[0]
+    for csv in root.rglob('train_split_Depression_AVEC2017.csv'):
+        return csv.parent
+    raise RuntimeError('DAIC not found')
+
+def adapter(out):
+    f=first(out/'outputs/colab/extractor-qwen25-7b-compact/checkpoint-36',
+            out/'outputs/colab/extractor-qwen25-7b-compact/checkpoint-30',
+            out/'outputs/colab/extractor-qwen25-7b-compact',
+            out/'outputs/colab/extractor-qwen25-1_5b-best-compact/checkpoint-5')
+    if f: return f
+    best=None
+    for cfg in out.rglob('adapter_config.json'):
+        parent=cfg.parent
+        if 'extractor' not in str(parent): continue
+        step=0
+        if parent.name.startswith('checkpoint-'):
+            try: step=int(parent.name.split('-')[-1])
+            except: step=0
+        if best is None or step>best[0]: best=(step,parent)
+    if best is None: raise RuntimeError('adapter not found')
+    return best[1]
+
+d=daic(R); a=adapter(O)
+print('DAIC root:',d); print('Init adapter:',a)
+cmd=[sys.executable,'tools/run_colab_daic_continue.py','--device','cuda','--daic-root',str(d),'--init-adapter',str(a),'--drive-dir',str(O)]
+print('Running:',' '.join(cmd))
+subprocess.run(cmd,cwd=P,check=True)

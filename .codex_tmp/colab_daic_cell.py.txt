@@ -1,0 +1,85 @@
+
+from google.colab import drive
+from pathlib import Path
+import os, shutil, subprocess, sys
+
+drive.mount('/content/drive', force_remount=True)
+
+DRIVE_ROOT = Path('/content/drive/MyDrive')
+OUT_ROOT = DRIVE_ROOT / 'ManoVartaOutputs'
+REPO_DIR = Path('/content/ManoVarta')
+REPO_URL = 'https://github.com/RitwijParmar/ManoVarta.git'
+
+def find_first_existing(paths):
+    for p in paths:
+        if p.exists():
+            return p
+    return None
+
+def find_daic_root(root: Path) -> Path:
+    direct = root / 'DAIC-WOZ'
+    if direct.exists():
+        return direct
+    patterns = [
+        'DAIC-WOZ', 'DAIC_WOZ', 'DAIC', 'daic',
+        'DAIC-WOZ_Depression', 'DAICWOZ', 'DAIC-WOZ_Depression_Dataset'
+    ]
+    for pat in patterns:
+        matches = sorted(root.rglob(pat))
+        if matches:
+            return matches[0]
+    for csv in root.rglob('train_split_Depression_AVEC2017.csv'):
+        return csv.parent
+    raise RuntimeError('Could not find DAIC-WOZ on Drive')
+
+def find_init_adapter(out_root: Path) -> Path:
+    candidates = [
+        out_root / 'outputs' / 'colab' / 'extractor-qwen25-7b-compact' / 'checkpoint-36',
+        out_root / 'outputs' / 'colab' / 'extractor-qwen25-7b-compact' / 'checkpoint-30',
+        out_root / 'outputs' / 'colab' / 'extractor-qwen25-7b-compact',
+        out_root / 'outputs' / 'colab' / 'extractor-qwen25-1_5b-best-compact' / 'checkpoint-5',
+    ]
+    found = find_first_existing(candidates)
+    if found is not None:
+        return found
+    best = None
+    for cfg in out_root.rglob('adapter_config.json'):
+        parent = cfg.parent
+        if 'extractor' not in str(parent):
+            continue
+        name = parent.name
+        score = 0
+        if name.startswith('checkpoint-'):
+            try:
+                score = int(name.split('-')[-1])
+            except Exception:
+                score = 0
+        best = max(best, (score, parent), default=None)
+    if best is None:
+        raise RuntimeError('Could not find a saved extractor adapter on Drive')
+    return best[1]
+
+if REPO_DIR.exists():
+    subprocess.run(['git', '-C', str(REPO_DIR), 'fetch', 'origin'], check=True)
+    subprocess.run(['git', '-C', str(REPO_DIR), 'checkout', 'main'], check=True)
+    subprocess.run(['git', '-C', str(REPO_DIR), 'pull', '--ff-only', 'origin', 'main'], check=True)
+else:
+    subprocess.run(['git', 'clone', REPO_URL, str(REPO_DIR)], check=True)
+
+subprocess.run([sys.executable, 'tools/colab_bootstrap.py'], cwd=REPO_DIR, check=True)
+
+daic_root = find_daic_root(DRIVE_ROOT)
+init_adapter = find_init_adapter(OUT_ROOT)
+print('DAIC root:', daic_root)
+print('Init adapter:', init_adapter)
+
+cmd = [
+    sys.executable,
+    'tools/run_colab_daic_continue.py',
+    '--device', 'cuda',
+    '--daic-root', str(daic_root),
+    '--init-adapter', str(init_adapter),
+    '--drive-dir', str(OUT_ROOT),
+]
+print('Running:', ' '.join(cmd))
+subprocess.run(cmd, cwd=REPO_DIR, check=True)
