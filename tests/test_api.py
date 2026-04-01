@@ -24,6 +24,18 @@ def test_runtime_config_reports_huggingface_disabled_by_default():
     assert "huggingface_enabled" in body
 
 
+def test_demo_bootstrap_exposes_runtime_profiles_and_links():
+    response = client.get("/demo/bootstrap")
+
+    assert response.status_code == 200
+    body = response.json()
+    assert body["health"]["status"] == "ok"
+    assert "runtime" in body
+    assert body["profiles"]
+    assert body["links"]
+    assert any(link["href"] == "/docs" for link in body["links"])
+
+
 def test_chat_flow_asks_non_sensitive_follow_up_first():
     start = client.post("/chat/sessions", json={"language": "en"})
     assert start.status_code == 200

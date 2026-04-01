@@ -2,21 +2,30 @@ const state = {
   sessionId: null,
   language: "en",
   exportPayload: null,
+  profiles: [],
+  isBusy: false,
 };
 
 const chatLog = document.getElementById("chatLog");
 const sessionMeta = document.getElementById("sessionMeta");
+const sessionBadge = document.getElementById("sessionBadge");
 const messageInput = document.getElementById("messageInput");
 const languageSelect = document.getElementById("languageSelect");
 const startButton = document.getElementById("startButton");
 const chatForm = document.getElementById("chatForm");
 const downloadButton = document.getElementById("downloadButton");
+const summaryLink = document.getElementById("summaryLink");
+const exportLink = document.getElementById("exportLink");
 const micButton = document.getElementById("micButton");
 const autoSendToggle = document.getElementById("autoSendToggle");
 const speakToggle = document.getElementById("speakToggle");
 const voiceStatus = document.getElementById("voiceStatus");
+const statusBanner = document.getElementById("statusBanner");
 
 const runtimeInfo = document.getElementById("runtimeInfo");
+const serviceHealth = document.getElementById("serviceHealth");
+const profileList = document.getElementById("profileList");
+const apiLinkList = document.getElementById("apiLinkList");
 const summaryText = document.getElementById("summaryText");
 const phqTotal = document.getElementById("phqTotal");
 const gadTotal = document.getElementById("gadTotal");
@@ -36,32 +45,213 @@ const speechSynthesisApi = window.speechSynthesis || null;
 let recognition = null;
 let listening = false;
 
-async function fetchRuntime() {
-  const response = await fetch("/runtime/config");
-  const payload = await response.json();
-  runtimeInfo.textContent = `${payload.provider} | chat: ${payload.chat_model} | extract: ${payload.extraction_model}`;
+function setBusy(isBusy) {
+  state.isBusy = isBusy;
+  startButton.disabled = isBusy;
+  chatForm.querySelector('button[type="submit"]').disabled = isBusy;
+}
+
+function setStatusBanner(message, tone = "info") {
+  if (!statusBanner) {
+    return;
+  }
+  statusBanner.textContent = message;
+  statusBanner.className = `status-banner ${tone}`;
+}
+
+function updateSessionBadge() {
+  if (!sessionBadge) {
+    return;
+  }
+  if (!state.sessionId) {
+    sessionBadge.textContent = "No session";
+    sessionBadge.className = "chip soft";
+    return;
+  }
+  sessionBadge.textContent = `${state.language.toUpperCase()} • ${state.sessionId.slice(0, 8)}`;
+  sessionBadge.className = "chip";
+}
+
+function setLink(anchor, href) {
+  if (!anchor) {
+    return;
+  }
+  if (!href) {
+    anchor.href = "#";
+    anchor.classList.add("disabled-link");
+    return;
+  }
+  anchor.href = href;
+  anchor.classList.remove("disabled-link");
+}
+
+function runtimeToText(payload) {
+  return `${payload.provider} | chat: ${payload.chat_model} | extract: ${payload.extraction_model}`;
+}
+
+function renderApiLinks(links) {
+  if (!apiLinkList) {
+    return;
+  }
+  const resolvedLinks = links?.length
+    ? links
+    : [
+        { label: "Health", href: "/health", description: "Service heartbeat and active sessions" },
+        { label: "Runtime config", href: "/runtime/config", description: "Current provider and model setup" },
+        { label: "Profiles", href: "/profiles", description: "Seed demo profiles" },
+        { label: "Questionnaires", href: "/questionnaires", description: "PHQ-9 and GAD-7 item schema" },
+        { label: "OpenAPI docs", href: "/docs", description: "Interactive API explorer" },
+      ];
+
+  apiLinkList.innerHTML = "";
+  resolvedLinks.forEach((link) => {
+    const li = document.createElement("li");
+    li.innerHTML = `<a href="${escapeHtml(link.href)}" target="_blank" rel="noopener noreferrer">${escapeHtml(link.label)}</a>
+      <span class="link-hint">${escapeHtml(link.description || "")}</span>`;
+    apiLinkList.appendChild(li);
+  });
+}
+
+function renderProfiles(profiles) {
+  if (!profileList) {
+    return;
+  }
+  if (!profiles.length) {
+    profileList.innerHTML = '<p class="muted">No profiles available right now.</p>';
+    return;
+  }
+
+  profileList.innerHTML = "";
+  profiles.slice(0, 6).forEach((profile) => {
+    const card = document.createElement("article");
+    card.className = "profile-card";
+    const tags = (profile.nuance_tags || []).slice(0, 3).join(" • ");
+    card.innerHTML = `
+      <p class="profile-title">${escapeHtml(profile.patient_id)} · ${escapeHtml((profile.language || "en").toUpperCase())}</p>
+      <p class="profile-meta">${escapeHtml(profile.occupation || "participant")} · age ${escapeHtml(String(profile.age || "n/a"))}</p>
+      <p class="profile-context">${escapeHtml(profile.context || profile.notes || "No context available.")}</p>
+      <p class="profile-tags">${escapeHtml(tags || "general screening demo")}</p>
+      <button type="button" class="button secondary profile-launch" data-profile-id="${escapeHtml(profile.patient_id)}">Launch Scenario</button>
+    `;
+    profileList.appendChild(card);
+  });
+
+  document.querySelectorAll(".profile-launch").forEach((button) => {
+    button.addEventListener("click", async () => {
+      const profileId = button.getAttribute("data-profile-id");
+      const profile = state.profiles.find((entry) => entry.patient_id === profileId);
+      if (!profile) {
+        return;
+      }
+      await launchProfile(profile);
+    });
+  });
+}
+
+function mapProfileToSeedText(profile) {
+  const depression = profile.depression_level || "unknown";
+  const anxiety = profile.anxiety_level || "unknown";
+  const context = profile.context || "day-to-day stress has been hard to manage";
+  const note = profile.notes || "I am trying to explain what has changed lately.";
+  return `I am ${profile.age || "an adult"} and ${context}. My depression feels ${depression} and anxiety feels ${anxiety}. ${note}`;
+}
+
+async function launchProfile(profile) {
+  languageSelect.value = profile.language || "en";
+  state.language = languageSelect.value;
+  setStatusBanner(`Launching ${profile.patient_id} in ${state.language.toUpperCase()}...`, "info");
+  await startSession();
+  await sendMessageText(mapProfileToSeedText(profile));
+}
+
+async function fetchBootstrap() {
+  try {
+    const response = await fetch("/demo/bootstrap");
+    if (!response.ok) {
+      throw new Error(`Bootstrap failed: ${response.status}`);
+    }
+    const payload = await response.json();
+    runtimeInfo.textContent = runtimeToText(payload.runtime);
+    serviceHealth.textContent = `Backend ${payload.health.status} · active sessions ${payload.health.active_sessions}`;
+    serviceHealth.className = `service-health ${payload.health.status === "ok" ? "good" : "warn"}`;
+    state.profiles = payload.profiles || [];
+    renderProfiles(state.profiles);
+    renderApiLinks(payload.links || []);
+    return;
+  } catch (error) {
+    console.error(error);
+  }
+
+  const [runtimeResponse, healthResponse, profilesResponse] = await Promise.all([
+    fetch("/runtime/config"),
+    fetch("/health"),
+    fetch("/profiles"),
+  ]);
+  const runtimePayload = await runtimeResponse.json();
+  const healthPayload = await healthResponse.json();
+  const profilesPayload = await profilesResponse.json();
+  runtimeInfo.textContent = runtimeToText(runtimePayload);
+  serviceHealth.textContent = `Backend ${healthPayload.status} · active sessions ${healthPayload.active_sessions}`;
+  serviceHealth.className = `service-health ${healthPayload.status === "ok" ? "good" : "warn"}`;
+  state.profiles = (profilesPayload || []).map((profile) => {
+    const background = profile.background_profile || {};
+    const symptoms = profile.symptom_profile || {};
+    return {
+      patient_id: profile.patient_id,
+      language: profile.language,
+      age: profile.age,
+      occupation: profile.occupation,
+      context: background.context || "",
+      depression_level: symptoms.depression_level || "unknown",
+      anxiety_level: symptoms.anxiety_level || "unknown",
+      notes: profile.notes || "",
+      nuance_tags: profile.nuance_tags || [],
+    };
+  });
+  renderProfiles(state.profiles);
+  renderApiLinks([]);
 }
 
 async function startSession() {
-  state.language = languageSelect.value;
-  stopListening();
+  setBusy(true);
+  try {
+    state.language = languageSelect.value;
+    stopListening();
 
-  const response = await fetch("/chat/sessions", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ language: state.language }),
-  });
-  const payload = await response.json();
-  state.sessionId = payload.session_id;
-  state.exportPayload = null;
-  chatLog.innerHTML = "";
-  renderTurn(payload.assistant_turn);
-  maybeSpeak(payload.assistant_turn);
-  sessionMeta.classList.remove("empty");
-  sessionMeta.textContent = `Session ${state.sessionId} | language: ${state.language}`;
-  downloadButton.disabled = true;
-  resetInsightPanel();
-  updateVoiceStatus("Session ready for typed or spoken turns.");
+    const response = await fetch("/chat/sessions", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ language: state.language }),
+    });
+    if (!response.ok) {
+      throw new Error(`Could not start session (${response.status})`);
+    }
+    const payload = await response.json();
+    state.sessionId = payload.session_id;
+    state.exportPayload = null;
+    chatLog.innerHTML = "";
+    renderTurn(payload.assistant_turn);
+    maybeSpeak(payload.assistant_turn);
+    sessionMeta.classList.remove("empty");
+    sessionMeta.textContent = `Session ${state.sessionId} · language ${state.language.toUpperCase()} · runtime ready`;
+    updateSessionBadge();
+    downloadButton.disabled = true;
+    setLink(summaryLink, null);
+    setLink(exportLink, null);
+    resetInsightPanel();
+    updateVoiceStatus("Session ready for typed or spoken turns.");
+    setStatusBanner(`Session started in ${state.language.toUpperCase()}.`, "success");
+  } catch (error) {
+    console.error(error);
+    renderSystemMessage("Session start failed. Check backend health and try again.");
+    setStatusBanner("Could not start session. Please retry.", "error");
+  } finally {
+    setBusy(false);
+  }
+}
+
+function renderSystemMessage(text) {
+  renderTurn({ speaker: "assistant", text: `[System] ${text}` });
 }
 
 function renderTurn(turn) {
@@ -69,7 +259,7 @@ function renderTurn(turn) {
   card.className = `message ${turn.speaker}`;
   card.innerHTML = `
     <span class="speaker">${turn.speaker}</span>
-    <div class="bubble">${escapeHtml(turn.text)}</div>
+    <div class="bubble">${escapeHtml(String(turn.text || ""))}</div>
   `;
   chatLog.appendChild(card);
   chatLog.scrollTop = chatLog.scrollHeight;
@@ -77,11 +267,13 @@ function renderTurn(turn) {
 
 function renderSnapshot(payload) {
   const { snapshot, summary, rows } = payload;
+  const safeRows = rows || [];
+  const safeItems = snapshot.items || {};
   const coverage = snapshot.coverage || {
-    total_items: Object.keys(snapshot.items).length,
-    touched_items: snapshot.evidence_spans.length,
+    total_items: Object.keys(safeItems).length,
+    touched_items: snapshot.evidence_spans?.length || 0,
     resolved_items: [],
-    next_items: snapshot.unresolved_items,
+    next_items: snapshot.unresolved_items || [],
     review_items: [],
   };
   phqTotal.textContent = snapshot.totals.PHQ9 ?? 0;
@@ -99,7 +291,7 @@ function renderSnapshot(payload) {
     unresolvedList.innerHTML = "<li>No follow-up queue right now.</li>";
   } else {
     coverage.next_items.slice(0, 6).forEach((itemId) => {
-      const row = rows.find((entry) => entry.item_id === itemId);
+      const row = safeRows.find((entry) => entry.item_id === itemId);
       const entry = document.createElement("li");
       entry.textContent = row ? `${row.label} · ${row.status}` : itemId;
       unresolvedList.appendChild(entry);
@@ -111,7 +303,7 @@ function renderSnapshot(payload) {
     reviewList.innerHTML = "<li>No review flags right now.</li>";
   } else {
     coverage.review_items.slice(0, 6).forEach((itemId) => {
-      const row = rows.find((entry) => entry.item_id === itemId);
+      const row = safeRows.find((entry) => entry.item_id === itemId);
       const entry = document.createElement("li");
       entry.textContent = row ? `${row.label} · ${row.status}` : itemId;
       reviewList.appendChild(entry);
@@ -119,7 +311,7 @@ function renderSnapshot(payload) {
   }
 
   itemTableBody.innerHTML = "";
-  rows
+  safeRows
     .filter((row) => row.value !== null || row.status !== "unresolved")
     .slice(0, 16)
     .forEach((row) => {
@@ -137,11 +329,12 @@ function renderSnapshot(payload) {
   }
 
   evidenceList.innerHTML = "";
-  if (!snapshot.evidence_spans.length) {
+  const evidence = snapshot.evidence_spans || [];
+  if (!evidence.length) {
     evidenceList.innerHTML = '<li class="empty-cell">No evidence spans yet.</li>';
   } else {
-    snapshot.evidence_spans.slice(-6).reverse().forEach((span) => {
-      const itemRow = rows.find((row) => row.item_id === span.item_id);
+    evidence.slice(-6).reverse().forEach((span) => {
+      const itemRow = safeRows.find((row) => row.item_id === span.item_id);
       const li = document.createElement("li");
       li.className = "evidence-item";
       li.innerHTML = `
@@ -173,38 +366,63 @@ async function refreshExport() {
     return;
   }
   const response = await fetch(`/chat/sessions/${state.sessionId}/export`);
+  if (!response.ok) {
+    throw new Error(`Export refresh failed (${response.status})`);
+  }
   state.exportPayload = await response.json();
   downloadButton.disabled = false;
   renderSnapshot(state.exportPayload);
+  setLink(summaryLink, `/chat/sessions/${state.sessionId}/summary`);
+  setLink(exportLink, `/chat/sessions/${state.sessionId}/export`);
 }
 
-async function sendTurn(event) {
-  event.preventDefault();
-  const text = messageInput.value.trim();
-  if (!text) {
+async function sendMessageText(text) {
+  const cleaned = (text || "").trim();
+  if (!cleaned) {
     return;
   }
   if (!state.sessionId) {
     await startSession();
+    if (!state.sessionId) {
+      return;
+    }
   }
 
-  stopListening();
-  if (speechSynthesisApi) {
-    speechSynthesisApi.cancel();
+  setBusy(true);
+  try {
+    stopListening();
+    if (speechSynthesisApi) {
+      speechSynthesisApi.cancel();
+    }
+
+    renderTurn({ speaker: "user", text: cleaned });
+    messageInput.value = "";
+
+    const response = await fetch(`/chat/sessions/${state.sessionId}/turns`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ text: cleaned }),
+    });
+    if (!response.ok) {
+      throw new Error(`Turn failed (${response.status})`);
+    }
+    const payload = await response.json();
+    renderTurn(payload.assistant_turn);
+    maybeSpeak(payload.assistant_turn);
+    await refreshExport();
+    setStatusBanner("Turn processed. Structured view has been updated.", "success");
+  } catch (error) {
+    console.error(error);
+    renderSystemMessage("Turn failed due to a runtime error. Please retry.");
+    setStatusBanner("Turn failed. Check runtime and retry.", "error");
+  } finally {
+    setBusy(false);
   }
+}
 
-  renderTurn({ speaker: "user", text });
-  messageInput.value = "";
-
-  const response = await fetch(`/chat/sessions/${state.sessionId}/turns`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ text }),
-  });
-  const payload = await response.json();
-  renderTurn(payload.assistant_turn);
-  maybeSpeak(payload.assistant_turn);
-  await refreshExport();
+async function sendTurn(event) {
+  event.preventDefault();
+  await sendMessageText(messageInput.value);
 }
 
 function downloadExport() {
@@ -281,6 +499,8 @@ function setupVoice() {
     if (recognition) {
       recognition.lang = mapVoiceLanguage(languageSelect.value);
     }
+    state.language = languageSelect.value;
+    updateSessionBadge();
     updateVoiceStatus(`Voice language set to ${languageSelect.value}.`);
   });
 
@@ -361,7 +581,7 @@ function updateVoiceStatus(message, isError = false, isActive = false) {
 }
 
 function escapeHtml(text) {
-  return text
+  return String(text)
     .replaceAll("&", "&amp;")
     .replaceAll("<", "&lt;")
     .replaceAll(">", "&gt;")
@@ -373,7 +593,14 @@ startButton.addEventListener("click", startSession);
 chatForm.addEventListener("submit", sendTurn);
 downloadButton.addEventListener("click", downloadExport);
 setupVoice();
+updateSessionBadge();
 
-fetchRuntime().catch(() => {
-  runtimeInfo.textContent = "Runtime config unavailable.";
-});
+fetchBootstrap()
+  .then(() => {
+    setStatusBanner("Runtime connected. Pick a profile or start chatting.", "success");
+  })
+  .catch((error) => {
+    console.error(error);
+    runtimeInfo.textContent = "Runtime config unavailable.";
+    setStatusBanner("Backend bootstrap failed. Verify API service.", "error");
+  });

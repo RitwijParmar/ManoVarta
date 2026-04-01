@@ -85,6 +85,40 @@ def runtime_settings() -> dict:
     }
 
 
+@app.get("/demo/bootstrap")
+def demo_bootstrap() -> dict:
+    profiles = []
+    for profile in load_seed_profiles():
+        background = profile.get("background_profile", {}) or {}
+        symptoms = profile.get("symptom_profile", {}) or {}
+        profiles.append(
+            {
+                "patient_id": profile.get("patient_id"),
+                "language": profile.get("language", "en"),
+                "age": profile.get("age"),
+                "occupation": profile.get("occupation", "participant"),
+                "context": background.get("context", ""),
+                "depression_level": symptoms.get("depression_level", "unknown"),
+                "anxiety_level": symptoms.get("anxiety_level", "unknown"),
+                "notes": profile.get("notes", ""),
+                "nuance_tags": profile.get("nuance_tags", [])[:4],
+            }
+        )
+
+    return {
+        "health": {"status": "ok", "active_sessions": store.size()},
+        "runtime": runtime_settings(),
+        "profiles": profiles,
+        "links": [
+            {"label": "Health", "href": "/health", "description": "Service heartbeat and active session count"},
+            {"label": "Runtime config", "href": "/runtime/config", "description": "Active provider and model selection"},
+            {"label": "Profiles", "href": "/profiles", "description": "Seed profile presets for demos"},
+            {"label": "Questionnaires", "href": "/questionnaires", "description": "PHQ-9 and GAD-7 questionnaire items"},
+            {"label": "OpenAPI docs", "href": "/docs", "description": "Interactive endpoint explorer"},
+        ],
+    }
+
+
 @app.get("/questionnaires")
 def questionnaires() -> dict:
     return {
