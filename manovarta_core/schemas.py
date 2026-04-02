@@ -10,6 +10,9 @@ Speaker = Literal["assistant", "user"]
 LanguageCode = Literal["en", "hi", "hinglish"]
 SafetyLevel = Literal["none", "review", "urgent"]
 ItemStatus = Literal["resolved", "partial", "contradicted", "unresolved", "abstained"]
+DialogueStage = Literal["rapport", "exploration", "clarification", "safety", "summary"]
+DialogueAction = Literal["reflect", "open_question", "symptom_probe", "clarify", "risk_check", "summarize", "handoff"]
+TopicStatus = Literal["pending", "probing", "stable", "review", "held_back"]
 
 
 class Turn(BaseModel):
@@ -52,6 +55,32 @@ class SafetyFlag(BaseModel):
     needs_human_review: bool = False
 
 
+class TopicState(BaseModel):
+    topic_id: str
+    label: str
+    item_ids: List[str] = Field(default_factory=list)
+    touched: bool = False
+    priority: int = 0
+    confidence: float = Field(ge=0.0, le=1.0)
+    status: TopicStatus = "pending"
+    resolved_items: List[str] = Field(default_factory=list)
+    unresolved_items: List[str] = Field(default_factory=list)
+    review_items: List[str] = Field(default_factory=list)
+
+
+class DialoguePlan(BaseModel):
+    stage: DialogueStage = "rapport"
+    next_action: DialogueAction = "open_question"
+    current_topic: str = "rapport"
+    target_topic: str = "rapport"
+    target_item: Optional[str] = None
+    rationale: str = ""
+    user_turns: int = 0
+    low_confidence_topics: List[str] = Field(default_factory=list)
+    covered_topics: List[str] = Field(default_factory=list)
+    held_back_items: List[str] = Field(default_factory=list)
+
+
 class CoveragePlan(BaseModel):
     total_items: int
     touched_items: int
@@ -64,6 +93,8 @@ class CoveragePlan(BaseModel):
     next_items: List[str] = Field(default_factory=list)
     completion_ratio: float = Field(ge=0.0, le=1.0)
     review_required: bool = False
+    topic_states: List[TopicState] = Field(default_factory=list)
+    dialogue: DialoguePlan = Field(default_factory=DialoguePlan)
 
 
 class ScreeningSnapshot(BaseModel):

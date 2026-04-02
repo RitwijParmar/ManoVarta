@@ -1,7 +1,10 @@
-from typing import Dict, Optional, Tuple
+from __future__ import annotations
+
+from dataclasses import dataclass
+from typing import Dict, Iterable, Optional, Tuple
 
 from manovarta_core.questionnaires import ITEM_INDEX
-from manovarta_core.schemas import ChatSession, CoveragePlan, ScreeningSnapshot
+from manovarta_core.schemas import ChatSession, CoveragePlan, DialoguePlan, ScreeningSnapshot, TopicState
 
 
 OPENING_PROMPTS = {
@@ -22,87 +25,124 @@ CLOSING_MESSAGES = {
     "hinglish": "Ab mere paas structured summary ke liye enough detail hai. Agar aap chaho to ek aur follow-up le sakte hain.",
 }
 
-FOLLOW_UPS: Dict[str, Dict[str, str]] = {
-    "phq_q1_anhedonia": {
-        "en": "Have the things you usually enjoy felt less interesting lately, or is it more about energy?",
-        "hi": "Jo cheezein pehle theek lagti thi, kya unmein ab dil kam lagta hai, ya zyada problem energy ki hai?",
-        "hinglish": "Jo cheezein pehle achhi lagti thi, kya unmein ab mann kam lagta hai, ya issue zyada energy ka hai?",
+RAPPORT_PROMPTS = {
+    "en": "Thanks for sharing that. Has it been feeling more like low mood, constant worry, poor sleep, or a mix of those?",
+    "hi": "Yeh share karne ke liye shukriya. Kya yeh zyada udaasi, lagataar chinta, neend ki dikkat, ya inka mix lag raha hai?",
+    "hinglish": "Yeh share karne ke liye thanks. Kya yeh zyada low mood, constant worry, sleep issue, ya in sab ka mix lag raha hai?",
+}
+
+TOPIC_PROMPTS: Dict[str, Dict[str, str]] = {
+    "mood": {
+        "en": "That sounds heavy. On most days, has it felt more like low mood itself, or more like losing interest in things you usually enjoy?",
+        "hi": "Yeh kaafi bhaari lag raha hai. Zyada dinon mein yeh zyada neecha mood jaisa lagta hai, ya pehle jo cheezein achhi lagti thi unmein dil kam lagta hai?",
+        "hinglish": "Yeh kaafi heavy lag raha hai. Most days yeh zyada low mood jaisa lagta hai, ya pehle jo cheezein achhi lagti thi unmein mann kam lagta hai?",
     },
-    "phq_q2_low_mood": {
-        "en": "Has your mood itself been low, empty, or heavy on most days, or is it mostly stress?",
-        "hi": "Kya aapka mood khud neecha ya udaas raha hai, ya zyada baat stress ki hai?",
-        "hinglish": "Kya mood khud low raha hai, ya zyada matter stress ka hai?",
+    "sleep": {
+        "en": "That sounds draining. Has sleep mostly been hard to start, hard to stay asleep, or are you sleeping more than usual?",
+        "hi": "Yeh thaka dene wala lag raha hai. Neend mein zyada dikkat sone ki shuruat mein hai, beech beech mein uthne mein, ya zarurat se zyada neend aa rahi hai?",
+        "hinglish": "Yeh kaafi draining lag raha hai. Sleep issue zyada sone ki shuruat mein hai, beech beech mein uthne mein, ya usual se zyada sleep ho rahi hai?",
     },
-    "phq_q3_sleep": {
-        "en": "How has sleep been lately: trouble falling asleep, waking up often, or sleeping too much?",
-        "hi": "Neend kaisi rahi: neend aane mein dikkat, baar baar uthna, ya zyada sona?",
-        "hinglish": "Sleep kaisi rahi: sone mein dikkat, baar baar uthna, ya zyada sleep?",
+    "energy": {
+        "en": "I want to understand the day-to-day impact a bit better. Is it more like low energy through the day, changes in appetite, or both?",
+        "hi": "Main roz ke impact ko thoda better samajhna chahta hoon. Kya baat zyada din bhar ki thakan ki hai, bhook ke badlav ki, ya dono ki?",
+        "hinglish": "Main day-to-day impact thoda better samajhna chahta hoon. Kya issue zyada low energy ka hai, appetite change ka, ya dono ka?",
     },
-    "phq_q4_fatigue": {
-        "en": "Are you feeling physically drained most days, even when the day is not that demanding?",
-        "hi": "Kya zyada din aise lagte hain jab sharir se hi thakan rehti hai, chahe kaam itna heavy na ho?",
-        "hinglish": "Kya most days body level pe drained feel hota hai, even when day itna heavy na ho?",
+    "self_view": {
+        "en": "When things feel this heavy, do you also end up blaming yourself or feeling like a burden?",
+        "hi": "Jab cheezein itni bhaari lagti hain, kya aap khud ko zyada blame karne lagte hain ya bojh jaisa mehsoos hota hai?",
+        "hinglish": "Jab cheezein itni heavy lagti hain, kya aap khud ko zyada blame karte ho ya burden jaisa feel hota hai?",
     },
-    "phq_q5_appetite": {
-        "en": "Have your appetite or eating patterns changed in a noticeable way?",
-        "hi": "Kya bhook ya khane ka pattern noticeably badla hai?",
-        "hinglish": "Kya appetite ya khane ka pattern noticeable way mein change hua hai?",
+    "focus": {
+        "en": "When you try to study or work, is it more that your focus keeps breaking, or that your body feels slowed down or restless?",
+        "hi": "Jab aap padhne ya kaam karne baithte hain, kya zyada dikkat dhyan tootne ki hoti hai, ya sharir dheema ya bechain lagta hai?",
+        "hinglish": "Jab aap study ya work karte ho, kya zyada issue focus break hone ka hota hai, ya body slow ya restless lagti hai?",
     },
-    "phq_q6_worthlessness": {
-        "en": "Have you been feeling like a burden, blaming yourself too much, or feeling not good enough?",
-        "hi": "Kya aapko bojh jaisa, khud ko zyada blame karne wala, ya khud ko kam samajhne wala ehsaas hua hai?",
-        "hinglish": "Kya aisa feel hua ki aap burden ho, ya aap khud ko zyada blame karte ho?",
+    "anxiety": {
+        "en": "Does this feel more like constant worry in your mind, tension in your body, or both at the same time?",
+        "hi": "Kya yeh zyada dimaag ki lagataar chinta jaisa lagta hai, sharir ke tanav jaisa, ya dono saath mein?",
+        "hinglish": "Kya yeh zyada constant worry in the mind jaisa lagta hai, body tension jaisa, ya dono ek saath?",
     },
-    "phq_q7_concentration": {
-        "en": "When you try to study or work, is focus breaking more than usual?",
-        "hi": "Jab padhne ya kaam karne baithte hain, kya dhyan pehle se zyada toot raha hai?",
-        "hinglish": "Jab study ya work karte ho, kya focus pehle se zyada break ho raha hai?",
+    "safety": {
+        "en": "I want to check carefully because your safety matters. Have thoughts of hurting yourself or not wanting to be alive shown up at all?",
+        "hi": "Main dhyan se poochna chahta hoon kyunki aapki safety zaruri hai. Kya khud ko nuksan pahunchane ya zinda na rehne ke khayal aaye hain?",
+        "hinglish": "Main carefully poochna chahta hoon kyunki aapki safety matter karti hai. Kya khud ko hurt karne ya zinda na rehne wale thoughts aaye hain?",
     },
-    "phq_q8_psychomotor": {
-        "en": "Have you felt unusually slowed down, or the opposite, so restless that it is hard to sit still?",
-        "hi": "Kya aap apne aap ko ya to bahut dheema mehsoos karte hain, ya itna bechain ki ek jagah tikna mushkil ho?",
-        "hinglish": "Kya aap ya to unusually slow feel karte ho, ya itne restless ki baithna mushkil ho?",
-    },
-    "phq_q9_self_harm": {
-        "en": "I want to check carefully: have thoughts of hurting yourself or not wanting to be alive shown up at all?",
-        "hi": "Main dhyan se poochna chahta hoon: kya khud ko nuksan pahunchane ya zinda na rehne ke khayal aaye hain?",
-        "hinglish": "Main carefully poochna chahta hoon: kya khud ko hurt karne ya zinda na rehne wale thoughts aaye hain?",
-    },
-    "gad_q1_nervous": {
-        "en": "Do you feel on edge or keyed up even when there is no immediate reason?",
-        "hi": "Kya bina turant wajah ke bhi andar se ghabrahat ya tanav bana rehta hai?",
-        "hinglish": "Kya bina immediate reason ke bhi on edge ya ghabrahat feel hoti rehti hai?",
-    },
-    "gad_q2_control_worry": {
-        "en": "When worry starts, does it feel hard to stop or slow it down?",
-        "hi": "Jab fikr shuru hoti hai, kya use rokna ya dheema karna mushkil lagta hai?",
-        "hinglish": "Jab worry start hoti hai, kya usse stop ya slow karna mushkil lagta hai?",
-    },
-    "gad_q3_excessive_worry": {
-        "en": "Is the worry usually about one issue, or does it spread across many things?",
-        "hi": "Kya chinta zyada tar ek baat tak simit hoti hai, ya bahut si cheezon tak phail jati hai?",
-        "hinglish": "Kya worry ek issue tak rehti hai, ya bahut si cheezon tak spread ho jati hai?",
-    },
-    "gad_q4_trouble_relaxing": {
-        "en": "Have you been able to relax at all, or does your body stay tense most of the time?",
-        "hi": "Kya aap relax kar pa rahe hain, ya sharir aksar tanav mein hi rehta hai?",
-        "hinglish": "Kya aap relax kar pa rahe ho, ya body mostly tense rehti hai?",
-    },
-    "gad_q5_restlessness": {
-        "en": "Do you get so restless that sitting still becomes hard?",
-        "hi": "Kya bechaini itni hoti hai ki ek jagah baithna mushkil ho jata hai?",
-        "hinglish": "Kya restlessness itni ho jati hai ki ek jagah baithna mushkil ho jata hai?",
-    },
-    "gad_q6_irritability": {
-        "en": "Have small things been making you unusually irritable or snappy?",
-        "hi": "Kya choti choti baatein pehle se zyada chidchida bana rahi hain?",
-        "hinglish": "Kya choti choti baatein aapko pehle se zyada irritable bana rahi hain?",
-    },
-    "gad_q7_fear_awful": {
-        "en": "Do you often feel as if something bad is about to happen, even when you cannot explain why?",
-        "hi": "Kya aksar aisa lagta hai ki kuch bura hone wala hai, chahe wajah clear na ho?",
-        "hinglish": "Kya aksar aisa lagta hai ki kuch bura hone wala hai, even when reason clear na ho?",
-    },
+}
+
+
+@dataclass(frozen=True)
+class TopicNode:
+    topic_id: str
+    label: str
+    item_ids: Tuple[str, ...]
+    priority: int
+    transitions: Tuple[str, ...]
+
+
+TOPIC_GRAPH: Dict[str, TopicNode] = {
+    "mood": TopicNode(
+        topic_id="mood",
+        label="Mood and interest",
+        item_ids=("phq_q1_anhedonia", "phq_q2_low_mood"),
+        priority=5,
+        transitions=("sleep", "energy", "self_view", "focus", "anxiety", "safety"),
+    ),
+    "sleep": TopicNode(
+        topic_id="sleep",
+        label="Sleep",
+        item_ids=("phq_q3_sleep",),
+        priority=4,
+        transitions=("energy", "focus", "mood", "anxiety"),
+    ),
+    "energy": TopicNode(
+        topic_id="energy",
+        label="Energy and appetite",
+        item_ids=("phq_q4_fatigue", "phq_q5_appetite"),
+        priority=3,
+        transitions=("sleep", "mood", "focus"),
+    ),
+    "self_view": TopicNode(
+        topic_id="self_view",
+        label="Self-worth",
+        item_ids=("phq_q6_worthlessness",),
+        priority=4,
+        transitions=("mood", "safety", "anxiety"),
+    ),
+    "focus": TopicNode(
+        topic_id="focus",
+        label="Focus and activation",
+        item_ids=("phq_q7_concentration", "phq_q8_psychomotor"),
+        priority=3,
+        transitions=("sleep", "energy", "mood", "anxiety"),
+    ),
+    "anxiety": TopicNode(
+        topic_id="anxiety",
+        label="Worry and tension",
+        item_ids=(
+            "gad_q1_nervous",
+            "gad_q2_control_worry",
+            "gad_q3_excessive_worry",
+            "gad_q4_trouble_relaxing",
+            "gad_q5_restlessness",
+            "gad_q6_irritability",
+            "gad_q7_fear_awful",
+        ),
+        priority=5,
+        transitions=("sleep", "focus", "mood", "safety"),
+    ),
+    "safety": TopicNode(
+        topic_id="safety",
+        label="Safety",
+        item_ids=("phq_q9_self_harm",),
+        priority=6,
+        transitions=("mood", "self_view", "summary"),
+    ),
+}
+
+ITEM_TO_TOPIC = {
+    item_id: node.topic_id
+    for node in TOPIC_GRAPH.values()
+    for item_id in node.item_ids
 }
 
 
@@ -111,52 +151,304 @@ class DialoguePlanner:
         return OPENING_PROMPTS[language]
 
     def next_reply(self, snapshot: ScreeningSnapshot, session: ChatSession) -> Tuple[str, Optional[str]]:
-        language = session.language
         snapshot.coverage = self.build_plan(snapshot, session)
-        if snapshot.safety.level == "urgent":
-            return SAFETY_MESSAGES[language], None
+        plan = snapshot.coverage.dialogue
+        language = session.language
 
-        for item in snapshot.coverage.next_items:
-            if item in FOLLOW_UPS:
-                return FOLLOW_UPS[item][language], item
+        if snapshot.safety.level == "urgent" or plan.next_action == "handoff":
+            return SAFETY_MESSAGES[language], plan.target_item
+        if plan.next_action == "summarize":
+            return CLOSING_MESSAGES[language], None
+        if plan.stage == "rapport":
+            return RAPPORT_PROMPTS[language], plan.target_item
 
+        prompt = TOPIC_PROMPTS.get(plan.target_topic, {}).get(language)
+        if prompt:
+            return prompt, plan.target_item
         return CLOSING_MESSAGES[language], None
 
     def build_plan(self, snapshot: ScreeningSnapshot, session: ChatSession) -> CoveragePlan:
-        scored = snapshot.items
-        unresolved = [
-            item_id
-            for item_id, item in scored.items()
-            if item.status in {"unresolved", "partial", "contradicted", "abstained"}
+        user_turns = [turn for turn in session.turns if turn.speaker == "user"]
+        held_back_items = self._held_back_items(snapshot, session)
+        topic_states = self._build_topic_states(snapshot, held_back_items)
+        current_topic = self._infer_current_topic(snapshot, session)
+        low_confidence_topics = [
+            topic.topic_id
+            for topic in topic_states
+            if topic.status in {"pending", "probing", "review"}
+            and topic.topic_id != "safety"
         ]
-        unresolved = [item_id for item_id in unresolved if not self._hold_back_sensitive_item(item_id, snapshot, session)]
-        unresolved.sort(
-            key=lambda item_id: (
-                item_id in session.asked_items,
-                scored[item_id].status == "unresolved",
-                -ITEM_INDEX[item_id].priority,
-                scored[item_id].confidence,
-            )
+        covered_topics = [topic.topic_id for topic in topic_states if topic.touched or topic.status == "stable"]
+        stage = self._select_stage(snapshot, topic_states, len(user_turns), held_back_items)
+        target_topic = self._select_target_topic(snapshot, topic_states, current_topic, stage, held_back_items)
+        target_item = self._select_target_item(snapshot, session, target_topic, held_back_items)
+        next_items = self._rank_next_items(snapshot, session, target_topic, held_back_items)
+        review_items = [
+            item_id
+            for item_id, item in snapshot.items.items()
+            if item.review_recommended or item.status in {"contradicted", "abstained"}
+        ]
+        dialogue = DialoguePlan(
+            stage=stage,
+            next_action=self._select_action(stage, target_topic),
+            current_topic=current_topic,
+            target_topic=target_topic,
+            target_item=target_item,
+            rationale=self._build_rationale(snapshot, target_topic, topic_states, held_back_items),
+            user_turns=len(user_turns),
+            low_confidence_topics=low_confidence_topics,
+            covered_topics=covered_topics,
+            held_back_items=held_back_items,
         )
         return snapshot.coverage.model_copy(
             update={
-                "next_items": unresolved[:5],
-                "review_items": [
-                    item_id for item_id, item in scored.items() if item.review_recommended or item.status in {"contradicted", "abstained"}
-                ],
-                "review_required": snapshot.safety.needs_human_review
-                or any(item.review_recommended or item.status in {"contradicted", "abstained"} for item in scored.values()),
+                "next_items": next_items,
+                "review_items": review_items,
+                "review_required": snapshot.safety.needs_human_review or bool(review_items),
+                "topic_states": topic_states,
+                "dialogue": dialogue,
             }
         )
+
+    def _build_topic_states(self, snapshot: ScreeningSnapshot, held_back_items: Iterable[str]) -> list[TopicState]:
+        held_back = set(held_back_items)
+        topic_states: list[TopicState] = []
+        for node in TOPIC_GRAPH.values():
+            items = [snapshot.items[item_id] for item_id in node.item_ids]
+            weights = [max(ITEM_INDEX[item.item_id].priority, 1) for item in items]
+            weighted_total = sum(item.confidence * weight for item, weight in zip(items, weights))
+            total_weight = sum(weights) or 1
+            resolved_items = [item.item_id for item in items if item.status == "resolved"]
+            unresolved_items = [item.item_id for item in items if item.status != "resolved" and item.item_id not in held_back]
+            review_items = [
+                item.item_id
+                for item in items
+                if item.review_recommended or item.status in {"contradicted", "abstained"}
+            ]
+            touched = any(item.evidence_span_ids for item in items)
+            topic_states.append(
+                TopicState(
+                    topic_id=node.topic_id,
+                    label=node.label,
+                    item_ids=list(node.item_ids),
+                    touched=touched,
+                    priority=node.priority,
+                    confidence=round(weighted_total / total_weight, 2),
+                    status=self._topic_status(node.topic_id, touched, unresolved_items, review_items, held_back),
+                    resolved_items=resolved_items,
+                    unresolved_items=unresolved_items,
+                    review_items=review_items,
+                )
+            )
+        return topic_states
+
+    def _topic_status(
+        self,
+        topic_id: str,
+        touched: bool,
+        unresolved_items: list[str],
+        review_items: list[str],
+        held_back_items: set[str],
+    ) -> str:
+        if any(item_id in held_back_items for item_id in TOPIC_GRAPH[topic_id].item_ids):
+            return "held_back"
+        if review_items:
+            return "review"
+        if not unresolved_items:
+            return "stable"
+        if touched:
+            return "probing"
+        return "pending"
+
+    def _select_stage(
+        self,
+        snapshot: ScreeningSnapshot,
+        topic_states: list[TopicState],
+        user_turn_count: int,
+        held_back_items: list[str],
+    ) -> str:
+        if snapshot.safety.level == "urgent":
+            return "safety"
+        if snapshot.safety.level == "review" and "phq_q9_self_harm" not in held_back_items:
+            return "safety"
+        if user_turn_count <= 1 and snapshot.coverage.touched_items < 3:
+            return "rapport"
+        if any(topic.status in {"review", "probing"} for topic in topic_states if topic.topic_id != "safety"):
+            return "clarification"
+        stable_topics = [topic for topic in topic_states if topic.status == "stable" and topic.topic_id != "safety"]
+        if snapshot.coverage.completion_ratio >= 0.65 or len(stable_topics) >= 4:
+            return "summary"
+        return "exploration"
+
+    def _select_target_topic(
+        self,
+        snapshot: ScreeningSnapshot,
+        topic_states: list[TopicState],
+        current_topic: str,
+        stage: str,
+        held_back_items: list[str],
+    ) -> str:
+        if stage == "safety":
+            return "safety"
+        if stage == "summary":
+            return current_topic if current_topic in TOPIC_GRAPH else "mood"
+
+        held_back = set(held_back_items)
+        candidates = [
+            topic
+            for topic in topic_states
+            if topic.unresolved_items or topic.review_items
+        ]
+        if not candidates:
+            return current_topic if current_topic in TOPIC_GRAPH else "mood"
+
+        def rank(topic: TopicState) -> tuple[int, float]:
+            score = topic.priority * 10
+            if topic.status == "review":
+                score += 20
+            elif topic.status == "probing":
+                score += 14
+            else:
+                score += 8
+            if topic.touched:
+                score += 8
+            if topic.topic_id == current_topic:
+                score += 4
+            if current_topic in TOPIC_GRAPH and topic.topic_id in TOPIC_GRAPH[current_topic].transitions:
+                score += 3
+            if topic.topic_id == "safety" and "phq_q9_self_harm" in held_back:
+                score -= 40
+            if topic.topic_id == "safety" and snapshot.safety.level == "none":
+                score -= 8
+            return score, 1.0 - topic.confidence
+
+        return max(candidates, key=rank).topic_id
+
+    def _select_target_item(
+        self,
+        snapshot: ScreeningSnapshot,
+        session: ChatSession,
+        target_topic: str,
+        held_back_items: list[str],
+    ) -> Optional[str]:
+        if target_topic not in TOPIC_GRAPH:
+            return None
+
+        held_back = set(held_back_items)
+        ranked = sorted(
+            (
+                item_id
+                for item_id in TOPIC_GRAPH[target_topic].item_ids
+                if item_id not in held_back and snapshot.items[item_id].status != "resolved"
+            ),
+            key=lambda item_id: (
+                item_id in session.asked_items,
+                snapshot.items[item_id].status == "unresolved",
+                -ITEM_INDEX[item_id].priority,
+                snapshot.items[item_id].confidence,
+            ),
+        )
+        return ranked[0] if ranked else None
+
+    def _rank_next_items(
+        self,
+        snapshot: ScreeningSnapshot,
+        session: ChatSession,
+        target_topic: str,
+        held_back_items: list[str],
+    ) -> list[str]:
+        held_back = set(held_back_items)
+        unresolved = [
+            item_id
+            for item_id, item in snapshot.items.items()
+            if item.status in {"unresolved", "partial", "contradicted", "abstained"} and item_id not in held_back
+        ]
+        unresolved.sort(
+            key=lambda item_id: (
+                ITEM_TO_TOPIC.get(item_id) != target_topic,
+                item_id in session.asked_items,
+                snapshot.items[item_id].status == "unresolved",
+                -ITEM_INDEX[item_id].priority,
+                snapshot.items[item_id].confidence,
+            )
+        )
+        return unresolved[:5]
+
+    def _infer_current_topic(self, snapshot: ScreeningSnapshot, session: ChatSession) -> str:
+        if session.asked_items:
+            last_item = session.asked_items[-1]
+            if last_item in ITEM_TO_TOPIC:
+                return ITEM_TO_TOPIC[last_item]
+        if snapshot.evidence_spans:
+            last_span = max(snapshot.evidence_spans, key=lambda span: (span.turn_id, span.span_id))
+            return ITEM_TO_TOPIC.get(last_span.item_id, "rapport")
+        return "rapport"
+
+    def _select_action(self, stage: str, target_topic: str) -> str:
+        if stage == "safety":
+            return "risk_check" if target_topic == "safety" else "handoff"
+        if stage == "summary":
+            return "summarize"
+        if stage == "rapport":
+            return "open_question"
+        return "clarify" if target_topic in {"mood", "anxiety", "sleep"} else "symptom_probe"
+
+    def _build_rationale(
+        self,
+        snapshot: ScreeningSnapshot,
+        target_topic: str,
+        topic_states: list[TopicState],
+        held_back_items: list[str],
+    ) -> str:
+        topic_lookup = {topic.topic_id: topic for topic in topic_states}
+        if snapshot.safety.level == "urgent":
+            return "Safety escalation overrides normal screening."
+        if target_topic == "safety":
+            return "Safety cues or mood-linked risk signals justify a direct safety check."
+        topic = topic_lookup.get(target_topic)
+        if topic is None:
+            return "Conversation is ready for a brief summary."
+        if topic.review_items:
+            return f"{topic.label} contains conflicting evidence and needs clarification."
+        if topic.touched:
+            return f"{topic.label} already has partial evidence, so the next turn should stabilize confidence."
+        if held_back_items and target_topic != "safety":
+            return f"{topic.label} is the best next branch while sensitive safety questions remain held back."
+        return f"{topic.label} is still under-covered and should be explored next."
+
+    def _held_back_items(self, snapshot: ScreeningSnapshot, session: ChatSession) -> list[str]:
+        held_back: list[str] = []
+        if self._hold_back_sensitive_item("phq_q9_self_harm", snapshot, session):
+            held_back.append("phq_q9_self_harm")
+        return held_back
 
     def _hold_back_sensitive_item(self, item_id: str, snapshot: ScreeningSnapshot, session: ChatSession) -> bool:
         if item_id != "phq_q9_self_harm":
             return False
+
         user_turns = [turn for turn in session.turns if turn.speaker == "user"]
-        if snapshot.safety.level in {"review", "urgent"}:
+        if snapshot.safety.level == "urgent":
+            return False
+        if snapshot.safety.level == "review" and self._has_explicit_safety_signal(snapshot):
             return False
         mood_signal = any(
-            snapshot.items[key].value and snapshot.items[key].value >= 2
+            snapshot.items[key].value is not None and snapshot.items[key].value >= 2
             for key in ("phq_q1_anhedonia", "phq_q2_low_mood", "phq_q6_worthlessness")
         )
         return len(user_turns) < 3 and not mood_signal
+
+    def _has_explicit_safety_signal(self, snapshot: ScreeningSnapshot) -> bool:
+        safety_text = " ".join(snapshot.safety.cues + ([snapshot.safety.rationale] if snapshot.safety.rationale else []))
+        normalized = safety_text.lower()
+        direct_markers = (
+            "self-harm",
+            "hurt yourself",
+            "hurt myself",
+            "kill myself",
+            "suicide",
+            "not wanting to be alive",
+            "not be alive",
+            "end my life",
+            "end it all",
+        )
+        return any(marker in normalized for marker in direct_markers)

@@ -48,6 +48,7 @@ def run_cli(language: str) -> None:
             break
 
     final_snapshot = scorer.analyze(session.turns, language, safety_monitor.assess(session.turns))
+    final_snapshot.coverage = planner.build_plan(final_snapshot, session)
     print("Summary:")
     print(build_summary(session, final_snapshot))
 

@@ -62,6 +62,7 @@ class HuggingFaceResponder:
         target_item: Optional[str],
         fallback_text: str,
     ):
+        dialogue = snapshot.coverage.dialogue
         focus_label = ITEM_INDEX[target_item].label if target_item else "general follow-up"
         transcript = "\n".join(
             f"{turn.speaker}: {turn.text}"
@@ -81,8 +82,13 @@ class HuggingFaceResponder:
         user_prompt = (
             f"Language: {session.language}\n"
             f"Safety level: {safety}\n"
+            f"Dialogue stage: {dialogue.stage}\n"
+            f"Next action: {dialogue.next_action}\n"
+            f"Current topic: {dialogue.current_topic}\n"
+            f"Target topic: {dialogue.target_topic}\n"
             f"Target focus: {focus_label}\n"
             f"Unresolved items: {unresolved}\n"
+            f"Planner rationale: {dialogue.rationale}\n"
             f"Fallback text: {fallback_text}\n"
             f"Recent transcript:\n{transcript}\n\n"
             "Draft the next assistant turn."

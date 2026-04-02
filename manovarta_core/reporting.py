@@ -16,6 +16,7 @@ def build_summary(session: ChatSession, snapshot: ScreeningSnapshot) -> str:
             unresolved_bits.append(label)
 
     safety_text = snapshot.safety.level
+    dialogue = snapshot.coverage.dialogue
     resolved_text = "; ".join(resolved_bits[:8]) or "No stable symptom evidence yet."
     unresolved_text = ", ".join(unresolved_bits[:6]) or "None"
     review_labels = [ITEM_INDEX[item_id].label for item_id in snapshot.coverage.review_items[:4]]
@@ -28,6 +29,7 @@ def build_summary(session: ChatSession, snapshot: ScreeningSnapshot) -> str:
         f"{len(snapshot.coverage.resolved_items)} resolved, "
         f"{len(snapshot.coverage.abstained_items)} abstained. "
         f"Safety: {safety_text}. "
+        f"Dialogue stage: {dialogue.stage}; next action: {dialogue.next_action} on {dialogue.target_topic}. "
         f"Mode: {snapshot.mode}. "
         f"Evidence summary: {resolved_text}. "
         f"Follow-up still needed for: {unresolved_text}. "
