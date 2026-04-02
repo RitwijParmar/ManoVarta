@@ -39,6 +39,10 @@ train = [
 train-cuda = [
   "bitsandbytes>=0.45.0",
 ]
+vertex = [
+  "google-cloud-aiplatform>=1.122.0",
+  "google-cloud-storage>=2.18.0",
+]
 
 [tool.setuptools.packages.find]
 include = ["manovarta_core*", "manovarta_admin*", "screening*", "training*"]

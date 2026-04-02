@@ -1,6 +1,6 @@
 # Training Workflows
 
-This folder contains Colab-friendly scripts for fine-tuning and evaluation.
+This folder contains Colab-friendly scripts for fine-tuning and evaluation, plus a Vertex AI path for Aya continuation training.
 
 ## Recommended defaults
 
@@ -21,6 +21,12 @@ python tools/generate_seed_scaleup.py
 python tools/colab_bootstrap.py
 python tools/create_data_splits.py
 python tools/export_training_sets.py
+```
+
+For Vertex AI submission from a local machine, also install the optional Google Cloud SDK dependencies:
+
+```bash
+pip install -e .[vertex]
 ```
 
 ## One-shot Colab pipeline
@@ -62,6 +68,43 @@ For the strongest extractor train set, prefer:
 - or `data/processed/extractor_train_best_augmented_daic.jsonl` if you export with `--daic-root`
 
 Those exports use the compact JSON schema and upweight Hindi/Hinglish examples so English auxiliary data does not dominate the multilingual objective.
+
+## Vertex AI Aya continuation
+
+If you want to keep the current Aya extractor and continue fine-tuning it with `DAIC-WOZ` auxiliary English supervision on Vertex AI, use:
+
+```bash
+python tools/run_vertex_aya_continue.py \
+  --project YOUR_GCP_PROJECT \
+  --location us-central1 \
+  --staging-bucket gs://YOUR_VERTEX_BUCKET \
+  --daic-root gs://YOUR_DATA_BUCKET/DAIC-WOZ \
+  --init-adapter /path/to/local/aya_adapter_dir
+```
+
+That submitter:
+
+- stages the local Aya adapter to GCS when needed,
+- reuses the existing `run_colab_daic_continue.py` training/eval flow inside Vertex,
+- uploads extractor checkpoints under the chosen GCS output root,
+- uploads reports under `reports/vertex_aya_continue`.
+
+If your `DAIC-WOZ` root is local instead of GCS, the submitter can upload it first, but it is better to pre-stage the transcript/split subset into Cloud Storage because the full corpus is large.
+
+Useful flags:
+
+- `--output-root gs://...` to control where the final reports and checkpoints land
+- `--wait` to block until the job finishes
+- `--container-uri ...` to override the default Vertex PyTorch training container if Google updates the prebuilt image line
+- `--service-account ...` to run the job under a specific Vertex runtime service account
+
+The worker entrypoint used by Vertex is:
+
+- `tools/vertex_aya_continue_worker.py`
+
+The job submitter is:
+
+- `tools/run_vertex_aya_continue.py`
 
 ## Fine-tune extraction model
 

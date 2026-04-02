@@ -9,6 +9,7 @@ The current repository includes two layers:
 - optional `Hugging Face` responder path for live chat drafting when `HF_TOKEN` is configured
 - browser voice wrapper using speech recognition and speech synthesis when supported
 - Colab-ready training scripts for extractor and safety fine-tuning
+- Vertex AI submitter/worker scripts for Aya continuation training with DAIC-WOZ auxiliary supervision
 
 The runtime now exposes an explicit coverage planner as part of the snapshot state. That planner tracks touched items, resolved items, abstained items, a follow-up queue, and a review queue so contradictory evidence is surfaced instead of being silently forced into a score.
 
@@ -217,6 +218,8 @@ If you want the full remote train/eval path in one command on Colab GPU, use:
 ```bash
 python tools/run_colab_full_pipeline.py --device cuda
 ```
+
+If you want to continue-train Aya on Vertex AI instead of Colab, use the submitter in `tools/run_vertex_aya_continue.py`. The worker reuses the same compact-schema DAIC continuation flow and uploads checkpoints/reports back into GCS.
 
 ## Saved evaluation bundle
 
