@@ -13,6 +13,11 @@ ItemStatus = Literal["resolved", "partial", "contradicted", "unresolved", "absta
 DialogueStage = Literal["rapport", "exploration", "clarification", "safety", "summary"]
 DialogueAction = Literal["reflect", "open_question", "symptom_probe", "clarify", "risk_check", "summarize", "handoff"]
 TopicStatus = Literal["pending", "probing", "stable", "review", "held_back"]
+VerbosityBand = Literal["brief", "balanced", "detailed"]
+OpennessBand = Literal["guarded", "cautious", "open"]
+DistressTrend = Literal["unclear", "steady", "rising", "easing"]
+CodeMixLevel = Literal["low", "medium", "high"]
+EmpathyLevel = Literal["moderate", "high"]
 
 
 class Turn(BaseModel):
@@ -68,6 +73,24 @@ class TopicState(BaseModel):
     review_items: List[str] = Field(default_factory=list)
 
 
+class UserStyleProfile(BaseModel):
+    avg_words_per_turn: float = Field(default=0.0, ge=0.0)
+    verbosity: VerbosityBand = "balanced"
+    openness: OpennessBand = "cautious"
+    code_mix: CodeMixLevel = "low"
+    distress_trend: DistressTrend = "unclear"
+    empathy_level: EmpathyLevel = "moderate"
+
+
+class DisclosureMetrics(BaseModel):
+    user_turns: int = 0
+    touched_items: int = 0
+    resolved_items: int = 0
+    stable_topics: int = 0
+    items_per_user_turn: float = Field(default=0.0, ge=0.0)
+    resolved_per_user_turn: float = Field(default=0.0, ge=0.0)
+
+
 class DialoguePlan(BaseModel):
     stage: DialogueStage = "rapport"
     next_action: DialogueAction = "open_question"
@@ -79,6 +102,9 @@ class DialoguePlan(BaseModel):
     low_confidence_topics: List[str] = Field(default_factory=list)
     covered_topics: List[str] = Field(default_factory=list)
     held_back_items: List[str] = Field(default_factory=list)
+    transition_hint: str = ""
+    user_style: UserStyleProfile = Field(default_factory=UserStyleProfile)
+    disclosure: DisclosureMetrics = Field(default_factory=DisclosureMetrics)
 
 
 class CoveragePlan(BaseModel):

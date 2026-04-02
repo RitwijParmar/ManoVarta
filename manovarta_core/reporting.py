@@ -21,6 +21,8 @@ def build_summary(session: ChatSession, snapshot: ScreeningSnapshot) -> str:
     unresolved_text = ", ".join(unresolved_bits[:6]) or "None"
     review_labels = [ITEM_INDEX[item_id].label for item_id in snapshot.coverage.review_items[:4]]
     review_text = ", ".join(review_labels) or "None"
+    style = dialogue.user_style
+    disclosure = dialogue.disclosure
 
     return (
         f"Session {session.session_id} in {session.language}. "
@@ -30,6 +32,8 @@ def build_summary(session: ChatSession, snapshot: ScreeningSnapshot) -> str:
         f"{len(snapshot.coverage.abstained_items)} abstained. "
         f"Safety: {safety_text}. "
         f"Dialogue stage: {dialogue.stage}; next action: {dialogue.next_action} on {dialogue.target_topic}. "
+        f"User style: {style.verbosity}, {style.openness}, distress trend {style.distress_trend}. "
+        f"Disclosure efficiency: {disclosure.items_per_user_turn:.2f} items touched per user turn. "
         f"Mode: {snapshot.mode}. "
         f"Evidence summary: {resolved_text}. "
         f"Follow-up still needed for: {unresolved_text}. "

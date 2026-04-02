@@ -53,6 +53,8 @@ def test_chat_flow_asks_non_sensitive_follow_up_first():
     assert "not wanting to be alive" not in reply
     assert snapshot["coverage"]["dialogue"]["target_topic"] in {"sleep", "energy", "mood"}
     assert "phq_q9_self_harm" in snapshot["coverage"]["dialogue"]["held_back_items"]
+    assert snapshot["coverage"]["dialogue"]["user_style"]["openness"] in {"guarded", "cautious", "open"}
+    assert "items_per_user_turn" in snapshot["coverage"]["dialogue"]["disclosure"]
 
 
 def test_summary_endpoint_returns_structured_snapshot():
@@ -72,8 +74,10 @@ def test_summary_endpoint_returns_structured_snapshot():
     assert "coverage" in body["snapshot"]
     assert body["snapshot"]["coverage"]["next_items"]
     assert body["snapshot"]["coverage"]["dialogue"]["stage"] in {"rapport", "exploration", "clarification", "summary", "safety"}
+    assert body["snapshot"]["coverage"]["dialogue"]["transition_hint"]
     assert "Session" in body["summary"]
     assert "Dialogue stage" in body["summary"]
+    assert "Disclosure efficiency" in body["summary"]
 
 
 def test_export_endpoint_returns_rows_and_snapshot_mode():
@@ -132,4 +136,20 @@ def test_dialogue_plan_tracks_anxiety_topic_when_worry_signal_present():
     dialogue = snapshot["coverage"]["dialogue"]
     assert dialogue["target_topic"] == "anxiety"
     assert dialogue["next_action"] in {"open_question", "clarify", "symptom_probe"}
+    assert dialogue["user_style"]["distress_trend"] in {"unclear", "steady", "rising", "easing"}
     assert any(topic["topic_id"] == "anxiety" and topic["touched"] for topic in snapshot["coverage"]["topic_states"])
+
+
+def test_brief_guarded_reply_sets_guarded_style_profile():
+    start = client.post("/chat/sessions", json={"language": "en"})
+    session_id = start.json()["session_id"]
+
+    turn = client.post(
+        f"/chat/sessions/{session_id}/turns",
+        json={"text": "Just tired. Not sure."},
+    )
+
+    assert turn.status_code == 200
+    dialogue = turn.json()["snapshot"]["coverage"]["dialogue"]
+    assert dialogue["user_style"]["verbosity"] == "brief"
+    assert dialogue["user_style"]["openness"] in {"guarded", "cautious"}

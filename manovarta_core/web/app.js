@@ -32,6 +32,15 @@ const gadTotal = document.getElementById("gadTotal");
 const safetyLevel = document.getElementById("safetyLevel");
 const snapshotMode = document.getElementById("snapshotMode");
 const coverageText = document.getElementById("coverageText");
+const plannerStage = document.getElementById("plannerStage");
+const plannerAction = document.getElementById("plannerAction");
+const plannerTopic = document.getElementById("plannerTopic");
+const plannerStyle = document.getElementById("plannerStyle");
+const plannerTrend = document.getElementById("plannerTrend");
+const plannerEfficiency = document.getElementById("plannerEfficiency");
+const plannerHeldBack = document.getElementById("plannerHeldBack");
+const plannerTransition = document.getElementById("plannerTransition");
+const topicMap = document.getElementById("topicMap");
 const unresolvedCount = document.getElementById("unresolvedCount");
 const unresolvedList = document.getElementById("unresolvedList");
 const reviewCount = document.getElementById("reviewCount");
@@ -269,6 +278,15 @@ function renderSnapshot(payload) {
   const { snapshot, summary, rows } = payload;
   const safeRows = rows || [];
   const safeItems = snapshot.items || {};
+  const dialogue = snapshot.coverage?.dialogue || {
+    stage: "rapport",
+    next_action: "open_question",
+    target_topic: "mood",
+    held_back_items: [],
+    transition_hint: "Start a conversation to see how steering changes.",
+    user_style: { verbosity: "balanced", openness: "cautious", distress_trend: "unclear" },
+    disclosure: { items_per_user_turn: 0, resolved_per_user_turn: 0 },
+  };
   const coverage = snapshot.coverage || {
     total_items: Object.keys(safeItems).length,
     touched_items: snapshot.evidence_spans?.length || 0,
@@ -283,8 +301,18 @@ function renderSnapshot(payload) {
   snapshotMode.textContent = snapshot.mode;
   summaryText.textContent = summary;
   coverageText.textContent = `Coverage ${coverage.touched_items}/${coverage.total_items} · resolved ${coverage.resolved_items.length}`;
+  plannerStage.textContent = dialogue.stage;
+  plannerAction.textContent = dialogue.next_action.replaceAll("_", " ");
+  plannerTopic.textContent = dialogue.target_topic.replaceAll("_", " ");
+  plannerStyle.textContent = `${dialogue.user_style.verbosity} · ${dialogue.user_style.openness}`;
+  plannerTrend.textContent = dialogue.user_style.distress_trend;
+  plannerEfficiency.textContent = `${Number(dialogue.disclosure.items_per_user_turn || 0).toFixed(2)} items/turn`;
+  plannerHeldBack.textContent = dialogue.held_back_items.length ? dialogue.held_back_items.join(", ") : "none";
+  plannerTransition.textContent = `${dialogue.rationale || "Planner rationale unavailable."} ${dialogue.transition_hint || ""}`.trim();
+  plannerStage.className = `chip soft stage-${dialogue.stage}`;
   unresolvedCount.textContent = `${coverage.next_items.length} queued`;
   reviewCount.textContent = `${coverage.review_items.length} flagged`;
+  renderTopicMap(coverage.topic_states || []);
 
   unresolvedList.innerHTML = "";
   if (!coverage.next_items.length) {
@@ -352,6 +380,16 @@ function resetInsightPanel() {
   safetyLevel.textContent = "none";
   snapshotMode.textContent = "heuristic";
   coverageText.textContent = "Coverage 0/16";
+  plannerStage.textContent = "rapport";
+  plannerStage.className = "chip soft";
+  plannerAction.textContent = "open question";
+  plannerTopic.textContent = "mood";
+  plannerStyle.textContent = "balanced · cautious";
+  plannerTrend.textContent = "unclear";
+  plannerEfficiency.textContent = "0.00 items/turn";
+  plannerHeldBack.textContent = "none";
+  plannerTransition.textContent = "Start a conversation to see how the next topic is selected.";
+  topicMap.innerHTML = '<span class="topic-pill">No topic map yet.</span>';
   unresolvedCount.textContent = "0 queued";
   reviewCount.textContent = "0 flagged";
   summaryText.textContent = "Start a conversation to generate the first summary.";
@@ -359,6 +397,27 @@ function resetInsightPanel() {
   reviewList.innerHTML = "<li>No review flags right now.</li>";
   itemTableBody.innerHTML = '<tr><td colspan="4" class="empty-cell">No item scores yet.</td></tr>';
   evidenceList.innerHTML = '<li class="empty-cell">No evidence spans yet.</li>';
+}
+
+function renderTopicMap(topicStates) {
+  if (!topicMap) {
+    return;
+  }
+  if (!topicStates.length) {
+    topicMap.innerHTML = '<span class="topic-pill">No topic map yet.</span>';
+    return;
+  }
+
+  topicMap.innerHTML = "";
+  topicStates.forEach((topic) => {
+    const pill = document.createElement("span");
+    pill.className = `topic-pill ${topic.status}`;
+    pill.innerHTML = `
+      <strong>${escapeHtml(topic.label)}</strong>
+      <span>${escapeHtml(topic.status)} · ${Number(topic.confidence || 0).toFixed(2)}</span>
+    `;
+    topicMap.appendChild(pill);
+  });
 }
 
 async function refreshExport() {

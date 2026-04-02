@@ -1,10 +1,19 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from statistics import mean
 from typing import Dict, Iterable, Optional, Tuple
 
 from manovarta_core.questionnaires import ITEM_INDEX
-from manovarta_core.schemas import ChatSession, CoveragePlan, DialoguePlan, ScreeningSnapshot, TopicState
+from manovarta_core.schemas import (
+    ChatSession,
+    CoveragePlan,
+    DialoguePlan,
+    DisclosureMetrics,
+    ScreeningSnapshot,
+    TopicState,
+    UserStyleProfile,
+)
 
 
 OPENING_PROMPTS = {
@@ -29,6 +38,27 @@ RAPPORT_PROMPTS = {
     "en": "Thanks for sharing that. Has it been feeling more like low mood, constant worry, poor sleep, or a mix of those?",
     "hi": "Yeh share karne ke liye shukriya. Kya yeh zyada udaasi, lagataar chinta, neend ki dikkat, ya inka mix lag raha hai?",
     "hinglish": "Yeh share karne ke liye thanks. Kya yeh zyada low mood, constant worry, sleep issue, ya in sab ka mix lag raha hai?",
+}
+
+REFLECTION_PREFIXES = {
+    "en": {
+        "moderate": "Thanks for explaining that.",
+        "high": "That sounds really hard, and I appreciate you saying it clearly.",
+    },
+    "hi": {
+        "moderate": "Yeh batane ke liye shukriya.",
+        "high": "Yeh kaafi mushkil lag raha hai, aur aapne ise itni saaf tarah bataya uske liye shukriya.",
+    },
+    "hinglish": {
+        "moderate": "Yeh share karne ke liye thanks.",
+        "high": "Yeh kaafi hard lag raha hai, aur aapne itni clearly bataya uske liye thanks.",
+    },
+}
+
+SOFTENING_SUFFIXES = {
+    "en": "Whichever part feels easier to answer is okay.",
+    "hi": "Jo hissa answer karna aasaan lage, usse shuru karna theek hai.",
+    "hinglish": "Jo part answer karna easier lage, usse start karna bilkul fine hai.",
 }
 
 TOPIC_PROMPTS: Dict[str, Dict[str, str]] = {
@@ -160,11 +190,11 @@ class DialoguePlanner:
         if plan.next_action == "summarize":
             return CLOSING_MESSAGES[language], None
         if plan.stage == "rapport":
-            return RAPPORT_PROMPTS[language], plan.target_item
+            return self._compose_prompt(language, RAPPORT_PROMPTS[language], plan), plan.target_item
 
         prompt = TOPIC_PROMPTS.get(plan.target_topic, {}).get(language)
         if prompt:
-            return prompt, plan.target_item
+            return self._compose_prompt(language, prompt, plan), plan.target_item
         return CLOSING_MESSAGES[language], None
 
     def build_plan(self, snapshot: ScreeningSnapshot, session: ChatSession) -> CoveragePlan:
@@ -179,6 +209,8 @@ class DialoguePlanner:
             and topic.topic_id != "safety"
         ]
         covered_topics = [topic.topic_id for topic in topic_states if topic.touched or topic.status == "stable"]
+        user_style = self._infer_user_style(snapshot, session, topic_states)
+        disclosure = self._build_disclosure_metrics(snapshot, session, topic_states)
         stage = self._select_stage(snapshot, topic_states, len(user_turns), held_back_items)
         target_topic = self._select_target_topic(snapshot, topic_states, current_topic, stage, held_back_items)
         target_item = self._select_target_item(snapshot, session, target_topic, held_back_items)
@@ -199,6 +231,9 @@ class DialoguePlanner:
             low_confidence_topics=low_confidence_topics,
             covered_topics=covered_topics,
             held_back_items=held_back_items,
+            transition_hint=self._build_transition_hint(current_topic, target_topic, stage, user_style),
+            user_style=user_style,
+            disclosure=disclosure,
         )
         return snapshot.coverage.model_copy(
             update={
@@ -208,6 +243,71 @@ class DialoguePlanner:
                 "topic_states": topic_states,
                 "dialogue": dialogue,
             }
+        )
+
+    def _infer_user_style(
+        self,
+        snapshot: ScreeningSnapshot,
+        session: ChatSession,
+        topic_states: list[TopicState],
+    ) -> UserStyleProfile:
+        user_turns = [turn for turn in session.turns if turn.speaker == "user"]
+        if not user_turns:
+            return UserStyleProfile(
+                code_mix="high" if session.language == "hinglish" else "low",
+                openness="cautious",
+            )
+
+        word_counts = [len(turn.text.split()) for turn in user_turns]
+        avg_words = round(mean(word_counts), 1) if word_counts else 0.0
+        if avg_words < 9:
+            verbosity = "brief"
+        elif avg_words < 20:
+            verbosity = "balanced"
+        else:
+            verbosity = "detailed"
+
+        if session.language == "hinglish":
+            code_mix = "high"
+        elif any(any(marker in turn.text.lower() for marker in ("yaar", "nahi", "haan", "bahut", "mann")) for turn in user_turns):
+            code_mix = "medium"
+        else:
+            code_mix = "low"
+
+        touched_ratio = snapshot.coverage.touched_items / max(len(user_turns), 1)
+        if avg_words < 8 and touched_ratio < 1.0:
+            openness = "guarded"
+        elif avg_words < 14 or any(topic.status == "review" for topic in topic_states):
+            openness = "cautious"
+        else:
+            openness = "open"
+
+        distress_trend = self._distress_trend(snapshot, session)
+        empathy_level = "high" if openness != "open" or distress_trend == "rising" or snapshot.safety.level != "none" else "moderate"
+        return UserStyleProfile(
+            avg_words_per_turn=avg_words,
+            verbosity=verbosity,
+            openness=openness,
+            code_mix=code_mix,
+            distress_trend=distress_trend,
+            empathy_level=empathy_level,
+        )
+
+    def _build_disclosure_metrics(
+        self,
+        snapshot: ScreeningSnapshot,
+        session: ChatSession,
+        topic_states: list[TopicState],
+    ) -> DisclosureMetrics:
+        user_turns = len([turn for turn in session.turns if turn.speaker == "user"])
+        stable_topics = len([topic for topic in topic_states if topic.status == "stable"])
+        return DisclosureMetrics(
+            user_turns=user_turns,
+            touched_items=snapshot.coverage.touched_items,
+            resolved_items=len(snapshot.coverage.resolved_items),
+            stable_topics=stable_topics,
+            items_per_user_turn=round(snapshot.coverage.touched_items / max(user_turns, 1), 2),
+            resolved_per_user_turn=round(len(snapshot.coverage.resolved_items) / max(user_turns, 1), 2),
         )
 
     def _build_topic_states(self, snapshot: ScreeningSnapshot, held_back_items: Iterable[str]) -> list[TopicState]:
@@ -416,6 +516,23 @@ class DialoguePlanner:
             return f"{topic.label} is the best next branch while sensitive safety questions remain held back."
         return f"{topic.label} is still under-covered and should be explored next."
 
+    def _build_transition_hint(
+        self,
+        current_topic: str,
+        target_topic: str,
+        stage: str,
+        user_style: UserStyleProfile,
+    ) -> str:
+        if stage == "rapport":
+            return "Acknowledge the opening concern, then narrow gently into the first likely symptom area."
+        if stage == "summary":
+            return "Reflect briefly, then summarize instead of opening a new branch."
+        if current_topic == target_topic:
+            return f"Stay with {target_topic} and stabilize confidence before moving on."
+        if user_style.openness == "guarded":
+            return f"Use a gentle bridge from {current_topic} to {target_topic} and offer an easier choice-based answer."
+        return f"Bridge naturally from {current_topic} to {target_topic} by connecting the last symptom to its daily impact."
+
     def _held_back_items(self, snapshot: ScreeningSnapshot, session: ChatSession) -> list[str]:
         held_back: list[str] = []
         if self._hold_back_sensitive_item("phq_q9_self_harm", snapshot, session):
@@ -452,3 +569,28 @@ class DialoguePlanner:
             "end it all",
         )
         return any(marker in normalized for marker in direct_markers)
+
+    def _compose_prompt(self, language: str, base_prompt: str, plan: DialoguePlan) -> str:
+        prefix = REFLECTION_PREFIXES[language][plan.user_style.empathy_level]
+        if plan.user_style.openness == "guarded":
+            return f"{prefix} {base_prompt} {SOFTENING_SUFFIXES[language]}"
+        return f"{prefix} {base_prompt}"
+
+    def _distress_trend(self, snapshot: ScreeningSnapshot, session: ChatSession) -> str:
+        user_turn_ids = [turn.turn_id for turn in session.turns if turn.speaker == "user"]
+        if len(user_turn_ids) < 2:
+            return "unclear"
+
+        severity_by_turn = {turn_id: 0 for turn_id in user_turn_ids}
+        for span in snapshot.evidence_spans:
+            if span.turn_id in severity_by_turn:
+                severity_by_turn[span.turn_id] += span.score_hint
+
+        values = [severity_by_turn[turn_id] for turn_id in user_turn_ids[-3:]]
+        if len(values) < 2:
+            return "unclear"
+        if values[-1] >= values[0] + 2:
+            return "rising"
+        if values[-1] + 2 <= values[0]:
+            return "easing"
+        return "steady"

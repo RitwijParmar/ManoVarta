@@ -139,6 +139,43 @@
 
           <section class="summary-block">
             <div class="summary-header">
+              <h3>Conversation steering</h3>
+              <span id="plannerStage" class="chip soft">rapport</span>
+            </div>
+            <div class="planner-grid">
+              <article class="planner-card">
+                <p class="planner-label">Next action</p>
+                <p id="plannerAction" class="planner-value">open_question</p>
+              </article>
+              <article class="planner-card">
+                <p class="planner-label">Target topic</p>
+                <p id="plannerTopic" class="planner-value">mood</p>
+              </article>
+              <article class="planner-card">
+                <p class="planner-label">User style</p>
+                <p id="plannerStyle" class="planner-value">balanced · cautious</p>
+              </article>
+              <article class="planner-card">
+                <p class="planner-label">Distress trend</p>
+                <p id="plannerTrend" class="planner-value">unclear</p>
+              </article>
+              <article class="planner-card">
+                <p class="planner-label">Disclosure efficiency</p>
+                <p id="plannerEfficiency" class="planner-value">0.00 items/turn</p>
+              </article>
+              <article class="planner-card">
+                <p class="planner-label">Held-back items</p>
+                <p id="plannerHeldBack" class="planner-value">none</p>
+              </article>
+            </div>
+            <p id="plannerTransition" class="summary-text">Start a conversation to see how the next topic is selected.</p>
+            <div id="topicMap" class="topic-map">
+              <span class="topic-pill">No topic map yet.</span>
+            </div>
+          </section>
+
+          <section class="summary-block">
+            <div class="summary-header">
               <h3>Priority follow-up</h3>
               <span id="unresolvedCount" class="chip soft">0 queued</span>
             </div>
