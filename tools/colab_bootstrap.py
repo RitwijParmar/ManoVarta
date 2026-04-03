@@ -60,7 +60,13 @@ def main() -> int:
         if needs_install(module_name, package_spec, requirement_cls, version_cls):
             missing.append(package_spec)
 
-    run([sys.executable, "-m", "pip", "install", "-q", "-e", str(PROJECT_ROOT), "--no-deps"])
+    # Colab runtimes occasionally ship an older pip/setuptools combo that cannot
+    # perform editable installs from pyproject-backed projects reliably.
+    run([sys.executable, "-m", "pip", "install", "-q", "--upgrade", "pip", "setuptools>=68", "wheel"])
+    try:
+        run([sys.executable, "-m", "pip", "install", "-q", "-e", str(PROJECT_ROOT), "--no-deps"])
+    except subprocess.CalledProcessError:
+        run([sys.executable, "-m", "pip", "install", "-q", str(PROJECT_ROOT), "--no-deps"])
     if missing:
         run([sys.executable, "-m", "pip", "install", "-q", *missing])
     else:
