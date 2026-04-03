@@ -2,6 +2,7 @@
 
 Use this path when you want GPU-backed experiments without bloating the local runtime.
 The fastest route is to open `manovarta_training_colab.ipynb` in Colab and run cells top to bottom.
+If you want the Aya continuation path with DAIC-backed checkpoints saved directly to Drive, use `manovarta_aya_daic_continue_colab.ipynb`.
 
 If you prefer one unattended command instead of stepping through the notebook, use:
 
