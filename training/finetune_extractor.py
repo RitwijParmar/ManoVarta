@@ -4,6 +4,7 @@ from __future__ import annotations
 import argparse
 import inspect
 import json
+import os
 from pathlib import Path
 import sys
 
@@ -43,6 +44,7 @@ def parse_args():
     parser.add_argument("--eval-strategy", choices=["epoch", "steps", "no"], default="epoch")
     parser.add_argument("--eval-steps", type=int, default=50)
     parser.add_argument("--resume-from-checkpoint", default=None)
+    parser.add_argument("--hf-token", default=None, help="Optional Hugging Face token for gated base models.")
     parser.add_argument(
         "--save-only-model",
         action="store_true",
@@ -127,6 +129,7 @@ def main() -> int:
     from training.runtime_utils import detect_device, pick_model_dtype, pick_precision
 
     args = parse_args()
+    hf_token = args.hf_token or os.environ.get("HF_TOKEN") or os.environ.get("HUGGING_FACE_HUB_TOKEN")
     dataset = load_dataset(
         "json",
         data_files={"train": args.train_file, "eval": args.eval_file},
@@ -139,7 +142,7 @@ def main() -> int:
     base_model_name = resolve_adapter_base_model(args.init_adapter) or args.model_name
     tokenizer_source = resolve_tokenizer_source(args.model_name, args.init_adapter)
 
-    tokenizer = AutoTokenizer.from_pretrained(tokenizer_source, trust_remote_code=True)
+    tokenizer = AutoTokenizer.from_pretrained(tokenizer_source, trust_remote_code=True, token=hf_token)
     if tokenizer.pad_token is None:
         tokenizer.pad_token = tokenizer.eos_token
     tokenizer.padding_side = "right"
@@ -158,6 +161,8 @@ def main() -> int:
         "trust_remote_code": True,
         "quantization_config": quantization_config,
     }
+    if hf_token:
+        model_kwargs["token"] = hf_token
     if quantization_config is not None:
         model_kwargs["device_map"] = "auto"
     else:
@@ -173,7 +178,7 @@ def main() -> int:
             use_gradient_checkpointing=args.gradient_checkpointing,
         )
     if args.init_adapter:
-        model = PeftModel.from_pretrained(model, args.init_adapter, is_trainable=True)
+        model = PeftModel.from_pretrained(model, args.init_adapter, is_trainable=True, token=hf_token)
     if args.gradient_checkpointing:
         model.gradient_checkpointing_enable()
         if hasattr(model, "config"):
