@@ -119,7 +119,7 @@ def main() -> int:
     try:
         import torch
         from datasets import load_dataset
-        from peft import LoraConfig, PeftModel
+        from peft import LoraConfig, PeftModel, prepare_model_for_kbit_training
         from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig, TrainingArguments
         from trl import SFTConfig, SFTTrainer
     except ImportError as exc:  # pragma: no cover
@@ -167,10 +167,17 @@ def main() -> int:
     model = AutoModelForCausalLM.from_pretrained(base_model_name, **model_kwargs)
     if quantization_config is None and device != "cpu":
         model.to(device)
+    if quantization_config is not None:
+        model = prepare_model_for_kbit_training(
+            model,
+            use_gradient_checkpointing=args.gradient_checkpointing,
+        )
     if args.init_adapter:
         model = PeftModel.from_pretrained(model, args.init_adapter, is_trainable=True)
     if args.gradient_checkpointing:
         model.gradient_checkpointing_enable()
+        if hasattr(model, "config"):
+            model.config.use_cache = False
 
     peft_config = None
     if not args.init_adapter:
