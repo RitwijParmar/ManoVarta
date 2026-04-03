@@ -62,6 +62,14 @@ python tools/fetch_daic_woz.py --output-dir /content/drive/MyDrive/DAIC-WOZ
 python tools/fetch_daic_woz.py --output-dir /content/drive/MyDrive/DAIC-WOZ --session-split train --max-session-zips 5
 ```
 
+If you only need the split CSVs plus transcript files for extractor training, the lighter path is:
+
+```bash
+python tools/fetch_daic_woz_transcripts.py --output-dir data/external/DAIC-WOZ-transcripts
+```
+
+That uses HTTP range requests against the public USC zip index so it can pull just `*_TRANSCRIPT.csv` from each session archive instead of downloading the full audio-heavy zip corpus.
+
 For the strongest extractor train set, prefer:
 
 - `data/processed/extractor_train_best.jsonl`
