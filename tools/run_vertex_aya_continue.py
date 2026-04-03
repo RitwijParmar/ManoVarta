@@ -5,6 +5,7 @@ import argparse
 import json
 import os
 import sys
+import time
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -271,11 +272,13 @@ def main() -> int:
         service_account=args.service_account or None,
         sync=args.wait,
     )
-    resource_name: str | None
-    try:
-        resource_name = custom_job.resource_name
-    except RuntimeError:
-        resource_name = None
+    resource_name: str | None = None
+    for _ in range(30):
+        try:
+            resource_name = custom_job.resource_name
+            break
+        except RuntimeError:
+            time.sleep(2)
 
     payload = {
         "submitted_at": datetime.now(timezone.utc).isoformat(),
