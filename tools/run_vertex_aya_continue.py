@@ -271,6 +271,11 @@ def main() -> int:
         service_account=args.service_account or None,
         sync=args.wait,
     )
+    resource_name: str | None
+    try:
+        resource_name = custom_job.resource_name
+    except RuntimeError:
+        resource_name = None
 
     payload = {
         "submitted_at": datetime.now(timezone.utc).isoformat(),
@@ -287,7 +292,7 @@ def main() -> int:
         "accelerator_count": args.accelerator_count,
         "service_account": args.service_account,
         "waited_for_completion": bool(args.wait),
-        "resource_name": getattr(custom_job, "resource_name", None),
+        "resource_name": resource_name,
     }
     print(json.dumps(payload, indent=2, ensure_ascii=False))
     return 0
