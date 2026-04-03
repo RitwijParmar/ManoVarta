@@ -41,6 +41,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--safety-batch-size", type=int, default=8)
     parser.add_argument("--safety-save-steps", type=int, default=10)
     parser.add_argument("--smoke-limit", type=int, default=8)
+    parser.add_argument("--disable-rule-safety-monitor", action="store_true")
     parser.add_argument("--skip-semantic", action="store_true")
     parser.add_argument("--run-llm-baselines", action="store_true")
     return parser.parse_args()
@@ -252,7 +253,7 @@ def select_best_safety_checkpoint(args: argparse.Namespace, output_dir: Path, re
     return selected_root, Path(best["report_path"])
 
 
-def run_extractor_eval(args: argparse.Namespace, extractor_dir: Path, reports_dir: Path) -> Path:
+def run_extractor_eval(args: argparse.Namespace, extractor_dir: Path, reports_dir: Path, safety_dir: Path | None = None) -> Path:
     eval_dir = reports_dir / "extractor_eval"
     smoke_cmd = [
         args.python,
@@ -273,6 +274,10 @@ def run_extractor_eval(args: argparse.Namespace, extractor_dir: Path, reports_di
         "--max-parse-failures",
         "1",
     ]
+    if not args.disable_rule_safety_monitor:
+        smoke_cmd.append("--use-rule-safety-monitor")
+    if safety_dir is not None:
+        smoke_cmd.extend(["--safety-checkpoint", str(safety_dir)])
     run(smoke_cmd)
 
     summary_path = eval_dir / "summary.json"
@@ -296,6 +301,10 @@ def run_extractor_eval(args: argparse.Namespace, extractor_dir: Path, reports_di
         "--max-new-tokens",
         str(args.extractor_max_new_tokens),
     ]
+    if not args.disable_rule_safety_monitor:
+        full_cmd.append("--use-rule-safety-monitor")
+    if safety_dir is not None:
+        full_cmd.extend(["--safety-checkpoint", str(safety_dir)])
     run(full_cmd)
     return summary_path
 
@@ -341,7 +350,7 @@ def main() -> int:
     extractor_dir = run_extractor_training(args)
     safety_dir = run_safety_training(args)
     selected_safety_dir, selected_safety_eval = select_best_safety_checkpoint(args, safety_dir, reports_dir)
-    extractor_eval_json = run_extractor_eval(args, extractor_dir, reports_dir)
+    extractor_eval_json = run_extractor_eval(args, extractor_dir, reports_dir, selected_safety_dir)
     finalize(args, extractor_dir, extractor_eval_json, selected_safety_dir, selected_safety_eval, reports_dir)
     print(reports_dir / "eval_bundle.json")
     return 0

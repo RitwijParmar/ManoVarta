@@ -10,6 +10,13 @@ if str(PROJECT_ROOT) not in sys.path:
 
 from manovarta_core.json_utils import parse_extractor_payload
 from manovarta_core.metrics import evaluate_item_predictions
+from manovarta_core.safety_assessors import (
+    LocalSafetyCheckpointAssessor,
+    build_turns_from_extractor_example,
+    evaluate_safety_stack,
+)
+
+
 def parse_args():
     parser = argparse.ArgumentParser(description="Evaluate a fine-tuned extractor checkpoint on a held-out JSONL file.")
     parser.add_argument("--model-path", required=True)
@@ -19,6 +26,8 @@ def parse_args():
     parser.add_argument("--limit", type=int, default=None)
     parser.add_argument("--offset", type=int, default=0)
     parser.add_argument("--hf-token", default=None)
+    parser.add_argument("--use-rule-safety-monitor", action="store_true")
+    parser.add_argument("--safety-checkpoint", default=None)
     return parser.parse_args()
 
 
@@ -70,6 +79,7 @@ def main() -> int:
         examples = examples[:args.limit]
     predictions = []
     gold_records = []
+    safety_assessor = LocalSafetyCheckpointAssessor(args.safety_checkpoint, device=args.device)
 
     for example in examples:
         prompt = example["text"].rsplit("<|assistant|>", 1)[0] + "<|assistant|>\n"
@@ -81,11 +91,19 @@ def main() -> int:
         completion = tokenizer.decode(output_ids[0][tokens["input_ids"].shape[-1]:], skip_special_tokens=True).strip()
         parsed = parse_extractor_payload(completion) or {"items": [], "safety_level": "none", "notes": "parse_error"}
         gold = parse_extractor_payload(example["response"]) or {"items": [], "safety_level": "none"}
+        turns = build_turns_from_extractor_example(example)
+        safety_result = evaluate_safety_stack(
+            extractor_safety_level=parsed.get("safety_level", "none"),
+            turns=turns,
+            language=example["language"],
+            use_rule_safety_monitor=args.use_rule_safety_monitor,
+            safety_assessor=safety_assessor,
+        )
         predictions.append(
             {
                 "conversation_id": example["id"],
                 "predictions": {item["item_id"]: item["value"] for item in parsed.get("items", []) if "item_id" in item},
-                "safety_level": parsed.get("safety_level", "none"),
+                "safety_level": safety_result["flag"].level,
             }
         )
         gold_items = {item["item_id"]: item["value"] for item in gold.get("items", []) if "item_id" in item}

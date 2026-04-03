@@ -13,6 +13,11 @@ if str(PROJECT_ROOT) not in sys.path:
 
 from manovarta_core.json_utils import normalize_safety_level, parse_extractor_payload
 from manovarta_core.metrics import evaluate_item_predictions
+from manovarta_core.safety_assessors import (
+    LocalSafetyCheckpointAssessor,
+    build_turns_from_extractor_example,
+    evaluate_safety_stack,
+)
 
 
 def parse_args():
@@ -27,6 +32,8 @@ def parse_args():
     parser.add_argument("--stop-on-parse-failure", action="store_true")
     parser.add_argument("--max-parse-failures", type=int, default=None)
     parser.add_argument("--hf-token", default=None)
+    parser.add_argument("--use-rule-safety-monitor", action="store_true")
+    parser.add_argument("--safety-checkpoint", default=None)
     return parser.parse_args()
 
 
@@ -48,6 +55,7 @@ def main() -> int:
     summary_path = output_dir / "summary.json"
     raw_dir = output_dir / "raw_generations"
     raw_dir.mkdir(parents=True, exist_ok=True)
+    safety_assessor = LocalSafetyCheckpointAssessor(args.safety_checkpoint, device=args.device)
 
     model_path = Path(args.model_path)
     adapter_config = model_path / "adapter_config.json"
@@ -102,11 +110,22 @@ def main() -> int:
             )
         completion = tokenizer.decode(output_ids[0][tokens["input_ids"].shape[-1]:], skip_special_tokens=True).strip()
         parsed = parse_extractor_payload(completion)
+        turns = build_turns_from_extractor_example(example)
+        safety_result = evaluate_safety_stack(
+            extractor_safety_level=normalize_safety_level((parsed or {}).get("safety_level", "none")),
+            turns=turns,
+            language=example["language"],
+            use_rule_safety_monitor=args.use_rule_safety_monitor,
+            safety_assessor=safety_assessor,
+        )
         row = {
             "conversation_id": example["id"],
             "parsed_ok": parsed is not None,
             "raw_path": str((raw_dir / f"{example['id']}.txt").resolve()),
-            "safety_level": normalize_safety_level((parsed or {}).get("safety_level", "none")),
+            "safety_level": safety_result["flag"].level,
+            "extractor_safety_level": safety_result["components"]["extractor"],
+            "rule_safety_level": safety_result["components"]["rule"],
+            "checkpoint_safety_level": safety_result["components"]["checkpoint"],
             "predictions": {
                 item["item_id"]: item["value"]
                 for item in (parsed or {}).get("items", [])

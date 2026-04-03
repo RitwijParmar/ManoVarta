@@ -11,6 +11,7 @@ from manovarta_core.llm import HuggingFaceExtractor, HuggingFaceResponder, Huggi
 from manovarta_core.profiles import load_seed_profiles
 from manovarta_core.questionnaires import grouped_items
 from manovarta_core.reporting import build_rows, build_summary
+from manovarta_core.safety_assessors import CompositeSafetyAssessor, LocalSafetyCheckpointAssessor
 from manovarta_core.semantic_safety import SemanticSafetyConfig, SemanticSafetyMonitor
 from manovarta_core.safety import SafetyMonitor
 from manovarta_core.scoring import ConversationScorer
@@ -49,7 +50,12 @@ semantic_safety_monitor = SemanticSafetyMonitor(
 scorer = ConversationScorer()
 responder = HuggingFaceResponder(runtime_config)
 extractor = HuggingFaceExtractor(runtime_config)
-safety_assessor = HuggingFaceSafetyAssessor(runtime_config)
+safety_assessor = CompositeSafetyAssessor(
+    [
+        LocalSafetyCheckpointAssessor(runtime_config.local_safety_checkpoint),
+        HuggingFaceSafetyAssessor(runtime_config),
+    ]
+)
 engine = RuntimeEngine(
     scorer=scorer,
     safety_monitor=safety_monitor,
@@ -82,6 +88,7 @@ def runtime_settings() -> dict:
         "huggingface_enabled": runtime_config.huggingface_enabled,
         "semantic_safety_enabled": runtime_config.semantic_safety_enabled,
         "semantic_safety_model": runtime_config.semantic_safety_model,
+        "local_safety_checkpoint_enabled": bool(runtime_config.local_safety_checkpoint),
     }
 
 

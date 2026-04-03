@@ -41,6 +41,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--select-best-checkpoint", action="store_true")
     parser.add_argument("--smoke-limit", type=int, default=8)
     parser.add_argument("--disable-extractor-4bit", action="store_true")
+    parser.add_argument("--disable-rule-safety-monitor", action="store_true")
+    parser.add_argument("--safety-checkpoint", default=None)
     return parser.parse_args()
 
 
@@ -152,6 +154,10 @@ def run_resumable_eval(args: argparse.Namespace, model_path: Path, output_dir: P
         "--device",
         args.device,
     ]
+    if not args.disable_rule_safety_monitor:
+        cmd.append("--use-rule-safety-monitor")
+    if args.safety_checkpoint:
+        cmd.extend(["--safety-checkpoint", args.safety_checkpoint])
     if limit is not None:
         cmd.extend(["--limit", str(limit), "--stop-on-parse-failure", "--max-parse-failures", "1"])
     run(cmd)
@@ -224,6 +230,10 @@ def select_best_extractor_checkpoint(args: argparse.Namespace, output_dir: Path,
             "--device",
             args.device,
         ]
+        if not args.disable_rule_safety_monitor:
+            cmd.append("--use-rule-safety-monitor")
+        if args.safety_checkpoint:
+            cmd.extend(["--safety-checkpoint", args.safety_checkpoint])
         result = subprocess.run(cmd, cwd=PROJECT_ROOT, text=True, capture_output=True, check=False)
         if result.returncode != 0:
             raise SystemExit(result.stderr or result.stdout or f"Extractor evaluation failed for {checkpoint}")
@@ -271,6 +281,8 @@ def write_summary(args: argparse.Namespace, train_path: Path, extractor_dir: Pat
             "hinglish_hardcase_repeats": args.hinglish_hardcase_repeats,
             "daic_ratio": args.daic_ratio,
             "select_best_checkpoint": args.select_best_checkpoint,
+            "rule_safety_monitor": not args.disable_rule_safety_monitor,
+            "safety_checkpoint": args.safety_checkpoint,
         },
         "train_file": str(train_path.resolve()),
         "extractor_output": str(extractor_dir.resolve()),

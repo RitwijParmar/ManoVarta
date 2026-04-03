@@ -27,6 +27,7 @@ class RuntimeConfig:
     semantic_safety_model: Optional[str]
     semantic_safety_review_threshold: float
     semantic_safety_urgent_threshold: float
+    local_safety_checkpoint: Optional[str] = None
 
     @property
     def huggingface_enabled(self) -> bool:
@@ -53,4 +54,5 @@ def get_runtime_config() -> RuntimeConfig:
         semantic_safety_model=os.getenv("MANOVARTA_SEMANTIC_SAFETY_MODEL"),
         semantic_safety_review_threshold=float(os.getenv("MANOVARTA_SEMANTIC_REVIEW_THRESHOLD", "0.64")),
         semantic_safety_urgent_threshold=float(os.getenv("MANOVARTA_SEMANTIC_URGENT_THRESHOLD", "0.72")),
+        local_safety_checkpoint=os.getenv("MANOVARTA_LOCAL_SAFETY_CHECKPOINT"),
     )

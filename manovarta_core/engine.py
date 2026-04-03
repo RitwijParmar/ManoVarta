@@ -5,6 +5,7 @@ from typing import Iterable, Optional
 from manovarta_core.json_utils import normalize_safety_level
 from manovarta_core.llm import HuggingFaceExtractor, HuggingFaceSafetyAssessor
 from manovarta_core.questionnaires import ITEM_INDEX
+from manovarta_core.safety_assessors import merge_safety_flags
 from manovarta_core.semantic_safety import SemanticSafetyMonitor
 from manovarta_core.safety import SafetyMonitor
 from manovarta_core.schemas import EvidenceSpan, ItemScore, SafetyFlag, ScreeningSnapshot, Turn
@@ -34,11 +35,11 @@ class RuntimeEngine:
         turn_list = list(turns)
         safety_flag = self.safety_monitor.assess(turn_list)
         if self.semantic_safety_monitor is not None:
-            safety_flag = self._merge_safety_flags(safety_flag, self.semantic_safety_monitor.assess(turn_list))
+            safety_flag = merge_safety_flags(safety_flag, self.semantic_safety_monitor.assess(turn_list))
         if self.safety_assessor is not None and self.safety_assessor.enabled and safety_flag.level != "urgent":
             assessed_flag = self.safety_assessor.assess(turn_list, language)
             if assessed_flag is not None:
-                safety_flag = self._merge_safety_flags(safety_flag, assessed_flag)
+                safety_flag = merge_safety_flags(safety_flag, assessed_flag)
         snapshot = self.scorer.analyze(turn_list, language, safety_flag)
         if not use_llm or self.extractor is None or not self.extractor.enabled:
             return snapshot
@@ -279,15 +280,7 @@ class RuntimeEngine:
         )
 
     def _merge_safety_flags(self, first: SafetyFlag, second: SafetyFlag) -> SafetyFlag:
-        dominant_level = first.level if SAFETY_RANK[first.level] >= SAFETY_RANK[second.level] else second.level
-        cues = list(dict.fromkeys(first.cues + second.cues))
-        rationale_parts = [part for part in [first.rationale, second.rationale] if part]
-        return SafetyFlag(
-            level=dominant_level,
-            cues=cues,
-            rationale=" ".join(rationale_parts) or None,
-            needs_human_review=dominant_level in {"review", "urgent"},
-        )
+        return merge_safety_flags(first, second)
 
     def _build_totals(self, items: dict[str, ItemScore]) -> dict[str, int]:
         totals = {"PHQ9": 0, "GAD7": 0}
