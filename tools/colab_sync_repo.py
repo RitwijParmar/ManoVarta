@@ -39,7 +39,7 @@ def run(cmd: list[str], cwd: Path | None = None) -> subprocess.CompletedProcess[
 def clone_urls(repo_url: str, github_token: str | None) -> list[str]:
     urls: list[str] = []
     if github_token and repo_url.startswith("https://github.com/"):
-        urls.append(repo_url.replace("https://", f"https://oauth2:{github_token}@"))
+        urls.append(repo_url.replace("https://", f"https://x-access-token:{github_token}@"))
     urls.append(repo_url)
     return urls
 
@@ -96,10 +96,14 @@ def fallback_extract_zip(
         raise SystemExit(json.dumps({"clone_errors": clone_errors}, indent=2))
 
     repo_path = repo_url.removeprefix("https://github.com/").removesuffix(".git")
-    zip_url = f"https://github.com/{repo_path}/archive/refs/heads/{branch}.zip"
+    if github_token:
+        zip_url = f"https://api.github.com/repos/{repo_path}/zipball/{branch}"
+    else:
+        zip_url = f"https://github.com/{repo_path}/archive/refs/heads/{branch}.zip"
     request = urllib.request.Request(zip_url)
     if github_token:
         request.add_header("Authorization", f"Bearer {github_token}")
+        request.add_header("Accept", "application/vnd.github+json")
 
     ensure_empty_target(repo_dir)
     with tempfile.TemporaryDirectory(prefix="manovarta-colab-sync-") as tmp_dir_str:
