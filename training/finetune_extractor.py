@@ -43,6 +43,11 @@ def parse_args():
     parser.add_argument("--eval-strategy", choices=["epoch", "steps", "no"], default="epoch")
     parser.add_argument("--eval-steps", type=int, default=50)
     parser.add_argument("--resume-from-checkpoint", default=None)
+    parser.add_argument(
+        "--save-only-model",
+        action="store_true",
+        help="Save smaller checkpoints without trainer state. Not recommended when resuming interrupted runs.",
+    )
     return parser.parse_args()
 
 
@@ -97,6 +102,8 @@ def resolve_resume_checkpoint(output_dir: str, resume_arg: str | None) -> str | 
     root = Path(output_dir)
     checkpoints = []
     for path in root.glob("checkpoint-*"):
+        if not (path / "trainer_state.json").exists():
+            continue
         try:
             step = int(path.name.split("-")[-1])
         except ValueError:
@@ -200,7 +207,7 @@ def main() -> int:
         training_kwargs["use_mps_device"] = True
     if args.save_strategy == "steps":
         training_kwargs["save_steps"] = args.save_steps
-    if "save_only_model" in inspect.signature(TrainingArguments.__init__).parameters:
+    if "save_only_model" in inspect.signature(TrainingArguments.__init__).parameters and args.save_only_model:
         training_kwargs["save_only_model"] = True
     strategy_key = "evaluation_strategy"
     if strategy_key not in inspect.signature(TrainingArguments.__init__).parameters:

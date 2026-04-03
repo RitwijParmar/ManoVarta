@@ -6,7 +6,7 @@ from tools.run_colab_daic_continue import (
     configure_storage_paths,
     pick_best_extractor_report,
 )
-from training.finetune_extractor import resolve_adapter_base_model, resolve_tokenizer_source
+from training.finetune_extractor import resolve_adapter_base_model, resolve_resume_checkpoint, resolve_tokenizer_source
 
 
 def test_daic_continue_configure_storage_paths_redirects_defaults_into_drive_dir():
@@ -77,3 +77,13 @@ def test_pick_best_extractor_report_prefers_balanced_multilingual_macro_f1():
     best = pick_best_extractor_report(reports)
 
     assert best["checkpoint_name"] == "checkpoint-20"
+
+
+def test_resolve_resume_checkpoint_skips_incomplete_checkpoints(tmp_path):
+    incomplete = tmp_path / "checkpoint-5"
+    incomplete.mkdir()
+    complete = tmp_path / "checkpoint-10"
+    complete.mkdir()
+    (complete / "trainer_state.json").write_text("{}", encoding="utf-8")
+
+    assert resolve_resume_checkpoint(str(tmp_path), "last") == str(complete)
