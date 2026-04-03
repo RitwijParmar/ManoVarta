@@ -65,3 +65,41 @@ def test_best_extractor_train_examples_boost_multilingual_coverage():
     assert best_counts["hi"] >= train_counts["hi"] * 2
     assert best_counts["hinglish"] >= train_counts["hinglish"] * 2
     assert best_counts["en"] >= train_counts["en"]
+
+
+def test_best_extractor_train_examples_can_boost_hinglish_hardcases_and_limit_daic_ratio():
+    multilingual_examples = [
+        {"id": "en-1", "language": "en", "text": "en"},
+        {"id": "hi-1", "language": "hi", "text": "hi"},
+        {
+            "id": "hinglish-safe",
+            "language": "hinglish",
+            "text": "hinglish-safe",
+            "safety_level": "none",
+            "positive_item_count": 4,
+            "annotator_notes": "",
+        },
+        {
+            "id": "hinglish-hard",
+            "language": "hinglish",
+            "text": "hinglish-hard",
+            "safety_level": "review",
+            "positive_item_count": 9,
+            "annotator_notes": "Indirect masking case.",
+        },
+    ]
+    auxiliary_examples = [{"id": f"aux-{idx}", "language": "en", "text": f"aux-{idx}"} for idx in range(10)]
+
+    best_examples = build_best_extractor_train_examples(
+        multilingual_examples,
+        auxiliary_english_examples=auxiliary_examples,
+        language_weights={"en": 1, "hi": 1, "hinglish": 1},
+        auxiliary_ratio=0.2,
+        hinglish_hardcase_repeats=3,
+    )
+
+    counts = Counter(example["id"] for example in best_examples)
+
+    assert counts["hinglish-safe"] == 1
+    assert counts["hinglish-hard"] == 3
+    assert counts["aux-0"] == 1

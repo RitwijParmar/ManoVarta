@@ -38,6 +38,26 @@ def main() -> int:
         default="compact",
         help="Extractor supervision style. compact is recommended for better schema stability.",
     )
+    parser.add_argument("--best-en-weight", type=int, default=1, help="Repeat factor for English seed examples.")
+    parser.add_argument("--best-hi-weight", type=int, default=2, help="Repeat factor for Hindi seed examples.")
+    parser.add_argument(
+        "--best-hinglish-weight",
+        type=int,
+        default=2,
+        help="Repeat factor for Hinglish seed examples before hard-case boosting.",
+    )
+    parser.add_argument(
+        "--hinglish-hardcase-repeats",
+        type=int,
+        default=1,
+        help="Total repeat factor for Hinglish hard cases identified from safety/annotation cues.",
+    )
+    parser.add_argument(
+        "--daic-ratio",
+        type=float,
+        default=0.5,
+        help="Fraction of the multilingual rebalanced train set to append from DAIC auxiliary English examples.",
+    )
     args = parser.parse_args()
 
     output_dir = Path(args.output_dir)
@@ -59,7 +79,13 @@ def main() -> int:
         )
 
     best_train = build_best_extractor_train_examples(
-        build_extractor_examples(split_conversations["train"], schema_style=args.extractor_style)
+        build_extractor_examples(split_conversations["train"], schema_style=args.extractor_style),
+        language_weights={
+            "en": args.best_en_weight,
+            "hi": args.best_hi_weight,
+            "hinglish": args.best_hinglish_weight,
+        },
+        hinglish_hardcase_repeats=args.hinglish_hardcase_repeats,
     )
     write_jsonl(output_dir / "extractor_train_best.jsonl", best_train)
     print(f"best train: extractor={len(best_train)}")
@@ -78,13 +104,21 @@ def main() -> int:
         best_augmented_train = build_best_extractor_train_examples(
             build_extractor_examples(split_conversations["train"], schema_style=args.extractor_style),
             auxiliary_english_examples=daic_train_examples,
+            language_weights={
+                "en": args.best_en_weight,
+                "hi": args.best_hi_weight,
+                "hinglish": args.best_hinglish_weight,
+            },
+            auxiliary_ratio=args.daic_ratio,
+            hinglish_hardcase_repeats=args.hinglish_hardcase_repeats,
         )
         write_jsonl(output_dir / "extractor_train_best_augmented_daic.jsonl", best_augmented_train)
         print(
             "daic auxiliary: "
             f"train={len(daic_train_examples)} dev={len(daic_dev_examples)} "
             f"test={len(daic_test_examples)} augmented_train={len(augmented_train)} "
-            f"best_augmented_train={len(best_augmented_train)}"
+            f"best_augmented_train={len(best_augmented_train)} "
+            f"daic_ratio={args.daic_ratio}"
         )
     return 0
 

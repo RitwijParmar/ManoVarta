@@ -96,11 +96,20 @@ def build_extractor_examples(
     for conversation in conversations:
         prompt = _extractor_prompt(conversation, schema_style=schema_style)
         response = json.dumps(_extractor_target(conversation, schema_style=schema_style), ensure_ascii=False)
+        positive_item_count = sum(
+            1
+            for labels in (conversation.get("phq9_item_labels", {}), conversation.get("gad7_item_labels", {}))
+            for value in labels.values()
+            if value > 0
+        )
         examples.append(
             {
                 "id": conversation["conversation_id"],
                 "task": "extractor",
                 "language": conversation["language"],
+                "safety_level": conversation.get("safety_flag", {}).get("level", "none"),
+                "positive_item_count": positive_item_count,
+                "annotator_notes": conversation.get("annotator_notes", ""),
                 "prompt": prompt,
                 "response": response,
                 "text": _pack_instruction(SYSTEM_EXTRACTION, prompt, response),
@@ -112,21 +121,33 @@ def build_extractor_examples(
 def build_best_extractor_train_examples(
     multilingual_examples: list[dict[str, Any]],
     auxiliary_english_examples: list[dict[str, Any]] | None = None,
+    *,
+    language_weights: dict[str, int] | None = None,
+    auxiliary_ratio: float = 0.5,
+    hinglish_hardcase_repeats: int = 1,
 ) -> list[dict[str, Any]]:
     by_language: dict[str, list[dict[str, Any]]] = defaultdict(list)
     for example in multilingual_examples:
         by_language[example.get("language", "en")].append(example)
 
-    language_weights = {"en": 1, "hi": 2, "hinglish": 2}
+    resolved_language_weights = {"en": 1, "hi": 2, "hinglish": 2}
+    if language_weights:
+        for language, weight in language_weights.items():
+            resolved_language_weights[language] = max(1, int(weight))
     rebalanced: list[dict[str, Any]] = []
     for language in ("en", "hi", "hinglish"):
         bucket = by_language.get(language, [])
-        repeats = language_weights.get(language, 1)
+        repeats = resolved_language_weights.get(language, 1)
         for _ in range(repeats):
             rebalanced.extend(dict(example) for example in bucket)
 
+    if hinglish_hardcase_repeats > 1:
+        hardcases = [example for example in by_language.get("hinglish", []) if _is_hinglish_hardcase(example)]
+        for _ in range(max(0, hinglish_hardcase_repeats - 1)):
+            rebalanced.extend(dict(example) for example in hardcases)
+
     if auxiliary_english_examples:
-        aux_cap = max(1, round(len(rebalanced) * 0.5))
+        aux_cap = max(1, round(len(rebalanced) * max(0.0, auxiliary_ratio)))
         rebalanced.extend(dict(example) for example in auxiliary_english_examples[:aux_cap])
 
     return _interleave_by_language(rebalanced)
@@ -367,3 +388,32 @@ def _cue_lines(user_turns: list[str], cues: list[str]) -> str:
         if any(term in lowered for term in cue_terms):
             matched.append(turn.strip())
     return "\n".join(dict.fromkeys(matched))
+
+
+def _is_hinglish_hardcase(example: dict[str, Any]) -> bool:
+    if example.get("language") != "hinglish":
+        return False
+    if example.get("safety_level", "none") != "none":
+        return True
+    positive_item_count = int(example.get("positive_item_count", 0) or 0)
+    if positive_item_count >= 8:
+        return True
+
+    notes = str(example.get("annotator_notes", "") or "").lower()
+    hardcase_markers = (
+        "indirect",
+        "passive",
+        "hidden",
+        "mask",
+        "masking",
+        "self-correcting",
+        "mixed symptoms",
+        "comparison",
+        "humor",
+        "shame",
+        "startup",
+        "night-shift",
+        "metaphor",
+        "code mix",
+    )
+    return any(marker in notes for marker in hardcase_markers)
