@@ -42,6 +42,13 @@ def run(cmd: list[str]) -> None:
     subprocess.run(cmd, cwd=PROJECT_ROOT, check=True)
 
 
+def resolve_git_revision() -> str:
+    try:
+        return subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=PROJECT_ROOT, text=True).strip()
+    except subprocess.CalledProcessError:
+        return "archive-no-git"
+
+
 def configure_storage_paths(args: argparse.Namespace) -> None:
     if not args.drive_dir:
         return
@@ -137,7 +144,7 @@ def run_resumable_eval(args: argparse.Namespace, model_path: Path, output_dir: P
 def write_summary(args: argparse.Namespace, train_path: Path, extractor_dir: Path, smoke_summary: Path, full_summary: Path, reports_dir: Path) -> Path:
     payload = {
         "generated_at": datetime.now(timezone.utc).isoformat(),
-        "git_revision": subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=PROJECT_ROOT, text=True).strip(),
+        "git_revision": resolve_git_revision(),
         "device": args.device,
         "daic_root": args.daic_root,
         "init_adapter": args.init_adapter,
