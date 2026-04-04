@@ -32,6 +32,45 @@ def merge_safety_flags(*flags: SafetyFlag) -> SafetyFlag:
     )
 
 
+def compose_runtime_safety_flag(
+    *,
+    extractor_flag: SafetyFlag | None = None,
+    rule_flag: SafetyFlag | None = None,
+    checkpoint_flag: SafetyFlag | None = None,
+) -> SafetyFlag:
+    extractor_flag = extractor_flag or SafetyFlag()
+    rule_flag = rule_flag or SafetyFlag()
+    checkpoint_flag = checkpoint_flag or SafetyFlag()
+
+    corroborating_flags = [
+        flag for flag in (rule_flag, checkpoint_flag) if flag.level != "none"
+    ]
+    if not corroborating_flags:
+        return SafetyFlag()
+
+    merged = merge_safety_flags(*corroborating_flags)
+    advisory_cues = []
+    advisory_notes = []
+    if extractor_flag.level != "none":
+        advisory_cues.append(f"extractor_advisory:{extractor_flag.level}")
+        if extractor_flag.rationale:
+            advisory_notes.append(extractor_flag.rationale)
+    if extractor_flag.cues:
+        advisory_cues.extend(f"extractor:{cue}" for cue in extractor_flag.cues if cue)
+
+    merged_cues = list(dict.fromkeys(merged.cues + advisory_cues))
+    rationale_parts = [part for part in [merged.rationale, *advisory_notes] if part]
+    if advisory_cues:
+        rationale_parts.append("Extractor safety signal was treated as advisory until corroborated by the runtime safety stack.")
+
+    return merged.model_copy(
+        update={
+            "cues": merged_cues,
+            "rationale": " ".join(dict.fromkeys(rationale_parts)) or merged.rationale,
+        }
+    )
+
+
 def build_safety_assessment_text(turns: Sequence[Turn]) -> str:
     user_turns = [turn.text.strip() for turn in turns if turn.speaker == "user" and turn.text.strip()]
     if not user_turns:
@@ -182,25 +221,29 @@ def evaluate_safety_stack(
         level=normalize_safety_level(extractor_safety_level),
         needs_human_review=normalize_safety_level(extractor_safety_level) in {"review", "urgent"},
     )
-    flags = [extractor_flag]
     component_levels = {
         "extractor": extractor_flag.level,
         "rule": "none",
         "checkpoint": "none",
     }
+    rule_flag = SafetyFlag()
+    checkpoint_flag = SafetyFlag()
 
     if use_rule_safety_monitor:
         rule_flag = SafetyMonitor().assess(turns)
         component_levels["rule"] = rule_flag.level
-        flags.append(rule_flag)
 
     if safety_assessor is not None and getattr(safety_assessor, "enabled", True):
         assessed_flag = safety_assessor.assess(turns, language)
         if assessed_flag is not None:
             component_levels["checkpoint"] = assessed_flag.level
-            flags.append(assessed_flag)
+            checkpoint_flag = assessed_flag
 
-    merged_flag = merge_safety_flags(*flags)
+    merged_flag = compose_runtime_safety_flag(
+        extractor_flag=extractor_flag,
+        rule_flag=rule_flag,
+        checkpoint_flag=checkpoint_flag,
+    )
     return {
         "flag": merged_flag,
         "components": component_levels,

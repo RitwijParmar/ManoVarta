@@ -5,15 +5,12 @@ from typing import Iterable, Optional
 from manovarta_core.json_utils import normalize_safety_level
 from manovarta_core.llm import HuggingFaceExtractor, HuggingFaceSafetyAssessor
 from manovarta_core.questionnaires import ITEM_INDEX
-from manovarta_core.safety_assessors import merge_safety_flags
+from manovarta_core.safety_assessors import compose_runtime_safety_flag, merge_safety_flags
 from manovarta_core.semantic_safety import SemanticSafetyMonitor
 from manovarta_core.safety import SafetyMonitor
 from manovarta_core.schemas import EvidenceSpan, ItemScore, SafetyFlag, ScreeningSnapshot, Turn
 from manovarta_core.scoring import ConversationScorer
 from manovarta_core.text import normalize_text
-
-
-SAFETY_RANK = {"none": 0, "review": 1, "urgent": 2}
 
 
 class RuntimeEngine:
@@ -265,19 +262,16 @@ class RuntimeEngine:
     def _merge_safety(self, heuristic: SafetyFlag, llm_result: dict) -> SafetyFlag:
         llm_level = normalize_safety_level(llm_result.get("safety_level", "none"))
         llm_cues = [str(cue) for cue in llm_result.get("safety_cues", []) if str(cue).strip()]
-        dominant_level = heuristic.level if SAFETY_RANK[heuristic.level] >= SAFETY_RANK[llm_level] else llm_level
-        cues = list(dict.fromkeys(heuristic.cues + llm_cues))
-
-        if dominant_level == heuristic.level and not llm_cues:
-            return heuristic
-
-        rationale_parts = [part for part in [heuristic.rationale, llm_result.get("notes")] if part]
-        return SafetyFlag(
-            level=dominant_level,
-            cues=cues,
-            rationale=" ".join(rationale_parts) or heuristic.rationale,
-            needs_human_review=dominant_level in {"review", "urgent"},
+        extractor_flag = SafetyFlag(
+            level=llm_level,
+            cues=llm_cues,
+            rationale=llm_result.get("notes"),
+            needs_human_review=llm_level in {"review", "urgent"},
         )
+        merged = compose_runtime_safety_flag(extractor_flag=extractor_flag, rule_flag=heuristic)
+        if merged.level == heuristic.level and merged.cues == heuristic.cues and merged.rationale == heuristic.rationale:
+            return heuristic
+        return merged
 
     def _merge_safety_flags(self, first: SafetyFlag, second: SafetyFlag) -> SafetyFlag:
         return merge_safety_flags(first, second)

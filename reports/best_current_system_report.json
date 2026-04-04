@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-04-04T19:20:06.806618+00:00",
-  "git_revision": "cf6ade9",
+  "generated_at": "2026-04-04T20:00:35.672182+00:00",
+  "git_revision": "d75577c",
   "public_runtime_url": "https://manovarta-runtime-122722888597.us-east4.run.app",
   "recommended_default_runtime": {
     "provider": "huggingface",
@@ -30,7 +30,7 @@
   },
   "source_artifacts": {
     "aya_baseline_json": "reports/aya_colab_eval_a100_20260328.json",
-    "hybrid_summary_source": "https://files.catbox.moe/mt0f2k.json",
+    "hybrid_summary_source": "/Users/ritwij/Documents/multilingualChatbot/reports/live_runtime_eval_20260404.json",
     "hybrid_summary_mirror": "reports/hybrid_runtime_validation_colab_20260404.json"
   },
   "extractor_baseline": {
@@ -80,172 +80,54 @@
   },
   "hybrid_runtime_validation": {
     "overall": {
-      "covered_items": 296,
-      "coverage_completeness": 0.804,
-      "mae": 0.28,
-      "exact_match_rate": 0.733,
-      "macro_f1": 0.344,
-      "safety_precision": 0.333,
+      "covered_items": 198,
+      "coverage_completeness": 0.538,
+      "mae": 0.288,
+      "exact_match_rate": 0.712,
+      "macro_f1": 0.295,
+      "safety_precision": 1.0,
       "safety_recall": 1.0
     },
     "languages": {
       "en": {
-        "covered_items": 112,
-        "coverage_completeness": 0.875,
-        "mae": 0.214,
-        "exact_match_rate": 0.812,
-        "macro_f1": 0.355,
-        "safety_precision": 0.25,
+        "covered_items": 61,
+        "coverage_completeness": 0.477,
+        "mae": 0.213,
+        "exact_match_rate": 0.787,
+        "macro_f1": 0.306,
+        "safety_precision": 1.0,
         "safety_recall": 1.0
       },
       "hi": {
-        "covered_items": 110,
-        "coverage_completeness": 0.859,
-        "mae": 0.318,
-        "exact_match_rate": 0.691,
-        "macro_f1": 0.348,
-        "safety_precision": 0.5,
+        "covered_items": 95,
+        "coverage_completeness": 0.742,
+        "mae": 0.326,
+        "exact_match_rate": 0.674,
+        "macro_f1": 0.327,
+        "safety_precision": 1.0,
         "safety_recall": 1.0
       },
       "hinglish": {
-        "covered_items": 74,
-        "coverage_completeness": 0.661,
-        "mae": 0.324,
-        "exact_match_rate": 0.676,
-        "macro_f1": 0.234,
-        "safety_precision": 0.25,
+        "covered_items": 42,
+        "coverage_completeness": 0.375,
+        "mae": 0.31,
+        "exact_match_rate": 0.69,
+        "macro_f1": 0.153,
+        "safety_precision": 1.0,
         "safety_recall": 1.0
       }
     },
-    "model_path": "/content/colab_hybrid_runtime_validation/aya_outer/aya_bundle",
+    "model_path": "https://manovarta-runtime-ciiiagnzaq-uk.a.run.app/screen/transcript",
     "example_count": 48,
     "completed_count": 48,
     "offset": 0,
     "parse_failures": 0,
     "parse_failure_ids": [],
     "last_completed_id": "MV-C165V3",
-    "status": "completed"
+    "status": "completed",
+    "evaluation_mode": "runtime_endpoint"
   },
-  "best_colab_safety_checkpoint": {
-    "model_path": "/content/colab_hybrid_runtime_validation/safety-indicbert-hybrid",
-    "device": "cuda",
-    "examples": 84,
-    "accuracy": 0.7024,
-    "macro_f1": 0.51,
-    "gold_counts": {
-      "none": 32,
-      "review": 40,
-      "urgent": 12
-    },
-    "predicted_counts": {
-      "none": 47,
-      "review": 35,
-      "urgent": 2
-    },
-    "mistakes": [
-      {
-        "id": "MV-C155",
-        "gold": "review",
-        "predicted": "none"
-      },
-      {
-        "id": "MV-C159",
-        "gold": "review",
-        "predicted": "none"
-      },
-      {
-        "id": "MV-C160",
-        "gold": "urgent",
-        "predicted": "none"
-      },
-      {
-        "id": "MV-C160-recent",
-        "gold": "urgent",
-        "predicted": "review"
-      },
-      {
-        "id": "MV-C160-tail",
-        "gold": "urgent",
-        "predicted": "review"
-      },
-      {
-        "id": "MV-C163",
-        "gold": "review",
-        "predicted": "none"
-      },
-      {
-        "id": "MV-C155V1-recent",
-        "gold": "review",
-        "predicted": "urgent"
-      },
-      {
-        "id": "MV-C155V1-tail",
-        "gold": "review",
-        "predicted": "urgent"
-      },
-      {
-        "id": "MV-C155V2",
-        "gold": "review",
-        "predicted": "none"
-      },
-      {
-        "id": "MV-C155V3",
-        "gold": "review",
-        "predicted": "none"
-      },
-      {
-        "id": "MV-C159V1",
-        "gold": "review",
-        "predicted": "none"
-      },
-      {
-        "id": "MV-C159V2",
-        "gold": "review",
-        "predicted": "none"
-      },
-      {
-        "id": "MV-C159V3",
-        "gold": "review",
-        "predicted": "none"
-      },
-      {
-        "id": "MV-C160V1",
-        "gold": "urgent",
-        "predicted": "none"
-      },
-      {
-        "id": "MV-C160V1-recent",
-        "gold": "urgent",
-        "predicted": "review"
-      },
-      {
-        "id": "MV-C160V1-tail",
-        "gold": "urgent",
-        "predicted": "review"
-      },
-      {
-        "id": "MV-C160V2",
-        "gold": "urgent",
-        "predicted": "none"
-      },
-      {
-        "id": "MV-C160V2-recent",
-        "gold": "urgent",
-        "predicted": "review"
-      },
-      {
-        "id": "MV-C160V2-tail",
-        "gold": "urgent",
-        "predicted": "review"
-      },
-      {
-        "id": "MV-C160V3",
-        "gold": "urgent",
-        "predicted": "none"
-      }
-    ],
-    "checkpoint": "/content/colab_hybrid_runtime_validation/safety-indicbert-hybrid"
-  },
+  "best_colab_safety_checkpoint": null,
   "local_default_safety_checkpoint_eval": {
     "status": "ok",
     "command": [
@@ -380,17 +262,17 @@
     }
   },
   "hybrid_vs_extractor_baseline": {
-    "coverage_completeness": -0.109,
-    "mae": -0.163,
-    "exact_match_rate": 0.171,
-    "macro_f1": 0.072,
-    "safety_precision": 0.333,
+    "coverage_completeness": -0.375,
+    "mae": -0.155,
+    "exact_match_rate": 0.15,
+    "macro_f1": 0.023,
+    "safety_precision": 1.0,
     "safety_recall": 1.0
   },
   "recommendation": {
     "ship_default": "hybrid_runtime",
     "why": [
-      "Hybrid runtime preserved zero parse failures while pushing safety recall to 1.0 in the completed Colab validation.",
+      "Hybrid runtime preserved zero parse failures while pushing safety recall to 1.0 in the latest live runtime endpoint evaluation.",
       "The promoted local safety checkpoint can now be auto-discovered by the repo without a private env file.",
       "The pure extractor checkpoints remain useful benchmarks, but the safer runtime stack is the better default for demos and guarded screening."
     ],

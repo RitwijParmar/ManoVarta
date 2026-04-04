@@ -19,7 +19,11 @@ from manovarta_core.config import get_runtime_config
 from generate_eval_bundle import git_revision
 
 
-DEFAULT_HYBRID_SUMMARY_SOURCE = "https://files.catbox.moe/mt0f2k.json"
+DEFAULT_HYBRID_SUMMARY_SOURCE = (
+    str(PROJECT_ROOT / "reports" / "live_runtime_eval_20260404.json")
+    if (PROJECT_ROOT / "reports" / "live_runtime_eval_20260404.json").exists()
+    else "https://files.catbox.moe/mt0f2k.json"
+)
 DEFAULT_LIVE_RUNTIME_URL = "https://manovarta-runtime-122722888597.us-east4.run.app"
 
 
@@ -32,7 +36,11 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "--hybrid-summary-mirror",
-        default=str(PROJECT_ROOT / "reports" / "hybrid_runtime_validation_colab_20260404.json"),
+        default=(
+            str(PROJECT_ROOT / "reports" / "live_runtime_eval_20260404.json")
+            if (PROJECT_ROOT / "reports" / "live_runtime_eval_20260404.json").exists()
+            else str(PROJECT_ROOT / "reports" / "hybrid_runtime_validation_colab_20260404.json")
+        ),
         help="Where to save the mirrored hybrid summary JSON.",
     )
     parser.add_argument(
@@ -177,6 +185,7 @@ def build_report(
     resolved_hybrid = hybrid_payload.get("full_summary", hybrid_payload)
     best_safety_report = hybrid_payload.get("best_safety_report")
     live_runtime = fetch_live_runtime()
+    runtime_summary_label = "live runtime endpoint evaluation" if Path(hybrid_source).expanduser().exists() else "hybrid runtime validation"
 
     return {
         "generated_at": datetime.now(timezone.utc).isoformat(),
@@ -206,7 +215,7 @@ def build_report(
         "recommendation": {
             "ship_default": "hybrid_runtime",
             "why": [
-                "Hybrid runtime preserved zero parse failures while pushing safety recall to 1.0 in the completed Colab validation.",
+                f"Hybrid runtime preserved zero parse failures while pushing safety recall to 1.0 in the latest {runtime_summary_label}.",
                 "The promoted local safety checkpoint can now be auto-discovered by the repo without a private env file.",
                 "The pure extractor checkpoints remain useful benchmarks, but the safer runtime stack is the better default for demos and guarded screening.",
             ],

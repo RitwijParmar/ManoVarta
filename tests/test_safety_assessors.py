@@ -3,6 +3,7 @@ from manovarta_core.safety_assessors import (
     LocalSafetyCheckpointAssessor,
     build_safety_assessment_text,
     build_turns_from_extractor_example,
+    compose_runtime_safety_flag,
     evaluate_safety_stack,
     merge_safety_flags,
 )
@@ -80,6 +81,42 @@ def test_composite_safety_assessor_merges_multiple_assessors():
     assert "stub:urgent" in flag.cues
 
 
+def test_compose_runtime_safety_flag_ignores_extractor_only_alerts():
+    merged = compose_runtime_safety_flag(
+        extractor_flag=SafetyFlag(
+            level="review",
+            cues=["extractor:review"],
+            rationale="Extractor suggested review.",
+            needs_human_review=True,
+        )
+    )
+
+    assert merged.level == "none"
+    assert merged.needs_human_review is False
+
+
+def test_compose_runtime_safety_flag_keeps_runtime_signal_and_marks_extractor_advisory():
+    merged = compose_runtime_safety_flag(
+        extractor_flag=SafetyFlag(
+            level="urgent",
+            cues=["llm:urgent"],
+            rationale="Extractor suggested urgent risk.",
+            needs_human_review=True,
+        ),
+        rule_flag=SafetyFlag(
+            level="review",
+            cues=["rule:review"],
+            rationale="Rule monitor flagged review.",
+            needs_human_review=True,
+        ),
+    )
+
+    assert merged.level == "review"
+    assert "rule:review" in merged.cues
+    assert "extractor_advisory:urgent" in merged.cues
+    assert "advisory" in (merged.rationale or "").lower()
+
+
 def test_evaluate_safety_stack_can_combine_rule_and_checkpoint_levels():
     turns = [
         Turn(turn_id=1, speaker="assistant", text="What has felt hardest?", language_tag="hinglish"),
@@ -98,6 +135,24 @@ def test_evaluate_safety_stack_can_combine_rule_and_checkpoint_levels():
     assert result["components"]["rule"] == "review"
     assert result["components"]["checkpoint"] == "urgent"
     assert result["flag"].level == "urgent"
+
+
+def test_evaluate_safety_stack_does_not_escalate_extractor_signal_without_support():
+    turns = [
+        Turn(turn_id=1, speaker="assistant", text="What has felt hardest?", language_tag="en"),
+        Turn(turn_id=2, speaker="user", text="I feel exhausted and low.", language_tag="en"),
+    ]
+
+    result = evaluate_safety_stack(
+        extractor_safety_level="review",
+        turns=turns,
+        language="en",
+        use_rule_safety_monitor=False,
+        safety_assessor=None,
+    )
+
+    assert result["components"]["extractor"] == "review"
+    assert result["flag"].level == "none"
 
 
 def test_local_safety_checkpoint_assessor_is_disabled_without_checkpoint():

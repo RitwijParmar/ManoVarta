@@ -1,6 +1,6 @@
 # Final Assignment Completion Report
 
-- Generated: `2026-04-04T19:19:58Z`
+- Generated: `2026-04-04T20:00:25Z`
 - Shipped baseline tag: `shipped-baseline-2026-04-04`
 
 ## Requirement Status
@@ -35,22 +35,22 @@
 
 ### Safety Accuracy
 
-- Precision: `0.333`
+- Precision: `1.0`
 - Recall: `1.0`
-- F1: `0.5`
+- F1: `1.0`
 
 ### Latency
 
-- Cold-start turn latency: `13744.84 ms`
-- Warm average turn latency: `153.41 ms`
-- Warm median turn latency: `74.29 ms`
-- Warm p95 turn latency: `85.51 ms`
+- Cold-start turn latency: `15520.47 ms`
+- Warm average turn latency: `188.57 ms`
+- Warm median turn latency: `221.99 ms`
+- Warm p95 turn latency: `238.0 ms`
 
 ### Discourse Effectiveness
 
-- Coverage completeness: `0.804`
-- Exact match rate: `0.733`
-- Macro-F1: `0.344`
+- Coverage completeness: `0.538`
+- Exact match rate: `0.712`
+- Macro-F1: `0.295`
 - Parse failures: `0`
 
 ## Deployment

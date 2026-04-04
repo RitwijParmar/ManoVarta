@@ -14,8 +14,10 @@ def test_detect_voice_layer_reports_browser_wrapper():
 
     assert voice["status"] == "complete"
     assert voice["browser_voice_controls"] is True
-    assert voice["speech_to_text"] is True
-    assert voice["text_to_speech"] is True
+    assert voice["browser_speech_to_text"] is True
+    assert voice["browser_text_to_speech"] is True
+    assert voice["cloud_speech_to_text"] is True
+    assert voice["cloud_text_to_speech"] is True
 
 
 def test_detect_deployment_assets_finds_new_configs():
@@ -41,11 +43,15 @@ def test_render_markdown_mentions_required_metric_names():
             "voice_capable_agent": {
                 "status": "complete",
                 "browser_voice_controls": True,
-                "speech_to_text": True,
-                "text_to_speech": True,
+                "browser_speech_to_text": True,
+                "browser_text_to_speech": True,
+                "cloud_speech_to_text": True,
+                "cloud_text_to_speech": True,
                 "transcript_before_submit": True,
                 "note": "voice note",
             },
+            "patient_profile_onboarding": {"status": "complete"},
+            "clinical_knowledge_base": {"status": "complete"},
             "task_1_smart_screening": {"status": "complete"},
             "task_2_llm_inference_engine": {"status": "complete"},
             "task_3_safety_trigger_system": {"status": "complete"},
@@ -56,6 +62,11 @@ def test_render_markdown_mentions_required_metric_names():
                     "docker_compose_demo": True,
                     "render_blueprint": True,
                     "shipped_bundle": True,
+                },
+                "public_runtime_url": "https://example.com",
+                "live_runtime": {
+                    "hybrid_safety_enabled": True,
+                    "cloud_voice_enabled": True,
                 },
                 "note": "deploy note",
             },

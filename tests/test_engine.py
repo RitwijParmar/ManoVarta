@@ -81,7 +81,7 @@ def test_runtime_engine_merges_llm_output_into_snapshot():
     assert snapshot.mode == "hybrid"
     assert snapshot.items["phq_q2_low_mood"].value == 2
     assert snapshot.items["phq_q2_low_mood"].source in {"llm", "hybrid"}
-    assert snapshot.safety.level == "review"
+    assert snapshot.safety.level == "none"
     assert any(span.span_id.startswith("LLM-") for span in snapshot.evidence_spans)
 
 
@@ -105,7 +105,7 @@ def test_runtime_engine_handles_compact_llm_payload():
 
     assert snapshot.mode == "hybrid"
     assert snapshot.items["phq_q2_low_mood"].value == 2
-    assert snapshot.safety.level == "review"
+    assert snapshot.safety.level == "none"
 
 
 def test_runtime_engine_can_merge_semantic_safety_signal():
@@ -142,3 +142,25 @@ def test_runtime_engine_can_merge_llm_safety_signal():
 
     assert snapshot.safety.level == "urgent"
     assert "llm-safety:test" in snapshot.safety.cues
+
+
+def test_runtime_engine_keeps_rule_signal_when_extractor_overcalls_safety():
+    turns = [
+        Turn(turn_id=1, speaker="assistant", text="What has felt heaviest?", language_tag="hinglish"),
+        Turn(
+            turn_id=2,
+            speaker="user",
+            text="Kabhi lagta hai mere bina sab theek hoga, but I am here talking about it.",
+            language_tag="hinglish",
+        ),
+    ]
+    engine = RuntimeEngine(
+        scorer=ConversationScorer(),
+        safety_monitor=SafetyMonitor(),
+        extractor=StubExtractor(),
+    )
+
+    snapshot = engine.analyze(turns, "hinglish")
+
+    assert snapshot.safety.level == "review"
+    assert "extractor_advisory:review" in snapshot.safety.cues

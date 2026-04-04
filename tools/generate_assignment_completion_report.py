@@ -11,6 +11,7 @@ from urllib.request import Request, urlopen
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 REPORTS_DIR = PROJECT_ROOT / "reports"
+LIVE_RUNTIME_EVAL_PATH = REPORTS_DIR / "live_runtime_eval_20260404.json"
 HYBRID_REPORT_PATH = REPORTS_DIR / "hybrid_runtime_validation_colab_20260404.json"
 SHIP_NOTE_PATH = REPORTS_DIR / "ship_note_2026-04-04.md"
 BEST_SYSTEM_PATH = REPORTS_DIR / "best_current_system_report.json"
@@ -30,6 +31,14 @@ LATENCY_SAMPLES = [
 
 def load_json(path: Path) -> dict:
     return json.loads(path.read_text(encoding="utf-8"))
+
+
+def runtime_eval_report_path() -> Path:
+    return LIVE_RUNTIME_EVAL_PATH if LIVE_RUNTIME_EVAL_PATH.exists() else HYBRID_REPORT_PATH
+
+
+def runtime_eval_source_label(path: Path) -> str:
+    return "live runtime endpoint evaluation" if path == LIVE_RUNTIME_EVAL_PATH else "shipped hybrid runtime validation"
 
 
 def detect_voice_layer(project_root: Path = PROJECT_ROOT) -> dict[str, object]:
@@ -201,9 +210,11 @@ def measure_latency_template_path() -> dict[str, object]:
 
 
 def build_assignment_report() -> dict[str, object]:
-    hybrid_report = load_json(HYBRID_REPORT_PATH)
+    hybrid_report_path = runtime_eval_report_path()
+    hybrid_report = load_json(hybrid_report_path)
+    runtime_source = runtime_eval_source_label(hybrid_report_path)
     best_system_report = load_json(BEST_SYSTEM_PATH)
-    hybrid_summary = hybrid_report["full_summary"]
+    hybrid_summary = hybrid_report.get("full_summary", hybrid_report)
     hybrid_overall = hybrid_summary["overall"]
     safety_precision = hybrid_overall["safety_precision"]
     safety_recall = hybrid_overall["safety_recall"]
@@ -223,7 +234,7 @@ def build_assignment_report() -> dict[str, object]:
     return {
         "generated_at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
         "source_reports": {
-            "hybrid_runtime_validation": str(HYBRID_REPORT_PATH.relative_to(PROJECT_ROOT)),
+            "hybrid_runtime_validation": str(hybrid_report_path.relative_to(PROJECT_ROOT)),
             "best_current_system": str(BEST_SYSTEM_PATH.relative_to(PROJECT_ROOT)),
             "ship_note": str(SHIP_NOTE_PATH.relative_to(PROJECT_ROOT)),
         },
@@ -281,7 +292,7 @@ def build_assignment_report() -> dict[str, object]:
                 "precision": safety_precision,
                 "recall": safety_recall,
                 "f1": safety_f1,
-                "source": "shipped hybrid runtime validation",
+                "source": runtime_source,
             },
             "latency": latency,
             "discourse_effectiveness": {
@@ -289,7 +300,7 @@ def build_assignment_report() -> dict[str, object]:
                 "exact_match_rate": hybrid_overall["exact_match_rate"],
                 "macro_f1": hybrid_overall["macro_f1"],
                 "parse_failures": hybrid_summary["parse_failures"],
-                "source": "shipped hybrid runtime validation",
+                "source": runtime_source,
                 "note": "Coverage completeness is used as the main operational discourse metric because it directly tracks whether the system stayed on task and covered clinically relevant questionnaire areas.",
             },
         },

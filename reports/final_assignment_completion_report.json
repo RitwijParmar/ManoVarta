@@ -1,7 +1,7 @@
 {
-  "generated_at": "2026-04-04T19:19:58Z",
+  "generated_at": "2026-04-04T20:00:25Z",
   "source_reports": {
-    "hybrid_runtime_validation": "reports/hybrid_runtime_validation_colab_20260404.json",
+    "hybrid_runtime_validation": "reports/live_runtime_eval_20260404.json",
     "best_current_system": "reports/best_current_system_report.json",
     "ship_note": "reports/ship_note_2026-04-04.md"
   },
@@ -115,25 +115,25 @@
       "note": "This is computed by replaying seed conversations turn by turn and finding the earliest user-turn prefix where an item score matches the conversation-final value and stays there."
     },
     "safety_accuracy": {
-      "precision": 0.333,
+      "precision": 1.0,
       "recall": 1.0,
-      "f1": 0.5,
-      "source": "shipped hybrid runtime validation"
+      "f1": 1.0,
+      "source": "live runtime endpoint evaluation"
     },
     "latency": {
-      "cold_start_ms": 13744.84,
-      "warm_avg_ms": 153.41,
-      "warm_median_ms": 74.29,
-      "warm_p95_ms": 85.51,
+      "cold_start_ms": 15520.47,
+      "warm_avg_ms": 188.57,
+      "warm_median_ms": 221.99,
+      "warm_p95_ms": 238.0,
       "samples": 6,
       "note": "Measured through the FastAPI chat endpoint with Hugging Face network calls disabled so the number reflects deterministic local screening latency rather than hosted-model round trips."
     },
     "discourse_effectiveness": {
-      "coverage_completeness": 0.804,
-      "exact_match_rate": 0.733,
-      "macro_f1": 0.344,
+      "coverage_completeness": 0.538,
+      "exact_match_rate": 0.712,
+      "macro_f1": 0.295,
       "parse_failures": 0,
-      "source": "shipped hybrid runtime validation",
+      "source": "live runtime endpoint evaluation",
       "note": "Coverage completeness is used as the main operational discourse metric because it directly tracks whether the system stayed on task and covered clinically relevant questionnaire areas."
     }
   },
