@@ -10,28 +10,82 @@ const state = {
 const LANGUAGE_UI = {
   en: {
     placeholder: "Describe what changed, when it happens, and how it affects your day...",
-    sessionReady: "Session ready for typed or spoken turns.",
-    startSuccess: "Session started in English.",
-    turnSuccess: "Thanks. ManoVarta updated its understanding and is ready for the next message.",
-    runtimeReady: "Ready when you are. You can start talking naturally now.",
-    nudgeIntro: "Use one of these nudges to share richer detail and stabilize scores faster.",
+    sessionReady: "You can type or speak now.",
+    startSuccess: "Your check-in started in English.",
+    turnSuccess: "Thanks. ManoVarta is ready for your next message.",
+    runtimeReady: "Ready when you are. Start with whatever feels easiest to say.",
+    nudgeIntro: "These small prompts help you share the most useful detail without pressure.",
   },
   hi: {
     placeholder: "Jo badla hai, kab zyada hota hai, aur din bhar par kya asar padta hai, woh likhiye...",
-    sessionReady: "Session typed ya voice response ke liye ready hai.",
-    startSuccess: "Session Hindi mein start ho gaya.",
-    turnSuccess: "Shukriya. ManoVarta ne apni understanding update kar li hai aur agle message ke liye ready hai.",
-    runtimeReady: "Sab ready hai. Aap normal tareeke se baat shuru kar sakte hain.",
-    nudgeIntro: "In nudges ka use karke zyada useful detail share kijiye aur scores ko jaldi stable banaiye.",
+    sessionReady: "Ab aap type ya bol sakte hain.",
+    startSuccess: "Aapka check-in Hindi mein start ho gaya.",
+    turnSuccess: "Shukriya. ManoVarta agle jawab ke liye ready hai.",
+    runtimeReady: "Sab ready hai. Jo sabse aasaan lage, wahi se baat shuru kijiye.",
+    nudgeIntro: "Yeh chhote prompts bina pressure ke useful detail nikalne mein madad karte hain.",
   },
   hinglish: {
     placeholder: "Kya change hua, kab zyada feel hota hai, aur daily routine par kya impact hai, woh share karo...",
-    sessionReady: "Session typed ya voice turns ke liye ready hai.",
-    startSuccess: "Session Hinglish mein start ho gaya.",
-    turnSuccess: "Thanks. ManoVarta ne apni understanding update kar li hai aur next message ke liye ready hai.",
-    runtimeReady: "Everything is ready. Bas naturally baat shuru karo.",
-    nudgeIntro: "In nudges se thodi aur concrete detail do, taaki confidence faster lock ho sake.",
+    sessionReady: "Ab tum type ya bol sakte ho.",
+    startSuccess: "Tumhara check-in Hinglish mein start ho gaya.",
+    turnSuccess: "Thanks. ManoVarta next message ke liye ready hai.",
+    runtimeReady: "Everything is ready. Jo easiest lage, usse start karo.",
+    nudgeIntro: "Yeh nudges thodi aur clear detail lane mein help karte hain, bina conversation ko heavy banaye.",
   },
+};
+
+const STARTER_LIBRARY = {
+  en: [
+    {
+      title: "Start with energy",
+      description: "Use this if the main change feels like fatigue or heaviness.",
+      text: "Lately I have been feeling more drained than usual, and it is changing how I get through the day.",
+    },
+    {
+      title: "Start with sleep",
+      description: "Use this if sleep has been the clearest sign that something shifted.",
+      text: "My sleep has changed a lot lately, and I think it is affecting my mood and focus.",
+    },
+    {
+      title: "Start with worry",
+      description: "Use this if the mind feels busy, tense, or restless.",
+      text: "My mind has been worrying a lot, and it feels hard to settle down even when nothing is happening.",
+    },
+  ],
+  hi: [
+    {
+      title: "Energy se start kijiye",
+      description: "Jab thakan ya bojh sabse zyada noticeable ho.",
+      text: "Pichhle kuchh dino se mujhe aam se zyada thakan feel ho rahi hai, aur din nikalna mushkil lag raha hai.",
+    },
+    {
+      title: "Neend se start kijiye",
+      description: "Jab sabse pehla badlav neend mein dikha ho.",
+      text: "Meri neend ka pattern kaafi badal gaya hai, aur uska asar mood aur focus par pad raha hai.",
+    },
+    {
+      title: "Chinta se start kijiye",
+      description: "Jab dimag zyada bhaag raha ho ya tanav body mein feel ho.",
+      text: "Mera dimag kaafi zyada chinta mein rehta hai aur bina wajah bhi tension feel hoti rehti hai.",
+    },
+  ],
+  hinglish: [
+    {
+      title: "Low energy se start karo",
+      description: "Jab sabse obvious change thakan ya heaviness ho.",
+      text: "Lately mujhe normal se kaafi zyada drained feel ho raha hai, aur din nikalna heavy lag raha hai.",
+    },
+    {
+      title: "Sleep se start karo",
+      description: "Jab sleep issue sabse clear signal ho.",
+      text: "Meri sleep pattern kaafi off ho gayi hai, aur uska impact mood aur focus par clearly aa raha hai.",
+    },
+    {
+      title: "Worry se start karo",
+      description: "Jab mind overactive ho ya tension body mein feel ho.",
+      text: "Mind kaafi overactive chal raha hai, aur bina reason bhi tension aur restlessness feel hoti rehti hai.",
+    },
+  ],
 };
 
 const NUDGE_LIBRARY = {
@@ -173,6 +227,7 @@ const composerHelper = document.getElementById("composerHelper");
 const patientSummary = document.getElementById("patientSummary");
 const whyThisQuestion = document.getElementById("whyThisQuestion");
 const safetyNarrative = document.getElementById("safetyNarrative");
+const starterDeck = document.getElementById("starterDeck");
 
 const runtimeInfo = document.getElementById("runtimeInfo");
 const runtimeDetail = document.getElementById("runtimeDetail");
@@ -211,6 +266,9 @@ const insightsToggle = document.getElementById("insightsToggle");
 const architectureButton = document.getElementById("architectureButton");
 const architectureClose = document.getElementById("architectureClose");
 const architectureModal = document.getElementById("architectureModal");
+const backstageToggle = document.getElementById("backstageToggle");
+const backstageClose = document.getElementById("backstageClose");
+const backstagePanel = document.getElementById("backstagePanel");
 
 const SpeechRecognitionCtor = window.SpeechRecognition || window.webkitSpeechRecognition || null;
 const speechSynthesisApi = window.speechSynthesis || null;
@@ -254,10 +312,30 @@ function closeArchitectureModal() {
   architectureModal.setAttribute("aria-hidden", "true");
 }
 
+function setSessionLiveState(isLive) {
+  document.body.classList.toggle("session-live", Boolean(isLive));
+}
+
 function humanizeToken(value) {
   return String(value || "")
     .replaceAll("_", " ")
     .replace(/\b\w/g, (match) => match.toUpperCase());
+}
+
+function renderStarterDeck(language) {
+  const starters = STARTER_LIBRARY[language] || STARTER_LIBRARY.en;
+  starterDeck.innerHTML = "";
+  starters.forEach((starter) => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "starter-card";
+    button.innerHTML = `
+      <strong>${escapeHtml(starter.title)}</strong>
+      <span>${escapeHtml(starter.description)}</span>
+    `;
+    button.addEventListener("click", () => applyNudge(starter.text));
+    starterDeck.appendChild(button);
+  });
 }
 
 function updateSessionBadge() {
@@ -282,12 +360,12 @@ function setLink(anchor, href) {
 
 function runtimeToText(payload) {
   if (payload.hybrid_safety_enabled) {
-    return "Ready for multilingual conversation with guided follow-ups and enhanced safety review.";
+    return "Ready for a guided multilingual check-in with stronger safety support.";
   }
   if (payload.huggingface_enabled) {
-    return "Ready for multilingual conversation, adaptive questions, and live safety monitoring.";
+    return "Ready for a guided conversation in English, Hindi, or Hinglish.";
   }
-  return "Conversation service is online and ready to start.";
+  return "Conversation service is online and ready whenever you are.";
 }
 
 function runtimeToDetail(payload) {
@@ -339,11 +417,11 @@ function renderProfiles(profiles) {
     card.className = "profile-card";
     const tags = (profile.nuance_tags || []).slice(0, 3).join(" • ");
     card.innerHTML = `
-      <p class="profile-title">${escapeHtml((profile.language || "en").toUpperCase())} demo · ${escapeHtml(profile.patient_id)}</p>
+      <p class="profile-title">${escapeHtml((profile.language || "en").toUpperCase())} scenario · ${escapeHtml(profile.patient_id)}</p>
       <p class="profile-meta">${escapeHtml(profile.occupation || "participant")} · age ${escapeHtml(String(profile.age || "n/a"))}</p>
       <p class="profile-context">${escapeHtml(profile.context || profile.notes || "No context available.")}</p>
       <p class="profile-tags">${escapeHtml(tags || "guided conversation demo")}</p>
-      <button type="button" class="button secondary profile-launch" data-profile-id="${escapeHtml(profile.patient_id)}">Try this demo</button>
+      <button type="button" class="button secondary profile-launch" data-profile-id="${escapeHtml(profile.patient_id)}">Load scenario</button>
     `;
     profileList.appendChild(card);
   });
@@ -385,8 +463,8 @@ async function fetchBootstrap() {
     const payload = await response.json();
     renderRuntime(payload.runtime);
     serviceHealth.textContent = payload.health.status === "ok"
-      ? "Safety checks are active and the conversation service is online."
-      : "The service is still waking up. You may need to retry in a moment.";
+      ? "Live and ready for a calm check-in."
+      : "The service is still waking up. Give it a moment, then retry.";
     serviceHealth.className = `service-health ${payload.health.status === "ok" ? "good" : "warn"}`;
     state.profiles = payload.profiles || [];
     renderProfiles(state.profiles);
@@ -406,8 +484,8 @@ async function fetchBootstrap() {
   const profilesPayload = await profilesResponse.json();
   renderRuntime(runtimePayload);
   serviceHealth.textContent = healthPayload.status === "ok"
-    ? "Safety checks are active and the conversation service is online."
-    : "The service is still waking up. You may need to retry in a moment.";
+    ? "Live and ready for a calm check-in."
+    : "The service is still waking up. Give it a moment, then retry.";
   serviceHealth.className = `service-health ${healthPayload.status === "ok" ? "good" : "warn"}`;
   state.profiles = (profilesPayload || []).map((profile) => {
     const background = profile.background_profile || {};
@@ -432,6 +510,7 @@ function applyLanguageDefaults(language) {
   const copy = LANGUAGE_UI[language] || LANGUAGE_UI.en;
   messageInput.placeholder = copy.placeholder;
   nudgeSubtitle.textContent = copy.nudgeIntro;
+  renderStarterDeck(language);
 }
 
 async function startSession() {
@@ -456,12 +535,21 @@ async function startSession() {
     renderTurn(payload.assistant_turn);
     maybeSpeak(payload.assistant_turn);
     sessionMeta.classList.remove("empty");
-    sessionMeta.textContent = `Live session in ${state.language.toUpperCase()} · ManoVarta is listening for the main concern and keeping the pace gentle.`;
+    sessionMeta.textContent = "ManoVarta has started gently and is listening for the main concern before moving deeper.";
     updateSessionBadge();
+    setSessionLiveState(true);
     downloadButton.disabled = true;
     setLink(summaryLink, null);
     setLink(exportLink, null);
     resetInsightPanel();
+    setDisclosureState(demoPanel, demoToggle, false, {
+      open: "Show demo scenarios",
+      close: "Hide demo scenarios",
+    });
+    setDisclosureState(insightPanel, insightsToggle, false, {
+      open: "Show care details",
+      close: "Hide care details",
+    });
     updateVoiceStatus(LANGUAGE_UI[state.language].sessionReady);
     setStatusBanner(LANGUAGE_UI[state.language].startSuccess, "success");
   } catch (error) {
@@ -515,36 +603,36 @@ function buildSessionGoal(dialogue, safety) {
 
 function buildProgressLabel(coverage) {
   const remaining = Math.max((coverage.total_items || 0) - (coverage.touched_items || 0), 0);
-  return `${coverage.touched_items} of ${coverage.total_items} wellbeing signals have been explored · ${remaining} still open`;
+  return `ManoVarta has gently explored ${coverage.touched_items} of ${coverage.total_items} areas so far, with ${remaining} still open.`;
 }
 
 function buildBonusSignals(dialogue, coverage) {
   const completion = Math.round((coverage.completion_ratio || 0) * 100);
   const posture = buildResponsePosture(dialogue.user_style);
   return [
-    `${completion}% progress`,
+    `${completion}% covered`,
     `${humanizeToken(dialogue.target_topic)} focus`,
     posture,
-    dialogue.next_action === "risk_check" ? "Safety checkpoint" : "Guided follow-up",
+    dialogue.next_action === "risk_check" ? "Safety pause" : "Guided follow-up",
   ];
 }
 
 function buildResponsePosture(userStyle) {
   if (userStyle.openness === "guarded") {
-    return "Gentle low-pressure pacing";
+    return "Low-pressure pacing";
   }
   if (userStyle.verbosity === "brief") {
-    return "Short focused follow-ups";
+    return "Short focused prompts";
   }
   if (userStyle.verbosity === "detailed") {
     return "Narrative-friendly flow";
   }
-  return "Balanced guided pacing";
+  return "Balanced guided pace";
 }
 
 function buildPersonalizationSummary(dialogue) {
   const { verbosity, openness, code_mix: codeMix, distress_trend: distressTrend } = dialogue.user_style;
-  return `ManoVarta is noticing ${verbosity} responses, ${openness} disclosure, ${codeMix} code-mix, and a ${distressTrend} distress pattern. It uses that to keep the conversation natural instead of robotic.`;
+  return `ManoVarta is noticing ${verbosity} responses, ${openness} disclosure, ${codeMix} code-mix, and a ${distressTrend} pattern, then adjusting the conversation to stay natural instead of robotic.`;
 }
 
 function buildComposerHelper(dialogue) {
@@ -591,8 +679,8 @@ function buildNudgeMeta(dialogue) {
 
 function buildSessionMetaLine(dialogue, coverage, safety) {
   const topic = humanizeToken(dialogue.target_topic);
-  const safetyLine = safety.level === "none" ? "safety monitoring active" : `${humanizeToken(safety.level)} safety posture`;
-  return `Live session in ${state.language.toUpperCase()} · currently exploring ${topic.toLowerCase()} · ${safetyLine}`;
+  const safetyLine = safety.level === "none" ? "safety monitoring stays in the background" : `${humanizeToken(safety.level)} safety care is active`;
+  return `Right now the conversation is exploring ${topic.toLowerCase()}, while ${safetyLine}.`;
 }
 
 function buildPatientSummary(dialogue, safety) {
@@ -985,8 +1073,8 @@ function setupVoice() {
 
   recognition.onstart = () => {
     listening = true;
-    micButton.textContent = "Stop voice";
-    updateVoiceStatus("Listening for a response...", false, true);
+    micButton.textContent = "Stop listening";
+    updateVoiceStatus("Listening now...", false, true);
   };
 
   recognition.onresult = (event) => {
@@ -1009,15 +1097,15 @@ function setupVoice() {
 
   recognition.onerror = (event) => {
     listening = false;
-    micButton.textContent = "Start voice";
+    micButton.textContent = "Talk instead";
     updateVoiceStatus(`Voice error: ${event.error}`, true);
   };
 
   recognition.onend = () => {
     listening = false;
-    micButton.textContent = "Start voice";
+    micButton.textContent = "Talk instead";
     if (!voiceStatus.classList.contains("error")) {
-      updateVoiceStatus("Voice idle.");
+      updateVoiceStatus("Voice ready.");
     }
   };
 
@@ -1029,7 +1117,7 @@ function setupVoice() {
     state.language = languageSelect.value;
     applyLanguageDefaults(state.language);
     updateSessionBadge();
-    updateVoiceStatus(`Voice language set to ${state.language}.`);
+    updateVoiceStatus(`Voice language set to ${state.language.toUpperCase()}.`);
   });
 
   updateVoiceStatus("Voice ready when microphone access is allowed.");
@@ -1117,6 +1205,18 @@ function escapeHtml(text) {
 startButton.addEventListener("click", startSession);
 chatForm.addEventListener("submit", sendTurn);
 downloadButton.addEventListener("click", downloadExport);
+backstageToggle.addEventListener("click", () => {
+  toggleDisclosure(backstagePanel, backstageToggle, {
+    open: "Presenter tools",
+    close: "Hide presenter tools",
+  });
+});
+backstageClose.addEventListener("click", () => {
+  setDisclosureState(backstagePanel, backstageToggle, false, {
+    open: "Presenter tools",
+    close: "Hide presenter tools",
+  });
+});
 demoToggle.addEventListener("click", () => {
   toggleDisclosure(demoPanel, demoToggle, {
     open: "Show demo scenarios",
@@ -1150,11 +1250,16 @@ setDisclosureState(insightPanel, insightsToggle, false, {
   open: "Show care details",
   close: "Hide care details",
 });
+setDisclosureState(backstagePanel, backstageToggle, false, {
+  open: "Presenter tools",
+  close: "Hide presenter tools",
+});
 
 setupVoice();
 applyLanguageDefaults(state.language);
 updateSessionBadge();
 resetInsightPanel();
+setSessionLiveState(false);
 
 fetchBootstrap()
   .then(() => {

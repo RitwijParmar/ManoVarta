@@ -10,10 +10,10 @@ def test_root_serves_browser_demo():
     response = client.get("/")
 
     assert response.status_code == 200
-    assert "ManoVarta Runtime" in response.text
-    assert "Start voice" in response.text
-    assert "How ManoVarta works" in response.text
-    assert "Show care details" in response.text
+    assert "ManoVarta | Multilingual mental health check-in" in response.text
+    assert "Start check-in" in response.text
+    assert "Talk instead" in response.text
+    assert "Presenter tools" in response.text
 
 
 def test_runtime_config_reports_huggingface_disabled_by_default():
