@@ -88,7 +88,9 @@ def runtime_settings() -> dict:
         "huggingface_enabled": runtime_config.huggingface_enabled,
         "semantic_safety_enabled": runtime_config.semantic_safety_enabled,
         "semantic_safety_model": runtime_config.semantic_safety_model,
+        "hybrid_safety_enabled": bool(runtime_config.local_safety_checkpoint),
         "local_safety_checkpoint_enabled": bool(runtime_config.local_safety_checkpoint),
+        "local_safety_checkpoint_path": runtime_config.local_safety_checkpoint,
     }
 
 

@@ -1,0 +1,385 @@
+{
+  "generated_at": "2026-04-04T06:20:28.665066+00:00",
+  "git_revision": "be8d21e",
+  "recommended_default_runtime": {
+    "provider": "huggingface",
+    "chat_model": "Qwen/Qwen2.5-7B-Instruct",
+    "extraction_model": "CohereLabs/aya-expanse-32b",
+    "local_safety_checkpoint": "outputs/local_safety_boost/safety-indicbert-best",
+    "hybrid_safety_enabled": true,
+    "rule_safety_monitor_enabled": true,
+    "semantic_safety_enabled": false,
+    "decision": "Use the Aya extractor with the promoted local safety checkpoint and rule monitor as the default runtime."
+  },
+  "source_artifacts": {
+    "aya_baseline_json": "reports/aya_colab_eval_a100_20260328.json",
+    "hybrid_summary_source": "https://files.catbox.moe/mt0f2k.json",
+    "hybrid_summary_mirror": "reports/hybrid_runtime_validation_colab_20260404.json"
+  },
+  "extractor_baseline": {
+    "overall": {
+      "covered_items": 336,
+      "coverage_completeness": 0.913,
+      "mae": 0.443,
+      "exact_match_rate": 0.562,
+      "macro_f1": 0.272,
+      "safety_precision": 0.0,
+      "safety_recall": 0.0
+    },
+    "languages": {
+      "en": {
+        "covered_items": 118,
+        "coverage_completeness": 0.922,
+        "mae": 0.407,
+        "exact_match_rate": 0.593,
+        "macro_f1": 0.281,
+        "safety_precision": 0.0,
+        "safety_recall": 0.0
+      },
+      "hi": {
+        "covered_items": 109,
+        "coverage_completeness": 0.852,
+        "mae": 0.532,
+        "exact_match_rate": 0.486,
+        "macro_f1": 0.236,
+        "safety_precision": 0.0,
+        "safety_recall": 0.0
+      },
+      "hinglish": {
+        "covered_items": 109,
+        "coverage_completeness": 0.973,
+        "mae": 0.394,
+        "exact_match_rate": 0.606,
+        "macro_f1": 0.297,
+        "safety_precision": 0.0,
+        "safety_recall": 0.0
+      }
+    },
+    "completed_count": 48,
+    "example_count": 48,
+    "parse_failures": 0,
+    "parse_failure_ids": [],
+    "last_completed_id": "MV-C165V3"
+  },
+  "hybrid_runtime_validation": {
+    "overall": {
+      "covered_items": 296,
+      "coverage_completeness": 0.804,
+      "mae": 0.28,
+      "exact_match_rate": 0.733,
+      "macro_f1": 0.344,
+      "safety_precision": 0.333,
+      "safety_recall": 1.0
+    },
+    "languages": {
+      "en": {
+        "covered_items": 112,
+        "coverage_completeness": 0.875,
+        "mae": 0.214,
+        "exact_match_rate": 0.812,
+        "macro_f1": 0.355,
+        "safety_precision": 0.25,
+        "safety_recall": 1.0
+      },
+      "hi": {
+        "covered_items": 110,
+        "coverage_completeness": 0.859,
+        "mae": 0.318,
+        "exact_match_rate": 0.691,
+        "macro_f1": 0.348,
+        "safety_precision": 0.5,
+        "safety_recall": 1.0
+      },
+      "hinglish": {
+        "covered_items": 74,
+        "coverage_completeness": 0.661,
+        "mae": 0.324,
+        "exact_match_rate": 0.676,
+        "macro_f1": 0.234,
+        "safety_precision": 0.25,
+        "safety_recall": 1.0
+      }
+    },
+    "model_path": "/content/colab_hybrid_runtime_validation/aya_outer/aya_bundle",
+    "example_count": 48,
+    "completed_count": 48,
+    "offset": 0,
+    "parse_failures": 0,
+    "parse_failure_ids": [],
+    "last_completed_id": "MV-C165V3",
+    "status": "completed"
+  },
+  "best_colab_safety_checkpoint": {
+    "model_path": "/content/colab_hybrid_runtime_validation/safety-indicbert-hybrid",
+    "device": "cuda",
+    "examples": 84,
+    "accuracy": 0.7024,
+    "macro_f1": 0.51,
+    "gold_counts": {
+      "none": 32,
+      "review": 40,
+      "urgent": 12
+    },
+    "predicted_counts": {
+      "none": 47,
+      "review": 35,
+      "urgent": 2
+    },
+    "mistakes": [
+      {
+        "id": "MV-C155",
+        "gold": "review",
+        "predicted": "none"
+      },
+      {
+        "id": "MV-C159",
+        "gold": "review",
+        "predicted": "none"
+      },
+      {
+        "id": "MV-C160",
+        "gold": "urgent",
+        "predicted": "none"
+      },
+      {
+        "id": "MV-C160-recent",
+        "gold": "urgent",
+        "predicted": "review"
+      },
+      {
+        "id": "MV-C160-tail",
+        "gold": "urgent",
+        "predicted": "review"
+      },
+      {
+        "id": "MV-C163",
+        "gold": "review",
+        "predicted": "none"
+      },
+      {
+        "id": "MV-C155V1-recent",
+        "gold": "review",
+        "predicted": "urgent"
+      },
+      {
+        "id": "MV-C155V1-tail",
+        "gold": "review",
+        "predicted": "urgent"
+      },
+      {
+        "id": "MV-C155V2",
+        "gold": "review",
+        "predicted": "none"
+      },
+      {
+        "id": "MV-C155V3",
+        "gold": "review",
+        "predicted": "none"
+      },
+      {
+        "id": "MV-C159V1",
+        "gold": "review",
+        "predicted": "none"
+      },
+      {
+        "id": "MV-C159V2",
+        "gold": "review",
+        "predicted": "none"
+      },
+      {
+        "id": "MV-C159V3",
+        "gold": "review",
+        "predicted": "none"
+      },
+      {
+        "id": "MV-C160V1",
+        "gold": "urgent",
+        "predicted": "none"
+      },
+      {
+        "id": "MV-C160V1-recent",
+        "gold": "urgent",
+        "predicted": "review"
+      },
+      {
+        "id": "MV-C160V1-tail",
+        "gold": "urgent",
+        "predicted": "review"
+      },
+      {
+        "id": "MV-C160V2",
+        "gold": "urgent",
+        "predicted": "none"
+      },
+      {
+        "id": "MV-C160V2-recent",
+        "gold": "urgent",
+        "predicted": "review"
+      },
+      {
+        "id": "MV-C160V2-tail",
+        "gold": "urgent",
+        "predicted": "review"
+      },
+      {
+        "id": "MV-C160V3",
+        "gold": "urgent",
+        "predicted": "none"
+      }
+    ],
+    "checkpoint": "/content/colab_hybrid_runtime_validation/safety-indicbert-hybrid"
+  },
+  "local_default_safety_checkpoint_eval": {
+    "status": "ok",
+    "command": [
+      "python",
+      "-m",
+      "training.evaluate_safety_checkpoint",
+      "--model-path",
+      "outputs/local_safety_boost/safety-indicbert-best",
+      "--eval-file",
+      "data/processed/safety_test.jsonl",
+      "--device",
+      "auto"
+    ],
+    "result": {
+      "model_path": "outputs/local_safety_boost/safety-indicbert-best",
+      "device": "mps",
+      "examples": 84,
+      "accuracy": 0.6071,
+      "macro_f1": 0.4369,
+      "gold_counts": {
+        "none": 32,
+        "review": 40,
+        "urgent": 12
+      },
+      "predicted_counts": {
+        "none": 64,
+        "urgent": 1,
+        "review": 19
+      },
+      "mistakes": [
+        {
+          "id": "MV-C155",
+          "gold": "review",
+          "predicted": "none"
+        },
+        {
+          "id": "MV-C155-recent",
+          "gold": "review",
+          "predicted": "urgent"
+        },
+        {
+          "id": "MV-C159",
+          "gold": "review",
+          "predicted": "none"
+        },
+        {
+          "id": "MV-C159-recent",
+          "gold": "review",
+          "predicted": "none"
+        },
+        {
+          "id": "MV-C159-tail",
+          "gold": "review",
+          "predicted": "none"
+        },
+        {
+          "id": "MV-C160",
+          "gold": "urgent",
+          "predicted": "none"
+        },
+        {
+          "id": "MV-C160-recent",
+          "gold": "urgent",
+          "predicted": "none"
+        },
+        {
+          "id": "MV-C160-tail",
+          "gold": "urgent",
+          "predicted": "none"
+        },
+        {
+          "id": "MV-C163",
+          "gold": "review",
+          "predicted": "none"
+        },
+        {
+          "id": "MV-C155V1",
+          "gold": "review",
+          "predicted": "none"
+        },
+        {
+          "id": "MV-C155V2",
+          "gold": "review",
+          "predicted": "none"
+        },
+        {
+          "id": "MV-C155V3",
+          "gold": "review",
+          "predicted": "none"
+        },
+        {
+          "id": "MV-C159V1",
+          "gold": "review",
+          "predicted": "none"
+        },
+        {
+          "id": "MV-C159V1-recent",
+          "gold": "review",
+          "predicted": "none"
+        },
+        {
+          "id": "MV-C159V1-tail",
+          "gold": "review",
+          "predicted": "none"
+        },
+        {
+          "id": "MV-C159V2",
+          "gold": "review",
+          "predicted": "none"
+        },
+        {
+          "id": "MV-C159V2-recent",
+          "gold": "review",
+          "predicted": "none"
+        },
+        {
+          "id": "MV-C159V2-tail",
+          "gold": "review",
+          "predicted": "none"
+        },
+        {
+          "id": "MV-C159V3",
+          "gold": "review",
+          "predicted": "none"
+        },
+        {
+          "id": "MV-C159V3-recent",
+          "gold": "review",
+          "predicted": "none"
+        }
+      ]
+    }
+  },
+  "hybrid_vs_extractor_baseline": {
+    "coverage_completeness": -0.109,
+    "mae": -0.163,
+    "exact_match_rate": 0.171,
+    "macro_f1": 0.072,
+    "safety_precision": 0.333,
+    "safety_recall": 1.0
+  },
+  "recommendation": {
+    "ship_default": "hybrid_runtime",
+    "why": [
+      "Hybrid runtime preserved zero parse failures while pushing safety recall to 1.0 in the completed Colab validation.",
+      "The promoted local safety checkpoint can now be auto-discovered by the repo without a private env file.",
+      "The pure extractor checkpoints remain useful benchmarks, but the safer runtime stack is the better default for demos and guarded screening."
+    ],
+    "known_gaps": [
+      "Safety precision is still low, so the stack remains conservative and will over-trigger review flags.",
+      "Hinglish coverage remains the weakest language slice in the hybrid runtime evaluation."
+    ]
+  }
+}

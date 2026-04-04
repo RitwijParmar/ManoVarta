@@ -11,6 +11,11 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 load_dotenv(PROJECT_ROOT / ".env", override=False)
 load_dotenv(PROJECT_ROOT / ".env.local", override=False)
 
+DEFAULT_LOCAL_SAFETY_CHECKPOINTS = (
+    Path("outputs") / "local_safety_boost" / "safety-indicbert-best-infer-fp16",
+    Path("outputs") / "local_safety_boost" / "safety-indicbert-best",
+)
+
 
 @dataclass(frozen=True)
 class RuntimeConfig:
@@ -38,6 +43,26 @@ class RuntimeConfig:
         return bool(self.semantic_safety_model)
 
 
+def _is_checkpoint_dir(path: Path) -> bool:
+    if not path.exists() or not path.is_dir():
+        return False
+    if not (path / "config.json").exists():
+        return False
+    return (path / "model.safetensors").exists() or (path / "model.safetensors.index.json").exists()
+
+
+def discover_local_safety_checkpoint(project_root: Path = PROJECT_ROOT) -> Optional[str]:
+    explicit = os.getenv("MANOVARTA_LOCAL_SAFETY_CHECKPOINT")
+    if explicit:
+        return str(Path(explicit).expanduser())
+
+    for relative_path in DEFAULT_LOCAL_SAFETY_CHECKPOINTS:
+        candidate = project_root / relative_path
+        if _is_checkpoint_dir(candidate):
+            return str(candidate)
+    return None
+
+
 @lru_cache(maxsize=1)
 def get_runtime_config() -> RuntimeConfig:
     return RuntimeConfig(
@@ -54,5 +79,5 @@ def get_runtime_config() -> RuntimeConfig:
         semantic_safety_model=os.getenv("MANOVARTA_SEMANTIC_SAFETY_MODEL"),
         semantic_safety_review_threshold=float(os.getenv("MANOVARTA_SEMANTIC_REVIEW_THRESHOLD", "0.64")),
         semantic_safety_urgent_threshold=float(os.getenv("MANOVARTA_SEMANTIC_URGENT_THRESHOLD", "0.72")),
-        local_safety_checkpoint=os.getenv("MANOVARTA_LOCAL_SAFETY_CHECKPOINT"),
+        local_safety_checkpoint=discover_local_safety_checkpoint(),
     )

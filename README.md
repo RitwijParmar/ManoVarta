@@ -200,6 +200,17 @@ export MANOVARTA_SEMANTIC_SAFETY_MODEL=ai4bharat/IndicBERTv2-MLM-only
 
 That path is optional and heavier, so it is best tested in Colab first.
 
+The runtime now also auto-discovers a promoted local safety checkpoint when either of these directories exists:
+
+- `outputs/local_safety_boost/safety-indicbert-best-infer-fp16`
+- `outputs/local_safety_boost/safety-indicbert-best`
+
+That means the hybrid safety stack can come up by default without editing `.env.local`. If you want to override it manually, set:
+
+```bash
+export MANOVARTA_LOCAL_SAFETY_CHECKPOINT=/absolute/path/to/checkpoint
+```
+
 ## Optional Colab encoder work
 
 If you want to test the Hindi-sensitive encoder path on GPU:
@@ -233,6 +244,12 @@ You can optionally include a local checkpoint path:
 
 ```bash
 python tools/generate_eval_bundle.py --checkpoint outputs/extractor-qwen25
+```
+
+To package the current recommended runtime stack and the latest hybrid Colab validation into a single report:
+
+```bash
+python tools/generate_best_current_system_report.py
 ```
 
 To package trained outputs after a Colab or local run:

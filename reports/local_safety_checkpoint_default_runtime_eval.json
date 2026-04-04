@@ -1,0 +1,133 @@
+{
+  "status": "ok",
+  "command": [
+    "python",
+    "-m",
+    "training.evaluate_safety_checkpoint",
+    "--model-path",
+    "outputs/local_safety_boost/safety-indicbert-best",
+    "--eval-file",
+    "data/processed/safety_test.jsonl",
+    "--device",
+    "auto"
+  ],
+  "result": {
+    "model_path": "outputs/local_safety_boost/safety-indicbert-best",
+    "device": "mps",
+    "examples": 84,
+    "accuracy": 0.6071,
+    "macro_f1": 0.4369,
+    "gold_counts": {
+      "none": 32,
+      "review": 40,
+      "urgent": 12
+    },
+    "predicted_counts": {
+      "none": 64,
+      "urgent": 1,
+      "review": 19
+    },
+    "mistakes": [
+      {
+        "id": "MV-C155",
+        "gold": "review",
+        "predicted": "none"
+      },
+      {
+        "id": "MV-C155-recent",
+        "gold": "review",
+        "predicted": "urgent"
+      },
+      {
+        "id": "MV-C159",
+        "gold": "review",
+        "predicted": "none"
+      },
+      {
+        "id": "MV-C159-recent",
+        "gold": "review",
+        "predicted": "none"
+      },
+      {
+        "id": "MV-C159-tail",
+        "gold": "review",
+        "predicted": "none"
+      },
+      {
+        "id": "MV-C160",
+        "gold": "urgent",
+        "predicted": "none"
+      },
+      {
+        "id": "MV-C160-recent",
+        "gold": "urgent",
+        "predicted": "none"
+      },
+      {
+        "id": "MV-C160-tail",
+        "gold": "urgent",
+        "predicted": "none"
+      },
+      {
+        "id": "MV-C163",
+        "gold": "review",
+        "predicted": "none"
+      },
+      {
+        "id": "MV-C155V1",
+        "gold": "review",
+        "predicted": "none"
+      },
+      {
+        "id": "MV-C155V2",
+        "gold": "review",
+        "predicted": "none"
+      },
+      {
+        "id": "MV-C155V3",
+        "gold": "review",
+        "predicted": "none"
+      },
+      {
+        "id": "MV-C159V1",
+        "gold": "review",
+        "predicted": "none"
+      },
+      {
+        "id": "MV-C159V1-recent",
+        "gold": "review",
+        "predicted": "none"
+      },
+      {
+        "id": "MV-C159V1-tail",
+        "gold": "review",
+        "predicted": "none"
+      },
+      {
+        "id": "MV-C159V2",
+        "gold": "review",
+        "predicted": "none"
+      },
+      {
+        "id": "MV-C159V2-recent",
+        "gold": "review",
+        "predicted": "none"
+      },
+      {
+        "id": "MV-C159V2-tail",
+        "gold": "review",
+        "predicted": "none"
+      },
+      {
+        "id": "MV-C159V3",
+        "gold": "review",
+        "predicted": "none"
+      },
+      {
+        "id": "MV-C159V3-recent",
+        "gold": "review",
+        "predicted": "none"
+      }
+    ]
+  }
+}
