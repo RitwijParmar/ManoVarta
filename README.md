@@ -64,6 +64,31 @@ source .venv/bin/activate
 uvicorn manovarta_core.api:app --reload
 ```
 
+## Shipped baseline
+
+The current shipped baseline is frozen at git tag `shipped-baseline-2026-04-04`.
+
+It uses:
+
+- chat/runtime drafting: `Qwen/Qwen2.5-7B-Instruct`
+- structured extraction: `CohereLabs/aya-expanse-32b`
+- safety: hybrid runtime with rule monitor plus an auto-discovered local checkpoint
+
+The shipped reference docs are:
+
+- `reports/ship_note_2026-04-04.md`
+- `reports/best_current_system_report.md`
+
+To package the lean shipped demo/submission bundle:
+
+```bash
+make ship-bundle
+```
+
+That writes:
+
+- `artifacts/manovarta_shipped_baseline_20260404.zip`
+
 ## Run Django admin
 
 ```bash

@@ -1,7 +1,7 @@
 PYTHON=.venv/bin/python
 PIP=.venv/bin/pip
 
-.PHONY: install test api migrate seed stats eval-seed compare-baselines splits export-train
+.PHONY: install test api migrate seed stats eval-seed compare-baselines splits export-train ship-bundle
 
 install:
 	$(PIP) install -e .[dev]
@@ -32,3 +32,6 @@ splits:
 
 export-train:
 	$(PYTHON) tools/export_training_sets.py
+
+ship-bundle:
+	$(PYTHON) tools/package_shipped_baseline.py
