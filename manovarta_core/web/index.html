@@ -11,152 +11,203 @@
     <div class="app-bg"></div>
 
     <div class="shell">
-      <header class="hero">
-        <section class="hero-main panel">
+      <header class="topbar">
+        <div class="brandmark">
+          <span class="brandmark-badge">MV</span>
+          <div>
+            <p class="eyebrow">ManoVarta</p>
+            <h1 class="brandmark-title">A calmer way to check in on your mental wellbeing.</h1>
+          </div>
+        </div>
+
+        <div class="shell-actions">
+          <button id="architectureButton" type="button" class="button ghost">How ManoVarta works</button>
+          <button id="demoToggle" type="button" class="button ghost" aria-expanded="false">Show demo scenarios</button>
+          <button id="insightsToggle" type="button" class="button ghost" aria-expanded="false">Show care details</button>
+        </div>
+      </header>
+
+      <section class="hero-grid">
+        <section class="panel welcome-panel">
           <div class="hero-topline">
-            <p class="eyebrow">Project 2 · ManoVarta</p>
+            <p class="eyebrow">Multilingual screening partner</p>
             <div class="feature-strip">
               <span class="chip accent">Voice-ready</span>
-              <span class="chip accent">Adaptive screening graph</span>
+              <span class="chip accent">English · Hindi · Hinglish</span>
               <span class="chip accent">Safety-aware</span>
             </div>
           </div>
 
-          <h1>Multilingual screening that feels like a guided conversation, not a cold questionnaire.</h1>
+          <p class="headline">
+            Talk naturally. ManoVarta listens, asks the next helpful question, and keeps the conversation gentle.
+          </p>
           <p class="subtitle">
-            ManoVarta is a conversational screening partner for English, Hindi, and Hinglish with
-            structured item inference, confidence-based follow-ups, voice interaction, and live
-            safety review.
+            You do not need to fill a rigid questionnaire. Just describe what has been feeling heavy,
+            what changed, and how it is affecting daily life. ManoVarta guides the conversation and
+            watches for situations that need extra care.
           </p>
 
-          <div class="hero-stats">
-            <article class="hero-stat">
-              <p class="hero-stat-label">Core tasks</p>
-              <strong>Smart screening · LLM inference · Safety triggers</strong>
-              <span>PHQ-9 and GAD-7 aligned coverage with follow-up branching.</span>
+          <div class="experience-grid">
+            <article class="experience-card">
+              <p class="hero-stat-label">Feels like a conversation</p>
+              <strong>No survey fatigue</strong>
+              <span>It follows your story instead of forcing a fixed yes/no checklist.</span>
             </article>
-            <article class="hero-stat">
-              <p class="hero-stat-label">Bonus feature</p>
-              <strong>Gamified confidence nudges</strong>
-              <span>Prompt the user for richer, more useful evidence without breaking rapport.</span>
+            <article class="experience-card">
+              <p class="hero-stat-label">Gamification</p>
+              <strong>Confidence nudges</strong>
+              <span>Small prompts help you share useful detail without pressure.</span>
             </article>
-            <article class="hero-stat">
-              <p class="hero-stat-label">Bonus feature</p>
-              <strong>Linguistic personalization</strong>
-              <span>Mirrors user pacing, detail level, and code-mix style to improve disclosure.</span>
+            <article class="experience-card">
+              <p class="hero-stat-label">Personalization</p>
+              <strong>Adaptive mirroring</strong>
+              <span>It adjusts pacing, detail level, and code-mix to feel more natural.</span>
             </article>
           </div>
 
           <div class="hero-actions">
             <label class="inline-field">
-              <span>Language</span>
+              <span>Choose language</span>
               <select id="languageSelect">
                 <option value="en">English</option>
                 <option value="hi">Hindi</option>
                 <option value="hinglish">Hinglish</option>
               </select>
             </label>
-            <button id="startButton" class="button primary">Start New Session</button>
-            <a class="button ghost-link" href="/docs" target="_blank" rel="noopener noreferrer">Open API Docs</a>
-            <a class="button ghost-link" href="/questionnaires" target="_blank" rel="noopener noreferrer">Questionnaire Schema</a>
+            <button id="startButton" class="button primary">Start conversation</button>
           </div>
 
           <div id="statusBanner" class="status-banner info">
-            Runtime ready. Start a session or launch a seeded profile.
+            ManoVarta is ready. Start when you feel comfortable.
           </div>
         </section>
 
-        <aside class="hero-side">
-          <article class="runtime-card panel">
-            <div class="summary-header">
-              <div>
-                <p class="runtime-label">Runtime cockpit</p>
-                <h3>Deployment status</h3>
-              </div>
-              <span class="chip soft">Live backend</span>
+        <aside class="panel trust-panel">
+          <div class="summary-header">
+            <div>
+              <p class="eyebrow">Before you begin</p>
+              <h2>What to expect</h2>
             </div>
-            <div id="runtimeInfo" class="runtime-meta">Loading configuration...</div>
-            <p id="serviceHealth" class="service-health">Checking backend health...</p>
-          </article>
+            <span class="chip soft">User-first</span>
+          </div>
 
-          <article class="runtime-card panel">
-            <div class="summary-header">
-              <div>
-                <h3>Demo profiles</h3>
-                <p class="panel-subtitle">Seeded multilingual scenarios for presentation and testing.</p>
-              </div>
-              <span class="chip soft">One-click launch</span>
-            </div>
-            <div id="profileList" class="profile-list">
-              <p class="muted">Loading profile presets...</p>
-            </div>
-          </article>
+          <div class="trust-list">
+            <article class="trust-item">
+              <strong>Speak in your own style</strong>
+              <span id="runtimeInfo">Loading readiness status...</span>
+            </article>
+            <article class="trust-item">
+              <strong>Voice is optional</strong>
+              <span>Type or speak. The experience stays the same either way.</span>
+            </article>
+            <article class="trust-item">
+              <strong>Safety comes first</strong>
+              <span id="serviceHealth">Checking service health...</span>
+            </article>
+          </div>
+
+          <div class="quiet-panel">
+            <p class="hero-stat-label">Good first response</p>
+            <p class="quiet-copy">
+              “I’ve been feeling more drained lately, my sleep has changed, and it’s affecting how I get through the day.”
+            </p>
+          </div>
         </aside>
-      </header>
+      </section>
 
-      <main class="layout">
-        <section class="panel chat-panel">
+      <section id="demoPanel" class="panel demo-panel is-hidden" aria-hidden="true">
+        <div class="summary-header">
+          <div>
+            <h2>Demo scenarios</h2>
+            <p class="panel-subtitle">
+              Use seeded examples only when you want to present the product quickly.
+            </p>
+          </div>
+          <span class="chip soft">Presentation mode</span>
+        </div>
+        <div id="profileList" class="profile-list">
+          <p class="muted">Loading profile presets...</p>
+        </div>
+      </section>
+
+      <main class="product-layout">
+        <section class="panel conversation-panel">
           <div class="panel-header">
             <div>
-              <h2>Conversation studio</h2>
+              <h2>Conversation</h2>
               <p class="panel-subtitle">
-                The assistant keeps the conversation natural while collecting structured evidence,
-                deciding the next best question, and pausing for safety when needed.
+                Share what has been difficult lately. ManoVarta will keep the conversation structured,
+                but it should still feel human.
               </p>
             </div>
             <span id="sessionBadge" class="chip soft">No session</span>
           </div>
 
-          <div class="session-cockpit">
-            <article class="cockpit-card accent-card">
-              <p class="mini-label">Session mission</p>
-              <p id="sessionGoal" class="cockpit-copy">
-                Build trust, isolate the main concern, and collect enough evidence for stable scoring.
+          <div class="progress-shell">
+            <article class="focus-card">
+              <p class="mini-label">Current goal</p>
+              <p id="sessionGoal" class="focus-copy">
+                Build comfort first, then understand the main concern clearly.
               </p>
             </article>
 
-            <article class="cockpit-card">
+            <article class="progress-card">
               <div class="summary-header compact-header">
                 <div>
-                  <p class="mini-label">Confidence unlock</p>
-                  <p id="progressMeterLabel" class="cockpit-copy">0 of 16 items touched</p>
+                  <p class="mini-label">How the conversation is building</p>
+                  <p id="progressMeterLabel" class="focus-copy">Nothing mapped yet</p>
                 </div>
-                <span id="coverageText" class="chip">Coverage 0/16</span>
+                <span id="coverageText" class="chip soft">Just getting started</span>
               </div>
               <div class="progress-track">
                 <div id="progressMeterFill" class="progress-fill" style="width: 0%"></div>
               </div>
             </article>
 
-            <article class="cockpit-card">
-              <p class="mini-label">Bonus layer</p>
+            <article class="progress-card">
+              <p class="mini-label">Support mode</p>
               <div id="bonusSignals" class="bonus-signals">
-                <span class="signal-pill">Voice interaction</span>
-                <span class="signal-pill">Adaptive prompts</span>
-                <span class="signal-pill">Safety gating</span>
+                <span class="signal-pill">Gentle pacing</span>
+                <span class="signal-pill">Voice available</span>
+                <span class="signal-pill">Safety checks on</span>
               </div>
             </article>
           </div>
 
           <div id="sessionMeta" class="session-meta empty">No active session yet.</div>
 
-          <section class="summary-block nudge-section">
-            <div class="summary-header">
-              <div>
-                <h3>Confidence boosters</h3>
-                <p id="nudgeSubtitle" class="panel-subtitle">
-                  Use one of these nudges to share richer detail and stabilize scores faster.
-                </p>
+          <div class="guidance-grid">
+            <section class="summary-block quick-help">
+              <div class="summary-header">
+                <div>
+                  <h3>Helpful prompts</h3>
+                  <p id="nudgeSubtitle" class="panel-subtitle">
+                    Choose a prompt if you want help getting started or adding more detail.
+                  </p>
+                </div>
+                <span class="chip bonus">Gamified nudges</span>
               </div>
-              <span class="chip bonus">Gamified nudges</span>
-            </div>
-            <div id="nudgeDeck" class="nudge-deck">
-              <button type="button" class="nudge-card">
-                <strong>Start with a recent example</strong>
-                <span>Describe one moment from the last few days that captures what changed.</span>
-              </button>
-            </div>
-          </section>
+              <div id="nudgeDeck" class="nudge-deck">
+                <button type="button" class="nudge-card">
+                  <strong>Start with a recent example</strong>
+                  <span>Describe one moment from the last few days that captures what changed.</span>
+                </button>
+              </div>
+            </section>
+
+            <section class="summary-block support-panel">
+              <div class="summary-header">
+                <div>
+                  <h3>How ManoVarta is responding</h3>
+                  <p class="panel-subtitle">It adapts to your pace and keeps the next question focused.</p>
+                </div>
+                <span class="chip bonus">Adaptive mirroring</span>
+              </div>
+              <p id="composerHelper" class="summary-text">
+                The assistant mirrors your pacing and keeps the next question focused on the highest-value evidence gap.
+              </p>
+            </section>
+          </div>
 
           <div id="chatLog" class="chat-log"></div>
 
@@ -183,123 +234,157 @@
             </div>
 
             <div class="composer-actions">
-              <p id="composerHelper" class="helper">
-                The assistant mirrors your pacing and keeps the next question focused on the highest-value evidence gap.
-              </p>
-              <button type="submit" class="button primary">Send turn</button>
+              <button type="submit" class="button primary">Send message</button>
             </div>
           </form>
-
-          <div class="export-row">
-            <button id="downloadButton" class="button ghost" disabled>Export Session JSON</button>
-            <a id="summaryLink" class="button ghost-link disabled-link" href="#" target="_blank" rel="noopener noreferrer">Open Summary JSON</a>
-            <a id="exportLink" class="button ghost-link disabled-link" href="#" target="_blank" rel="noopener noreferrer">Open Full Export JSON</a>
-          </div>
         </section>
 
-        <aside class="panel insight-panel">
-          <div class="panel-header compact">
-            <div>
-              <h2>Inference cockpit</h2>
-              <p class="panel-subtitle">
-                Live scores, safety posture, evidence confidence, and planner guidance after every turn.
-              </p>
-            </div>
-          </div>
-
-          <div class="metrics">
-            <article class="metric-card">
-              <p class="metric-label">PHQ-9 total</p>
-              <p id="phqTotal" class="metric-value">0</p>
-            </article>
-            <article class="metric-card">
-              <p class="metric-label">GAD-7 total</p>
-              <p id="gadTotal" class="metric-value">0</p>
-            </article>
-            <article class="metric-card">
-              <p class="metric-label">Safety</p>
-              <p id="safetyLevel" class="metric-value small">none</p>
-            </article>
-            <article class="metric-card">
-              <p class="metric-label">Mode</p>
-              <p id="snapshotMode" class="metric-value small">heuristic</p>
-            </article>
-          </div>
-
-          <section class="summary-block highlight-block">
+        <aside class="care-rail">
+          <section class="panel user-summary-card">
             <div class="summary-header">
               <div>
-                <h3>Adaptive mirroring</h3>
-                <p class="panel-subtitle">The assistant adjusts tone, pacing, and phrasing to fit the user.</p>
+                <p class="eyebrow">Live understanding</p>
+                <h2>What ManoVarta is hearing</h2>
               </div>
-              <span class="chip bonus">Linguistic personalization</span>
+              <span id="plannerStage" class="chip soft">rapport</span>
             </div>
-            <div class="persona-grid">
-              <article class="persona-card">
+            <p id="patientSummary" class="patient-summary">
+              Start a conversation to see a gentle plain-language summary here.
+            </p>
+          </section>
+
+          <section class="panel assist-card">
+            <div class="summary-header">
+              <div>
+                <h3>What it is focusing on</h3>
+                <p class="panel-subtitle">The backend planner still guides the conversation, but the explanation stays human.</p>
+              </div>
+            </div>
+            <div class="mini-stack">
+              <article class="mini-card">
+                <p class="planner-label">Main topic</p>
+                <p id="plannerTopic" class="planner-value">Mood</p>
+              </article>
+              <article class="mini-card">
+                <p class="planner-label">Next step</p>
+                <p id="plannerAction" class="planner-value">Open question</p>
+              </article>
+            </div>
+            <p id="whyThisQuestion" class="summary-text">
+              Start a conversation to see why the next question is being asked.
+            </p>
+          </section>
+
+          <section class="panel assist-card">
+            <div class="summary-header">
+              <div>
+                <h3>Comfort and safety</h3>
+                <p class="panel-subtitle">The conversation adjusts to your style and pauses if something needs extra care.</p>
+              </div>
+            </div>
+            <div class="mini-stack">
+              <article class="mini-card">
                 <p class="planner-label">Detected style</p>
                 <p id="plannerStyle" class="planner-value">balanced · cautious</p>
               </article>
-              <article class="persona-card">
-                <p class="planner-label">Distress trend</p>
-                <p id="plannerTrend" class="planner-value">unclear</p>
-              </article>
-              <article class="persona-card">
+              <article class="mini-card">
                 <p class="planner-label">Language blend</p>
                 <p id="personalizationBlend" class="planner-value">low code-mix</p>
               </article>
-              <article class="persona-card">
-                <p class="planner-label">Response posture</p>
-                <p id="personalizationPacing" class="planner-value">gentle and focused</p>
-              </article>
             </div>
+            <p id="personalizationPacing" class="quiet-copy">gentle and focused</p>
             <p id="personalizationSummary" class="summary-text">
               Start a session to see how ManoVarta adapts to the user’s language style and disclosure pace.
             </p>
-          </section>
-
-          <section class="summary-block">
-            <div class="summary-header">
-              <h3>Current summary</h3>
-              <span id="plannerStage" class="chip soft">rapport</span>
-            </div>
-            <p id="summaryText" class="summary-text">Start a conversation to generate the first summary.</p>
-          </section>
-
-          <section class="summary-block">
-            <div class="summary-header">
-              <h3>Screening map</h3>
-              <span class="chip soft">Smart screening graph</span>
-            </div>
-            <div class="planner-grid">
-              <article class="planner-card">
-                <p class="planner-label">Next action</p>
-                <p id="plannerAction" class="planner-value">open question</p>
-              </article>
-              <article class="planner-card">
-                <p class="planner-label">Target topic</p>
-                <p id="plannerTopic" class="planner-value">mood</p>
-              </article>
-              <article class="planner-card">
-                <p class="planner-label">Disclosure efficiency</p>
-                <p id="plannerEfficiency" class="planner-value">0.00 items/turn</p>
-              </article>
-              <article class="planner-card">
-                <p class="planner-label">Held-back items</p>
-                <p id="plannerHeldBack" class="planner-value">none</p>
-              </article>
-            </div>
-            <p id="plannerTransition" class="summary-text">
-              Start a conversation to see how the next topic is selected.
+            <p id="safetyNarrative" class="summary-text">
+              Safety checks are running quietly in the background throughout the conversation.
             </p>
-            <div id="topicMap" class="topic-map">
-              <span class="topic-pill">No topic map yet.</span>
-            </div>
           </section>
+        </aside>
+      </main>
 
+      <section id="insightPanel" class="panel detail-panel is-hidden" aria-hidden="true">
+        <div class="summary-header">
+          <div>
+            <p class="eyebrow">Hidden care details</p>
+            <h2>Structured view</h2>
+            <p class="panel-subtitle">
+              These details are useful for clinicians, evaluators, or demos, but they are hidden by default for users.
+            </p>
+          </div>
+          <span id="plannerTrend" class="chip soft">unclear</span>
+        </div>
+
+        <div class="detail-meta">
+          <div>
+            <p class="planner-label">Technical runtime</p>
+            <p id="runtimeDetail" class="summary-text">Loading runtime details...</p>
+          </div>
+          <div>
+            <p class="planner-label">Planner transition</p>
+            <p id="plannerTransition" class="summary-text">Start a conversation to see how the next topic is selected.</p>
+          </div>
+        </div>
+
+        <div class="metrics">
+          <article class="metric-card">
+            <p class="metric-label">PHQ-9 total</p>
+            <p id="phqTotal" class="metric-value">0</p>
+          </article>
+          <article class="metric-card">
+            <p class="metric-label">GAD-7 total</p>
+            <p id="gadTotal" class="metric-value">0</p>
+          </article>
+          <article class="metric-card">
+            <p class="metric-label">Safety</p>
+            <p id="safetyLevel" class="metric-value small">none</p>
+          </article>
+          <article class="metric-card">
+            <p class="metric-label">Mode</p>
+            <p id="snapshotMode" class="metric-value small">heuristic</p>
+          </article>
+        </div>
+
+        <section class="summary-block">
+          <div class="summary-header">
+            <h3>Clinical summary</h3>
+            <span class="chip soft">Backend brain</span>
+          </div>
+          <p id="summaryText" class="summary-text">Start a conversation to generate the first summary.</p>
+        </section>
+
+        <section class="summary-block">
+          <div class="summary-header">
+            <h3>Screening map</h3>
+            <span id="plannerEfficiency" class="chip soft">0.00 items/turn</span>
+          </div>
+          <div class="planner-grid">
+            <article class="planner-card">
+              <p class="planner-label">Held-back items</p>
+              <p id="plannerHeldBack" class="planner-value">none</p>
+            </article>
+            <article class="planner-card">
+              <p class="planner-label">Priority follow-up</p>
+              <p id="unresolvedCount" class="planner-value">0 queued</p>
+            </article>
+            <article class="planner-card">
+              <p class="planner-label">Review gate</p>
+              <p id="reviewCount" class="planner-value">0 flagged</p>
+            </article>
+            <article class="planner-card">
+              <p class="planner-label">Runtime mode</p>
+              <p id="detailModeLabel" class="planner-value">Guided conversation</p>
+            </article>
+          </div>
+          <div id="topicMap" class="topic-map">
+            <span class="topic-pill">No topic map yet.</span>
+          </div>
+        </section>
+
+        <div class="detail-grid">
           <section class="summary-block">
             <div class="summary-header">
               <h3>Priority follow-up</h3>
-              <span id="unresolvedCount" class="chip soft">0 queued</span>
             </div>
             <ul id="unresolvedList" class="plain-list">
               <li>No follow-up queue yet.</li>
@@ -309,52 +394,92 @@
           <section class="summary-block">
             <div class="summary-header">
               <h3>Review gate</h3>
-              <span id="reviewCount" class="chip soft">0 flagged</span>
             </div>
             <ul id="reviewList" class="plain-list">
               <li>No review flags right now.</li>
             </ul>
           </section>
+        </div>
 
-          <section class="summary-block">
-            <h3>Item table</h3>
-            <div class="table-wrap">
-              <table>
-                <thead>
-                  <tr>
-                    <th>Item</th>
-                    <th>Score</th>
-                    <th>Status</th>
-                    <th>Source</th>
-                  </tr>
-                </thead>
-                <tbody id="itemTableBody">
-                  <tr>
-                    <td colspan="4" class="empty-cell">No item scores yet.</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </section>
+        <section class="summary-block">
+          <h3>Item table</h3>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Item</th>
+                  <th>Score</th>
+                  <th>Status</th>
+                  <th>Source</th>
+                </tr>
+              </thead>
+              <tbody id="itemTableBody">
+                <tr>
+                  <td colspan="4" class="empty-cell">No item scores yet.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
 
-          <section class="summary-block">
-            <h3>Evidence highlights</h3>
-            <ul id="evidenceList" class="evidence-list">
-              <li class="empty-cell">No evidence spans yet.</li>
-            </ul>
-          </section>
+        <section class="summary-block">
+          <h3>Evidence highlights</h3>
+          <ul id="evidenceList" class="evidence-list">
+            <li class="empty-cell">No evidence spans yet.</li>
+          </ul>
+        </section>
 
-          <section class="summary-block">
-            <div class="summary-header">
-              <h3>Live API links</h3>
-              <span class="chip soft">Frontend + backend</span>
-            </div>
-            <ul id="apiLinkList" class="plain-list">
-              <li class="empty-cell">Preparing service links...</li>
-            </ul>
-          </section>
-        </aside>
-      </main>
+        <section class="summary-block">
+          <div class="summary-header">
+            <h3>Developer and evaluator links</h3>
+            <span class="chip soft">Hidden by default</span>
+          </div>
+          <div class="export-row">
+            <button id="downloadButton" class="button ghost" disabled>Export session JSON</button>
+            <a id="summaryLink" class="button ghost-link disabled-link" href="#" target="_blank" rel="noopener noreferrer">Open summary JSON</a>
+            <a id="exportLink" class="button ghost-link disabled-link" href="#" target="_blank" rel="noopener noreferrer">Open full export JSON</a>
+          </div>
+          <ul id="apiLinkList" class="plain-list">
+            <li class="empty-cell">Preparing service links...</li>
+          </ul>
+        </section>
+      </section>
+    </div>
+
+    <div id="architectureModal" class="modal-backdrop is-hidden" aria-hidden="true">
+      <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="architectureTitle">
+        <div class="summary-header">
+          <div>
+            <p class="eyebrow">Architecture</p>
+            <h2 id="architectureTitle">How ManoVarta works</h2>
+          </div>
+          <button id="architectureClose" type="button" class="button ghost">Close</button>
+        </div>
+
+        <p class="summary-text">
+          ManoVarta is designed as a complete product: calm frontend, adaptive conversation brain, multilingual
+          inference, and safety checks running together in one flow.
+        </p>
+
+        <div class="architecture-grid">
+          <article class="architecture-step">
+            <strong>1. Listen naturally</strong>
+            <span>The frontend captures typed or spoken responses in English, Hindi, or Hinglish.</span>
+          </article>
+          <article class="architecture-step">
+            <strong>2. Plan the next question</strong>
+            <span>The backend dialogue planner decides what to ask next based on missing evidence and confidence.</span>
+          </article>
+          <article class="architecture-step">
+            <strong>3. Infer and structure</strong>
+            <span>The inference engine maps open-ended conversation into questionnaire-aligned symptom evidence.</span>
+          </article>
+          <article class="architecture-step">
+            <strong>4. Protect the user</strong>
+            <span>Safety checks watch for emotional escalation or self-harm risk and can interrupt the normal flow.</span>
+          </article>
+        </div>
+      </div>
     </div>
 
     <script src="/app-assets/app.js" defer></script>

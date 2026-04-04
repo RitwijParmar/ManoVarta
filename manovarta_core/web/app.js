@@ -12,24 +12,24 @@ const LANGUAGE_UI = {
     placeholder: "Describe what changed, when it happens, and how it affects your day...",
     sessionReady: "Session ready for typed or spoken turns.",
     startSuccess: "Session started in English.",
-    turnSuccess: "Turn processed. The confidence board has been updated.",
-    runtimeReady: "Runtime connected. Pick a profile or start chatting.",
+    turnSuccess: "Thanks. ManoVarta updated its understanding and is ready for the next message.",
+    runtimeReady: "Ready when you are. You can start talking naturally now.",
     nudgeIntro: "Use one of these nudges to share richer detail and stabilize scores faster.",
   },
   hi: {
     placeholder: "Jo badla hai, kab zyada hota hai, aur din bhar par kya asar padta hai, woh likhiye...",
     sessionReady: "Session typed ya voice response ke liye ready hai.",
     startSuccess: "Session Hindi mein start ho gaya.",
-    turnSuccess: "Turn process ho gaya. Confidence board update ho gaya.",
-    runtimeReady: "Runtime connect ho gaya. Profile pick kijiye ya seedha chat start kijiye.",
+    turnSuccess: "Shukriya. ManoVarta ne apni understanding update kar li hai aur agle message ke liye ready hai.",
+    runtimeReady: "Sab ready hai. Aap normal tareeke se baat shuru kar sakte hain.",
     nudgeIntro: "In nudges ka use karke zyada useful detail share kijiye aur scores ko jaldi stable banaiye.",
   },
   hinglish: {
     placeholder: "Kya change hua, kab zyada feel hota hai, aur daily routine par kya impact hai, woh share karo...",
     sessionReady: "Session typed ya voice turns ke liye ready hai.",
     startSuccess: "Session Hinglish mein start ho gaya.",
-    turnSuccess: "Turn process ho gaya. Confidence board update ho gaya.",
-    runtimeReady: "Runtime connect ho gaya. Demo profile launch karo ya chat start karo.",
+    turnSuccess: "Thanks. ManoVarta ne apni understanding update kar li hai aur next message ke liye ready hai.",
+    runtimeReady: "Everything is ready. Bas naturally baat shuru karo.",
     nudgeIntro: "In nudges se thodi aur concrete detail do, taaki confidence faster lock ho sake.",
   },
 };
@@ -170,8 +170,12 @@ const bonusSignals = document.getElementById("bonusSignals");
 const nudgeDeck = document.getElementById("nudgeDeck");
 const nudgeSubtitle = document.getElementById("nudgeSubtitle");
 const composerHelper = document.getElementById("composerHelper");
+const patientSummary = document.getElementById("patientSummary");
+const whyThisQuestion = document.getElementById("whyThisQuestion");
+const safetyNarrative = document.getElementById("safetyNarrative");
 
 const runtimeInfo = document.getElementById("runtimeInfo");
+const runtimeDetail = document.getElementById("runtimeDetail");
 const serviceHealth = document.getElementById("serviceHealth");
 const profileList = document.getElementById("profileList");
 const apiLinkList = document.getElementById("apiLinkList");
@@ -199,6 +203,14 @@ const evidenceList = document.getElementById("evidenceList");
 const personalizationBlend = document.getElementById("personalizationBlend");
 const personalizationPacing = document.getElementById("personalizationPacing");
 const personalizationSummary = document.getElementById("personalizationSummary");
+const detailModeLabel = document.getElementById("detailModeLabel");
+const demoPanel = document.getElementById("demoPanel");
+const insightPanel = document.getElementById("insightPanel");
+const demoToggle = document.getElementById("demoToggle");
+const insightsToggle = document.getElementById("insightsToggle");
+const architectureButton = document.getElementById("architectureButton");
+const architectureClose = document.getElementById("architectureClose");
+const architectureModal = document.getElementById("architectureModal");
 
 const SpeechRecognitionCtor = window.SpeechRecognition || window.webkitSpeechRecognition || null;
 const speechSynthesisApi = window.speechSynthesis || null;
@@ -215,6 +227,31 @@ function setBusy(isBusy) {
 function setStatusBanner(message, tone = "info") {
   statusBanner.textContent = message;
   statusBanner.className = `status-banner ${tone}`;
+}
+
+function setDisclosureState(panel, button, open, labels) {
+  if (!panel || !button) {
+    return;
+  }
+  panel.classList.toggle("is-hidden", !open);
+  panel.setAttribute("aria-hidden", String(!open));
+  button.setAttribute("aria-expanded", String(open));
+  button.textContent = open ? labels.close : labels.open;
+}
+
+function toggleDisclosure(panel, button, labels) {
+  const open = panel.classList.contains("is-hidden");
+  setDisclosureState(panel, button, open, labels);
+}
+
+function openArchitectureModal() {
+  architectureModal.classList.remove("is-hidden");
+  architectureModal.setAttribute("aria-hidden", "false");
+}
+
+function closeArchitectureModal() {
+  architectureModal.classList.add("is-hidden");
+  architectureModal.setAttribute("aria-hidden", "true");
 }
 
 function humanizeToken(value) {
@@ -244,6 +281,16 @@ function setLink(anchor, href) {
 }
 
 function runtimeToText(payload) {
+  if (payload.hybrid_safety_enabled) {
+    return "Ready for multilingual conversation with guided follow-ups and enhanced safety review.";
+  }
+  if (payload.huggingface_enabled) {
+    return "Ready for multilingual conversation, adaptive questions, and live safety monitoring.";
+  }
+  return "Conversation service is online and ready to start.";
+}
+
+function runtimeToDetail(payload) {
   const safetyMode = payload.hybrid_safety_enabled
     ? "local hybrid safety enabled"
     : payload.semantic_safety_enabled
@@ -255,6 +302,9 @@ function runtimeToText(payload) {
 function renderRuntime(payload) {
   state.runtime = payload;
   runtimeInfo.textContent = runtimeToText(payload);
+  if (runtimeDetail) {
+    runtimeDetail.textContent = runtimeToDetail(payload);
+  }
 }
 
 function renderApiLinks(links) {
@@ -289,11 +339,11 @@ function renderProfiles(profiles) {
     card.className = "profile-card";
     const tags = (profile.nuance_tags || []).slice(0, 3).join(" • ");
     card.innerHTML = `
-      <p class="profile-title">${escapeHtml(profile.patient_id)} · ${escapeHtml((profile.language || "en").toUpperCase())}</p>
+      <p class="profile-title">${escapeHtml((profile.language || "en").toUpperCase())} demo · ${escapeHtml(profile.patient_id)}</p>
       <p class="profile-meta">${escapeHtml(profile.occupation || "participant")} · age ${escapeHtml(String(profile.age || "n/a"))}</p>
       <p class="profile-context">${escapeHtml(profile.context || profile.notes || "No context available.")}</p>
-      <p class="profile-tags">${escapeHtml(tags || "general screening demo")}</p>
-      <button type="button" class="button secondary profile-launch" data-profile-id="${escapeHtml(profile.patient_id)}">Launch scenario</button>
+      <p class="profile-tags">${escapeHtml(tags || "guided conversation demo")}</p>
+      <button type="button" class="button secondary profile-launch" data-profile-id="${escapeHtml(profile.patient_id)}">Try this demo</button>
     `;
     profileList.appendChild(card);
   });
@@ -334,7 +384,9 @@ async function fetchBootstrap() {
     }
     const payload = await response.json();
     renderRuntime(payload.runtime);
-    serviceHealth.textContent = `Backend ${payload.health.status} · active sessions ${payload.health.active_sessions}`;
+    serviceHealth.textContent = payload.health.status === "ok"
+      ? "Safety checks are active and the conversation service is online."
+      : "The service is still waking up. You may need to retry in a moment.";
     serviceHealth.className = `service-health ${payload.health.status === "ok" ? "good" : "warn"}`;
     state.profiles = payload.profiles || [];
     renderProfiles(state.profiles);
@@ -353,7 +405,9 @@ async function fetchBootstrap() {
   const healthPayload = await healthResponse.json();
   const profilesPayload = await profilesResponse.json();
   renderRuntime(runtimePayload);
-  serviceHealth.textContent = `Backend ${healthPayload.status} · active sessions ${healthPayload.active_sessions}`;
+  serviceHealth.textContent = healthPayload.status === "ok"
+    ? "Safety checks are active and the conversation service is online."
+    : "The service is still waking up. You may need to retry in a moment.";
   serviceHealth.className = `service-health ${healthPayload.status === "ok" ? "good" : "warn"}`;
   state.profiles = (profilesPayload || []).map((profile) => {
     const background = profile.background_profile || {};
@@ -402,7 +456,7 @@ async function startSession() {
     renderTurn(payload.assistant_turn);
     maybeSpeak(payload.assistant_turn);
     sessionMeta.classList.remove("empty");
-    sessionMeta.textContent = `Session ${state.sessionId} · language ${state.language.toUpperCase()} · adaptive screening ready`;
+    sessionMeta.textContent = `Live session in ${state.language.toUpperCase()} · ManoVarta is listening for the main concern and keeping the pace gentle.`;
     updateSessionBadge();
     downloadButton.disabled = true;
     setLink(summaryLink, null);
@@ -429,8 +483,8 @@ function renderTurn(turn) {
   const speakerLabel = isSystem
     ? "System"
     : turn.speaker === "assistant"
-      ? "Screening guide"
-      : "Participant";
+      ? "ManoVarta"
+      : "You";
   card.className = `message ${isSystem ? "system" : turn.speaker}`;
   card.innerHTML = `
     <span class="speaker">${escapeHtml(speakerLabel)}</span>
@@ -442,71 +496,71 @@ function renderTurn(turn) {
 
 function buildSessionGoal(dialogue, safety) {
   if (safety.level === "urgent") {
-    return "Pause routine screening and route the conversation to urgent human review.";
+    return "Pause the normal flow and make space for immediate human support.";
   }
   if (dialogue.stage === "rapport") {
-    return "Warm up the conversation, identify the first symptom cluster, and keep the opening low-pressure.";
+    return "Start gently, understand the main concern, and keep the conversation low-pressure.";
   }
   if (dialogue.stage === "clarification") {
-    return "Resolve mixed evidence so the score becomes stable instead of guessed.";
+    return "Clarify one missing detail so ManoVarta does not make assumptions.";
   }
   if (dialogue.stage === "safety") {
-    return "Move carefully into a focused safety check while keeping the interaction supportive.";
+    return "Slow down and check safety carefully before moving on.";
   }
   if (dialogue.stage === "summary") {
-    return "The evidence is nearly complete. Prepare a stable structured summary and final clarification.";
+    return "The picture is becoming clear enough to wrap up with a stable summary.";
   }
-  return "Expand the symptom picture with concrete details about pattern, intensity, and daily impact.";
+  return "Understand the pattern, impact, and intensity of what the user is feeling.";
 }
 
 function buildProgressLabel(coverage) {
   const remaining = Math.max((coverage.total_items || 0) - (coverage.touched_items || 0), 0);
-  return `${coverage.touched_items}/${coverage.total_items} mapped · ${coverage.resolved_items.length} confidence locks · ${remaining} still open`;
+  return `${coverage.touched_items} of ${coverage.total_items} wellbeing signals have been explored · ${remaining} still open`;
 }
 
 function buildBonusSignals(dialogue, coverage) {
   const completion = Math.round((coverage.completion_ratio || 0) * 100);
-  const stability = Number(dialogue.disclosure.resolved_per_user_turn || 0).toFixed(2);
+  const posture = buildResponsePosture(dialogue.user_style);
   return [
-    `${completion}% map revealed`,
-    `${coverage.resolved_items.length} evidence locks`,
-    `${stability} stable items / turn`,
-    dialogue.next_action === "risk_check" ? "Safety checkpoint live" : `${humanizeToken(dialogue.target_topic)} in focus`,
+    `${completion}% progress`,
+    `${humanizeToken(dialogue.target_topic)} focus`,
+    posture,
+    dialogue.next_action === "risk_check" ? "Safety checkpoint" : "Guided follow-up",
   ];
 }
 
 function buildResponsePosture(userStyle) {
   if (userStyle.openness === "guarded") {
-    return "gentle, low-pressure prompts";
+    return "Gentle low-pressure pacing";
   }
   if (userStyle.verbosity === "brief") {
-    return "tight one-question pacing";
+    return "Short focused follow-ups";
   }
   if (userStyle.verbosity === "detailed") {
-    return "narrative-friendly follow-ups";
+    return "Narrative-friendly flow";
   }
-  return "balanced, guided exploration";
+  return "Balanced guided pacing";
 }
 
 function buildPersonalizationSummary(dialogue) {
   const { verbosity, openness, code_mix: codeMix, distress_trend: distressTrend } = dialogue.user_style;
-  return `Detected style: ${verbosity} responses, ${openness} disclosure, ${codeMix} code-mix, and ${distressTrend} distress trend. ManoVarta mirrors that style lightly so the conversation feels natural while still collecting stronger screening evidence.`;
+  return `ManoVarta is noticing ${verbosity} responses, ${openness} disclosure, ${codeMix} code-mix, and a ${distressTrend} distress pattern. It uses that to keep the conversation natural instead of robotic.`;
 }
 
 function buildComposerHelper(dialogue) {
   if (dialogue.next_action === "risk_check") {
-    return "A short answer is enough here. The assistant is doing a careful safety check before returning to normal screening.";
+    return "A short direct answer is enough here. ManoVarta is doing a careful safety check before returning to the normal flow.";
   }
   if (dialogue.user_style.openness === "guarded") {
-    return "Low-pressure mode is active: one recent example or one daily-life impact is enough to move the confidence meter.";
+    return "Low-pressure mode is active: one recent example or one daily-life impact is enough.";
   }
   if (dialogue.user_style.verbosity === "brief") {
-    return "Brief responses are okay. Adding one concrete example or timing detail will unlock more score confidence.";
+    return "Brief responses are okay. One example or one timing detail will help a lot.";
   }
   if (dialogue.user_style.verbosity === "detailed") {
-    return "Narrative mode is active: stay with the part that feels most important and the assistant will map it back to the screening graph.";
+    return "Narrative mode is active: stay with the part that feels most important and ManoVarta will organize it quietly in the background.";
   }
-  return "The assistant is mirroring your pace and asking the next highest-value follow-up based on evidence confidence.";
+  return "ManoVarta is mirroring your pace and asking the next question that adds the most useful clarity.";
 }
 
 function buildNudgeSubtitle(dialogue) {
@@ -536,12 +590,52 @@ function buildNudgeMeta(dialogue) {
 }
 
 function buildSessionMetaLine(dialogue, coverage, safety) {
-  const stage = humanizeToken(dialogue.stage);
   const topic = humanizeToken(dialogue.target_topic);
-  const turns = dialogue.user_turns;
-  const mapped = `${coverage.touched_items}/${coverage.total_items}`;
-  const safetyLine = safety.level === "none" ? "standard safety monitoring" : `${humanizeToken(safety.level)} safety posture`;
-  return `Live session · ${stage} stage · ${mapped} items mapped · ${turns} user turns · ${topic} in focus · ${safetyLine}`;
+  const safetyLine = safety.level === "none" ? "safety monitoring active" : `${humanizeToken(safety.level)} safety posture`;
+  return `Live session in ${state.language.toUpperCase()} · currently exploring ${topic.toLowerCase()} · ${safetyLine}`;
+}
+
+function buildPatientSummary(dialogue, safety) {
+  const topic = humanizeToken(dialogue.target_topic).toLowerCase();
+  if (safety.level === "urgent") {
+    return "ManoVarta heard something that may need immediate human support, so it is shifting away from normal screening.";
+  }
+  if (safety.level === "review") {
+    return "Something sensitive has come up, so the conversation is becoming more careful while safety stays in view.";
+  }
+  if (dialogue.stage === "rapport") {
+    return `The conversation is still getting oriented. Right now ManoVarta is trying to understand whether ${topic} is the biggest source of strain.`;
+  }
+  if (dialogue.stage === "clarification") {
+    return `There is already useful context, but ManoVarta still needs one clearer detail about ${topic} before moving on.`;
+  }
+  if (dialogue.stage === "summary") {
+    return "The overall picture is getting clearer. ManoVarta is close to having enough information for a stable structured summary.";
+  }
+  return `Right now ManoVarta is exploring ${topic} and how it is affecting day-to-day life.`;
+}
+
+function buildWhyThisQuestion(dialogue) {
+  if (dialogue.next_action === "risk_check") {
+    return "This question comes first because safety matters more than finishing the screening quickly.";
+  }
+  if (dialogue.stage === "clarification") {
+    return `The assistant is checking one missing detail so it does not guess about ${humanizeToken(dialogue.target_topic).toLowerCase()}.`;
+  }
+  if (dialogue.user_style.openness === "guarded") {
+    return "The next question is intentionally smaller and gentler so it is easier to answer.";
+  }
+  return `The next question is about ${humanizeToken(dialogue.target_topic).toLowerCase()} because that is where the conversation still needs the strongest evidence.`;
+}
+
+function buildSafetyNarrative(safety) {
+  if (safety.level === "urgent") {
+    return "Safety support is being prioritized right now.";
+  }
+  if (safety.level === "review") {
+    return "A sensitive signal has been noticed, so ManoVarta is moving more carefully.";
+  }
+  return "Safety checks are running quietly in the background throughout the conversation.";
 }
 
 function pickNudges(language, dialogue) {
@@ -645,11 +739,17 @@ function renderSnapshot(payload) {
   gadTotal.textContent = snapshot.totals.GAD7 ?? 0;
   safetyLevel.textContent = snapshot.safety.level;
   safetyLevel.className = `metric-value small ${snapshot.safety.level}`;
-  snapshotMode.textContent = snapshot.mode;
+  snapshotMode.textContent = humanizeToken(snapshot.mode);
+  if (detailModeLabel) {
+    detailModeLabel.textContent = humanizeToken(snapshot.mode);
+  }
   summaryText.textContent = summary;
+  patientSummary.textContent = buildPatientSummary(dialogue, snapshot.safety);
+  whyThisQuestion.textContent = buildWhyThisQuestion(dialogue);
+  safetyNarrative.textContent = buildSafetyNarrative(snapshot.safety);
 
   const completion = Math.round((coverage.completion_ratio || 0) * 100);
-  coverageText.textContent = `Coverage ${coverage.touched_items}/${coverage.total_items}`;
+  coverageText.textContent = `${coverage.touched_items}/${coverage.total_items} explored`;
   progressMeterFill.style.width = `${Math.max(completion, coverage.touched_items ? 8 : 0)}%`;
   progressMeterLabel.textContent = buildProgressLabel(coverage);
 
@@ -750,10 +850,13 @@ function resetInsightPanel() {
   gadTotal.textContent = "0";
   safetyLevel.textContent = "none";
   safetyLevel.className = "metric-value small none";
-  snapshotMode.textContent = "heuristic";
-  coverageText.textContent = "Coverage 0/16";
+  snapshotMode.textContent = "Heuristic";
+  if (detailModeLabel) {
+    detailModeLabel.textContent = "Guided conversation";
+  }
+  coverageText.textContent = "Just getting started";
   progressMeterFill.style.width = "0%";
-  progressMeterLabel.textContent = "0 stabilized · 0 touched · 16 still open";
+  progressMeterLabel.textContent = "Nothing explored yet";
   plannerStage.textContent = "rapport";
   plannerStage.className = "chip soft";
   plannerAction.textContent = "Open Question";
@@ -764,7 +867,10 @@ function resetInsightPanel() {
   plannerHeldBack.textContent = "none";
   plannerTransition.textContent = "Start a conversation to see how the next topic is selected.";
   summaryText.textContent = "Start a conversation to generate the first summary.";
-  sessionGoal.textContent = "Build trust, isolate the main concern, and collect enough evidence for stable scoring.";
+  patientSummary.textContent = "Start a conversation to see a gentle plain-language summary here.";
+  whyThisQuestion.textContent = "Start a conversation to see why the next question is being asked.";
+  safetyNarrative.textContent = "Safety checks are running quietly in the background throughout the conversation.";
+  sessionGoal.textContent = "Build comfort first, then understand the main concern clearly.";
   topicMap.innerHTML = '<span class="topic-pill">No topic map yet.</span>';
   unresolvedCount.textContent = "0 queued";
   reviewCount.textContent = "0 flagged";
@@ -773,12 +879,12 @@ function resetInsightPanel() {
   itemTableBody.innerHTML = '<tr><td colspan="4" class="empty-cell">No item scores yet.</td></tr>';
   evidenceList.innerHTML = '<li class="empty-cell">No evidence spans yet.</li>';
   bonusSignals.innerHTML = `
-    <span class="signal-pill">Voice interaction</span>
-    <span class="signal-pill">Adaptive prompts</span>
-    <span class="signal-pill">Safety gating</span>
+    <span class="signal-pill">Gentle pacing</span>
+    <span class="signal-pill">Voice available</span>
+    <span class="signal-pill">Safety checks on</span>
   `;
   personalizationBlend.textContent = "low code-mix";
-  personalizationPacing.textContent = "gentle and focused";
+  personalizationPacing.textContent = "Balanced guided pacing";
   personalizationSummary.textContent = "Start a session to see how ManoVarta adapts to the user’s language style and disclosure pace.";
   renderNudges(state.language, {
     target_topic: "mood",
@@ -1011,6 +1117,40 @@ function escapeHtml(text) {
 startButton.addEventListener("click", startSession);
 chatForm.addEventListener("submit", sendTurn);
 downloadButton.addEventListener("click", downloadExport);
+demoToggle.addEventListener("click", () => {
+  toggleDisclosure(demoPanel, demoToggle, {
+    open: "Show demo scenarios",
+    close: "Hide demo scenarios",
+  });
+});
+insightsToggle.addEventListener("click", () => {
+  toggleDisclosure(insightPanel, insightsToggle, {
+    open: "Show care details",
+    close: "Hide care details",
+  });
+});
+architectureButton.addEventListener("click", openArchitectureModal);
+architectureClose.addEventListener("click", closeArchitectureModal);
+architectureModal.addEventListener("click", (event) => {
+  if (event.target === architectureModal) {
+    closeArchitectureModal();
+  }
+});
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape" && !architectureModal.classList.contains("is-hidden")) {
+    closeArchitectureModal();
+  }
+});
+
+setDisclosureState(demoPanel, demoToggle, false, {
+  open: "Show demo scenarios",
+  close: "Hide demo scenarios",
+});
+setDisclosureState(insightPanel, insightsToggle, false, {
+  open: "Show care details",
+  close: "Hide care details",
+});
+
 setupVoice();
 applyLanguageDefaults(state.language);
 updateSessionBadge();

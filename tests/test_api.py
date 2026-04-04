@@ -12,8 +12,8 @@ def test_root_serves_browser_demo():
     assert response.status_code == 200
     assert "ManoVarta Runtime" in response.text
     assert "Start voice" in response.text
-    assert "Gamified nudges" in response.text
-    assert "Adaptive mirroring" in response.text
+    assert "How ManoVarta works" in response.text
+    assert "Show care details" in response.text
 
 
 def test_runtime_config_reports_huggingface_disabled_by_default():
