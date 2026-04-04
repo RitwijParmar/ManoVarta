@@ -61,6 +61,24 @@ SOFTENING_SUFFIXES = {
     "hinglish": "Jo part answer karna easier lage, usse start karna bilkul fine hai.",
 }
 
+BRIEF_DETAIL_SUFFIXES = {
+    "en": "One recent example or one timing detail is enough.",
+    "hi": "Ek recent example ya ek timing detail bhi kaafi hai.",
+    "hinglish": "Ek recent example ya ek timing detail bhi enough hai.",
+}
+
+OPEN_STORY_SUFFIXES = {
+    "en": "You can answer in your own words and stay with the part that feels most important.",
+    "hi": "Aap apne shabdon mein jawab de sakte hain aur jo hissa sabse important lage us par tik sakte hain.",
+    "hinglish": "Aap apne words mein jawab de sakte ho aur jo part sabse important lage us par reh sakte ho.",
+}
+
+SAFETY_SHORT_ANSWER_SUFFIXES = {
+    "en": "A short direct answer is okay here.",
+    "hi": "Yahan ek chhota seedha jawab bhi theek hai.",
+    "hinglish": "Yahan short direct answer bhi bilkul theek hai.",
+}
+
 TOPIC_PROMPTS: Dict[str, Dict[str, str]] = {
     "mood": {
         "en": "That sounds heavy. On most days, has it felt more like low mood itself, or more like losing interest in things you usually enjoy?",
@@ -572,9 +590,21 @@ class DialoguePlanner:
 
     def _compose_prompt(self, language: str, base_prompt: str, plan: DialoguePlan) -> str:
         prefix = REFLECTION_PREFIXES[language][plan.user_style.empathy_level]
-        if plan.user_style.openness == "guarded":
-            return f"{prefix} {base_prompt} {SOFTENING_SUFFIXES[language]}"
+        suffix = self._style_suffix(language, plan)
+        if suffix:
+            return f"{prefix} {base_prompt} {suffix}"
         return f"{prefix} {base_prompt}"
+
+    def _style_suffix(self, language: str, plan: DialoguePlan) -> str:
+        if plan.next_action == "risk_check" or plan.target_topic == "safety":
+            return SAFETY_SHORT_ANSWER_SUFFIXES[language]
+        if plan.user_style.openness == "guarded":
+            return SOFTENING_SUFFIXES[language]
+        if plan.user_style.verbosity == "brief":
+            return BRIEF_DETAIL_SUFFIXES[language]
+        if plan.user_style.verbosity == "detailed":
+            return OPEN_STORY_SUFFIXES[language]
+        return ""
 
     def _distress_trend(self, snapshot: ScreeningSnapshot, session: ChatSession) -> str:
         user_turn_ids = [turn.turn_id for turn in session.turns if turn.speaker == "user"]

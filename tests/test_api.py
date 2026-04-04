@@ -12,6 +12,8 @@ def test_root_serves_browser_demo():
     assert response.status_code == 200
     assert "ManoVarta Runtime" in response.text
     assert "Start voice" in response.text
+    assert "Gamified nudges" in response.text
+    assert "Adaptive mirroring" in response.text
 
 
 def test_runtime_config_reports_huggingface_disabled_by_default():
@@ -150,6 +152,11 @@ def test_brief_guarded_reply_sets_guarded_style_profile():
     )
 
     assert turn.status_code == 200
+    reply = turn.json()["assistant_turn"]["text"]
     dialogue = turn.json()["snapshot"]["coverage"]["dialogue"]
     assert dialogue["user_style"]["verbosity"] == "brief"
     assert dialogue["user_style"]["openness"] in {"guarded", "cautious"}
+    assert (
+        "one recent example or one timing detail is enough" in reply.lower()
+        or "whichever part feels easier to answer is okay" in reply.lower()
+    )
