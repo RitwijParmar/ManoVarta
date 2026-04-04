@@ -1,0 +1,13 @@
+services:
+  runtime:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env.local
+    environment:
+      MANOVARTA_LOCAL_SAFETY_CHECKPOINT: /app/outputs/local_safety_boost/safety-indicbert-best-infer-fp16
+    volumes:
+      - ./outputs/local_safety_boost/safety-indicbert-best-infer-fp16:/app/outputs/local_safety_boost/safety-indicbert-best-infer-fp16:ro

@@ -1,0 +1,121 @@
+{
+  "generated_at": "2026-04-04T07:31:36Z",
+  "source_reports": {
+    "hybrid_runtime_validation": "reports/hybrid_runtime_validation_colab_20260404.json",
+    "best_current_system": "reports/best_current_system_report.json",
+    "ship_note": "reports/ship_note_2026-04-04.md"
+  },
+  "requirement_status": {
+    "multilingual_text_chat": {
+      "status": "complete",
+      "languages": [
+        "English",
+        "Hindi"
+      ],
+      "extra_robustness": [
+        "Hinglish"
+      ]
+    },
+    "voice_capable_agent": {
+      "status": "complete",
+      "browser_voice_controls": true,
+      "speech_to_text": true,
+      "text_to_speech": true,
+      "transcript_before_submit": true,
+      "note": "Voice is implemented as a browser-native wrapper over the text pipeline, so it depends on microphone permission and browser support."
+    },
+    "task_1_smart_screening": {
+      "status": "complete",
+      "details": [
+        "Dialogue planner with topic graph and next-best-question routing",
+        "Held-back sensitive item logic for self-harm",
+        "Per-topic confidence and follow-up branching"
+      ]
+    },
+    "task_2_llm_inference_engine": {
+      "status": "complete",
+      "details": [
+        "LLM extraction path with evidence-first scoring",
+        "Hybrid heuristic + LLM snapshot merge",
+        "PHQ-9 and GAD-7 item-level outputs"
+      ]
+    },
+    "task_3_safety_trigger_system": {
+      "status": "complete",
+      "details": [
+        "Rule safety monitor",
+        "Hybrid safety checkpoint stack",
+        "Urgent human-review routing"
+      ]
+    },
+    "deployment": {
+      "status": "complete",
+      "assets": {
+        "dockerfile": "Dockerfile",
+        "docker_compose_demo": "docker-compose.demo.yml",
+        "render_blueprint": "render.yaml",
+        "shipped_bundle": "artifacts/manovarta_shipped_baseline_20260404.zip"
+      },
+      "present": {
+        "dockerfile": true,
+        "docker_compose_demo": true,
+        "render_blueprint": true,
+        "shipped_bundle": true
+      },
+      "note": "Repo now includes local container deployment plus a cloud-ready Render blueprint. A public URL still requires external account provisioning."
+    },
+    "bonus": {
+      "implemented": [
+        "linguistic_personalization"
+      ],
+      "missing": [],
+      "note": "The runtime already adapts prompt softness, pacing, and code-mix cues through the planner user-style profile."
+    }
+  },
+  "evaluation_validation": {
+    "disclosure_efficiency": {
+      "sample_conversations": 30,
+      "stable_item_traces": 16,
+      "avg_turns_to_stable_score": 1.5,
+      "median_turns_to_stable_score": 1.0,
+      "note": "This is computed by replaying seed conversations turn by turn and finding the earliest user-turn prefix where an item score matches the conversation-final value and stays there."
+    },
+    "safety_accuracy": {
+      "precision": 0.333,
+      "recall": 1.0,
+      "f1": 0.5,
+      "source": "shipped hybrid runtime validation"
+    },
+    "latency": {
+      "cold_start_ms": 20104.44,
+      "warm_avg_ms": 216.91,
+      "warm_median_ms": 194.1,
+      "warm_p95_ms": 306.07,
+      "samples": 6,
+      "note": "Measured through the FastAPI chat endpoint with Hugging Face network calls disabled so the number reflects deterministic local screening latency rather than hosted-model round trips."
+    },
+    "discourse_effectiveness": {
+      "coverage_completeness": 0.804,
+      "exact_match_rate": 0.733,
+      "macro_f1": 0.344,
+      "parse_failures": 0,
+      "source": "shipped hybrid runtime validation",
+      "note": "Coverage completeness is used as the main operational discourse metric because it directly tracks whether the system stayed on task and covered clinically relevant questionnaire areas."
+    }
+  },
+  "shipped_baseline": {
+    "tag": "shipped-baseline-2026-04-04",
+    "default_runtime": {
+      "provider": "huggingface",
+      "chat_model": "Qwen/Qwen2.5-7B-Instruct",
+      "extraction_model": "CohereLabs/aya-expanse-32b",
+      "local_safety_checkpoint": "outputs/local_safety_boost/safety-indicbert-best",
+      "hybrid_safety_enabled": true,
+      "rule_safety_monitor_enabled": true,
+      "semantic_safety_enabled": false,
+      "decision": "Use the Aya extractor with the promoted local safety checkpoint and rule monitor as the default runtime."
+    },
+    "bundle": "artifacts/manovarta_shipped_baseline_20260404.zip"
+  },
+  "remaining_external_step": "Provision a public cloud URL if the course requires an internet-hosted demo link; the repo is deployment-ready, but live hosting still needs external account credentials."
+}

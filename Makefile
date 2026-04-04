@@ -1,7 +1,7 @@
 PYTHON=.venv/bin/python
 PIP=.venv/bin/pip
 
-.PHONY: install test api migrate seed stats eval-seed compare-baselines splits export-train ship-bundle
+.PHONY: install test api migrate seed stats eval-seed compare-baselines splits export-train ship-bundle assignment-report
 
 install:
 	$(PIP) install -e .[dev]
@@ -35,3 +35,6 @@ export-train:
 
 ship-bundle:
 	$(PYTHON) tools/package_shipped_baseline.py
+
+assignment-report:
+	$(PYTHON) tools/generate_assignment_completion_report.py

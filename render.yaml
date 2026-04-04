@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: manovarta-runtime
+    env: docker
+    dockerfilePath: ./Dockerfile
+    autoDeploy: false
+    plan: starter
+    healthCheckPath: /health
+    envVars:
+      - key: MANOVARTA_MODEL_PROVIDER
+        value: huggingface
+      - key: MANOVARTA_CHAT_MODEL
+        value: Qwen/Qwen2.5-7B-Instruct
+      - key: MANOVARTA_EXTRACTION_MODEL
+        value: CohereLabs/aya-expanse-32b

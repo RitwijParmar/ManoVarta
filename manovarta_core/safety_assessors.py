@@ -152,7 +152,14 @@ class LocalSafetyCheckpointAssessor:
 
         device = detect_device(torch, self.device)
         try:
-            tokenizer = AutoTokenizer.from_pretrained(self.model_path, trust_remote_code=True)
+            try:
+                tokenizer = AutoTokenizer.from_pretrained(
+                    self.model_path,
+                    trust_remote_code=True,
+                    fix_mistral_regex=True,
+                )
+            except TypeError:
+                tokenizer = AutoTokenizer.from_pretrained(self.model_path, trust_remote_code=True)
             model = AutoModelForSequenceClassification.from_pretrained(self.model_path, trust_remote_code=True)
         except OSError:  # pragma: no cover
             self._backend = None

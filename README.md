@@ -89,6 +89,41 @@ That writes:
 
 - `artifacts/manovarta_shipped_baseline_20260404.zip`
 
+## Deployment
+
+For a production-like local demo, the repo now includes container deployment assets:
+
+- `Dockerfile`
+- `docker-compose.demo.yml`
+- `render.yaml`
+
+Local container demo:
+
+```bash
+docker compose -f docker-compose.demo.yml up --build
+```
+
+This serves the browser runtime on port `8000`. The compose stack mounts the promoted
+inference-only safety checkpoint if it exists locally at:
+
+- `outputs/local_safety_boost/safety-indicbert-best-infer-fp16`
+
+For cloud deployment, `render.yaml` provides a simple HTTPS-ready web service blueprint.
+Because browser voice relies on Web Speech APIs, HTTPS deployment is the right path for live microphone demos.
+
+## Final assignment report
+
+To generate the assignment-aligned completion bundle with the exact rubric terms:
+
+```bash
+make assignment-report
+```
+
+That writes:
+
+- `reports/final_assignment_completion_report.json`
+- `reports/final_assignment_completion_report.md`
+
 ## Run Django admin
 
 ```bash
