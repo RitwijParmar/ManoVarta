@@ -7,6 +7,7 @@ import os
 import time
 from pathlib import Path
 from statistics import mean, median
+from urllib.request import Request, urlopen
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 REPORTS_DIR = PROJECT_ROOT / "reports"
@@ -15,6 +16,7 @@ SHIP_NOTE_PATH = REPORTS_DIR / "ship_note_2026-04-04.md"
 BEST_SYSTEM_PATH = REPORTS_DIR / "best_current_system_report.json"
 OUTPUT_JSON_PATH = REPORTS_DIR / "final_assignment_completion_report.json"
 OUTPUT_MD_PATH = REPORTS_DIR / "final_assignment_completion_report.md"
+DEFAULT_PUBLIC_URL = os.getenv("MANOVARTA_PUBLIC_BASE_URL", "https://manovarta-runtime-122722888597.us-east4.run.app")
 
 LATENCY_SAMPLES = [
     ("en", "I feel drained all day and my sleep schedule is messed up."),
@@ -33,16 +35,30 @@ def load_json(path: Path) -> dict:
 def detect_voice_layer(project_root: Path = PROJECT_ROOT) -> dict[str, object]:
     index_html = (project_root / "manovarta_core" / "web" / "index.html").read_text(encoding="utf-8")
     app_js = (project_root / "manovarta_core" / "web" / "app.js").read_text(encoding="utf-8")
+    api_code = (project_root / "manovarta_core" / "api.py").read_text(encoding="utf-8")
+    voice_code = (project_root / "manovarta_core" / "voice.py").read_text(encoding="utf-8")
     return {
         "status": "complete"
-        if all(token in index_html + app_js for token in ("micButton", "voiceStatus", "SpeechRecognition", "speechSynthesis"))
+        if all(
+            token in index_html + app_js + api_code + voice_code
+            for token in ("micButton", "voiceStatus", "SpeechRecognition", "speechSynthesis", "/voice/transcribe", "/voice/speak", "transcribe_audio", "synthesize_speech")
+        )
         else "missing",
         "browser_voice_controls": "id=\"micButton\"" in index_html and "id=\"voiceStatus\"" in index_html,
-        "speech_to_text": "SpeechRecognitionCtor" in app_js,
-        "text_to_speech": "speechSynthesisApi" in app_js,
+        "browser_speech_to_text": "SpeechRecognitionCtor" in app_js,
+        "browser_text_to_speech": "speechSynthesisApi" in app_js,
+        "cloud_speech_to_text": "/voice/transcribe" in api_code and "transcribe_audio" in voice_code,
+        "cloud_text_to_speech": "/voice/speak" in api_code and "synthesize_speech" in voice_code,
         "transcript_before_submit": "Transcript captured." in app_js and "messageInput.value = transcript;" in app_js,
-        "note": "Voice is implemented as a browser-native wrapper over the text pipeline, so it depends on microphone permission and browser support.",
+        "note": "Voice now supports backend Google Cloud STT/TTS for English, Hindi, and Hinglish-oriented use, with browser speech kept as a fallback wrapper.",
     }
+
+
+def fetch_live_runtime(public_url: str = DEFAULT_PUBLIC_URL) -> dict[str, object]:
+    runtime_url = public_url.rstrip("/") + "/runtime/config"
+    request = Request(runtime_url, headers={"User-Agent": "Mozilla/5.0"})
+    with urlopen(request, timeout=30) as response:
+        return json.loads(response.read().decode("utf-8"))
 
 
 def detect_deployment_assets(project_root: Path = PROJECT_ROOT) -> dict[str, object]:
@@ -53,22 +69,38 @@ def detect_deployment_assets(project_root: Path = PROJECT_ROOT) -> dict[str, obj
         "shipped_bundle": project_root / "artifacts" / "manovarta_shipped_baseline_20260404.zip",
     }
     present = {name: path.exists() for name, path in assets.items()}
+    live_runtime = fetch_live_runtime()
     return {
         "status": "complete" if all(present.values()) else "partial",
         "assets": {name: str(path.relative_to(project_root)) for name, path in assets.items()},
         "present": present,
-        "note": "Repo now includes local container deployment plus a cloud-ready Render blueprint. A public URL still requires external account provisioning.",
+        "public_runtime_url": DEFAULT_PUBLIC_URL,
+        "live_runtime": live_runtime,
+        "note": "Repo includes local container deployment, cloud deployment configuration, and a live public runtime whose config is mirrored here.",
     }
 
 
 def detect_bonus_features(project_root: Path = PROJECT_ROOT) -> dict[str, object]:
     dialogue_code = (project_root / "manovarta_core" / "dialogue.py").read_text(encoding="utf-8")
     llm_code = (project_root / "manovarta_core" / "llm.py").read_text(encoding="utf-8")
+    web_code = (project_root / "manovarta_core" / "web" / "app.js").read_text(encoding="utf-8")
+    index_html = (project_root / "manovarta_core" / "web" / "index.html").read_text(encoding="utf-8")
     linguistic = all(token in dialogue_code + llm_code for token in ("user_style", "code_mix", "verbosity", "openness"))
+    gamification = all(token in web_code + index_html for token in ("nudgeDeck", "starterDeck", "Gamified nudges", "Confidence boosters"))
+    implemented = []
+    missing = []
+    if gamification:
+        implemented.append("gamification")
+    else:
+        missing.append("gamification")
+    if linguistic:
+        implemented.append("linguistic_personalization")
+    else:
+        missing.append("linguistic_personalization")
     return {
-        "implemented": ["linguistic_personalization"] if linguistic else [],
-        "missing": [] if linguistic else ["linguistic_personalization", "gamification"],
-        "note": "The runtime already adapts prompt softness, pacing, and code-mix cues through the planner user-style profile.",
+        "implemented": implemented,
+        "missing": missing,
+        "note": "The product now combines adaptive nudges for richer narrative disclosure with backend personalization based on pacing, openness, and code-mix.",
     }
 
 
@@ -202,6 +234,20 @@ def build_assignment_report() -> dict[str, object]:
                 "extra_robustness": ["Hinglish"],
             },
             "voice_capable_agent": voice,
+            "patient_profile_onboarding": {
+                "status": "complete",
+                "details": [
+                    "Optional age, occupation, living situation, support system, and context are collected at session start",
+                    "Profile context is carried into the session object, planner opening, and export",
+                ],
+            },
+            "clinical_knowledge_base": {
+                "status": "complete",
+                "details": [
+                    "Derived PHQ-9 and GAD-7 symptom/domain knowledge base exposed at /knowledge/base",
+                    "NIMH-grounded risk guidance for anxiety and suicide warning signs",
+                ],
+            },
             "task_1_smart_screening": {
                 "status": "complete",
                 "details": [
@@ -253,7 +299,7 @@ def build_assignment_report() -> dict[str, object]:
             or best_system_report.get("recommendation", {}).get("ship_default", "hybrid_runtime"),
             "bundle": "artifacts/manovarta_shipped_baseline_20260404.zip",
         },
-        "remaining_external_step": "Provision a public cloud URL if the course requires an internet-hosted demo link; the repo is deployment-ready, but live hosting still needs external account credentials.",
+        "remaining_external_step": f"None. The public runtime is live at {DEFAULT_PUBLIC_URL}.",
     }
 
 
@@ -278,6 +324,8 @@ def render_markdown(report: dict[str, object]) -> str:
         "",
         f"- Multilingual text chat: `{req['multilingual_text_chat']['status']}` (`English`, `Hindi`, plus `Hinglish` robustness support)",
         f"- Voice-capable agent: `{voice['status']}`",
+        f"- Patient profile onboarding: `{req['patient_profile_onboarding']['status']}`",
+        f"- Clinical knowledge base: `{req['clinical_knowledge_base']['status']}`",
         f"- Task 1 smart screening: `{req['task_1_smart_screening']['status']}`",
         f"- Task 2 LLM inference engine: `{req['task_2_llm_inference_engine']['status']}`",
         f"- Task 3 safety trigger system: `{req['task_3_safety_trigger_system']['status']}`",
@@ -287,8 +335,10 @@ def render_markdown(report: dict[str, object]) -> str:
         "## Voice Capability",
         "",
         f"- Browser voice controls present: `{voice['browser_voice_controls']}`",
-        f"- Speech-to-text wrapper present: `{voice['speech_to_text']}`",
-        f"- Text-to-speech wrapper present: `{voice['text_to_speech']}`",
+        f"- Browser speech-to-text present: `{voice['browser_speech_to_text']}`",
+        f"- Browser text-to-speech present: `{voice['browser_text_to_speech']}`",
+        f"- Cloud speech-to-text route present: `{voice['cloud_speech_to_text']}`",
+        f"- Cloud text-to-speech route present: `{voice['cloud_text_to_speech']}`",
         f"- Transcript-before-submit flow present: `{voice['transcript_before_submit']}`",
         f"- Note: {voice['note']}",
         "",
@@ -326,6 +376,9 @@ def render_markdown(report: dict[str, object]) -> str:
         f"- Docker Compose demo stack: `{deployment['present']['docker_compose_demo']}`",
         f"- Render blueprint: `{deployment['present']['render_blueprint']}`",
         f"- Shipped bundle: `{deployment['present']['shipped_bundle']}`",
+        f"- Public runtime URL: `{deployment['public_runtime_url']}`",
+        f"- Live hybrid safety enabled: `{deployment['live_runtime']['hybrid_safety_enabled']}`",
+        f"- Live cloud voice enabled: `{deployment['live_runtime']['cloud_voice_enabled']}`",
         f"- Note: {deployment['note']}",
         "",
         "## Bonus",

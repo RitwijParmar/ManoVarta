@@ -1,5 +1,6 @@
 from typing import List
 
+from manovarta_core.knowledge import profile_summary
 from manovarta_core.questionnaires import ITEM_INDEX
 from manovarta_core.schemas import ChatSession, ScreeningSnapshot, SummaryRow
 
@@ -23,9 +24,11 @@ def build_summary(session: ChatSession, snapshot: ScreeningSnapshot) -> str:
     review_text = ", ".join(review_labels) or "None"
     style = dialogue.user_style
     disclosure = dialogue.disclosure
+    profile_text = profile_summary(session.profile)
 
     return (
         f"Session {session.session_id} in {session.language}. "
+        f"Profile context: {profile_text}. "
         f"Observed totals: PHQ-9={snapshot.totals['PHQ9']}, GAD-7={snapshot.totals['GAD7']}. "
         f"Coverage: {snapshot.coverage.touched_items}/{snapshot.coverage.total_items} items touched, "
         f"{len(snapshot.coverage.resolved_items)} resolved, "

@@ -1,6 +1,7 @@
 {
-  "generated_at": "2026-04-04T06:20:28.665066+00:00",
-  "git_revision": "be8d21e",
+  "generated_at": "2026-04-04T19:20:06.806618+00:00",
+  "git_revision": "cf6ade9",
+  "public_runtime_url": "https://manovarta-runtime-122722888597.us-east4.run.app",
   "recommended_default_runtime": {
     "provider": "huggingface",
     "chat_model": "Qwen/Qwen2.5-7B-Instruct",
@@ -10,6 +11,22 @@
     "rule_safety_monitor_enabled": true,
     "semantic_safety_enabled": false,
     "decision": "Use the Aya extractor with the promoted local safety checkpoint and rule monitor as the default runtime."
+  },
+  "live_deployment_runtime": {
+    "provider": "huggingface",
+    "chat_model": "Qwen/Qwen2.5-7B-Instruct",
+    "extraction_model": "CohereLabs/aya-expanse-32b",
+    "safety_model": "CohereLabs/aya-expanse-32b",
+    "huggingface_enabled": true,
+    "semantic_safety_enabled": false,
+    "semantic_safety_model": null,
+    "hybrid_safety_enabled": true,
+    "local_safety_checkpoint_enabled": true,
+    "local_safety_checkpoint_path": "/tmp/manovarta_local_safety_checkpoint/59e9264e860d",
+    "remote_safety_fallback_enabled": false,
+    "cloud_voice_enabled": true,
+    "speech_to_text_enabled": true,
+    "text_to_speech_enabled": true
   },
   "source_artifacts": {
     "aya_baseline_json": "reports/aya_colab_eval_a100_20260328.json",

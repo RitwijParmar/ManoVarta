@@ -20,6 +20,7 @@ from generate_eval_bundle import git_revision
 
 
 DEFAULT_HYBRID_SUMMARY_SOURCE = "https://files.catbox.moe/mt0f2k.json"
+DEFAULT_LIVE_RUNTIME_URL = "https://manovarta-runtime-122722888597.us-east4.run.app"
 
 
 def parse_args() -> argparse.Namespace:
@@ -78,6 +79,12 @@ def load_json_source(source: str) -> dict:
 def save_json(path: Path, payload: dict) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+
+
+def fetch_live_runtime(url: str = DEFAULT_LIVE_RUNTIME_URL) -> dict:
+    request = Request(url.rstrip("/") + "/runtime/config", headers={"User-Agent": "Mozilla/5.0"})
+    with urlopen(request, timeout=30) as response:
+        return json.loads(response.read().decode("utf-8"))
 
 
 def normalize_path_value(value: str | None) -> str | None:
@@ -169,10 +176,12 @@ def build_report(
     config = get_runtime_config()
     resolved_hybrid = hybrid_payload.get("full_summary", hybrid_payload)
     best_safety_report = hybrid_payload.get("best_safety_report")
+    live_runtime = fetch_live_runtime()
 
     return {
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "git_revision": git_revision(),
+        "public_runtime_url": DEFAULT_LIVE_RUNTIME_URL,
         "recommended_default_runtime": {
             "provider": config.model_provider,
             "chat_model": config.chat_model,
@@ -183,6 +192,7 @@ def build_report(
             "semantic_safety_enabled": config.semantic_safety_enabled,
             "decision": "Use the Aya extractor with the promoted local safety checkpoint and rule monitor as the default runtime.",
         },
+        "live_deployment_runtime": live_runtime,
         "source_artifacts": {
             "aya_baseline_json": "reports/aya_colab_eval_a100_20260328.json",
             "hybrid_summary_source": hybrid_source,
@@ -221,6 +231,7 @@ def build_markdown(report: dict) -> str:
         "",
         f"- Generated: `{report['generated_at']}`",
         f"- Git revision: `{report['git_revision']}`",
+        f"- Public runtime URL: `{report['public_runtime_url']}`",
         "",
         "## Default Runtime",
         "",
@@ -230,6 +241,15 @@ def build_markdown(report: dict) -> str:
         f"- Hybrid safety enabled: `{runtime['hybrid_safety_enabled']}`",
         f"- Rule safety monitor enabled: `{runtime['rule_safety_monitor_enabled']}`",
         f"- Local safety checkpoint: `{runtime['local_safety_checkpoint']}`",
+        "",
+        "## Live Deployment Runtime",
+        "",
+        f"- Provider: `{report['live_deployment_runtime']['provider']}`",
+        f"- Chat model: `{report['live_deployment_runtime']['chat_model']}`",
+        f"- Extraction model: `{report['live_deployment_runtime']['extraction_model']}`",
+        f"- Hybrid safety enabled: `{report['live_deployment_runtime']['hybrid_safety_enabled']}`",
+        f"- Cloud voice enabled: `{report['live_deployment_runtime']['cloud_voice_enabled']}`",
+        f"- Local safety checkpoint enabled: `{report['live_deployment_runtime']['local_safety_checkpoint_enabled']}`",
         "",
         "## Extractor Baseline",
         "",

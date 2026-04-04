@@ -4,6 +4,7 @@ import json
 from typing import Optional, Tuple
 
 from manovarta_core.config import RuntimeConfig
+from manovarta_core.knowledge import knowledge_summary_for_topic, profile_summary
 from manovarta_core.json_utils import normalize_safety_level, parse_extractor_payload, parse_json_object
 from manovarta_core.questionnaires import ITEM_INDEX
 from manovarta_core.schemas import ChatSession, SafetyFlag, ScreeningSnapshot, Turn
@@ -70,6 +71,8 @@ class HuggingFaceResponder:
         )
         unresolved = ", ".join(snapshot.unresolved_items[:6]) or "none"
         safety = snapshot.safety.level
+        profile_context = profile_summary(session.profile)
+        topic_knowledge = knowledge_summary_for_topic(dialogue.target_topic)
 
         system_prompt = (
             "You are ManoVarta, a multilingual mental health screening assistant. "
@@ -93,9 +96,11 @@ class HuggingFaceResponder:
             f"Target topic: {dialogue.target_topic}\n"
             f"Target focus: {focus_label}\n"
             f"Transition hint: {dialogue.transition_hint}\n"
+            f"User profile context: {profile_context}\n"
             f"User style: verbosity={dialogue.user_style.verbosity}, openness={dialogue.user_style.openness}, code_mix={dialogue.user_style.code_mix}, distress_trend={dialogue.user_style.distress_trend}, empathy_level={dialogue.user_style.empathy_level}\n"
             f"Disclosure efficiency: items_per_turn={dialogue.disclosure.items_per_user_turn}, resolved_per_turn={dialogue.disclosure.resolved_per_user_turn}\n"
             f"Unresolved items: {unresolved}\n"
+            f"Knowledge guidance: {topic_knowledge}\n"
             f"Planner rationale: {dialogue.rationale}\n"
             f"Fallback text: {fallback_text}\n"
             f"Recent transcript:\n{transcript}\n\n"
@@ -168,6 +173,7 @@ class HuggingFaceExtractor:
                     "Only include items with value 1, 2, or 3.\n"
                     "safety_level must be one of: none, review, urgent.\n"
                     "Use safety_level review for indirect disappearance language and urgent for direct self-harm intent.\n"
+                    f"Clinical guidance summary:\n{knowledge_summary_for_topic('mood')}\n{knowledge_summary_for_topic('anxiety')}\n{knowledge_summary_for_topic('safety')}\n\n"
                     f"Transcript:\n{transcript}"
                 ),
             },

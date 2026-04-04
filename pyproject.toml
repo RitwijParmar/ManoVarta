@@ -15,6 +15,7 @@ dependencies = [
   "pydantic>=2.10,<=2.12.3",
   "huggingface_hub>=0.34.0,<1.0",
   "python-dotenv>=1.0,<2.0",
+  "python-multipart>=0.0.9",
 ]
 
 [project.optional-dependencies]
@@ -43,6 +44,14 @@ vertex = [
   "google-cloud-aiplatform>=1.122.0",
   "google-cloud-storage>=2.18.0",
   "remotezip>=0.12.3",
+]
+runtime-cloud = [
+  "google-cloud-storage>=2.18.0",
+  "google-cloud-speech>=2.31.0",
+  "google-cloud-texttospeech>=2.17.2",
+  "torch>=2.2",
+  "transformers>=4.45",
+  "sentencepiece>=0.2.0",
 ]
 
 [tool.setuptools.packages.find]

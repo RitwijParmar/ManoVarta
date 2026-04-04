@@ -1,7 +1,8 @@
 # Best Current System Report
 
-- Generated: `2026-04-04T06:20:28.665066+00:00`
-- Git revision: `be8d21e`
+- Generated: `2026-04-04T19:20:06.806618+00:00`
+- Git revision: `cf6ade9`
+- Public runtime URL: `https://manovarta-runtime-122722888597.us-east4.run.app`
 
 ## Default Runtime
 
@@ -11,6 +12,15 @@
 - Hybrid safety enabled: `True`
 - Rule safety monitor enabled: `True`
 - Local safety checkpoint: `outputs/local_safety_boost/safety-indicbert-best`
+
+## Live Deployment Runtime
+
+- Provider: `huggingface`
+- Chat model: `Qwen/Qwen2.5-7B-Instruct`
+- Extraction model: `CohereLabs/aya-expanse-32b`
+- Hybrid safety enabled: `True`
+- Cloud voice enabled: `True`
+- Local safety checkpoint enabled: `True`
 
 ## Extractor Baseline
 

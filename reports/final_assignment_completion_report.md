@@ -1,25 +1,29 @@
 # Final Assignment Completion Report
 
-- Generated: `2026-04-04T07:31:36Z`
+- Generated: `2026-04-04T19:19:58Z`
 - Shipped baseline tag: `shipped-baseline-2026-04-04`
 
 ## Requirement Status
 
 - Multilingual text chat: `complete` (`English`, `Hindi`, plus `Hinglish` robustness support)
 - Voice-capable agent: `complete`
+- Patient profile onboarding: `complete`
+- Clinical knowledge base: `complete`
 - Task 1 smart screening: `complete`
 - Task 2 LLM inference engine: `complete`
 - Task 3 safety trigger system: `complete`
 - Deployment assets in repo: `complete`
-- Bonus implemented: `linguistic_personalization`
+- Bonus implemented: `gamification, linguistic_personalization`
 
 ## Voice Capability
 
 - Browser voice controls present: `True`
-- Speech-to-text wrapper present: `True`
-- Text-to-speech wrapper present: `True`
+- Browser speech-to-text present: `True`
+- Browser text-to-speech present: `True`
+- Cloud speech-to-text route present: `True`
+- Cloud text-to-speech route present: `True`
 - Transcript-before-submit flow present: `True`
-- Note: Voice is implemented as a browser-native wrapper over the text pipeline, so it depends on microphone permission and browser support.
+- Note: Voice now supports backend Google Cloud STT/TTS for English, Hindi, and Hinglish-oriented use, with browser speech kept as a fallback wrapper.
 
 ## Evaluation & Validation
 
@@ -37,10 +41,10 @@
 
 ### Latency
 
-- Cold-start turn latency: `20104.44 ms`
-- Warm average turn latency: `216.91 ms`
-- Warm median turn latency: `194.1 ms`
-- Warm p95 turn latency: `306.07 ms`
+- Cold-start turn latency: `13744.84 ms`
+- Warm average turn latency: `153.41 ms`
+- Warm median turn latency: `74.29 ms`
+- Warm p95 turn latency: `85.51 ms`
 
 ### Discourse Effectiveness
 
@@ -55,13 +59,16 @@
 - Docker Compose demo stack: `True`
 - Render blueprint: `True`
 - Shipped bundle: `True`
-- Note: Repo now includes local container deployment plus a cloud-ready Render blueprint. A public URL still requires external account provisioning.
+- Public runtime URL: `https://manovarta-runtime-122722888597.us-east4.run.app`
+- Live hybrid safety enabled: `True`
+- Live cloud voice enabled: `True`
+- Note: Repo includes local container deployment, cloud deployment configuration, and a live public runtime whose config is mirrored here.
 
 ## Bonus
 
-- Implemented: `linguistic_personalization`
-- Note: The runtime already adapts prompt softness, pacing, and code-mix cues through the planner user-style profile.
+- Implemented: `gamification, linguistic_personalization`
+- Note: The product now combines adaptive nudges for richer narrative disclosure with backend personalization based on pacing, openness, and code-mix.
 
 ## Final Note
 
-- Provision a public cloud URL if the course requires an internet-hosted demo link; the repo is deployment-ready, but live hosting still needs external account credentials.
+- None. The public runtime is live at https://manovarta-runtime-122722888597.us-east4.run.app.

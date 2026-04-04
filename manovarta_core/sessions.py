@@ -1,15 +1,21 @@
+from __future__ import annotations
+
 from typing import Dict, Optional
 from uuid import uuid4
 
-from manovarta_core.schemas import ChatSession, Turn
+from manovarta_core.schemas import ChatSession, Turn, UserProfileContext
 
 
 class SessionStore:
     def __init__(self) -> None:
         self._sessions: Dict[str, ChatSession] = {}
 
-    def create(self, language: str) -> ChatSession:
-        session = ChatSession(session_id=f"mv-{uuid4().hex[:10]}", language=language)
+    def create(self, language: str, profile: UserProfileContext | None = None) -> ChatSession:
+        session = ChatSession(
+            session_id=f"mv-{uuid4().hex[:10]}",
+            language=language,
+            profile=profile or UserProfileContext(),
+        )
         self._sessions[session.session_id] = session
         return session
 

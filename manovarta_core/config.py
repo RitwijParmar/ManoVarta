@@ -1,4 +1,7 @@
+import hashlib
 import os
+import shutil
+import tempfile
 from dataclasses import dataclass
 from functools import lru_cache
 from pathlib import Path
@@ -51,10 +54,59 @@ def _is_checkpoint_dir(path: Path) -> bool:
     return (path / "model.safetensors").exists() or (path / "model.safetensors.index.json").exists()
 
 
+def _download_gcs_checkpoint(uri: str) -> Optional[str]:
+    if not uri.startswith("gs://"):
+        return None
+    try:
+        from google.cloud import storage
+    except Exception:
+        return None
+
+    _, remainder = uri.split("gs://", 1)
+    bucket_name, prefix = remainder.split("/", 1)
+    prefix = prefix.rstrip("/")
+    cache_key = hashlib.sha1(uri.encode("utf-8")).hexdigest()[:12]
+    local_root = Path(tempfile.gettempdir()) / "manovarta_local_safety_checkpoint" / cache_key
+    marker = local_root / ".ready"
+    if _is_checkpoint_dir(local_root) and marker.exists():
+        return str(local_root)
+    if local_root.exists():
+        shutil.rmtree(local_root)
+    local_root.mkdir(parents=True, exist_ok=True)
+
+    client = storage.Client()
+    bucket = client.bucket(bucket_name)
+    blobs = list(client.list_blobs(bucket, prefix=prefix))
+    if not blobs:
+        return None
+
+    for blob in blobs:
+        if blob.name.endswith("/"):
+            continue
+        relative = Path(blob.name[len(prefix):].lstrip("/"))
+        destination = local_root / relative
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        blob.download_to_filename(destination)
+    marker.write_text(uri, encoding="utf-8")
+    return str(local_root)
+
+
 def discover_local_safety_checkpoint(project_root: Path = PROJECT_ROOT) -> Optional[str]:
     explicit = os.getenv("MANOVARTA_LOCAL_SAFETY_CHECKPOINT")
     if explicit:
-        return str(Path(explicit).expanduser())
+        if str(explicit).startswith("gs://"):
+            downloaded = _download_gcs_checkpoint(str(explicit))
+            if downloaded and _is_checkpoint_dir(Path(downloaded)):
+                return downloaded
+            return None
+        expanded = Path(explicit).expanduser()
+        return str(expanded)
+
+    gcs_uri = os.getenv("MANOVARTA_LOCAL_SAFETY_CHECKPOINT_GCS_URI")
+    if gcs_uri:
+        downloaded = _download_gcs_checkpoint(gcs_uri)
+        if downloaded and _is_checkpoint_dir(Path(downloaded)):
+            return downloaded
 
     for relative_path in DEFAULT_LOCAL_SAFETY_CHECKPOINTS:
         candidate = project_root / relative_path

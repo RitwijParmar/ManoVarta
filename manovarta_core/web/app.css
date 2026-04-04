@@ -60,6 +60,16 @@ input {
   font: inherit;
 }
 
+input {
+  width: 100%;
+  min-height: 48px;
+  padding: 0 14px;
+  border: 1px solid var(--line-strong);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.9);
+  color: var(--text);
+}
+
 a {
   color: inherit;
   text-decoration: none;
@@ -185,6 +195,19 @@ a {
   display: none !important;
 }
 
+.review-only {
+  display: none !important;
+}
+
+body.review-mode .review-only {
+  display: initial !important;
+}
+
+body.review-mode button.review-only,
+body.review-mode section.review-only {
+  display: block !important;
+}
+
 .brandblock {
   display: flex;
   align-items: center;
@@ -298,6 +321,39 @@ a {
 .composer-shell {
   display: grid;
   gap: 12px;
+}
+
+.profile-details {
+  padding: 16px 18px;
+  border-radius: var(--radius-xl);
+  background: rgba(255, 255, 255, 0.66);
+  border: 1px solid rgba(34, 48, 58, 0.08);
+}
+
+.profile-details summary {
+  cursor: pointer;
+  font-weight: 700;
+  color: var(--teal-deep);
+  list-style: none;
+}
+
+.profile-details summary::-webkit-details-marker {
+  display: none;
+}
+
+.profile-details[open] {
+  display: grid;
+  gap: 14px;
+}
+
+.profile-form-grid {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.full-span {
+  grid-column: 1 / -1;
 }
 
 .readiness-card {

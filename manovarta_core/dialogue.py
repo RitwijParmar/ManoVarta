@@ -195,8 +195,30 @@ ITEM_TO_TOPIC = {
 
 
 class DialoguePlanner:
-    def opening_prompt(self, language: str) -> str:
-        return OPENING_PROMPTS[language]
+    def opening_prompt(self, language: str, profile=None) -> str:
+        base = OPENING_PROMPTS[language]
+        if profile is None:
+            return base
+
+        preferred_name = getattr(profile, "preferred_name", None)
+        occupation = getattr(profile, "occupation", None)
+        context_note = getattr(profile, "context_note", None)
+        if language == "en":
+            if preferred_name and occupation:
+                return f"Hi {preferred_name}. Thanks for being here. Before we go deeper, how have things been feeling lately in day-to-day life as a {occupation}?"
+            if context_note:
+                return f"Thanks for being here. Keeping {context_note} in mind, what has felt the heaviest over the last couple of weeks?"
+        if language == "hi":
+            if preferred_name and occupation:
+                return f"Namaste {preferred_name}. Aapka shukriya. {occupation} ke roop mein rozmarra zindagi mein pichhle do hafton mein sabse zyada kya bhaari laga?"
+            if context_note:
+                return f"Shukriya, aap yahan aaye. {context_note} ko dhyan mein rakhte hue pichhle do hafton mein sabse zyada kya bhaari laga?"
+        if language == "hinglish":
+            if preferred_name and occupation:
+                return f"Hi {preferred_name}. Thanks for being here. {occupation} wali day-to-day life mein pichhle do hafton mein sabse zyada kya heavy laga?"
+            if context_note:
+                return f"Thanks for joining. {context_note} ko dhyan mein rakhte hue pichhle do hafton mein sabse zyada kya heavy laga?"
+        return base
 
     def next_reply(self, snapshot: ScreeningSnapshot, session: ChatSession) -> Tuple[str, Optional[str]]:
         snapshot.coverage = self.build_plan(snapshot, session)

@@ -45,6 +45,39 @@
               <p id="runtimeInfo" class="summary-text">Loading readiness status...</p>
             </div>
 
+            <details class="profile-details">
+              <summary>Optional context</summary>
+              <p class="panel-subtitle">
+                You can share a little context so ManoVarta can ask more relevant follow-ups. Everything here is optional.
+              </p>
+              <div class="profile-form-grid">
+                <label class="inline-field">
+                  <span>Name</span>
+                  <input id="profileNameInput" type="text" placeholder="What should ManoVarta call you?" />
+                </label>
+                <label class="inline-field">
+                  <span>Age</span>
+                  <input id="profileAgeInput" type="number" min="1" max="120" placeholder="Optional" />
+                </label>
+                <label class="inline-field">
+                  <span>Occupation</span>
+                  <input id="profileOccupationInput" type="text" placeholder="Student, engineer, homemaker..." />
+                </label>
+                <label class="inline-field">
+                  <span>Living situation</span>
+                  <input id="profileLivingInput" type="text" placeholder="With family, alone, hostel..." />
+                </label>
+                <label class="inline-field">
+                  <span>Support system</span>
+                  <input id="profileSupportInput" type="text" placeholder="Friend, sibling, partner..." />
+                </label>
+                <label class="inline-field full-span">
+                  <span>Anything important to keep in mind?</span>
+                  <input id="profileContextInput" type="text" placeholder="Exams, caregiving, breakup, work stress..." />
+                </label>
+              </div>
+            </details>
+
             <div class="hero-actions">
               <label class="inline-field">
                 <span>Language</span>
@@ -114,7 +147,7 @@
 
             <div class="conversation-head-actions">
               <span id="sessionBadge" class="chip soft">No session</span>
-              <button id="architectureButton" type="button" class="button ghost subtle">How it works</button>
+              <button id="architectureButton" type="button" class="button ghost subtle">What to expect</button>
             </div>
           </div>
 
@@ -230,15 +263,15 @@
           </section>
 
           <footer class="conversation-footer">
-            <button id="backstageToggle" type="button" class="button ghost subtle">Presenter tools</button>
+            <button id="backstageToggle" type="button" class="button ghost subtle review-only">Presenter tools</button>
             <p class="footer-copy">
-              Demo scenarios, structured scores, exports, and evaluator details stay hidden unless you open them.
+              ManoVarta keeps the main experience focused on your check-in and your comfort.
             </p>
           </footer>
         </section>
       </main>
 
-      <section id="backstagePanel" class="panel backstage-panel is-hidden" aria-hidden="true">
+      <section id="backstagePanel" class="panel backstage-panel is-hidden review-only" aria-hidden="true">
         <div class="section-head">
           <div>
             <p class="eyebrow">Presenter tools</p>

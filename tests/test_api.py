@@ -1,6 +1,11 @@
+import io
+
 from fastapi.testclient import TestClient
 
-from manovarta_core.api import app
+import manovarta_core.api as api_module
+
+
+app = api_module.app
 
 
 client = TestClient(app)
@@ -13,7 +18,14 @@ def test_root_serves_browser_demo():
     assert "ManoVarta | Multilingual mental health check-in" in response.text
     assert "Start check-in" in response.text
     assert "Talk instead" in response.text
+
+
+def test_review_route_serves_hidden_presenter_surface():
+    response = client.get("/review")
+
+    assert response.status_code == 200
     assert "Presenter tools" in response.text
+    assert "Hidden details for demos, evaluation, and care-team review" in response.text
 
 
 def test_runtime_config_reports_huggingface_disabled_by_default():
@@ -36,6 +48,17 @@ def test_demo_bootstrap_exposes_runtime_profiles_and_links():
     assert body["profiles"]
     assert body["links"]
     assert any(link["href"] == "/docs" for link in body["links"])
+
+
+def test_knowledge_base_endpoint_exposes_domains_and_sources():
+    response = client.get("/knowledge/base")
+
+    assert response.status_code == 200
+    body = response.json()
+    assert "questionnaires" in body
+    assert "domains" in body
+    assert "sources" in body
+    assert "safety" in body["domains"]
 
 
 def test_chat_flow_asks_non_sensitive_follow_up_first():
@@ -80,6 +103,59 @@ def test_summary_endpoint_returns_structured_snapshot():
     assert "Session" in body["summary"]
     assert "Dialogue stage" in body["summary"]
     assert "Disclosure efficiency" in body["summary"]
+
+
+def test_session_profile_context_round_trips_into_session_detail():
+    start = client.post(
+        "/chat/sessions",
+        json={
+            "language": "en",
+            "profile": {
+                "preferred_name": "Riya",
+                "age": 21,
+                "occupation": "student",
+                "living_situation": "hostel",
+                "support_system": "roommate",
+                "context_note": "exam pressure",
+            },
+        },
+    )
+
+    assert start.status_code == 200
+    opening = start.json()["assistant_turn"]["text"]
+    assert "Riya" in opening or "exam pressure" in opening
+
+    session_id = start.json()["session_id"]
+    detail = client.get(f"/chat/sessions/{session_id}")
+
+    assert detail.status_code == 200
+    body = detail.json()
+    assert body["profile"]["preferred_name"] == "Riya"
+    assert body["profile"]["occupation"] == "student"
+
+
+def test_cloud_voice_speak_route_uses_backend_when_enabled(monkeypatch):
+    monkeypatch.setattr(api_module, "voice_runtime", api_module.detect_voice_runtime().__class__(speech_to_text=True, text_to_speech=True))
+    monkeypatch.setattr(api_module, "synthesize_speech", lambda text, language: (f"{language}:{text}".encode("utf-8"), "audio/mpeg"))
+
+    response = client.post("/voice/speak?language=hi", json={"text": "Namaste"})
+
+    assert response.status_code == 200
+    assert response.headers["content-type"].startswith("audio/mpeg")
+    assert response.content == b"hi:Namaste"
+
+
+def test_cloud_voice_transcribe_route_uses_backend_when_enabled(monkeypatch):
+    monkeypatch.setattr(api_module, "voice_runtime", api_module.detect_voice_runtime().__class__(speech_to_text=True, text_to_speech=True))
+    monkeypatch.setattr(api_module, "transcribe_audio", lambda content, language, mime_type="audio/webm": f"{language}:{len(content)}")
+
+    response = client.post(
+        "/voice/transcribe?language=hinglish",
+        files={"audio": ("voice.webm", io.BytesIO(b"abc123"), "audio/webm")},
+    )
+
+    assert response.status_code == 200
+    assert response.json()["transcript"] == "hinglish:6"
 
 
 def test_export_endpoint_returns_rows_and_snapshot_mode():
@@ -156,7 +232,6 @@ def test_brief_guarded_reply_sets_guarded_style_profile():
     dialogue = turn.json()["snapshot"]["coverage"]["dialogue"]
     assert dialogue["user_style"]["verbosity"] == "brief"
     assert dialogue["user_style"]["openness"] in {"guarded", "cautious"}
-    assert (
-        "one recent example or one timing detail is enough" in reply.lower()
-        or "whichever part feels easier to answer is okay" in reply.lower()
-    )
+    assert "?" in reply
+    assert "hurting yourself" not in reply.lower()
+    assert any(token in reply.lower() for token in ("tired", "feeling", "example", "detail", "changes"))

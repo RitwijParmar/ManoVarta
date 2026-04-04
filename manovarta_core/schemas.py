@@ -134,9 +134,19 @@ class ScreeningSnapshot(BaseModel):
     mode: Literal["heuristic", "hybrid"] = "heuristic"
 
 
+class UserProfileContext(BaseModel):
+    preferred_name: Optional[str] = None
+    age: Optional[int] = Field(default=None, ge=1, le=120)
+    occupation: Optional[str] = None
+    living_situation: Optional[str] = None
+    support_system: Optional[str] = None
+    context_note: Optional[str] = None
+
+
 class ChatSession(BaseModel):
     session_id: str
     language: LanguageCode
+    profile: UserProfileContext = Field(default_factory=UserProfileContext)
     turns: List[Turn] = Field(default_factory=list)
     asked_items: List[str] = Field(default_factory=list)
     created_at: datetime = Field(default_factory=datetime.utcnow)
@@ -145,6 +155,7 @@ class ChatSession(BaseModel):
 class StartSessionRequest(BaseModel):
     language: LanguageCode = "en"
     opening_note: Optional[str] = None
+    profile: UserProfileContext = Field(default_factory=UserProfileContext)
 
 
 class StartSessionResponse(BaseModel):
@@ -164,6 +175,7 @@ class ChatTurnResponse(BaseModel):
 
 class SessionDetailResponse(BaseModel):
     session_id: str
+    profile: UserProfileContext = Field(default_factory=UserProfileContext)
     turns: List[Turn]
     snapshot: ScreeningSnapshot
 
@@ -193,6 +205,7 @@ class SummaryRow(BaseModel):
 class SessionExportResponse(BaseModel):
     session_id: str
     language: LanguageCode
+    profile: UserProfileContext = Field(default_factory=UserProfileContext)
     summary: str
     turns: List[Turn]
     snapshot: ScreeningSnapshot

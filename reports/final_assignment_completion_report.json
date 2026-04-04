@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-04T07:31:36Z",
+  "generated_at": "2026-04-04T19:19:58Z",
   "source_reports": {
     "hybrid_runtime_validation": "reports/hybrid_runtime_validation_colab_20260404.json",
     "best_current_system": "reports/best_current_system_report.json",
@@ -19,10 +19,26 @@
     "voice_capable_agent": {
       "status": "complete",
       "browser_voice_controls": true,
-      "speech_to_text": true,
-      "text_to_speech": true,
+      "browser_speech_to_text": true,
+      "browser_text_to_speech": true,
+      "cloud_speech_to_text": true,
+      "cloud_text_to_speech": true,
       "transcript_before_submit": true,
-      "note": "Voice is implemented as a browser-native wrapper over the text pipeline, so it depends on microphone permission and browser support."
+      "note": "Voice now supports backend Google Cloud STT/TTS for English, Hindi, and Hinglish-oriented use, with browser speech kept as a fallback wrapper."
+    },
+    "patient_profile_onboarding": {
+      "status": "complete",
+      "details": [
+        "Optional age, occupation, living situation, support system, and context are collected at session start",
+        "Profile context is carried into the session object, planner opening, and export"
+      ]
+    },
+    "clinical_knowledge_base": {
+      "status": "complete",
+      "details": [
+        "Derived PHQ-9 and GAD-7 symptom/domain knowledge base exposed at /knowledge/base",
+        "NIMH-grounded risk guidance for anxiety and suicide warning signs"
+      ]
     },
     "task_1_smart_screening": {
       "status": "complete",
@@ -62,14 +78,32 @@
         "render_blueprint": true,
         "shipped_bundle": true
       },
-      "note": "Repo now includes local container deployment plus a cloud-ready Render blueprint. A public URL still requires external account provisioning."
+      "public_runtime_url": "https://manovarta-runtime-122722888597.us-east4.run.app",
+      "live_runtime": {
+        "provider": "huggingface",
+        "chat_model": "Qwen/Qwen2.5-7B-Instruct",
+        "extraction_model": "CohereLabs/aya-expanse-32b",
+        "safety_model": "CohereLabs/aya-expanse-32b",
+        "huggingface_enabled": true,
+        "semantic_safety_enabled": false,
+        "semantic_safety_model": null,
+        "hybrid_safety_enabled": true,
+        "local_safety_checkpoint_enabled": true,
+        "local_safety_checkpoint_path": "/tmp/manovarta_local_safety_checkpoint/59e9264e860d",
+        "remote_safety_fallback_enabled": false,
+        "cloud_voice_enabled": true,
+        "speech_to_text_enabled": true,
+        "text_to_speech_enabled": true
+      },
+      "note": "Repo includes local container deployment, cloud deployment configuration, and a live public runtime whose config is mirrored here."
     },
     "bonus": {
       "implemented": [
+        "gamification",
         "linguistic_personalization"
       ],
       "missing": [],
-      "note": "The runtime already adapts prompt softness, pacing, and code-mix cues through the planner user-style profile."
+      "note": "The product now combines adaptive nudges for richer narrative disclosure with backend personalization based on pacing, openness, and code-mix."
     }
   },
   "evaluation_validation": {
@@ -87,10 +121,10 @@
       "source": "shipped hybrid runtime validation"
     },
     "latency": {
-      "cold_start_ms": 20104.44,
-      "warm_avg_ms": 216.91,
-      "warm_median_ms": 194.1,
-      "warm_p95_ms": 306.07,
+      "cold_start_ms": 13744.84,
+      "warm_avg_ms": 153.41,
+      "warm_median_ms": 74.29,
+      "warm_p95_ms": 85.51,
       "samples": 6,
       "note": "Measured through the FastAPI chat endpoint with Hugging Face network calls disabled so the number reflects deterministic local screening latency rather than hosted-model round trips."
     },
@@ -117,5 +151,5 @@
     },
     "bundle": "artifacts/manovarta_shipped_baseline_20260404.zip"
   },
-  "remaining_external_step": "Provision a public cloud URL if the course requires an internet-hosted demo link; the repo is deployment-ready, but live hosting still needs external account credentials."
+  "remaining_external_step": "None. The public runtime is live at https://manovarta-runtime-122722888597.us-east4.run.app."
 }

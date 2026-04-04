@@ -14,7 +14,9 @@ COPY screening ./screening
 COPY training ./training
 COPY data ./data
 
-RUN pip install --upgrade pip && pip install .
+RUN pip install --upgrade pip \
+    && pip install --index-url https://download.pytorch.org/whl/cpu "torch>=2.2" \
+    && pip install ".[runtime-cloud]"
 
 EXPOSE 8000
 
