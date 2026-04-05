@@ -117,6 +117,17 @@ TOPIC_PROMPTS: Dict[str, Dict[str, str]] = {
     },
 }
 
+UNDERCOVERED_ITEM_BOOSTS: Dict[str, int] = {
+    "phq_q5_appetite": 3,
+    "phq_q6_worthlessness": 4,
+    "phq_q7_concentration": 3,
+    "gad_q2_control_worry": 3,
+    "gad_q3_excessive_worry": 2,
+    "gad_q4_trouble_relaxing": 3,
+    "gad_q6_irritability": 2,
+    "gad_q7_fear_awful": 3,
+}
+
 
 @dataclass(frozen=True)
 class TopicNode:
@@ -432,6 +443,23 @@ class DialoguePlanner:
             return "safety"
         if stage == "summary":
             return current_topic if current_topic in TOPIC_GRAPH else "mood"
+        if stage == "rapport":
+            touched_candidates = [
+                topic
+                for topic in topic_states
+                if topic.topic_id != "safety" and topic.touched and topic.unresolved_items
+            ]
+            if touched_candidates:
+                return max(
+                    touched_candidates,
+                    key=lambda topic: (
+                        topic.topic_id == current_topic,
+                        topic.status == "probing",
+                        self._topic_coverage_boost(snapshot, topic.topic_id),
+                        topic.priority,
+                        1.0 - topic.confidence,
+                    ),
+                ).topic_id
 
         held_back = set(held_back_items)
         candidates = [
@@ -444,6 +472,8 @@ class DialoguePlanner:
 
         def rank(topic: TopicState) -> tuple[int, float]:
             score = topic.priority * 10
+            score += int((len(topic.unresolved_items) / max(len(topic.item_ids), 1)) * 10)
+            score += self._topic_coverage_boost(snapshot, topic.topic_id) * 2
             if topic.status == "review":
                 score += 20
             elif topic.status == "probing":
@@ -452,6 +482,8 @@ class DialoguePlanner:
                 score += 8
             if topic.touched:
                 score += 8
+            if topic.touched and topic.confidence < 0.62:
+                score += 6
             if topic.topic_id == current_topic:
                 score += 4
             if current_topic in TOPIC_GRAPH and topic.topic_id in TOPIC_GRAPH[current_topic].transitions:
@@ -475,20 +507,14 @@ class DialoguePlanner:
             return None
 
         held_back = set(held_back_items)
-        ranked = sorted(
-            (
-                item_id
-                for item_id in TOPIC_GRAPH[target_topic].item_ids
-                if item_id not in held_back and snapshot.items[item_id].status != "resolved"
-            ),
-            key=lambda item_id: (
-                item_id in session.asked_items,
-                snapshot.items[item_id].status == "unresolved",
-                -ITEM_INDEX[item_id].priority,
-                snapshot.items[item_id].confidence,
-            ),
-        )
-        return ranked[0] if ranked else None
+        candidates = [
+            item_id
+            for item_id in TOPIC_GRAPH[target_topic].item_ids
+            if item_id not in held_back and snapshot.items[item_id].status != "resolved"
+        ]
+        if not candidates:
+            return None
+        return max(candidates, key=lambda item_id: self._item_priority_score(snapshot, session, item_id, target_topic))
 
     def _rank_next_items(
         self,
@@ -506,10 +532,7 @@ class DialoguePlanner:
         unresolved.sort(
             key=lambda item_id: (
                 ITEM_TO_TOPIC.get(item_id) != target_topic,
-                item_id in session.asked_items,
-                snapshot.items[item_id].status == "unresolved",
-                -ITEM_INDEX[item_id].priority,
-                snapshot.items[item_id].confidence,
+                -self._item_priority_score(snapshot, session, item_id, target_topic),
             )
         )
         return unresolved[:5]
@@ -572,6 +595,40 @@ class DialoguePlanner:
         if user_style.openness == "guarded":
             return f"Use a gentle bridge from {current_topic} to {target_topic} and offer an easier choice-based answer."
         return f"Bridge naturally from {current_topic} to {target_topic} by connecting the last symptom to its daily impact."
+
+    def _topic_coverage_boost(self, snapshot: ScreeningSnapshot, topic_id: str) -> int:
+        return sum(UNDERCOVERED_ITEM_BOOSTS.get(item_id, 0) for item_id in TOPIC_GRAPH[topic_id].item_ids if snapshot.items[item_id].status != "resolved")
+
+    def _item_priority_score(
+        self,
+        snapshot: ScreeningSnapshot,
+        session: ChatSession,
+        item_id: str,
+        target_topic: Optional[str] = None,
+    ) -> int:
+        item = snapshot.items[item_id]
+        score = ITEM_INDEX[item_id].priority * 10
+        score += UNDERCOVERED_ITEM_BOOSTS.get(item_id, 0) * 6
+        score += int((1.0 - item.confidence) * 12)
+
+        if item.status == "contradicted":
+            score += 28
+        elif item.status == "abstained":
+            score += 24
+        elif item.status == "partial":
+            score += 18
+        elif item.status == "unresolved":
+            score += 12
+
+        if item.evidence_span_ids and item.status != "resolved":
+            score += 6
+        if item_id in session.asked_items:
+            score += 7 if item.status in {"partial", "contradicted", "abstained"} else -6
+        if target_topic and ITEM_TO_TOPIC.get(item_id) == target_topic:
+            score += 12
+        if item.review_recommended:
+            score += 10
+        return score
 
     def _held_back_items(self, snapshot: ScreeningSnapshot, session: ChatSession) -> list[str]:
         held_back: list[str] = []

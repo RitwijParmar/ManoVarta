@@ -1,7 +1,7 @@
 # Best Current System Report
 
-- Generated: `2026-04-04T20:00:35.672182+00:00`
-- Git revision: `d75577c`
+- Generated: `2026-04-05T02:01:33.065270+00:00`
+- Git revision: `fb869d9`
 - Public runtime URL: `https://manovarta-runtime-122722888597.us-east4.run.app`
 
 ## Default Runtime
@@ -33,19 +33,19 @@
 
 ## Hybrid Runtime Validation
 
-- Coverage completeness: `0.538`
-- MAE: `0.288`
-- Exact match: `0.712`
-- Macro-F1: `0.295`
+- Coverage completeness: `0.625`
+- MAE: `0.452`
+- Exact match: `0.613`
+- Macro-F1: `0.214`
 - Safety precision: `1.0`
 - Safety recall: `1.0`
 
 ## Delta Vs Extractor Baseline
 
-- `coverage_completeness`: `-0.375`
-- `mae`: `-0.155`
-- `exact_match_rate`: `+0.150`
-- `macro_f1`: `+0.023`
+- `coverage_completeness`: `-0.288`
+- `mae`: `+0.009`
+- `exact_match_rate`: `+0.051`
+- `macro_f1`: `-0.058`
 - `safety_precision`: `+1.000`
 - `safety_recall`: `+1.000`
 
@@ -65,11 +65,12 @@
 
 ## Known Gaps
 
-- Safety precision is still low, so the stack remains conservative and will over-trigger review flags.
-- Hinglish coverage remains the weakest language slice in the hybrid runtime evaluation.
+- English is now the weakest language slice in the live runtime evaluation at coverage 0.391.
+- Live runtime coverage still trails the best offline extractor baseline, so hosted extraction reliability remains the next coverage bottleneck.
+- Production inference still depends on hosted Hugging Face models rather than a fully self-hosted extractor stack.
 
 ## Sources
 
 - `aya_baseline_json`: `reports/aya_colab_eval_a100_20260328.json`
 - `hybrid_summary_source`: `/Users/ritwij/Documents/multilingualChatbot/reports/live_runtime_eval_20260404.json`
-- `hybrid_summary_mirror`: `reports/hybrid_runtime_validation_colab_20260404.json`
+- `hybrid_summary_mirror`: `reports/live_runtime_eval_20260404.json`

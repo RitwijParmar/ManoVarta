@@ -25,6 +25,7 @@ DEFAULT_HYBRID_SUMMARY_SOURCE = (
     else "https://files.catbox.moe/mt0f2k.json"
 )
 DEFAULT_LIVE_RUNTIME_URL = "https://manovarta-runtime-122722888597.us-east4.run.app"
+LANGUAGE_LABELS = {"en": "English", "hi": "Hindi", "hinglish": "Hinglish"}
 
 
 def parse_args() -> argparse.Namespace:
@@ -186,6 +187,29 @@ def build_report(
     best_safety_report = hybrid_payload.get("best_safety_report")
     live_runtime = fetch_live_runtime()
     runtime_summary_label = "live runtime endpoint evaluation" if Path(hybrid_source).expanduser().exists() else "hybrid runtime validation"
+    language_metrics = resolved_hybrid.get("languages", {})
+    weakest_language = None
+    if language_metrics:
+        weakest_language = min(
+            language_metrics.items(),
+            key=lambda item: item[1].get("coverage_completeness", 0.0),
+        )[0]
+    known_gaps = []
+    if resolved_hybrid["overall"].get("safety_precision", 0.0) < 0.8:
+        known_gaps.append("Safety precision is still low, so the stack remains conservative and will over-trigger review flags.")
+    if weakest_language:
+        weakest_coverage = language_metrics[weakest_language].get("coverage_completeness", 0.0)
+        known_gaps.append(
+            f"{LANGUAGE_LABELS.get(weakest_language, weakest_language.title())} is now the weakest language slice in the live runtime evaluation at coverage {weakest_coverage:.3f}."
+        )
+    baseline_coverage = aya_payload.get("overall", {}).get("coverage_completeness")
+    hybrid_coverage = resolved_hybrid["overall"].get("coverage_completeness")
+    if isinstance(baseline_coverage, (int, float)) and isinstance(hybrid_coverage, (int, float)) and hybrid_coverage < baseline_coverage:
+        known_gaps.append(
+            "Live runtime coverage still trails the best offline extractor baseline, so hosted extraction reliability remains the next coverage bottleneck."
+        )
+    if live_runtime.get("provider") == "huggingface":
+        known_gaps.append("Production inference still depends on hosted Hugging Face models rather than a fully self-hosted extractor stack.")
 
     return {
         "generated_at": datetime.now(timezone.utc).isoformat(),
@@ -219,10 +243,7 @@ def build_report(
                 "The promoted local safety checkpoint can now be auto-discovered by the repo without a private env file.",
                 "The pure extractor checkpoints remain useful benchmarks, but the safer runtime stack is the better default for demos and guarded screening.",
             ],
-            "known_gaps": [
-                "Safety precision is still low, so the stack remains conservative and will over-trigger review flags.",
-                "Hinglish coverage remains the weakest language slice in the hybrid runtime evaluation.",
-            ],
+            "known_gaps": known_gaps,
         },
     }
 

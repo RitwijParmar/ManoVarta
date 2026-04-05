@@ -65,6 +65,59 @@ def build_gold_index(examples: list[dict]) -> dict[str, dict]:
     return gold_index
 
 
+def build_item_breakdowns(gold_index: dict[str, dict], predictions: list[dict]) -> tuple[dict, dict]:
+    predicted_index = {record["conversation_id"]: record for record in predictions}
+    per_item = {}
+    per_language = {}
+
+    for conversation_id, gold in gold_index.items():
+        prediction = predicted_index.get(conversation_id, {"predictions": {}})
+        predicted_labels = prediction.get("predictions", {})
+        language = gold["language"]
+        gold_labels = {}
+        gold_labels.update(gold.get("phq9_item_labels", {}))
+        gold_labels.update(gold.get("gad7_item_labels", {}))
+
+        language_bucket = per_language.setdefault(language, {})
+        for item_id, gold_value in gold_labels.items():
+            item_bucket = per_item.setdefault(item_id, {"gold_count": 0, "covered_count": 0, "exact_count": 0, "predicted_values": []})
+            lang_bucket = language_bucket.setdefault(item_id, {"gold_count": 0, "covered_count": 0, "exact_count": 0, "predicted_values": []})
+            pred_value = predicted_labels.get(item_id)
+
+            item_bucket["gold_count"] += 1
+            lang_bucket["gold_count"] += 1
+            if pred_value is None:
+                continue
+
+            item_bucket["covered_count"] += 1
+            lang_bucket["covered_count"] += 1
+            item_bucket["predicted_values"].append(pred_value)
+            lang_bucket["predicted_values"].append(pred_value)
+            if pred_value == gold_value:
+                item_bucket["exact_count"] += 1
+                lang_bucket["exact_count"] += 1
+
+    return _finalize_item_breakdown(per_item), {
+        language: _finalize_item_breakdown(items)
+        for language, items in per_language.items()
+    }
+
+
+def _finalize_item_breakdown(buckets: dict) -> dict:
+    finalized = {}
+    for item_id, bucket in buckets.items():
+        gold_count = bucket["gold_count"]
+        covered_count = bucket["covered_count"]
+        finalized[item_id] = {
+            "gold_count": gold_count,
+            "covered_count": covered_count,
+            "coverage": round(covered_count / gold_count, 3) if gold_count else 0.0,
+            "exact_rate_when_covered": round(bucket["exact_count"] / covered_count, 3) if covered_count else 0.0,
+            "predicted_values": bucket["predicted_values"],
+        }
+    return finalized
+
+
 def main() -> int:
     args = parse_args()
     eval_path = Path(args.eval_file)
@@ -107,6 +160,7 @@ def main() -> int:
         )
 
     summary = evaluate_item_predictions(list(gold_index.values()), predictions)
+    per_item, per_language_items = build_item_breakdowns(gold_index, predictions)
     summary.update(
         {
             "model_path": args.base_url.rstrip("/") + "/screen/transcript",
@@ -118,6 +172,8 @@ def main() -> int:
             "last_completed_id": examples[-1]["id"] if examples else None,
             "status": "completed",
             "evaluation_mode": "runtime_endpoint",
+            "per_item": per_item,
+            "per_language_items": per_language_items,
         }
     )
     output_path.parent.mkdir(parents=True, exist_ok=True)

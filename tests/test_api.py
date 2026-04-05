@@ -76,7 +76,7 @@ def test_chat_flow_asks_non_sensitive_follow_up_first():
     snapshot = turn.json()["snapshot"]
     assert "hurting yourself" not in reply
     assert "not wanting to be alive" not in reply
-    assert snapshot["coverage"]["dialogue"]["target_topic"] in {"sleep", "energy", "mood"}
+    assert snapshot["coverage"]["dialogue"]["target_topic"] in {"sleep", "energy", "mood", "anxiety"}
     assert "phq_q9_self_harm" in snapshot["coverage"]["dialogue"]["held_back_items"]
     assert snapshot["coverage"]["dialogue"]["user_style"]["openness"] in {"guarded", "cautious", "open"}
     assert "items_per_user_turn" in snapshot["coverage"]["dialogue"]["disclosure"]

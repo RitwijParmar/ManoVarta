@@ -123,7 +123,7 @@ class RuntimeEngine:
             item_id=item_id,
             turn_id=turn.turn_id,
             text_span=span_text,
-            polarity="present" if value > 0 else "uncertain",
+            polarity="present" if value > 0 else "absent",
             score_hint=value,
             rationale=note or "LLM-aligned evidence span.",
         )

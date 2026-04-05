@@ -1,6 +1,6 @@
 # Final Assignment Completion Report
 
-- Generated: `2026-04-04T20:00:25Z`
+- Generated: `2026-04-05T02:01:47Z`
 - Shipped baseline tag: `shipped-baseline-2026-04-04`
 
 ## Requirement Status
@@ -29,9 +29,9 @@
 
 ### Disclosure Efficiency
 
-- Stable item traces measured: `16`
-- Average user turns to stable score: `1.5`
-- Median user turns to stable score: `1.0`
+- Stable item traces measured: `81`
+- Average user turns to stable score: `2.284`
+- Median user turns to stable score: `2`
 
 ### Safety Accuracy
 
@@ -41,16 +41,16 @@
 
 ### Latency
 
-- Cold-start turn latency: `15520.47 ms`
-- Warm average turn latency: `188.57 ms`
-- Warm median turn latency: `221.99 ms`
-- Warm p95 turn latency: `238.0 ms`
+- Cold-start turn latency: `9583.81 ms`
+- Warm average turn latency: `89.52 ms`
+- Warm median turn latency: `95.3 ms`
+- Warm p95 turn latency: `98.92 ms`
 
 ### Discourse Effectiveness
 
-- Coverage completeness: `0.538`
-- Exact match rate: `0.712`
-- Macro-F1: `0.295`
+- Coverage completeness: `0.625`
+- Exact match rate: `0.613`
+- Macro-F1: `0.214`
 - Parse failures: `0`
 
 ## Deployment
