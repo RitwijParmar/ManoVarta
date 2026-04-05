@@ -17,7 +17,7 @@
           <span class="brand-orb">म</span>
           <div class="brand-copy">
             <p class="eyebrow">ManoVarta</p>
-            <h1>A calm space to talk through stress, sleep, low mood, and worry.</h1>
+            <h1>A calmer way to talk through sleep, stress, low mood, and worry.</h1>
           </div>
         </div>
 
@@ -37,7 +37,7 @@
             </button>
           </div>
           <p id="serviceHealth" class="service-health">Checking service health...</p>
-          <button id="architectureButton" type="button" class="button ghost subtle">How it works</button>
+          <button id="architectureButton" type="button" class="button ghost subtle">Trust & privacy</button>
           <a class="button emergency-link" href="https://988lifeline.org/" target="_blank" rel="noopener noreferrer">
             Urgent help
           </a>
@@ -47,25 +47,12 @@
       <main class="product-grid">
         <aside class="sanctuary-column">
           <section class="panel sanctuary-card">
-            <div class="hero-visual">
-              <div class="hero-orbit hero-orbit-a"></div>
-              <div class="hero-orbit hero-orbit-b"></div>
-              <div class="hero-core">
-                <span class="hero-core-text">मन</span>
-                <span class="hero-core-sub">mind · mann · मन</span>
+            <div class="section-head compact">
+              <div>
+                <p class="eyebrow">Session anchor</p>
+                <h3>Quiet signals ManoVarta keeps in mind</h3>
               </div>
-              <div class="hero-floating hero-floating-a">sleep</div>
-              <div class="hero-floating hero-floating-b">worry</div>
-              <div class="hero-floating hero-floating-c">ऊर्जा</div>
-            </div>
-
-            <div class="hero-copy">
-              <p class="eyebrow">Private, multilingual, voice-ready</p>
-              <h2>Your private check-in starts with one honest sentence.</h2>
-              <p class="subtitle">
-                ManoVarta is designed to feel like a gentle conversation, not a clinical form.
-                Start wherever it feels easiest: sleep, stress, heaviness, worry, or “I’m not sure.”
-              </p>
+              <span class="chip soft">Private</span>
             </div>
 
             <div class="sanctuary-status">
@@ -78,67 +65,32 @@
               </div>
             </div>
 
-            <div class="launch-row">
-              <label class="inline-field compact-field native-language-select">
-                <span>Language</span>
-                <select id="languageSelect">
-                  <option value="en">English</option>
-                  <option value="hi">Hindi</option>
-                  <option value="hinglish">Hinglish</option>
-                </select>
-              </label>
-              <button id="startButton" class="button primary">Start check-in</button>
+            <div class="focus-tone-grid">
+              <article class="tone-card">
+                <span class="tone-icon">☾</span>
+                <div>
+                  <p class="mini-label">Sleep</p>
+                  <p class="summary-text">नींद, restlessness, waking up, oversleeping</p>
+                </div>
+              </article>
+              <article class="tone-card">
+                <span class="tone-icon">◐</span>
+                <div>
+                  <p class="mini-label">Mood</p>
+                  <p class="summary-text">heavy mood, numbness, guilt, low energy</p>
+                </div>
+              </article>
+              <article class="tone-card">
+                <span class="tone-icon">∞</span>
+                <div>
+                  <p class="mini-label">Worry</p>
+                  <p class="summary-text">चिंता, overthinking, tension, not switching off</p>
+                </div>
+              </article>
             </div>
 
-            <section class="starter-section">
-              <div class="section-head compact">
-                <div>
-                  <p class="eyebrow">Start with what feels easiest</p>
-                  <h3>Quick ways to begin</h3>
-                </div>
-                <span class="chip accent">Confidence boosters</span>
-              </div>
-              <p class="panel-subtitle">
-                These starters help when opening up feels hard. Tap one, edit it, or ignore them and speak naturally.
-              </p>
-              <div id="starterDeck" class="starter-deck"></div>
-            </section>
-
-            <details class="profile-details">
-              <summary>Optional context for a more personal check-in</summary>
-              <p class="panel-subtitle">
-                Share as much or as little as you want. This stays focused on making the next question more relevant.
-              </p>
-              <div class="profile-form-grid">
-                <label class="inline-field">
-                  <span>Name</span>
-                  <input id="profileNameInput" type="text" placeholder="What should ManoVarta call you?" />
-                </label>
-                <label class="inline-field">
-                  <span>Age</span>
-                  <input id="profileAgeInput" type="number" min="1" max="120" placeholder="Optional" />
-                </label>
-                <label class="inline-field">
-                  <span>Occupation</span>
-                  <input id="profileOccupationInput" type="text" placeholder="Student, engineer, homemaker..." />
-                </label>
-                <label class="inline-field">
-                  <span>Living situation</span>
-                  <input id="profileLivingInput" type="text" placeholder="With family, alone, hostel..." />
-                </label>
-                <label class="inline-field">
-                  <span>Support system</span>
-                  <input id="profileSupportInput" type="text" placeholder="Friend, sibling, partner..." />
-                </label>
-                <label class="inline-field full-span">
-                  <span>Anything important to keep in mind?</span>
-                  <input id="profileContextInput" type="text" placeholder="Exams, caregiving, breakup, work stress..." />
-                </label>
-              </div>
-            </details>
-
             <div class="trust-row">
-              <span class="trust-pill">No rigid questionnaire on the surface</span>
+              <span class="trust-pill">No rigid form on the surface</span>
               <span class="trust-pill">Voice and text both work</span>
               <span class="trust-pill">Safety checks stay in the background</span>
             </div>
@@ -205,6 +157,91 @@
 
             <div id="sessionMeta" class="session-meta empty">No active session yet.</div>
 
+            <section class="welcome-stage">
+              <div class="welcome-copy">
+                <p class="eyebrow">Start gently</p>
+                <h2>What feels heaviest today?</h2>
+                <p class="subtitle">
+                  Type one honest sentence or tap the mic. ManoVarta responds in English, हिंदी, or Hinglish and keeps the conversation gentle.
+                </p>
+              </div>
+
+              <div class="welcome-visual">
+                <div class="welcome-halo welcome-halo-a"></div>
+                <div class="welcome-halo welcome-halo-b"></div>
+                <div class="welcome-core">
+                  <span class="welcome-core-mark">म</span>
+                  <span class="welcome-core-line">mind · mann · मन</span>
+                </div>
+                <div class="welcome-float welcome-float-a">नींद</div>
+                <div class="welcome-float welcome-float-b">stress</div>
+                <div class="welcome-float welcome-float-c">चिंता</div>
+              </div>
+
+              <div class="welcome-actions">
+                <label class="inline-field compact-field native-language-select">
+                  <span>Language</span>
+                  <select id="languageSelect">
+                    <option value="en">English</option>
+                    <option value="hi">Hindi</option>
+                    <option value="hinglish">Hinglish</option>
+                  </select>
+                </label>
+                <button id="startButton" class="button primary">Start check-in</button>
+                <span class="welcome-note">No account required to begin.</span>
+              </div>
+
+              <section class="starter-section">
+                <div class="section-head compact">
+                  <div>
+                    <p class="eyebrow">Start with what feels easiest</p>
+                    <h3>Quick first lines</h3>
+                  </div>
+                  <span class="chip accent">Confidence boosters</span>
+                </div>
+                <div id="starterDeck" class="starter-deck"></div>
+              </section>
+
+              <details class="profile-details profile-details-inline">
+                <summary>Optional context for a more personal check-in</summary>
+                <p class="panel-subtitle">
+                  Add only what feels useful. ManoVarta uses this to make follow-up questions feel more relevant, not more clinical.
+                </p>
+                <div class="profile-form-grid">
+                  <label class="inline-field">
+                    <span>Name</span>
+                    <input id="profileNameInput" type="text" placeholder="What should ManoVarta call you?" />
+                  </label>
+                  <label class="inline-field">
+                    <span>Age</span>
+                    <input id="profileAgeInput" type="number" min="1" max="120" placeholder="Optional" />
+                  </label>
+                  <label class="inline-field">
+                    <span>Occupation</span>
+                    <input id="profileOccupationInput" type="text" placeholder="Student, engineer, homemaker..." />
+                  </label>
+                  <label class="inline-field">
+                    <span>Living situation</span>
+                    <input id="profileLivingInput" type="text" placeholder="With family, alone, hostel..." />
+                  </label>
+                  <label class="inline-field">
+                    <span>Support system</span>
+                    <input id="profileSupportInput" type="text" placeholder="Friend, sibling, partner..." />
+                  </label>
+                  <label class="inline-field full-span">
+                    <span>Anything important to keep in mind?</span>
+                    <input id="profileContextInput" type="text" placeholder="Exams, caregiving, breakup, work stress..." />
+                  </label>
+                </div>
+              </details>
+
+              <div class="welcome-assurances">
+                <span class="trust-pill">No long form to fill</span>
+                <span class="trust-pill">Speak or type</span>
+                <span class="trust-pill">You can keep answers brief</span>
+              </div>
+            </section>
+
             <section class="storyboard-grid">
               <article class="story-card">
                 <p class="mini-label">What ManoVarta is hearing</p>
@@ -258,7 +295,15 @@
             </section>
 
             <div class="chat-stage">
-              <div id="chatLog" class="chat-log"></div>
+              <div id="chatLog" class="chat-log">
+                <article class="empty-chat-card">
+                  <p class="eyebrow">When you are ready</p>
+                  <h3>You can start with just one line.</h3>
+                  <p class="summary-text">
+                    Example: “My sleep has been off and I feel more tense than usual.”
+                  </p>
+                </article>
+              </div>
             </div>
 
             <section class="nudge-panel">
@@ -291,6 +336,17 @@
                   rows="3"
                   placeholder="Describe what changed, when it happens, and how it affects your day..."
                 ></textarea>
+
+                <div id="voicePreview" class="voice-preview is-hidden" aria-live="polite">
+                  <div class="voice-preview-copy">
+                    <p class="mini-label">Captured voice note</p>
+                    <p id="voicePreviewText" class="summary-text">Transcript preview</p>
+                  </div>
+                  <div class="voice-preview-actions">
+                    <span id="voiceSendMode" class="chip soft">Auto-send on</span>
+                    <button id="voiceUseButton" type="button" class="button ghost">Use transcript</button>
+                  </div>
+                </div>
 
                 <div class="composer-toolbar">
                   <div class="voice-cluster">
@@ -329,7 +385,7 @@
             <footer class="conversation-footer">
               <button id="backstageToggle" type="button" class="button ghost subtle review-only">Presenter tools</button>
               <p class="footer-copy">
-                The main experience stays focused on comfort, clarity, and a private check-in you can return to.
+                Comfort first. The conversation stays focused on what feels real right now.
               </p>
             </footer>
           </section>

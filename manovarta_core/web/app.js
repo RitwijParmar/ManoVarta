@@ -220,6 +220,10 @@ const micButton = document.getElementById("micButton");
 const autoSendToggle = document.getElementById("autoSendToggle");
 const speakToggle = document.getElementById("speakToggle");
 const voiceStatus = document.getElementById("voiceStatus");
+const voicePreview = document.getElementById("voicePreview");
+const voicePreviewText = document.getElementById("voicePreviewText");
+const voiceSendMode = document.getElementById("voiceSendMode");
+const voiceUseButton = document.getElementById("voiceUseButton");
 const statusBanner = document.getElementById("statusBanner");
 const progressMeterFill = document.getElementById("progressMeterFill");
 const progressMeterLabel = document.getElementById("progressMeterLabel");
@@ -294,6 +298,7 @@ let mediaRecorder = null;
 let mediaStream = null;
 let recordedChunks = [];
 let currentAudio = null;
+let pendingVoiceTranscript = "";
 const reviewMode = window.location.pathname.startsWith("/review");
 
 function setBusy(isBusy) {
@@ -305,6 +310,10 @@ function setBusy(isBusy) {
 function setStatusBanner(message, tone = "info") {
   statusBanner.textContent = message;
   statusBanner.className = `status-banner ${tone}`;
+}
+
+function setHasHistory(hasHistory) {
+  document.body.classList.toggle("has-history", Boolean(hasHistory));
 }
 
 function setDisclosureState(panel, button, open, labels) {
@@ -455,6 +464,7 @@ function renderHistory() {
   }
 
   const entries = state.recentCheckins || [];
+  setHasHistory(entries.length > 0);
   ritualCount.textContent = String(entries.length);
   ritualStreak.textContent = String(computeCheckinStreak(entries));
 
@@ -488,6 +498,34 @@ function renderHistory() {
     `;
     historyList.appendChild(card);
   });
+}
+
+function setVoicePreview(transcript = "", { visible = false } = {}) {
+  pendingVoiceTranscript = transcript || "";
+  if (!voicePreview || !voicePreviewText || !voiceSendMode) {
+    return;
+  }
+  voicePreview.classList.toggle("is-hidden", !visible);
+  voicePreviewText.textContent = transcript || "Transcript preview";
+  voiceSendMode.textContent = autoSendToggle?.checked ? "Sends when you stop talking" : "Review before sending";
+  if (voiceUseButton) {
+    voiceUseButton.textContent = autoSendToggle?.checked ? "Send now" : "Use transcript";
+  }
+}
+
+function detectRecordingMimeType() {
+  if (typeof MediaRecorder === "undefined" || typeof MediaRecorder.isTypeSupported !== "function") {
+    return "";
+  }
+  const candidates = [
+    "audio/webm;codecs=opus",
+    "audio/webm",
+    "audio/ogg;codecs=opus",
+    "audio/ogg",
+    "audio/mp4",
+    "audio/wav",
+  ];
+  return candidates.find((mime) => MediaRecorder.isTypeSupported(mime)) || "";
 }
 
 function rememberCheckin(payload) {
@@ -524,14 +562,14 @@ function setLink(anchor, href) {
 function runtimeToText(payload) {
   if (payload.hybrid_safety_enabled) {
     if (payload.cloud_voice_enabled) {
-      return "Voice, multilingual support, and background safety checks are ready for a calm guided check-in.";
+      return "Voice, multilingual support, and quiet safety checks are ready.";
     }
-    return "Multilingual conversation and background safety checks are ready for a calm guided check-in.";
+    return "Multilingual conversation and quiet safety checks are ready.";
   }
   if (payload.cloud_voice_enabled) {
-    return "Voice and multilingual conversation are ready whenever you feel like starting.";
+    return "Voice and multilingual conversation are ready.";
   }
-  return "Conversation service is online and ready whenever you are.";
+  return "Conversation service is ready.";
 }
 
 function runtimeToDetail(payload) {
@@ -644,8 +682,8 @@ async function fetchBootstrap() {
     const payload = await response.json();
     renderRuntime(payload.runtime);
     serviceHealth.textContent = payload.health.status === "ok"
-      ? "Private check-in ready."
-      : "The service is still waking up. Give it a moment, then retry.";
+      ? "Ready"
+      : "Waking up";
     serviceHealth.className = `service-health ${payload.health.status === "ok" ? "good" : "warn"}`;
     state.profiles = payload.profiles || [];
     renderProfiles(state.profiles);
@@ -665,8 +703,8 @@ async function fetchBootstrap() {
   const profilesPayload = await profilesResponse.json();
   renderRuntime(runtimePayload);
   serviceHealth.textContent = healthPayload.status === "ok"
-    ? "Private check-in ready."
-    : "The service is still waking up. Give it a moment, then retry.";
+    ? "Ready"
+    : "Waking up";
   serviceHealth.className = `service-health ${healthPayload.status === "ok" ? "good" : "warn"}`;
   state.profiles = (profilesPayload || []).map((profile) => {
     const background = profile.background_profile || {};
@@ -701,6 +739,7 @@ async function startSession() {
     state.language = languageSelect.value;
     applyLanguageDefaults(state.language);
     stopListening();
+    setVoicePreview("", { visible: false });
 
     const response = await fetch("/chat/sessions", {
       method: "POST",
@@ -1215,6 +1254,7 @@ async function sendMessageText(text) {
   setBusy(true);
   try {
     stopListening();
+    setVoicePreview("", { visible: false });
     if (speechSynthesisApi) {
       speechSynthesisApi.cancel();
     }
@@ -1263,18 +1303,88 @@ function downloadExport() {
 }
 
 function backendVoiceAvailable() {
-  return Boolean(state.runtime?.speech_to_text_enabled);
+  return Boolean(state.runtime?.speech_to_text_enabled || state.runtime?.cloud_voice_enabled);
+}
+
+function browserVoiceAvailable() {
+  return Boolean(recognition);
+}
+
+function shouldPreferBrowserVoice() {
+  return browserVoiceAvailable();
+}
+
+function startBrowserVoiceCapture(statusMessage = "Requesting microphone access...") {
+  if (!recognition) {
+    updateVoiceStatus("Browser voice is not available here.", true);
+    return false;
+  }
+  try {
+    recognition.lang = mapVoiceLanguage(languageSelect.value);
+    setVoicePreview("", { visible: false });
+    updateVoiceStatus(statusMessage);
+    recognition.start();
+    return true;
+  } catch (error) {
+    console.error(error);
+    updateVoiceStatus("Microphone could not start. Please check browser mic permission and try again.", true);
+    return false;
+  }
+}
+
+function updateMicButtonLabel() {
+  if (!micButton) {
+    return;
+  }
+  if (listening) {
+    micButton.textContent = "Stop";
+    return;
+  }
+  micButton.textContent = autoSendToggle?.checked ? "Speak and auto-send" : "Tap to talk";
+}
+
+function cleanupMediaStream() {
+  if (mediaStream) {
+    mediaStream.getTracks().forEach((track) => track.stop());
+    mediaStream = null;
+  }
+  mediaRecorder = null;
+}
+
+function handleCapturedTranscript(transcript, sourceLabel = "voice") {
+  const cleaned = (transcript || "").trim();
+  if (!cleaned) {
+    updateVoiceStatus("I could not hear enough to transcribe. Please try again.", true);
+    setVoicePreview("", { visible: false });
+    return;
+  }
+  messageInput.value = cleaned;
+  setVoicePreview(cleaned, { visible: true });
+  updateVoiceStatus(`Transcript captured from ${sourceLabel}.`);
+  if (autoSendToggle.checked) {
+    chatForm.requestSubmit();
+  }
 }
 
 async function startBackendRecording() {
   if (!navigator.mediaDevices?.getUserMedia || typeof MediaRecorder === "undefined") {
-    updateVoiceStatus("Voice recording is not available in this browser.", true);
-    return;
+    throw new Error("Voice recording is not available in this browser.");
   }
 
-  mediaStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+  const mimeType = detectRecordingMimeType();
+  if (!mimeType) {
+    throw new Error("No supported recording format is available in this browser.");
+  }
+
+  mediaStream = await navigator.mediaDevices.getUserMedia({
+    audio: {
+      echoCancellation: true,
+      noiseSuppression: true,
+      autoGainControl: true,
+    },
+  });
   recordedChunks = [];
-  mediaRecorder = new MediaRecorder(mediaStream, { mimeType: "audio/webm" });
+  mediaRecorder = new MediaRecorder(mediaStream, mimeType ? { mimeType } : undefined);
   mediaRecorder.ondataavailable = (event) => {
     if (event.data && event.data.size > 0) {
       recordedChunks.push(event.data);
@@ -1282,17 +1392,15 @@ async function startBackendRecording() {
   };
   mediaRecorder.onstop = async () => {
     listening = false;
-    micButton.textContent = "Talk instead";
+    updateMicButtonLabel();
     updateVoiceStatus("Transcribing your voice...");
-    const blob = new Blob(recordedChunks, { type: "audio/webm" });
+    const blob = new Blob(recordedChunks, { type: mimeType || "audio/webm" });
     recordedChunks = [];
-    if (mediaStream) {
-      mediaStream.getTracks().forEach((track) => track.stop());
-      mediaStream = null;
-    }
+    cleanupMediaStream();
     try {
       const formData = new FormData();
-      formData.append("audio", blob, "voice.webm");
+      const extension = mimeType.includes("ogg") ? "ogg" : mimeType.includes("wav") ? "wav" : "webm";
+      formData.append("audio", blob, `voice.${extension}`);
       const response = await fetch(`/voice/transcribe?language=${encodeURIComponent(state.language)}`, {
         method: "POST",
         body: formData,
@@ -1301,24 +1409,19 @@ async function startBackendRecording() {
         throw new Error(`Voice transcription failed (${response.status})`);
       }
       const payload = await response.json();
-      const transcript = (payload.transcript || "").trim();
-      if (!transcript) {
-        updateVoiceStatus("I could not hear enough to transcribe. Please try again.", true);
-        return;
-      }
-      messageInput.value = transcript;
-      updateVoiceStatus("Transcript captured from cloud voice.");
-      if (autoSendToggle.checked) {
-        chatForm.requestSubmit();
-      }
+      handleCapturedTranscript(payload.transcript || "", "cloud voice");
     } catch (error) {
       console.error(error);
+      if (recognition) {
+        updateVoiceStatus("Cloud transcription struggled. Try speaking once more and I’ll capture it live in the browser.");
+        return;
+      }
       updateVoiceStatus("Voice transcription failed. Please try typing instead.", true);
     }
   };
   mediaRecorder.start();
   listening = true;
-  micButton.textContent = "Stop listening";
+  updateMicButtonLabel();
   updateVoiceStatus("Recording for cloud transcription...", false, true);
 }
 
@@ -1338,8 +1441,9 @@ function setupVoice() {
 
     recognition.onstart = () => {
       listening = true;
-      micButton.textContent = "Stop listening";
-      updateVoiceStatus("Listening now...", false, true);
+      updateMicButtonLabel();
+      setVoicePreview("", { visible: false });
+      updateVoiceStatus("Listening now. Tap stop when you are done.", false, true);
     };
 
     recognition.onresult = (event) => {
@@ -1350,25 +1454,31 @@ function setupVoice() {
       if (!transcript) {
         return;
       }
-      messageInput.value = transcript;
       const finalResult = event.results[event.results.length - 1];
       if (finalResult?.isFinal) {
-        updateVoiceStatus("Transcript captured.");
-        if (autoSendToggle.checked) {
-          chatForm.requestSubmit();
-        }
+        handleCapturedTranscript(transcript, "browser voice");
+      } else {
+        setVoicePreview(transcript, { visible: true });
       }
     };
 
     recognition.onerror = (event) => {
       listening = false;
-      micButton.textContent = "Talk instead";
+      updateMicButtonLabel();
+      if (event.error === "not-allowed" || event.error === "service-not-allowed") {
+        updateVoiceStatus("Microphone access is blocked. Allow mic access in the browser and try again.", true);
+        return;
+      }
+      if (event.error === "no-speech") {
+        updateVoiceStatus("I did not catch speech that time. Try once more.", true);
+        return;
+      }
       updateVoiceStatus(`Voice error: ${event.error}`, true);
     };
 
     recognition.onend = () => {
       listening = false;
-      micButton.textContent = "Talk instead";
+      updateMicButtonLabel();
       if (!voiceStatus.classList.contains("error")) {
         updateVoiceStatus("Voice ready.");
       }
@@ -1376,6 +1486,22 @@ function setupVoice() {
   }
 
   micButton.addEventListener("click", toggleListening);
+  voiceUseButton?.addEventListener("click", () => {
+    if (!pendingVoiceTranscript) {
+      return;
+    }
+    messageInput.value = pendingVoiceTranscript;
+    if (autoSendToggle.checked) {
+      chatForm.requestSubmit();
+    } else {
+      messageInput.focus();
+      updateVoiceStatus("Transcript moved into the message box.");
+    }
+  });
+  autoSendToggle?.addEventListener("change", () => {
+    updateMicButtonLabel();
+    setVoicePreview(pendingVoiceTranscript, { visible: Boolean(pendingVoiceTranscript) });
+  });
   languageSelect.addEventListener("change", () => {
     if (recognition) {
       recognition.lang = mapVoiceLanguage(languageSelect.value);
@@ -1395,10 +1521,11 @@ function setupVoice() {
   });
 
   if (SpeechRecognitionCtor) {
-    updateVoiceStatus("Voice ready when microphone access is allowed.");
+    updateVoiceStatus("Tap the mic, speak, and stop. ManoVarta will capture your words.");
   } else {
-    updateVoiceStatus("Cloud voice will be used when available.");
+    updateVoiceStatus("Tap the mic to record. ManoVarta will transcribe it in the cloud.");
   }
+  updateMicButtonLabel();
 }
 
 function toggleListening() {
@@ -1406,10 +1533,18 @@ function toggleListening() {
     stopListening();
     return;
   }
+  if (shouldPreferBrowserVoice()) {
+    startBrowserVoiceCapture("Requesting microphone access...");
+    return;
+  }
   if (backendVoiceAvailable()) {
     updateVoiceStatus("Requesting microphone access...");
     startBackendRecording().catch((error) => {
       console.error(error);
+      if (recognition) {
+        startBrowserVoiceCapture("Cloud recording could not start. Switching to browser voice...");
+        return;
+      }
       updateVoiceStatus("Voice recording could not start. Please type instead.", true);
     });
     return;
@@ -1424,12 +1559,12 @@ function toggleListening() {
 }
 
 function stopListening() {
-  if (backendVoiceAvailable() && mediaRecorder && mediaRecorder.state !== "inactive") {
-    stopBackendRecording();
-    return;
-  }
   if (recognition && listening) {
     recognition.stop();
+    return;
+  }
+  if (backendVoiceAvailable() && mediaRecorder && mediaRecorder.state !== "inactive") {
+    stopBackendRecording();
   }
 }
 
