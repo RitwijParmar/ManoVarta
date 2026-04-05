@@ -283,6 +283,7 @@ const architectureModal = document.getElementById("architectureModal");
 const backstageToggle = document.getElementById("backstageToggle");
 const backstageClose = document.getElementById("backstageClose");
 const backstagePanel = document.getElementById("backstagePanel");
+const languageTabs = Array.from(document.querySelectorAll(".language-tab"));
 
 const SpeechRecognitionCtor = window.SpeechRecognition || window.webkitSpeechRecognition || null;
 const speechSynthesisApi = window.speechSynthesis || null;
@@ -354,6 +355,14 @@ function renderStarterDeck(language) {
     `;
     button.addEventListener("click", () => applyNudge(starter.text));
     starterDeck.appendChild(button);
+  });
+}
+
+function syncLanguageTabs(language) {
+  languageTabs.forEach((button) => {
+    const active = button.getAttribute("data-language") === language;
+    button.classList.toggle("is-active", active);
+    button.setAttribute("aria-pressed", String(active));
   });
 }
 
@@ -682,6 +691,7 @@ function applyLanguageDefaults(language) {
   const copy = LANGUAGE_UI[language] || LANGUAGE_UI.en;
   messageInput.placeholder = copy.placeholder;
   nudgeSubtitle.textContent = copy.nudgeIntro;
+  syncLanguageTabs(language);
   renderStarterDeck(language);
 }
 
@@ -1374,6 +1384,14 @@ function setupVoice() {
     applyLanguageDefaults(state.language);
     updateSessionBadge();
     updateVoiceStatus(`Voice language set to ${state.language.toUpperCase()}.`);
+  });
+
+  languageTabs.forEach((button) => {
+    button.addEventListener("click", () => {
+      const nextLanguage = button.getAttribute("data-language") || "en";
+      languageSelect.value = nextLanguage;
+      languageSelect.dispatchEvent(new Event("change"));
+    });
   });
 
   if (SpeechRecognitionCtor) {

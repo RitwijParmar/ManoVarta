@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="ManoVarta">
+  <defs>
+    <linearGradient id="bg" x1="0%" x2="100%" y1="0%" y2="100%">
+      <stop offset="0%" stop-color="#0d786f" />
+      <stop offset="100%" stop-color="#0c5a61" />
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="18" fill="url(#bg)" />
+  <circle cx="22" cy="18" r="10" fill="rgba(255,255,255,0.18)" />
+  <text x="32" y="40" text-anchor="middle" font-size="29" font-family="Georgia, serif" font-weight="700" fill="#ffffff">म</text>
+</svg>
