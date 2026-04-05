@@ -138,6 +138,59 @@ def test_huggingface_extractor_retries_with_compact_prompt_after_failure():
     assert "User disclosures:" in extractor._client.calls[1]["messages"][1]["content"]
 
 
+def test_huggingface_extractor_builds_english_windows_with_context():
+    extractor = HuggingFaceExtractor(_disabled_config())
+    turns = [
+        Turn(turn_id=1, speaker="assistant", text="What has been feeling hardest?", language_tag="en"),
+        Turn(turn_id=2, speaker="user", text="I feel flat most of the day.", language_tag="en"),
+        Turn(turn_id=3, speaker="assistant", text="What happens at night?", language_tag="en"),
+        Turn(turn_id=4, speaker="user", text="I replay whole conversations and cannot switch off.", language_tag="en"),
+        Turn(turn_id=5, speaker="assistant", text="Anything else?", language_tag="en"),
+        Turn(turn_id=6, speaker="user", text="Sometimes it feels like everyone would be better off without me around.", language_tag="en"),
+    ]
+
+    windows = extractor._build_english_window_transcripts(turns)
+
+    assert len(windows) >= 3
+    assert windows[0].startswith("assistant: What has been feeling hardest?")
+    assert "assistant: What happens at night?" in windows[1]
+    assert any("better off without me around" in window for window in windows)
+
+
+def test_huggingface_extractor_english_windows_merge_with_verifier():
+    extractor = HuggingFaceExtractor(_disabled_config())
+
+    class _Response:
+        def __init__(self, content):
+            self.choices = [type("Choice", (), {"message": type("Message", (), {"content": content})()})()]
+
+    class _FakeClient:
+        def __init__(self):
+            self.calls = []
+
+        def chat_completion(self, *, messages, temperature, max_tokens):
+            self.calls.append({"messages": messages, "max_tokens": max_tokens})
+            if len(self.calls) == 1:
+                return _Response('{"items":[{"item_id":"gad_q1_nervous","value":2,"evidence_quote":"my jaw stays tight all day"}],"safety_level":"none","safety_cues":[],"notes":"window1"}')
+            return _Response('{"items":[{"item_id":"gad_q4_trouble_relaxing","value":2,"evidence_quote":"I cannot really switch off"},{"item_id":"phq_q9_self_harm","value":1,"evidence_quote":"everyone would be better off without me around"}],"safety_level":"review","safety_cues":["disappearance language"],"notes":"verifier"}')
+
+    extractor._client = _FakeClient()
+    turns = [
+        Turn(turn_id=1, speaker="assistant", text="What has stress looked like lately?", language_tag="en"),
+        Turn(turn_id=2, speaker="user", text="My jaw stays tight all day before difficult calls.", language_tag="en"),
+        Turn(turn_id=3, speaker="assistant", text="What thoughts show up when it gets heavy?", language_tag="en"),
+        Turn(turn_id=4, speaker="user", text="I replay whole conversations, cannot really switch off, and sometimes it feels like everyone would be better off without me around.", language_tag="en"),
+    ]
+
+    payload = extractor.extract(turns, "en")
+
+    assert payload is not None
+    items = {item["item_id"] for item in payload["items"]}
+    assert {"gad_q1_nervous", "gad_q4_trouble_relaxing", "phq_q9_self_harm"} <= items
+    assert payload["safety_level"] == "review"
+    assert "Priority English miss-check items:" in extractor._client.calls[-1]["messages"][1]["content"]
+
+
 def test_huggingface_safety_assessor_stays_disabled_without_token():
     assessor = HuggingFaceSafetyAssessor(_disabled_config())
     assert assessor.enabled is False

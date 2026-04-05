@@ -1,7 +1,7 @@
 # Best Current System Report
 
-- Generated: `2026-04-05T02:01:33.065270+00:00`
-- Git revision: `fb869d9`
+- Generated: `2026-04-05T02:23:02.149446+00:00`
+- Git revision: `15abf2e`
 - Public runtime URL: `https://manovarta-runtime-122722888597.us-east4.run.app`
 
 ## Default Runtime
@@ -33,19 +33,19 @@
 
 ## Hybrid Runtime Validation
 
-- Coverage completeness: `0.625`
-- MAE: `0.452`
-- Exact match: `0.613`
-- Macro-F1: `0.214`
+- Coverage completeness: `0.745`
+- MAE: `0.482`
+- Exact match: `0.584`
+- Macro-F1: `0.216`
 - Safety precision: `1.0`
 - Safety recall: `1.0`
 
 ## Delta Vs Extractor Baseline
 
-- `coverage_completeness`: `-0.288`
-- `mae`: `+0.009`
-- `exact_match_rate`: `+0.051`
-- `macro_f1`: `-0.058`
+- `coverage_completeness`: `-0.168`
+- `mae`: `+0.039`
+- `exact_match_rate`: `+0.022`
+- `macro_f1`: `-0.056`
 - `safety_precision`: `+1.000`
 - `safety_recall`: `+1.000`
 
@@ -65,7 +65,7 @@
 
 ## Known Gaps
 
-- English is now the weakest language slice in the live runtime evaluation at coverage 0.391.
+- English is now the weakest language slice in the live runtime evaluation at coverage 0.727.
 - Live runtime coverage still trails the best offline extractor baseline, so hosted extraction reliability remains the next coverage bottleneck.
 - Production inference still depends on hosted Hugging Face models rather than a fully self-hosted extractor stack.
 

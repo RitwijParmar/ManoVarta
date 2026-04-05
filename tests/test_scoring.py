@@ -167,3 +167,34 @@ def test_scoring_picks_up_hinglish_worry_relaxing_and_restlessness():
     assert snapshot.items["gad_q4_trouble_relaxing"].value >= 2
     assert snapshot.items["gad_q5_restlessness"].value >= 2
     assert snapshot.items["gad_q6_irritability"].value >= 1
+
+
+def test_scoring_picks_up_english_nervous_relaxing_irritability_and_self_harm_cues():
+    turns = [
+        Turn(turn_id=1, speaker="assistant", text="What has stress looked like lately?", language_tag="en"),
+        Turn(
+            turn_id=2,
+            speaker="user",
+            text="My jaw stays tight all day and I notice I am clenching my hands before difficult calls.",
+            language_tag="en",
+        ),
+        Turn(
+            turn_id=3,
+            speaker="user",
+            text="By the time I get home I am snappy for no good reason and cannot really switch off.",
+            language_tag="en",
+        ),
+        Turn(
+            turn_id=4,
+            speaker="user",
+            text="Sometimes it feels like everyone would be better off without me around and I could just disappear.",
+            language_tag="en",
+        ),
+    ]
+
+    snapshot = ConversationScorer().analyze(turns, "en", SafetyMonitor().assess(turns))
+
+    assert snapshot.items["gad_q1_nervous"].value >= 2
+    assert snapshot.items["gad_q4_trouble_relaxing"].value >= 2
+    assert snapshot.items["gad_q6_irritability"].value >= 1
+    assert snapshot.items["phq_q9_self_harm"].value >= 1

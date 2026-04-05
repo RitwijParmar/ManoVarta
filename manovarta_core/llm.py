@@ -36,6 +36,15 @@ EXTRACTOR_ITEM_HINTS = {
     "gad_q6_irritability": "snappy for no good reason, choti baat par gussa, irritability from stress spillover",
     "gad_q7_fear_awful": "getting written up, not covering rent, something bad will happen, debt or catastrophe anticipation",
 }
+ENGLISH_VERIFIER_FOCUS_ITEMS = (
+    "gad_q1_nervous",
+    "gad_q2_control_worry",
+    "gad_q3_excessive_worry",
+    "gad_q4_trouble_relaxing",
+    "gad_q6_irritability",
+    "phq_q3_sleep",
+    "phq_q9_self_harm",
+)
 
 
 class HuggingFaceResponder:
@@ -162,22 +171,57 @@ class HuggingFaceExtractor:
         if not self.enabled:
             return None
 
+        if language.lower() == "en":
+            return self._extract_with_english_windows(turns)
+
         transcript = self._build_extraction_transcript(turns)
+        full_transcript = self._build_extraction_transcript(turns, include_assistant=True)
         item_lines = self._item_lines(include_hints=False)
-        attempts = [
-            (
-                self._build_extraction_messages(language, transcript, item_lines),
-                min(self.config.extraction_max_tokens, 360),
-            ),
-            (
-                self._build_compact_extraction_messages(language, transcript),
-                min(self.config.extraction_max_tokens, 260),
-            ),
-            (
-                self._build_compact_extraction_messages(language, self._build_extraction_transcript(turns, include_assistant=True)),
-                min(self.config.extraction_max_tokens, 260),
-            ),
-        ]
+        return self._run_attempt_sequence(language, transcript, full_transcript, item_lines)
+
+    def _extract_with_english_windows(self, turns: list[Turn]) -> Optional[dict]:
+        item_lines = self._item_lines(include_hints=False)
+        merged_payload = None
+        for transcript in self._build_english_window_transcripts(turns):
+            payload = self._run_attempt_sequence(
+                "en",
+                transcript,
+                transcript,
+                item_lines,
+                prefer_compact=True,
+            )
+            merged_payload = self._merge_payloads(merged_payload, payload)
+
+        full_transcript = self._build_extraction_transcript(turns, include_assistant=True)
+        verifier_payload = self._run_english_verifier(full_transcript, item_lines, merged_payload)
+        merged_payload = self._merge_payloads(merged_payload, verifier_payload)
+        if merged_payload and merged_payload.get("items"):
+            return merged_payload
+
+        return self._run_attempt_sequence(
+            "en",
+            self._build_extraction_transcript(turns),
+            full_transcript,
+            item_lines,
+            prefer_compact=True,
+        )
+
+    def _run_attempt_sequence(
+        self,
+        language: str,
+        primary_transcript: str,
+        fallback_transcript: str,
+        item_lines: str,
+        *,
+        prefer_compact: bool = False,
+    ) -> Optional[dict]:
+        attempts = self._build_attempts(
+            language,
+            primary_transcript,
+            fallback_transcript,
+            item_lines,
+            prefer_compact=prefer_compact,
+        )
 
         last_payload = None
         for index, (messages, max_tokens) in enumerate(attempts):
@@ -200,12 +244,98 @@ class HuggingFaceExtractor:
                 time.sleep(0.2)
         return last_payload
 
+    def _build_attempts(
+        self,
+        language: str,
+        primary_transcript: str,
+        fallback_transcript: str,
+        item_lines: str,
+        *,
+        prefer_compact: bool = False,
+    ) -> list[tuple[list[dict[str, str]], int]]:
+        if prefer_compact:
+            return [
+                (
+                    self._build_compact_extraction_messages(language, primary_transcript),
+                    min(self.config.extraction_max_tokens, 240),
+                ),
+                (
+                    self._build_extraction_messages(language, primary_transcript, item_lines),
+                    min(self.config.extraction_max_tokens, 300),
+                ),
+                (
+                    self._build_compact_extraction_messages(language, fallback_transcript),
+                    min(self.config.extraction_max_tokens, 240),
+                ),
+            ]
+
+        return [
+            (
+                self._build_extraction_messages(language, primary_transcript, item_lines),
+                min(self.config.extraction_max_tokens, 360),
+            ),
+            (
+                self._build_compact_extraction_messages(language, primary_transcript),
+                min(self.config.extraction_max_tokens, 260),
+            ),
+            (
+                self._build_compact_extraction_messages(language, fallback_transcript),
+                min(self.config.extraction_max_tokens, 260),
+            ),
+        ]
+
     def _parse_json(self, content: str) -> Optional[dict]:
         return parse_extractor_payload(content)
 
     def _build_extraction_transcript(self, turns: list[Turn], *, include_assistant: bool = False) -> str:
         selected_turns = turns[-12:] if include_assistant else [turn for turn in turns if turn.speaker == "user"][-6:]
         return "\n".join(f"{turn.speaker}: {turn.text}" for turn in selected_turns)
+
+    def _build_english_window_transcripts(self, turns: list[Turn]) -> list[str]:
+        user_indices = [index for index, turn in enumerate(turns) if turn.speaker == "user"]
+        if not user_indices:
+            return []
+        if len(user_indices) <= 2:
+            return [self._build_window_transcript(turns, 0, len(turns) - 1)]
+
+        windows: list[str] = []
+        seen = set()
+        for start in range(len(user_indices) - 1):
+            start_idx = user_indices[start]
+            if start_idx > 0 and turns[start_idx - 1].speaker == "assistant":
+                start_idx -= 1
+            end_idx = user_indices[start + 1]
+            window = self._build_window_transcript(turns, start_idx, end_idx)
+            if window and window not in seen:
+                seen.add(window)
+                windows.append(window)
+
+        full_transcript = self._build_extraction_transcript(turns, include_assistant=True)
+        if full_transcript and full_transcript not in seen:
+            windows.append(full_transcript)
+        return windows
+
+    def _build_window_transcript(self, turns: list[Turn], start_idx: int, end_idx: int) -> str:
+        return "\n".join(
+            f"{turn.speaker}: {turn.text}"
+            for turn in turns[start_idx:end_idx + 1]
+        )
+
+    def _run_english_verifier(
+        self,
+        transcript: str,
+        item_lines: str,
+        candidate_payload: Optional[dict],
+    ) -> Optional[dict]:
+        try:
+            output = self._client.chat_completion(
+                messages=self._build_english_verifier_messages(transcript, item_lines, candidate_payload),
+                temperature=0.0,
+                max_tokens=min(self.config.extraction_max_tokens, 320),
+            )
+        except Exception:
+            return None
+        return self._parse_json(output.choices[0].message.content)
 
     def _run_candidate_pass(self, language: str, transcript: str, item_lines: str) -> Optional[dict]:
         try:
@@ -319,6 +449,50 @@ class HuggingFaceExtractor:
                     "mind not sticking, feeling weak or like a burden, heart racing, replaying worries, wanting to disappear, "
                     "or saying everything should end.\n\n"
                     f"User disclosures:\n{transcript}"
+                ),
+            },
+        ]
+
+    def _build_english_verifier_messages(
+        self,
+        transcript: str,
+        item_lines: str,
+        candidate_payload: Optional[dict],
+    ) -> list[dict[str, str]]:
+        if candidate_payload and candidate_payload.get("items"):
+            candidate_lines = "\n".join(
+                f"- {item['item_id']}: {item['value']} | quote={item.get('evidence_quote', '')}"
+                for item in candidate_payload["items"]
+            )
+        else:
+            candidate_lines = "- none"
+        focus_lines = "\n".join(
+            f"- {item_id}: {ITEM_INDEX[item_id].label} ({EXTRACTOR_ITEM_HINTS.get(item_id, ITEM_INDEX[item_id].focus)})"
+            for item_id in ENGLISH_VERIFIER_FOCUS_ITEMS
+        )
+        return [
+            {
+                "role": "system",
+                "content": (
+                    "You are verifying and completing English mental health symptom extraction from a short transcript. "
+                    "Return strict JSON only with keys: items, safety_level, safety_cues, notes. "
+                    "Keep supported candidate items, remove unsupported ones, and add any clearly supported missing items. "
+                    "Pay extra attention to subtle English cues for nervousness, trouble relaxing, irritability, replaying worries, disrupted sleep, and disappearance or self-harm language. "
+                    "Do not add markdown fences."
+                ),
+            },
+            {
+                "role": "user",
+                "content": (
+                    "Language: en\n"
+                    "Use these item ids and meanings:\n"
+                    f"{item_lines}\n\n"
+                    "Candidate support from earlier passes:\n"
+                    f"{candidate_lines}\n\n"
+                    "Priority English miss-check items:\n"
+                    f"{focus_lines}\n\n"
+                    "Return only supported items with values 1, 2, or 3.\n"
+                    f"Transcript:\n{transcript}"
                 ),
             },
         ]
