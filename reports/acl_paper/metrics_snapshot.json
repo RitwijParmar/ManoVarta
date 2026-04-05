@@ -1,0 +1,1114 @@
+{
+  "milestones": {
+    "heuristic_seed_runtime": {
+      "overall": {
+        "covered_items": 63,
+        "coverage_completeness": 0.022,
+        "mae": 0.492,
+        "exact_match_rate": 0.635,
+        "macro_f1": 0.058,
+        "safety_precision": 1.0,
+        "safety_recall": 0.604
+      },
+      "languages": {
+        "en": {
+          "covered_items": 27,
+          "coverage_completeness": 0.028,
+          "mae": 0.704,
+          "exact_match_rate": 0.444,
+          "macro_f1": 0.049,
+          "safety_precision": 1.0,
+          "safety_recall": 0.632
+        },
+        "hi": {
+          "covered_items": 20,
+          "coverage_completeness": 0.021,
+          "mae": 0.0,
+          "exact_match_rate": 1.0,
+          "macro_f1": 0.089,
+          "safety_precision": 1.0,
+          "safety_recall": 0.727
+        },
+        "hinglish": {
+          "covered_items": 16,
+          "coverage_completeness": 0.017,
+          "mae": 0.75,
+          "exact_match_rate": 0.5,
+          "macro_f1": 0.015,
+          "safety_precision": 1.0,
+          "safety_recall": 0.522
+        }
+      }
+    },
+    "aya_llm_direct": {
+      "overall": {
+        "covered_items": 25,
+        "coverage_completeness": 0.009,
+        "mae": 0.84,
+        "exact_match_rate": 0.4,
+        "macro_f1": 0.006,
+        "safety_precision": 0.667,
+        "safety_recall": 0.038
+      },
+      "languages": {
+        "en": {
+          "covered_items": 0,
+          "coverage_completeness": 0.0,
+          "mae": null,
+          "exact_match_rate": null,
+          "macro_f1": 0.0,
+          "safety_precision": 0.0,
+          "safety_recall": 0.0
+        },
+        "hi": {
+          "covered_items": 0,
+          "coverage_completeness": 0.0,
+          "mae": null,
+          "exact_match_rate": null,
+          "macro_f1": 0.0,
+          "safety_precision": 0.0,
+          "safety_recall": 0.0
+        },
+        "hinglish": {
+          "covered_items": 25,
+          "coverage_completeness": 0.026,
+          "mae": 0.84,
+          "exact_match_rate": 0.4,
+          "macro_f1": 0.019,
+          "safety_precision": 0.667,
+          "safety_recall": 0.087
+        }
+      }
+    },
+    "kimi_k2_direct": {
+      "overall": {
+        "covered_items": 0,
+        "coverage_completeness": 0.0,
+        "mae": null,
+        "exact_match_rate": null,
+        "macro_f1": 0.0,
+        "safety_precision": 0.0,
+        "safety_recall": 0.0
+      },
+      "languages": {
+        "en": {
+          "covered_items": 0,
+          "coverage_completeness": 0.0,
+          "mae": null,
+          "exact_match_rate": null,
+          "macro_f1": 0.0,
+          "safety_precision": 0.0,
+          "safety_recall": 0.0
+        },
+        "hi": {
+          "covered_items": 0,
+          "coverage_completeness": 0.0,
+          "mae": null,
+          "exact_match_rate": null,
+          "macro_f1": 0.0,
+          "safety_precision": 0.0,
+          "safety_recall": 0.0
+        },
+        "hinglish": {
+          "covered_items": 0,
+          "coverage_completeness": 0.0,
+          "mae": null,
+          "exact_match_rate": null,
+          "macro_f1": 0.0,
+          "safety_precision": 0.0,
+          "safety_recall": 0.0
+        }
+      }
+    },
+    "qwen2_5_7b_direct": {
+      "overall": {
+        "covered_items": 0,
+        "coverage_completeness": 0.0,
+        "mae": null,
+        "exact_match_rate": null,
+        "macro_f1": 0.0,
+        "safety_precision": 0.0,
+        "safety_recall": 0.0
+      },
+      "languages": {
+        "en": {
+          "covered_items": 0,
+          "coverage_completeness": 0.0,
+          "mae": null,
+          "exact_match_rate": null,
+          "macro_f1": 0.0,
+          "safety_precision": 0.0,
+          "safety_recall": 0.0
+        },
+        "hi": {
+          "covered_items": 0,
+          "coverage_completeness": 0.0,
+          "mae": null,
+          "exact_match_rate": null,
+          "macro_f1": 0.0,
+          "safety_precision": 0.0,
+          "safety_recall": 0.0
+        },
+        "hinglish": {
+          "covered_items": 0,
+          "coverage_completeness": 0.0,
+          "mae": null,
+          "exact_match_rate": null,
+          "macro_f1": 0.0,
+          "safety_precision": 0.0,
+          "safety_recall": 0.0
+        }
+      }
+    },
+    "aya_extractor_offline": {
+      "overall": {
+        "covered_items": 336,
+        "coverage_completeness": 0.913,
+        "mae": 0.443,
+        "exact_match_rate": 0.562,
+        "macro_f1": 0.272,
+        "safety_precision": 0.0,
+        "safety_recall": 0.0
+      },
+      "languages": {
+        "en": {
+          "covered_items": 118,
+          "coverage_completeness": 0.922,
+          "mae": 0.407,
+          "exact_match_rate": 0.593,
+          "macro_f1": 0.281,
+          "safety_precision": 0.0,
+          "safety_recall": 0.0
+        },
+        "hi": {
+          "covered_items": 109,
+          "coverage_completeness": 0.852,
+          "mae": 0.532,
+          "exact_match_rate": 0.486,
+          "macro_f1": 0.236,
+          "safety_precision": 0.0,
+          "safety_recall": 0.0
+        },
+        "hinglish": {
+          "covered_items": 109,
+          "coverage_completeness": 0.973,
+          "mae": 0.394,
+          "exact_match_rate": 0.606,
+          "macro_f1": 0.297,
+          "safety_precision": 0.0,
+          "safety_recall": 0.0
+        }
+      }
+    },
+    "daic_auxiliary_continuation_v2run3": {
+      "coverage_completeness": 0.897,
+      "mae": 0.458,
+      "exact_match_rate": 0.561,
+      "macro_f1": 0.268,
+      "safety_precision": 1.0,
+      "safety_recall": 0.312,
+      "source_note": "Notebook/Colab continuation log for v2run3 captured during the project thread. This run was saved and discussed, but its summary was not checked into the repo as a standalone JSON artifact.",
+      "languages": {
+        "en": {
+          "coverage_completeness": 0.969,
+          "mae": 0.452,
+          "exact_match_rate": 0.565,
+          "macro_f1": 0.279,
+          "safety_precision": 1.0,
+          "safety_recall": 0.5
+        },
+        "hi": {
+          "coverage_completeness": 0.852,
+          "mae": 0.532,
+          "exact_match_rate": 0.505,
+          "macro_f1": 0.243,
+          "safety_precision": 1.0,
+          "safety_recall": 0.25
+        },
+        "hinglish": {
+          "coverage_completeness": 0.866,
+          "mae": 0.381,
+          "exact_match_rate": 0.619,
+          "macro_f1": 0.28,
+          "safety_precision": 1.0,
+          "safety_recall": 0.25
+        }
+      }
+    },
+    "hybrid_runtime_validation": {
+      "overall": {
+        "covered_items": 198,
+        "coverage_completeness": 0.538,
+        "mae": 0.288,
+        "exact_match_rate": 0.712,
+        "macro_f1": 0.295,
+        "safety_precision": 1.0,
+        "safety_recall": 1.0
+      },
+      "languages": {
+        "en": {
+          "covered_items": 61,
+          "coverage_completeness": 0.477,
+          "mae": 0.213,
+          "exact_match_rate": 0.787,
+          "macro_f1": 0.306,
+          "safety_precision": 1.0,
+          "safety_recall": 1.0
+        },
+        "hi": {
+          "covered_items": 95,
+          "coverage_completeness": 0.742,
+          "mae": 0.326,
+          "exact_match_rate": 0.674,
+          "macro_f1": 0.327,
+          "safety_precision": 1.0,
+          "safety_recall": 1.0
+        },
+        "hinglish": {
+          "covered_items": 42,
+          "coverage_completeness": 0.375,
+          "mae": 0.31,
+          "exact_match_rate": 0.69,
+          "macro_f1": 0.153,
+          "safety_precision": 1.0,
+          "safety_recall": 1.0
+        }
+      }
+    },
+    "final_live_runtime": {
+      "overall": {
+        "covered_items": 288,
+        "coverage_completeness": 0.783,
+        "mae": 0.424,
+        "exact_match_rate": 0.639,
+        "macro_f1": 0.251,
+        "safety_precision": 1.0,
+        "safety_recall": 1.0
+      },
+      "languages": {
+        "en": {
+          "covered_items": 108,
+          "coverage_completeness": 0.844,
+          "mae": 0.37,
+          "exact_match_rate": 0.667,
+          "macro_f1": 0.239,
+          "safety_precision": 1.0,
+          "safety_recall": 1.0
+        },
+        "hi": {
+          "covered_items": 92,
+          "coverage_completeness": 0.719,
+          "mae": 0.435,
+          "exact_match_rate": 0.609,
+          "macro_f1": 0.242,
+          "safety_precision": 1.0,
+          "safety_recall": 1.0
+        },
+        "hinglish": {
+          "covered_items": 88,
+          "coverage_completeness": 0.786,
+          "mae": 0.477,
+          "exact_match_rate": 0.636,
+          "macro_f1": 0.232,
+          "safety_precision": 1.0,
+          "safety_recall": 1.0
+        }
+      }
+    }
+  },
+  "per_language_items_live": {
+    "en": {
+      "phq_q1_anhedonia": {
+        "gold_count": 8,
+        "covered_count": 4,
+        "coverage": 0.5,
+        "exact_rate_when_covered": 1.0,
+        "predicted_values": [
+          2,
+          2,
+          2,
+          2
+        ]
+      },
+      "phq_q2_low_mood": {
+        "gold_count": 12,
+        "covered_count": 8,
+        "coverage": 0.667,
+        "exact_rate_when_covered": 1.0,
+        "predicted_values": [
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2
+        ]
+      },
+      "phq_q3_sleep": {
+        "gold_count": 16,
+        "covered_count": 8,
+        "coverage": 0.5,
+        "exact_rate_when_covered": 1.0,
+        "predicted_values": [
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2
+        ]
+      },
+      "phq_q4_fatigue": {
+        "gold_count": 8,
+        "covered_count": 8,
+        "coverage": 1.0,
+        "exact_rate_when_covered": 0.0,
+        "predicted_values": [
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2
+        ]
+      },
+      "phq_q5_appetite": {
+        "gold_count": 8,
+        "covered_count": 8,
+        "coverage": 1.0,
+        "exact_rate_when_covered": 0.0,
+        "predicted_values": [
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2
+        ]
+      },
+      "phq_q6_worthlessness": {
+        "gold_count": 8,
+        "covered_count": 8,
+        "coverage": 1.0,
+        "exact_rate_when_covered": 0.5,
+        "predicted_values": [
+          2,
+          3,
+          2,
+          2,
+          2,
+          3,
+          3,
+          3
+        ]
+      },
+      "phq_q7_concentration": {
+        "gold_count": 8,
+        "covered_count": 8,
+        "coverage": 1.0,
+        "exact_rate_when_covered": 1.0,
+        "predicted_values": [
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2
+        ]
+      },
+      "gad_q1_nervous": {
+        "gold_count": 12,
+        "covered_count": 8,
+        "coverage": 0.667,
+        "exact_rate_when_covered": 0.0,
+        "predicted_values": [
+          2,
+          3,
+          2,
+          2,
+          2,
+          3,
+          3,
+          3
+        ]
+      },
+      "gad_q2_control_worry": {
+        "gold_count": 12,
+        "covered_count": 12,
+        "coverage": 1.0,
+        "exact_rate_when_covered": 1.0,
+        "predicted_values": [
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2
+        ]
+      },
+      "gad_q3_excessive_worry": {
+        "gold_count": 12,
+        "covered_count": 12,
+        "coverage": 1.0,
+        "exact_rate_when_covered": 1.0,
+        "predicted_values": [
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2
+        ]
+      },
+      "gad_q4_trouble_relaxing": {
+        "gold_count": 12,
+        "covered_count": 12,
+        "coverage": 1.0,
+        "exact_rate_when_covered": 1.0,
+        "predicted_values": [
+          1,
+          2,
+          2,
+          1,
+          1,
+          1,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2
+        ]
+      },
+      "phq_q9_self_harm": {
+        "gold_count": 4,
+        "covered_count": 4,
+        "coverage": 1.0,
+        "exact_rate_when_covered": 0.0,
+        "predicted_values": [
+          3,
+          3,
+          3,
+          3
+        ]
+      },
+      "gad_q6_irritability": {
+        "gold_count": 4,
+        "covered_count": 4,
+        "coverage": 1.0,
+        "exact_rate_when_covered": 0.0,
+        "predicted_values": [
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      "gad_q7_fear_awful": {
+        "gold_count": 4,
+        "covered_count": 4,
+        "coverage": 1.0,
+        "exact_rate_when_covered": 1.0,
+        "predicted_values": [
+          2,
+          2,
+          2,
+          2
+        ]
+      }
+    },
+    "hi": {
+      "phq_q2_low_mood": {
+        "gold_count": 12,
+        "covered_count": 8,
+        "coverage": 0.667,
+        "exact_rate_when_covered": 1.0,
+        "predicted_values": [
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2
+        ]
+      },
+      "phq_q3_sleep": {
+        "gold_count": 16,
+        "covered_count": 12,
+        "coverage": 0.75,
+        "exact_rate_when_covered": 1.0,
+        "predicted_values": [
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2
+        ]
+      },
+      "phq_q4_fatigue": {
+        "gold_count": 12,
+        "covered_count": 12,
+        "coverage": 1.0,
+        "exact_rate_when_covered": 1.0,
+        "predicted_values": [
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2
+        ]
+      },
+      "phq_q5_appetite": {
+        "gold_count": 8,
+        "covered_count": 8,
+        "coverage": 1.0,
+        "exact_rate_when_covered": 0.0,
+        "predicted_values": [
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2
+        ]
+      },
+      "phq_q6_worthlessness": {
+        "gold_count": 16,
+        "covered_count": 8,
+        "coverage": 0.5,
+        "exact_rate_when_covered": 0.0,
+        "predicted_values": [
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3
+        ]
+      },
+      "phq_q7_concentration": {
+        "gold_count": 8,
+        "covered_count": 8,
+        "coverage": 1.0,
+        "exact_rate_when_covered": 0.5,
+        "predicted_values": [
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2
+        ]
+      },
+      "gad_q1_nervous": {
+        "gold_count": 12,
+        "covered_count": 12,
+        "coverage": 1.0,
+        "exact_rate_when_covered": 0.667,
+        "predicted_values": [
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2
+        ]
+      },
+      "gad_q3_excessive_worry": {
+        "gold_count": 12,
+        "covered_count": 4,
+        "coverage": 0.333,
+        "exact_rate_when_covered": 1.0,
+        "predicted_values": [
+          2,
+          2,
+          2,
+          2
+        ]
+      },
+      "gad_q6_irritability": {
+        "gold_count": 4,
+        "covered_count": 4,
+        "coverage": 1.0,
+        "exact_rate_when_covered": 0.0,
+        "predicted_values": [
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      "phq_q1_anhedonia": {
+        "gold_count": 4,
+        "covered_count": 0,
+        "coverage": 0.0,
+        "exact_rate_when_covered": 0.0,
+        "predicted_values": []
+      },
+      "phq_q9_self_harm": {
+        "gold_count": 8,
+        "covered_count": 8,
+        "coverage": 1.0,
+        "exact_rate_when_covered": 0.5,
+        "predicted_values": [
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3
+        ]
+      },
+      "gad_q2_control_worry": {
+        "gold_count": 4,
+        "covered_count": 0,
+        "coverage": 0.0,
+        "exact_rate_when_covered": 0.0,
+        "predicted_values": []
+      },
+      "gad_q7_fear_awful": {
+        "gold_count": 8,
+        "covered_count": 4,
+        "coverage": 0.5,
+        "exact_rate_when_covered": 0.0,
+        "predicted_values": [
+          2,
+          2,
+          2,
+          2
+        ]
+      },
+      "gad_q4_trouble_relaxing": {
+        "gold_count": 4,
+        "covered_count": 4,
+        "coverage": 1.0,
+        "exact_rate_when_covered": 1.0,
+        "predicted_values": [
+          2,
+          2,
+          2,
+          2
+        ]
+      }
+    },
+    "hinglish": {
+      "phq_q3_sleep": {
+        "gold_count": 16,
+        "covered_count": 12,
+        "coverage": 0.75,
+        "exact_rate_when_covered": 0.5,
+        "predicted_values": [
+          2,
+          2,
+          2,
+          2,
+          2,
+          0,
+          2,
+          2,
+          0,
+          2,
+          2,
+          2
+        ]
+      },
+      "phq_q4_fatigue": {
+        "gold_count": 4,
+        "covered_count": 4,
+        "coverage": 1.0,
+        "exact_rate_when_covered": 1.0,
+        "predicted_values": [
+          2,
+          2,
+          2,
+          2
+        ]
+      },
+      "phq_q5_appetite": {
+        "gold_count": 8,
+        "covered_count": 4,
+        "coverage": 0.5,
+        "exact_rate_when_covered": 0.0,
+        "predicted_values": [
+          2,
+          2,
+          2,
+          2
+        ]
+      },
+      "phq_q6_worthlessness": {
+        "gold_count": 8,
+        "covered_count": 4,
+        "coverage": 0.5,
+        "exact_rate_when_covered": 1.0,
+        "predicted_values": [
+          2,
+          2,
+          2,
+          2
+        ]
+      },
+      "phq_q7_concentration": {
+        "gold_count": 8,
+        "covered_count": 8,
+        "coverage": 1.0,
+        "exact_rate_when_covered": 0.875,
+        "predicted_values": [
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          0
+        ]
+      },
+      "gad_q2_control_worry": {
+        "gold_count": 8,
+        "covered_count": 8,
+        "coverage": 1.0,
+        "exact_rate_when_covered": 0.0,
+        "predicted_values": [
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          0
+        ]
+      },
+      "gad_q3_excessive_worry": {
+        "gold_count": 12,
+        "covered_count": 8,
+        "coverage": 0.667,
+        "exact_rate_when_covered": 1.0,
+        "predicted_values": [
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2
+        ]
+      },
+      "gad_q7_fear_awful": {
+        "gold_count": 4,
+        "covered_count": 4,
+        "coverage": 1.0,
+        "exact_rate_when_covered": 0.75,
+        "predicted_values": [
+          2,
+          1,
+          2,
+          2
+        ]
+      },
+      "phq_q9_self_harm": {
+        "gold_count": 4,
+        "covered_count": 4,
+        "coverage": 1.0,
+        "exact_rate_when_covered": 0.0,
+        "predicted_values": [
+          3,
+          3,
+          3,
+          3
+        ]
+      },
+      "gad_q1_nervous": {
+        "gold_count": 12,
+        "covered_count": 8,
+        "coverage": 0.667,
+        "exact_rate_when_covered": 1.0,
+        "predicted_values": [
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2
+        ]
+      },
+      "gad_q4_trouble_relaxing": {
+        "gold_count": 8,
+        "covered_count": 4,
+        "coverage": 0.5,
+        "exact_rate_when_covered": 1.0,
+        "predicted_values": [
+          2,
+          2,
+          2,
+          2
+        ]
+      },
+      "gad_q6_irritability": {
+        "gold_count": 8,
+        "covered_count": 8,
+        "coverage": 1.0,
+        "exact_rate_when_covered": 0.5,
+        "predicted_values": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      "phq_q1_anhedonia": {
+        "gold_count": 4,
+        "covered_count": 4,
+        "coverage": 1.0,
+        "exact_rate_when_covered": 0.0,
+        "predicted_values": [
+          2,
+          2,
+          2,
+          2
+        ]
+      },
+      "phq_q2_low_mood": {
+        "gold_count": 4,
+        "covered_count": 4,
+        "coverage": 1.0,
+        "exact_rate_when_covered": 1.0,
+        "predicted_values": [
+          2,
+          2,
+          2,
+          2
+        ]
+      },
+      "gad_q5_restlessness": {
+        "gold_count": 4,
+        "covered_count": 4,
+        "coverage": 1.0,
+        "exact_rate_when_covered": 1.0,
+        "predicted_values": [
+          2,
+          2,
+          2,
+          2
+        ]
+      }
+    }
+  },
+  "latency": {
+    "cold_start_ms": 937.69,
+    "warm_avg_ms": 29.55,
+    "warm_median_ms": 32.73,
+    "warm_p95_ms": 32.89,
+    "samples": 6,
+    "note": "Measured through the FastAPI chat endpoint with Hugging Face network calls disabled so the number reflects deterministic local screening latency rather than hosted-model round trips."
+  },
+  "safety_checkpoint": {
+    "model_path": "/Users/ritwij/Documents/multilingualChatbot/outputs/local_mps/safety-indicbert-best/checkpoint-20",
+    "device": "mps",
+    "examples": 84,
+    "accuracy": 0.6548,
+    "macro_f1": 0.4733,
+    "gold_counts": {
+      "none": 32,
+      "review": 40,
+      "urgent": 12
+    },
+    "predicted_counts": {
+      "none": 59,
+      "review": 25
+    },
+    "mistakes": [
+      {
+        "id": "MV-C159",
+        "gold": "review",
+        "predicted": "none"
+      },
+      {
+        "id": "MV-C159-recent",
+        "gold": "review",
+        "predicted": "none"
+      },
+      {
+        "id": "MV-C159-tail",
+        "gold": "review",
+        "predicted": "none"
+      },
+      {
+        "id": "MV-C160",
+        "gold": "urgent",
+        "predicted": "none"
+      },
+      {
+        "id": "MV-C160-recent",
+        "gold": "urgent",
+        "predicted": "none"
+      },
+      {
+        "id": "MV-C160-tail",
+        "gold": "urgent",
+        "predicted": "none"
+      },
+      {
+        "id": "MV-C163",
+        "gold": "review",
+        "predicted": "none"
+      },
+      {
+        "id": "MV-C157V3",
+        "gold": "none",
+        "predicted": "review"
+      },
+      {
+        "id": "MV-C159V1",
+        "gold": "review",
+        "predicted": "none"
+      },
+      {
+        "id": "MV-C159V1-recent",
+        "gold": "review",
+        "predicted": "none"
+      },
+      {
+        "id": "MV-C159V1-tail",
+        "gold": "review",
+        "predicted": "none"
+      },
+      {
+        "id": "MV-C159V2",
+        "gold": "review",
+        "predicted": "none"
+      },
+      {
+        "id": "MV-C159V2-recent",
+        "gold": "review",
+        "predicted": "none"
+      },
+      {
+        "id": "MV-C159V2-tail",
+        "gold": "review",
+        "predicted": "none"
+      },
+      {
+        "id": "MV-C159V3",
+        "gold": "review",
+        "predicted": "none"
+      },
+      {
+        "id": "MV-C159V3-recent",
+        "gold": "review",
+        "predicted": "none"
+      },
+      {
+        "id": "MV-C159V3-tail",
+        "gold": "review",
+        "predicted": "none"
+      },
+      {
+        "id": "MV-C160V1",
+        "gold": "urgent",
+        "predicted": "none"
+      },
+      {
+        "id": "MV-C160V1-recent",
+        "gold": "urgent",
+        "predicted": "none"
+      },
+      {
+        "id": "MV-C160V1-tail",
+        "gold": "urgent",
+        "predicted": "none"
+      }
+    ]
+  },
+  "final_assignment": {
+    "disclosure_efficiency": {
+      "sample_conversations": 30,
+      "stable_item_traces": 96,
+      "avg_turns_to_stable_score": 2.292,
+      "median_turns_to_stable_score": 2.0,
+      "note": "This is computed by replaying seed conversations turn by turn and finding the earliest user-turn prefix where an item score matches the conversation-final value and stays there."
+    },
+    "safety_accuracy": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "source": "live runtime endpoint evaluation"
+    },
+    "latency": {
+      "cold_start_ms": 937.69,
+      "warm_avg_ms": 29.55,
+      "warm_median_ms": 32.73,
+      "warm_p95_ms": 32.89,
+      "samples": 6,
+      "note": "Measured through the FastAPI chat endpoint with Hugging Face network calls disabled so the number reflects deterministic local screening latency rather than hosted-model round trips."
+    },
+    "discourse_effectiveness": {
+      "coverage_completeness": 0.783,
+      "exact_match_rate": 0.639,
+      "macro_f1": 0.251,
+      "parse_failures": 0,
+      "source": "live runtime endpoint evaluation",
+      "note": "Coverage completeness is used as the main operational discourse metric because it directly tracks whether the system stayed on task and covered clinically relevant questionnaire areas."
+    }
+  }
+}

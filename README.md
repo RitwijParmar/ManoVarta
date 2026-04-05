@@ -183,13 +183,9 @@ This directory contains:
 
 This directory contains the promoted inference-only safety checkpoint used in the final hybrid runtime path.
 
-### Additional experiment artifacts
+### Additional experiment notes
 
-- `reports/local_mps/qwen25_1_5b_best_compact_probe_eval_20260405.json`
-- `reports/local_mps/granite_3_1_2b_instruct_probe_eval_20260405.json`
-- `reports/local_mps/llama_3_1_8b_instruct_4bit_probe_eval_20260405.json`
-
-These are useful for documenting model selection, but they are small retrospective probes, not full held-out multilingual benchmarks.
+The detailed Qwen, Granite, and Llama comparison results are summarized in the final paper bundle rather than kept as separate top-level report clutter. They should be interpreted as small retrospective probes, not full held-out multilingual benchmarks.
 
 ## Final report and presentation
 
