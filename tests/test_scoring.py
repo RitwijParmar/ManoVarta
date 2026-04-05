@@ -198,3 +198,51 @@ def test_scoring_picks_up_english_nervous_relaxing_irritability_and_self_harm_cu
     assert snapshot.items["gad_q4_trouble_relaxing"].value >= 2
     assert snapshot.items["gad_q6_irritability"].value >= 1
     assert snapshot.items["phq_q9_self_harm"].value >= 1
+
+
+def test_scoring_separates_english_worry_control_from_excessive_worry_and_relaxing():
+    turns = [
+        Turn(turn_id=1, speaker="assistant", text="What has been feeling hardest over the last couple of weeks?", language_tag="en"),
+        Turn(
+            turn_id=2,
+            speaker="user",
+            text="Sleep is messy because my brain keeps replaying comments from my advisor, and some days I realize it is late afternoon and I still have not eaten properly.",
+            language_tag="en",
+        ),
+        Turn(
+            turn_id=3,
+            speaker="user",
+            text="Mostly that I am wasting everyone's time and maybe I was never cut out for this in the first place.",
+            language_tag="en",
+        ),
+    ]
+
+    snapshot = ConversationScorer().analyze(turns, "en", SafetyMonitor().assess(turns))
+
+    assert snapshot.items["gad_q2_control_worry"].value == 2
+    assert snapshot.items["gad_q3_excessive_worry"].value == 2
+    assert snapshot.items["gad_q4_trouble_relaxing"].value == 1
+
+
+def test_scoring_captures_english_multi_domain_worry_and_relaxing_cues():
+    turns = [
+        Turn(turn_id=1, speaker="assistant", text="What do you find yourself worrying about most once you get home?", language_tag="en"),
+        Turn(
+            turn_id=2,
+            speaker="user",
+            text="By the time I get home I am snappy for no good reason, replay whole conversations, and cannot really switch off.",
+            language_tag="en",
+        ),
+        Turn(
+            turn_id=3,
+            speaker="user",
+            text="Mostly that I am going to say the wrong thing, get written up, and suddenly not be able to cover rent.",
+            language_tag="en",
+        ),
+    ]
+
+    snapshot = ConversationScorer().analyze(turns, "en", SafetyMonitor().assess(turns))
+
+    assert snapshot.items["gad_q2_control_worry"].value == 2
+    assert snapshot.items["gad_q3_excessive_worry"].value == 2
+    assert snapshot.items["gad_q4_trouble_relaxing"].value == 2

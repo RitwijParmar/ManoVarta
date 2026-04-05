@@ -9,6 +9,7 @@ from manovarta_core.knowledge import knowledge_summary_for_topic, profile_summar
 from manovarta_core.json_utils import normalize_extractor_payload, normalize_safety_level, parse_extractor_payload, parse_json_object
 from manovarta_core.questionnaires import ITEM_INDEX
 from manovarta_core.schemas import ChatSession, SafetyFlag, ScreeningSnapshot, Turn
+from manovarta_core.text import extract_window, normalize_text
 
 try:
     from huggingface_hub import InferenceClient
@@ -44,6 +45,40 @@ ENGLISH_VERIFIER_FOCUS_ITEMS = (
     "gad_q6_irritability",
     "phq_q3_sleep",
     "phq_q9_self_harm",
+)
+ENGLISH_CONTROL_WORRY_CUES = (
+    "mind won't stop",
+    "thoughts won't stop",
+    "can't stop worrying",
+    "cannot stop worrying",
+    "replay whole conversations",
+    "replaying comments from my advisor",
+    "brain keeps replaying",
+    "head keeps saying",
+)
+ENGLISH_EXCESSIVE_WORRY_CUES = (
+    "get written up",
+    "cover rent",
+    "wrong thing",
+    "messed up the marriage",
+    "difficult calls",
+    "work stuff",
+    "advisor",
+    "kids",
+    "marriage",
+    "rent",
+)
+ENGLISH_TROUBLE_RELAXING_CUES = (
+    "can't really switch off",
+    "cannot really switch off",
+    "can't switch off",
+    "cannot switch off",
+    "replay whole conversations",
+    "replaying comments from my advisor",
+    "pace around",
+    "pacing around",
+    "do not sit still",
+    "can't sit still",
 )
 
 
@@ -196,15 +231,18 @@ class HuggingFaceExtractor:
         verifier_payload = self._run_english_verifier(full_transcript, item_lines, merged_payload)
         merged_payload = self._merge_payloads(merged_payload, verifier_payload)
         if merged_payload and merged_payload.get("items"):
-            return merged_payload
+            return self._refine_english_anxiety_payload(full_transcript, merged_payload)
 
-        return self._run_attempt_sequence(
+        fallback_payload = self._run_attempt_sequence(
             "en",
             self._build_extraction_transcript(turns),
             full_transcript,
             item_lines,
             prefer_compact=True,
         )
+        if fallback_payload:
+            return self._refine_english_anxiety_payload(full_transcript, fallback_payload)
+        return fallback_payload
 
     def _run_attempt_sequence(
         self,
@@ -336,6 +374,74 @@ class HuggingFaceExtractor:
         except Exception:
             return None
         return self._parse_json(output.choices[0].message.content)
+
+    def _refine_english_anxiety_payload(self, transcript: str, payload: Optional[dict]) -> Optional[dict]:
+        if not payload:
+            return payload
+
+        normalized = normalize_text(transcript)
+        items = {item["item_id"]: dict(item) for item in payload.get("items", []) if item.get("item_id")}
+
+        control_hit = self._find_first_cue(transcript, ENGLISH_CONTROL_WORRY_CUES)
+        excessive_hit = self._find_first_cue(transcript, ENGLISH_EXCESSIVE_WORRY_CUES)
+        relaxing_hit = self._find_first_cue(transcript, ENGLISH_TROUBLE_RELAXING_CUES)
+
+        if control_hit:
+            item = items.get("gad_q2_control_worry")
+            value = 3 if any(phrase in normalized for phrase in ("mind won t stop", "thoughts won t stop", "can t stop worrying", "cannot stop worrying")) else 2
+            if item is None or int(item.get("value", 0)) < value:
+                items["gad_q2_control_worry"] = {
+                    "item_id": "gad_q2_control_worry",
+                    "value": value,
+                    "evidence_quote": extract_window(transcript, control_hit),
+                    "confidence_note": "Persistent looping or uncontrollable worry language.",
+                }
+            elif int(item.get("value", 0)) > value:
+                item["value"] = value
+
+        if excessive_hit:
+            items["gad_q3_excessive_worry"] = self._prefer_structured_item(
+                items.get("gad_q3_excessive_worry"),
+                {
+                    "item_id": "gad_q3_excessive_worry",
+                    "value": 2,
+                    "evidence_quote": extract_window(transcript, excessive_hit),
+                    "confidence_note": "Concrete worry about outcomes across work, family, or finances.",
+                },
+            )
+
+        if relaxing_hit:
+            items["gad_q4_trouble_relaxing"] = self._prefer_structured_item(
+                items.get("gad_q4_trouble_relaxing"),
+                {
+                    "item_id": "gad_q4_trouble_relaxing",
+                    "value": 2,
+                    "evidence_quote": extract_window(transcript, relaxing_hit),
+                    "confidence_note": "Difficulty settling or switching off after stress.",
+                },
+            )
+
+        refined = normalize_extractor_payload(
+            {
+                "items": list(items.values()),
+                "safety_level": payload.get("safety_level", "none"),
+                "safety_cues": payload.get("safety_cues", []),
+                "notes": " | ".join(part for part in [payload.get("notes", "").strip(), "english_anxiety_refined"] if part),
+            }
+        )
+        return refined or payload
+
+    def _find_first_cue(self, transcript: str, cues: tuple[str, ...]) -> Optional[str]:
+        normalized = normalize_text(transcript)
+        for cue in cues:
+            if normalize_text(cue) in normalized:
+                return cue
+        return None
+
+    def _prefer_structured_item(self, current: Optional[dict[str, Any]], candidate: dict[str, Any]) -> dict[str, Any]:
+        if current is None:
+            return dict(candidate)
+        return dict(candidate) if self._prefer_item(candidate, current) else current
 
     def _run_candidate_pass(self, language: str, transcript: str, item_lines: str) -> Optional[dict]:
         try:

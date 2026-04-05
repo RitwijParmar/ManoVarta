@@ -68,6 +68,8 @@ class ConversationScorer:
         normalized_phrase = normalize_text(phrase)
         index = normalized_text.find(normalized_phrase)
         window = normalized_text[max(0, index - 20):index]
+        if "no good reason" in window:
+            window = window.replace("no good reason", " ")
         phrase_contains_negation = any(cue in normalized_phrase for cue in NEGATION_CUES)
         if not phrase_contains_negation and any(cue in window for cue in NEGATION_CUES):
             return "absent"

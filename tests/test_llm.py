@@ -191,6 +191,34 @@ def test_huggingface_extractor_english_windows_merge_with_verifier():
     assert "Priority English miss-check items:" in extractor._client.calls[-1]["messages"][1]["content"]
 
 
+def test_huggingface_extractor_refines_english_anxiety_items():
+    extractor = HuggingFaceExtractor(_disabled_config())
+    transcript = (
+        "assistant: What has your body been doing when stress spikes at work?\n"
+        "user: My jaw stays tight all day and I notice I am clenching my hands before difficult calls even start.\n"
+        "assistant: And emotionally, what changes after those stressful shifts?\n"
+        "user: By the time I get home I replay whole conversations, feel snappy for no good reason, and cannot really switch off.\n"
+        "assistant: What do you find yourself worrying about most once you get home?\n"
+        "user: Mostly that I am going to say the wrong thing, get written up, and suddenly not be able to cover rent."
+    )
+    payload = {
+        "items": [
+            {"item_id": "gad_q2_control_worry", "value": 3, "evidence_quote": "replay whole conversations"},
+        ],
+        "safety_level": "none",
+        "safety_cues": [],
+        "notes": "raw",
+    }
+
+    refined = extractor._refine_english_anxiety_payload(transcript, payload)
+    items = {item["item_id"]: item for item in refined["items"]}
+
+    assert items["gad_q2_control_worry"]["value"] == 2
+    assert items["gad_q3_excessive_worry"]["value"] == 2
+    assert items["gad_q4_trouble_relaxing"]["value"] == 2
+    assert "english_anxiety_refined" in refined["notes"]
+
+
 def test_huggingface_safety_assessor_stays_disabled_without_token():
     assessor = HuggingFaceSafetyAssessor(_disabled_config())
     assert assessor.enabled is False
