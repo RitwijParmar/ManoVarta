@@ -5,30 +5,33 @@ const state = {
   profiles: [],
   runtime: null,
   isBusy: false,
+  recentCheckins: [],
 };
+
+const HISTORY_KEY = "manovarta_recent_checkins_v2";
 
 const LANGUAGE_UI = {
   en: {
     placeholder: "Describe what changed, when it happens, and how it affects your day...",
-    sessionReady: "You can type or speak now.",
-    startSuccess: "Your check-in started in English.",
-    turnSuccess: "Thanks. ManoVarta is ready for your next message.",
+    sessionReady: "You can type or speak whenever you are ready.",
+    startSuccess: "Your private check-in has started in English.",
+    turnSuccess: "Thanks. ManoVarta is holding onto that and is ready for the next part.",
     runtimeReady: "Ready when you are. Start with whatever feels easiest to say.",
-    nudgeIntro: "These small prompts help you share the most useful detail without pressure.",
+    nudgeIntro: "These small prompts help you share useful detail without making the conversation feel heavy.",
   },
   hi: {
     placeholder: "Jo badla hai, kab zyada hota hai, aur din bhar par kya asar padta hai, woh likhiye...",
-    sessionReady: "Ab aap type ya bol sakte hain.",
-    startSuccess: "Aapka check-in Hindi mein start ho gaya.",
-    turnSuccess: "Shukriya. ManoVarta agle jawab ke liye ready hai.",
+    sessionReady: "Ab aap aaraam se type ya bol sakte hain.",
+    startSuccess: "Aapka private check-in Hindi mein shuru ho gaya.",
+    turnSuccess: "Shukriya. ManoVarta ne yeh hold kar liya hai aur agle jawab ke liye ready hai.",
     runtimeReady: "Sab ready hai. Jo sabse aasaan lage, wahi se baat shuru kijiye.",
     nudgeIntro: "Yeh chhote prompts bina pressure ke useful detail nikalne mein madad karte hain.",
   },
   hinglish: {
     placeholder: "Kya change hua, kab zyada feel hota hai, aur daily routine par kya impact hai, woh share karo...",
-    sessionReady: "Ab tum type ya bol sakte ho.",
-    startSuccess: "Tumhara check-in Hinglish mein start ho gaya.",
-    turnSuccess: "Thanks. ManoVarta next message ke liye ready hai.",
+    sessionReady: "Ab tum aaraam se type ya bol sakte ho.",
+    startSuccess: "Tumhara private check-in Hinglish mein start ho gaya.",
+    turnSuccess: "Thanks. ManoVarta ne yeh note kar liya hai aur next message ke liye ready hai.",
     runtimeReady: "Everything is ready. Jo easiest lage, usse start karo.",
     nudgeIntro: "Yeh nudges thodi aur clear detail lane mein help karte hain, bina conversation ko heavy banaye.",
   },
@@ -234,6 +237,11 @@ const profileOccupationInput = document.getElementById("profileOccupationInput")
 const profileLivingInput = document.getElementById("profileLivingInput");
 const profileSupportInput = document.getElementById("profileSupportInput");
 const profileContextInput = document.getElementById("profileContextInput");
+const ritualCount = document.getElementById("ritualCount");
+const ritualStreak = document.getElementById("ritualStreak");
+const ritualCopy = document.getElementById("ritualCopy");
+const historyList = document.getElementById("historyList");
+const reflectionPrompt = document.getElementById("reflectionPrompt");
 
 const runtimeInfo = document.getElementById("runtimeInfo");
 const runtimeDetail = document.getElementById("runtimeDetail");
@@ -371,6 +379,129 @@ function collectProfileContext() {
   };
 }
 
+function loadRecentCheckins() {
+  try {
+    const raw = window.localStorage.getItem(HISTORY_KEY);
+    if (!raw) {
+      return [];
+    }
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
+}
+
+function saveRecentCheckins() {
+  try {
+    window.localStorage.setItem(HISTORY_KEY, JSON.stringify(state.recentCheckins.slice(0, 6)));
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+function dayKey(isoString) {
+  const date = new Date(isoString);
+  if (Number.isNaN(date.getTime())) {
+    return null;
+  }
+  return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
+}
+
+function computeCheckinStreak(entries) {
+  const uniqueDays = Array.from(new Set(entries.map((entry) => dayKey(entry.savedAt)).filter(Boolean)));
+  if (!uniqueDays.length) {
+    return 0;
+  }
+
+  const sorted = uniqueDays
+    .map((value) => new Date(`${value}T00:00:00`))
+    .sort((left, right) => right - left);
+  let streak = 1;
+  for (let index = 1; index < sorted.length; index += 1) {
+    const previous = sorted[index - 1];
+    const current = sorted[index];
+    const delta = (previous - current) / (1000 * 60 * 60 * 24);
+    if (delta === 1) {
+      streak += 1;
+    } else if (delta > 1) {
+      break;
+    }
+  }
+  return streak;
+}
+
+function formatCheckinDate(isoString) {
+  const date = new Date(isoString);
+  if (Number.isNaN(date.getTime())) {
+    return "Recently";
+  }
+  return date.toLocaleDateString(undefined, { month: "short", day: "numeric" });
+}
+
+function renderHistory() {
+  if (!historyList || !ritualCount || !ritualStreak || !ritualCopy) {
+    return;
+  }
+
+  const entries = state.recentCheckins || [];
+  ritualCount.textContent = String(entries.length);
+  ritualStreak.textContent = String(computeCheckinStreak(entries));
+
+  if (!entries.length) {
+    ritualCopy.textContent = "After your first conversation, ManoVarta will keep a lightweight private memory here so the app feels easier to return to.";
+    historyList.innerHTML = `
+      <article class="history-card empty">
+        <p class="history-meta">No check-ins yet</p>
+        <p>Start one conversation and your recent reflections will appear here.</p>
+      </article>
+    `;
+    return;
+  }
+
+  const latest = entries[0];
+  ritualCopy.textContent = `Latest saved focus: ${humanizeToken(latest.topic || "check_in").toLowerCase()} in ${String(latest.language || "en").toUpperCase()}.`;
+
+  historyList.innerHTML = "";
+  entries.slice(0, 4).forEach((entry) => {
+    const card = document.createElement("article");
+    card.className = "history-card";
+    const summary = String(entry.summary || "A private check-in was saved on this device.").slice(0, 140);
+    card.innerHTML = `
+      <p class="history-meta">${escapeHtml(formatCheckinDate(entry.savedAt))} · ${escapeHtml(String(entry.language || "en").toUpperCase())}</p>
+      <strong>${escapeHtml(humanizeToken(entry.topic || "check_in"))}</strong>
+      <p>${escapeHtml(summary)}${summary.length >= 140 ? "..." : ""}</p>
+      <div class="history-tags">
+        <span class="history-tag">${escapeHtml(Math.round(Number(entry.completion || 0) * 100))}% complete</span>
+        <span class="history-tag">${escapeHtml(humanizeToken(entry.safety || "none"))} safety</span>
+      </div>
+    `;
+    historyList.appendChild(card);
+  });
+}
+
+function rememberCheckin(payload) {
+  const snapshot = payload?.snapshot;
+  if (!snapshot || !state.sessionId) {
+    return;
+  }
+
+  const entry = {
+    sessionId: state.sessionId,
+    savedAt: new Date().toISOString(),
+    language: snapshot.language || state.language,
+    topic: snapshot.coverage?.dialogue?.target_topic || "check_in",
+    safety: snapshot.safety?.level || "none",
+    completion: Number(snapshot.coverage?.completion_ratio || 0),
+    summary: payload.summary || buildPatientSummary(snapshot.coverage?.dialogue || { stage: "rapport", target_topic: "mood" }, snapshot.safety || { level: "none" }),
+  };
+
+  state.recentCheckins = [entry, ...state.recentCheckins.filter((item) => item.sessionId !== entry.sessionId)].slice(0, 6);
+  saveRecentCheckins();
+  renderHistory();
+}
+
 function setLink(anchor, href) {
   if (!href) {
     anchor.href = "#";
@@ -383,28 +514,13 @@ function setLink(anchor, href) {
 
 function runtimeToText(payload) {
   if (payload.hybrid_safety_enabled) {
-    if (payload.self_hosted_inference_enabled && payload.cloud_voice_enabled) {
-      return "Ready for a guided multilingual check-in with self-hosted local inference, stronger safety support, and cloud voice.";
-    }
-    if (payload.self_hosted_inference_enabled) {
-      return "Ready for a guided multilingual check-in with self-hosted local inference and stronger safety support.";
-    }
     if (payload.cloud_voice_enabled) {
-      return "Ready for a guided multilingual check-in with stronger safety support and cloud voice.";
+      return "Voice, multilingual support, and background safety checks are ready for a calm guided check-in.";
     }
-    return "Ready for a guided multilingual check-in with stronger safety support.";
+    return "Multilingual conversation and background safety checks are ready for a calm guided check-in.";
   }
-  if (payload.self_hosted_inference_enabled) {
-    if (payload.cloud_voice_enabled) {
-      return "Ready for a guided conversation in English, Hindi, or Hinglish with self-hosted local inference and cloud voice.";
-    }
-    return "Ready for a guided conversation in English, Hindi, or Hinglish with self-hosted local inference.";
-  }
-  if (payload.huggingface_enabled) {
-    if (payload.cloud_voice_enabled) {
-      return "Ready for a guided conversation in English, Hindi, or Hinglish with cloud voice available.";
-    }
-    return "Ready for a guided conversation in English, Hindi, or Hinglish.";
+  if (payload.cloud_voice_enabled) {
+    return "Voice and multilingual conversation are ready whenever you feel like starting.";
   }
   return "Conversation service is online and ready whenever you are.";
 }
@@ -519,7 +635,7 @@ async function fetchBootstrap() {
     const payload = await response.json();
     renderRuntime(payload.runtime);
     serviceHealth.textContent = payload.health.status === "ok"
-      ? "Live and ready for a calm check-in."
+      ? "Private check-in ready."
       : "The service is still waking up. Give it a moment, then retry.";
     serviceHealth.className = `service-health ${payload.health.status === "ok" ? "good" : "warn"}`;
     state.profiles = payload.profiles || [];
@@ -540,7 +656,7 @@ async function fetchBootstrap() {
   const profilesPayload = await profilesResponse.json();
   renderRuntime(runtimePayload);
   serviceHealth.textContent = healthPayload.status === "ok"
-    ? "Live and ready for a calm check-in."
+    ? "Private check-in ready."
     : "The service is still waking up. Give it a moment, then retry.";
   serviceHealth.className = `service-health ${healthPayload.status === "ok" ? "good" : "warn"}`;
   state.profiles = (profilesPayload || []).map((profile) => {
@@ -591,7 +707,7 @@ async function startSession() {
     renderTurn(payload.assistant_turn);
     maybeSpeak(payload.assistant_turn);
     sessionMeta.classList.remove("empty");
-    sessionMeta.textContent = "ManoVarta has started gently and is listening for the main concern before moving deeper.";
+    sessionMeta.textContent = "Your private check-in is open. Start with whatever feels most real right now.";
     updateSessionBadge();
     setSessionLiveState(true);
     downloadButton.disabled = true;
@@ -643,23 +759,23 @@ function buildSessionGoal(dialogue, safety) {
     return "Pause the normal flow and make space for immediate human support.";
   }
   if (dialogue.stage === "rapport") {
-    return "Start gently, understand the main concern, and keep the conversation low-pressure.";
+    return "Stay gentle, understand the main concern, and keep the conversation low-pressure.";
   }
   if (dialogue.stage === "clarification") {
-    return "Clarify one missing detail so ManoVarta does not make assumptions.";
+    return "Clarify one missing detail so ManoVarta does not rush into assumptions.";
   }
   if (dialogue.stage === "safety") {
     return "Slow down and check safety carefully before moving on.";
   }
   if (dialogue.stage === "summary") {
-    return "The picture is becoming clear enough to wrap up with a stable summary.";
+    return "The picture is becoming steady enough to end with a clear summary.";
   }
-  return "Understand the pattern, impact, and intensity of what the user is feeling.";
+  return "Understand the pattern, impact, and intensity of what you are feeling.";
 }
 
 function buildProgressLabel(coverage) {
   const remaining = Math.max((coverage.total_items || 0) - (coverage.touched_items || 0), 0);
-  return `ManoVarta has gently explored ${coverage.touched_items} of ${coverage.total_items} areas so far, with ${remaining} still open.`;
+  return `${coverage.touched_items} of ${coverage.total_items} areas have some clarity so far, with ${remaining} still open.`;
 }
 
 function buildBonusSignals(dialogue, coverage) {
@@ -736,7 +852,7 @@ function buildNudgeMeta(dialogue) {
 function buildSessionMetaLine(dialogue, coverage, safety) {
   const topic = humanizeToken(dialogue.target_topic);
   const safetyLine = safety.level === "none" ? "safety monitoring stays in the background" : `${humanizeToken(safety.level)} safety care is active`;
-  return `Right now the conversation is exploring ${topic.toLowerCase()}, while ${safetyLine}.`;
+  return `Right now ManoVarta is staying with ${topic.toLowerCase()}, while ${safetyLine}.`;
 }
 
 function buildPatientSummary(dialogue, safety) {
@@ -780,6 +896,21 @@ function buildSafetyNarrative(safety) {
     return "A sensitive signal has been noticed, so ManoVarta is moving more carefully.";
   }
   return "Safety checks are running quietly in the background throughout the conversation.";
+}
+
+function buildReflectionPrompt(snapshot, summary) {
+  const safety = snapshot?.safety?.level || "none";
+  const completion = Number(snapshot?.coverage?.completion_ratio || 0);
+  if (safety === "urgent") {
+    return "This check-in surfaced something urgent. Pause the screening flow and reach for immediate human support now.";
+  }
+  if (safety === "review") {
+    return "This session touched something sensitive. It is okay to pause here, keep the answer short, or come back with support nearby.";
+  }
+  if (completion >= 0.7) {
+    return `${summary || "ManoVarta has enough to hold a clearer picture now."} You can stop here or return later if anything shifts.`;
+  }
+  return "You can stop here if this already feels like enough, or answer one more question to make the picture clearer.";
 }
 
 function pickNudges(language, dialogue) {
@@ -891,6 +1022,9 @@ function renderSnapshot(payload) {
   patientSummary.textContent = buildPatientSummary(dialogue, snapshot.safety);
   whyThisQuestion.textContent = buildWhyThisQuestion(dialogue);
   safetyNarrative.textContent = buildSafetyNarrative(snapshot.safety);
+  if (reflectionPrompt) {
+    reflectionPrompt.textContent = buildReflectionPrompt(snapshot, summary);
+  }
 
   const completion = Math.round((coverage.completion_ratio || 0) * 100);
   coverageText.textContent = `${coverage.touched_items}/${coverage.total_items} explored`;
@@ -1030,6 +1164,9 @@ function resetInsightPanel() {
   personalizationBlend.textContent = "low code-mix";
   personalizationPacing.textContent = "Balanced guided pacing";
   personalizationSummary.textContent = "Start a session to see how ManoVarta adapts to the user’s language style and disclosure pace.";
+  if (reflectionPrompt) {
+    reflectionPrompt.textContent = "Once the conversation starts settling, ManoVarta will leave a simple recap here so you know what it is holding onto.";
+  }
   renderNudges(state.language, {
     target_topic: "mood",
     next_action: "open_question",
@@ -1048,6 +1185,7 @@ async function refreshExport() {
   state.exportPayload = await response.json();
   downloadButton.disabled = false;
   renderSnapshot(state.exportPayload);
+  rememberCheckin(state.exportPayload);
   setLink(summaryLink, `/chat/sessions/${state.sessionId}/summary`);
   setLink(exportLink, `/chat/sessions/${state.sessionId}/export`);
 }
@@ -1441,6 +1579,8 @@ setupVoice();
 applyLanguageDefaults(state.language);
 updateSessionBadge();
 resetInsightPanel();
+state.recentCheckins = loadRecentCheckins();
+renderHistory();
 setSessionLiveState(false);
 document.body.classList.toggle("review-mode", reviewMode);
 if (reviewMode) {
