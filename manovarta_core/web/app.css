@@ -1,26 +1,26 @@
 @import url("https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Manrope:wght@400;500;600;700;800&display=swap");
 
 :root {
-  --bg: #f7f0e7;
-  --bg-deep: #e7daca;
-  --surface: rgba(255, 249, 242, 0.84);
-  --surface-strong: rgba(255, 252, 247, 0.97);
-  --surface-ink: #1d2b2d;
-  --surface-soft: #5f6864;
-  --surface-faint: #8d867c;
-  --line: rgba(29, 43, 45, 0.08);
-  --line-strong: rgba(29, 43, 45, 0.16);
-  --sage: #dde5de;
-  --sage-deep: #204f55;
-  --sea: #1d4a4f;
-  --sea-soft: rgba(29, 74, 79, 0.08);
-  --amber: #d7a56b;
-  --apricot: #c77a48;
-  --rose: #9c5d5d;
-  --success: #2e6f59;
-  --shadow-xl: 0 34px 72px rgba(40, 37, 31, 0.11);
-  --shadow-lg: 0 20px 42px rgba(40, 37, 31, 0.09);
-  --shadow-md: 0 12px 22px rgba(40, 37, 31, 0.065);
+  --bg: #f5efe6;
+  --bg-deep: #e1d6c6;
+  --surface: rgba(255, 251, 246, 0.8);
+  --surface-strong: rgba(255, 252, 248, 0.96);
+  --surface-ink: #18242a;
+  --surface-soft: #566167;
+  --surface-faint: #8d8579;
+  --line: rgba(24, 36, 42, 0.08);
+  --line-strong: rgba(24, 36, 42, 0.14);
+  --sage: #dfe5dd;
+  --sage-deep: #203741;
+  --sea: #274650;
+  --sea-soft: rgba(39, 70, 80, 0.08);
+  --amber: #c99f65;
+  --apricot: #b96c4b;
+  --rose: #8f5458;
+  --success: #2f6a58;
+  --shadow-xl: 0 40px 80px rgba(29, 32, 35, 0.12);
+  --shadow-lg: 0 24px 48px rgba(29, 32, 35, 0.1);
+  --shadow-md: 0 14px 28px rgba(29, 32, 35, 0.075);
   --radius-3xl: 34px;
   --radius-2xl: 26px;
   --radius-xl: 20px;
@@ -43,10 +43,10 @@ body {
   color: var(--surface-ink);
   font-family: "Manrope", "Avenir Next", "Segoe UI", sans-serif;
   background:
-    radial-gradient(circle at 12% 12%, rgba(29, 74, 79, 0.11), transparent 18%),
-    radial-gradient(circle at 88% 10%, rgba(199, 122, 72, 0.14), transparent 18%),
-    radial-gradient(circle at 80% 72%, rgba(154, 93, 93, 0.08), transparent 22%),
-    linear-gradient(180deg, #fffaf4 0%, var(--bg) 52%, var(--bg-deep) 100%);
+    radial-gradient(circle at 10% 12%, rgba(39, 70, 80, 0.13), transparent 18%),
+    radial-gradient(circle at 86% 12%, rgba(201, 159, 101, 0.18), transparent 18%),
+    radial-gradient(circle at 76% 76%, rgba(185, 108, 75, 0.1), transparent 22%),
+    linear-gradient(180deg, #fffaf4 0%, var(--bg) 54%, var(--bg-deep) 100%);
 }
 
 h1,
@@ -117,9 +117,9 @@ textarea {
 .page-glow {
   z-index: -2;
   background:
-    radial-gradient(circle at 16% 24%, rgba(29, 74, 79, 0.1), transparent 18%),
-    radial-gradient(circle at 82% 12%, rgba(215, 165, 107, 0.15), transparent 16%),
-    radial-gradient(circle at 68% 78%, rgba(199, 122, 72, 0.08), transparent 22%);
+    radial-gradient(circle at 16% 24%, rgba(39, 70, 80, 0.11), transparent 18%),
+    radial-gradient(circle at 82% 12%, rgba(201, 159, 101, 0.17), transparent 16%),
+    radial-gradient(circle at 68% 78%, rgba(185, 108, 75, 0.09), transparent 22%);
 }
 
 .page-noise {
@@ -164,7 +164,12 @@ textarea {
 .topbar {
   align-items: center;
   justify-content: space-between;
-  padding: 8px 2px;
+  padding: 14px 18px;
+  border-radius: 28px;
+  background: rgba(255, 251, 246, 0.62);
+  border: 1px solid rgba(255, 255, 255, 0.74);
+  box-shadow: var(--shadow-lg);
+  backdrop-filter: blur(18px);
 }
 
 .brandblock {
@@ -173,10 +178,10 @@ textarea {
 }
 
 .brand-mark {
-  inline-size: 64px;
-  block-size: 64px;
+  inline-size: 72px;
+  block-size: 72px;
   flex: 0 0 auto;
-  filter: drop-shadow(0 14px 22px rgba(29, 74, 79, 0.12));
+  filter: drop-shadow(0 16px 24px rgba(39, 70, 80, 0.14));
 }
 
 .brand-copy h1,
@@ -188,9 +193,9 @@ textarea {
 }
 
 .brand-copy h1 {
-  font-size: 1.18rem;
-  line-height: 1.08;
-  max-width: 20ch;
+  font-size: 1.2rem;
+  line-height: 1.05;
+  max-width: 22ch;
   letter-spacing: -0.02em;
 }
 
@@ -218,9 +223,9 @@ textarea {
   gap: 8px;
   padding: 5px;
   border-radius: 999px;
-  background: rgba(255, 252, 247, 0.7);
-  border: 1px solid rgba(29, 43, 45, 0.06);
-  box-shadow: 0 8px 18px rgba(40, 37, 31, 0.06);
+  background: rgba(255, 252, 247, 0.74);
+  border: 1px solid rgba(24, 36, 42, 0.06);
+  box-shadow: 0 10px 22px rgba(29, 32, 35, 0.07);
 }
 
 .language-tab {
@@ -242,9 +247,9 @@ textarea {
 }
 
 .language-tab.is-active {
-  background: linear-gradient(140deg, rgba(29, 74, 79, 0.98), rgba(20, 57, 62, 0.96));
+  background: linear-gradient(140deg, rgba(39, 70, 80, 0.98), rgba(27, 48, 56, 0.96));
   color: #fff;
-  box-shadow: 0 12px 20px rgba(29, 74, 79, 0.18);
+  box-shadow: 0 14px 22px rgba(39, 70, 80, 0.2);
 }
 
 .tab-label {
@@ -359,7 +364,7 @@ textarea {
 .panel {
   border-radius: var(--radius-3xl);
   box-shadow: var(--shadow-xl);
-  padding: 26px;
+  padding: 28px;
 }
 
 .status-card,
@@ -380,7 +385,7 @@ textarea {
 .sanctuary-card,
 .conversation-panel {
   background:
-    linear-gradient(180deg, rgba(255, 251, 246, 0.98) 0%, rgba(255, 247, 239, 0.9) 100%);
+    linear-gradient(180deg, rgba(255, 252, 247, 0.98) 0%, rgba(248, 241, 233, 0.9) 100%);
 }
 
 .sanctuary-card,
@@ -736,8 +741,8 @@ body.session-live .welcome-stage {
 
 .welcome-stage {
   display: grid;
-  gap: 20px;
-  padding: 4px 0 8px;
+  gap: 22px;
+  padding: 6px 0 10px;
 }
 
 .welcome-copy {
@@ -747,10 +752,10 @@ body.session-live .welcome-stage {
 
 .welcome-copy h2 {
   font-family: "Fraunces", "Iowan Old Style", serif;
-  font-size: clamp(2.7rem, 6vw, 5.8rem);
-  line-height: 0.88;
+  font-size: clamp(2.9rem, 6vw, 6.1rem);
+  line-height: 0.86;
   max-width: 10ch;
-  letter-spacing: -0.045em;
+  letter-spacing: -0.05em;
 }
 
 .welcome-visual {
@@ -759,9 +764,9 @@ body.session-live .welcome-stage {
   border-radius: 30px;
   overflow: hidden;
   background:
-    radial-gradient(circle at 22% 25%, rgba(215, 165, 107, 0.22), transparent 20%),
-    radial-gradient(circle at 82% 24%, rgba(29, 74, 79, 0.18), transparent 22%),
-    linear-gradient(145deg, rgba(241, 234, 223, 0.98), rgba(252, 246, 238, 0.98));
+    radial-gradient(circle at 22% 25%, rgba(201, 159, 101, 0.22), transparent 20%),
+    radial-gradient(circle at 82% 24%, rgba(39, 70, 80, 0.18), transparent 22%),
+    linear-gradient(145deg, rgba(239, 231, 220, 0.98), rgba(252, 246, 238, 0.98));
   border: 1px solid rgba(255, 255, 255, 0.82);
   box-shadow: var(--shadow-lg);
 }
@@ -795,9 +800,9 @@ body.session-live .welcome-stage {
   place-items: center;
   text-align: center;
   background:
-    radial-gradient(circle at 30% 28%, rgba(255, 255, 255, 0.8), transparent 36%),
-    linear-gradient(160deg, rgba(255, 255, 255, 0.96), rgba(245, 235, 224, 0.92));
-  box-shadow: 0 24px 46px rgba(40, 37, 31, 0.12);
+    radial-gradient(circle at 30% 28%, rgba(255, 255, 255, 0.82), transparent 36%),
+    linear-gradient(160deg, rgba(255, 255, 255, 0.97), rgba(243, 233, 223, 0.92));
+  box-shadow: 0 28px 52px rgba(29, 32, 35, 0.12);
   border: 1px solid rgba(29, 43, 45, 0.06);
 }
 
@@ -871,7 +876,7 @@ body.session-live .welcome-stage {
 
 .story-card {
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.86), rgba(248, 240, 230, 0.84));
+    linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(246, 239, 232, 0.84));
 }
 
 .story-card:first-child {
@@ -907,7 +912,8 @@ body.session-live .welcome-stage {
   min-height: 360px;
   border-radius: 28px;
   background:
-    linear-gradient(180deg, rgba(255, 251, 246, 0.95), rgba(246, 239, 229, 0.92));
+    radial-gradient(circle at top, rgba(255, 255, 255, 0.45), transparent 48%),
+    linear-gradient(180deg, rgba(255, 252, 248, 0.96), rgba(245, 239, 232, 0.93));
   border: 1px solid rgba(255, 255, 255, 0.78);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.88), var(--shadow-lg);
   overflow: hidden;
@@ -954,22 +960,22 @@ body.session-live .welcome-stage {
 
 .bubble {
   max-width: min(78%, 720px);
-  padding: 16px 18px;
-  border-radius: 24px;
-  line-height: 1.7;
-  font-size: 0.97rem;
+  padding: 17px 19px;
+  border-radius: 26px;
+  line-height: 1.74;
+  font-size: 0.99rem;
   box-shadow: var(--shadow-md);
 }
 
 .message.assistant .bubble,
 .message.system .bubble {
-  background: rgba(255, 255, 255, 0.92);
+  background: rgba(255, 255, 255, 0.94);
   border-top-left-radius: 10px;
 }
 
 .message.user .bubble {
   background:
-    linear-gradient(160deg, rgba(29, 74, 79, 0.98), rgba(23, 57, 62, 0.96));
+    linear-gradient(160deg, rgba(39, 70, 80, 0.99), rgba(27, 48, 56, 0.98));
   color: #fff;
   border-top-right-radius: 10px;
 }
@@ -982,7 +988,7 @@ body.session-live .welcome-stage {
 .composer-panel,
 .aftercare-panel {
   background:
-    linear-gradient(180deg, rgba(255, 254, 250, 0.92), rgba(248, 244, 238, 0.86));
+    linear-gradient(180deg, rgba(255, 254, 251, 0.94), rgba(247, 242, 237, 0.88));
 }
 
 .composer {
@@ -994,7 +1000,65 @@ body.session-live .welcome-stage {
   position: sticky;
   bottom: 18px;
   z-index: 5;
-  box-shadow: 0 18px 40px rgba(27, 41, 45, 0.12);
+  box-shadow: 0 22px 44px rgba(29, 32, 35, 0.12);
+}
+
+.conversation-mode {
+  display: grid;
+  gap: 14px;
+  padding: 18px 18px 20px;
+  border-radius: 24px;
+  background:
+    radial-gradient(circle at top left, rgba(201, 159, 101, 0.18), transparent 28%),
+    linear-gradient(145deg, rgba(32, 55, 65, 0.98), rgba(24, 39, 46, 0.98));
+  color: #f8f2ea;
+  box-shadow: 0 22px 40px rgba(29, 32, 35, 0.18);
+}
+
+.conversation-mode .eyebrow,
+.conversation-mode .summary-text,
+.conversation-mode h3 {
+  color: inherit;
+}
+
+.conversation-mode-copy {
+  display: grid;
+  gap: 8px;
+}
+
+.conversation-mode-copy h3 {
+  font-family: "Fraunces", "Iowan Old Style", serif;
+  font-size: clamp(1.25rem, 2vw, 1.8rem);
+  line-height: 1.04;
+  letter-spacing: -0.03em;
+  max-width: 24ch;
+}
+
+.conversation-mode-rail {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.mode-step {
+  min-height: 34px;
+  padding: 0 14px;
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  font-size: 0.84rem;
+  font-weight: 700;
+}
+
+.mode-dot {
+  inline-size: 8px;
+  block-size: 8px;
+  border-radius: 999px;
+  background: rgba(201, 159, 101, 0.88);
+  box-shadow: 0 0 0 4px rgba(201, 159, 101, 0.12);
 }
 
 .composer-toolbar {
@@ -1005,10 +1069,11 @@ body.session-live .welcome-stage {
 .voice-cluster {
   flex: 1 1 240px;
   align-items: center;
+  gap: 14px;
 }
 
 .voice-status {
-  font-size: 0.9rem;
+  font-size: 0.92rem;
 }
 
 .voice-preview {
@@ -1044,6 +1109,7 @@ body.session-live .welcome-stage {
 
 .voice-status.active {
   color: var(--sea);
+  font-weight: 700;
 }
 
 .voice-toggles {
@@ -1058,7 +1124,7 @@ body.session-live .welcome-stage {
   min-height: 44px;
   padding: 0 12px;
   border-radius: 999px;
-  background: rgba(23, 39, 44, 0.06);
+  background: rgba(24, 36, 42, 0.06);
 }
 
 .toggle input {
@@ -1104,8 +1170,8 @@ body.session-live .welcome-stage {
 .button.primary {
   color: #fff;
   background:
-    linear-gradient(140deg, #1d4a4f 0%, #16383c 100%);
-  box-shadow: 0 14px 24px rgba(29, 74, 79, 0.2);
+    linear-gradient(140deg, #274650 0%, #1c343d 100%);
+  box-shadow: 0 16px 28px rgba(39, 70, 80, 0.22);
 }
 
 .button.secondary,
@@ -1126,8 +1192,17 @@ body.session-live .welcome-stage {
 .emergency-link {
   color: #fff;
   background:
-    linear-gradient(140deg, #b96a55 0%, #995042 100%);
-  box-shadow: 0 14px 24px rgba(153, 80, 66, 0.18);
+    linear-gradient(140deg, #b96c4b 0%, #934f3b 100%);
+  box-shadow: 0 14px 24px rgba(147, 79, 59, 0.18);
+}
+
+.voice-button {
+  min-width: 188px;
+  border-radius: 18px;
+}
+
+.send-button {
+  min-width: 124px;
 }
 
 .disabled-link {

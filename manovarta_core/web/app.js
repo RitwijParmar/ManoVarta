@@ -1741,12 +1741,8 @@ function maybeSpeak(turn) {
     currentAudio = null;
   }
 
-  if (speechSynthesisApi) {
-    fallbackSpeak(turn.text);
-    return;
-  }
-
   if (state.runtime?.text_to_speech_enabled) {
+    updateVoiceStatus("ManoVarta is replying aloud...");
     fetch(`/voice/speak?language=${encodeURIComponent(state.language)}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -1761,9 +1757,11 @@ function maybeSpeak(turn) {
       .then((blob) => {
         const url = URL.createObjectURL(blob);
         currentAudio = new Audio(url);
+        currentAudio.preload = "auto";
         currentAudio.onended = () => {
           URL.revokeObjectURL(url);
           currentAudio = null;
+          updateVoiceStatus("Your turn. Speak when ready.");
           maybeResumeVoiceLoop();
         };
         currentAudio.onerror = () => {
@@ -1779,8 +1777,17 @@ function maybeSpeak(turn) {
       })
       .catch((error) => {
         console.error(error);
+        if (speechSynthesisApi) {
+          fallbackSpeak(turn.text);
+          return;
+        }
         state.voiceLoopArmed = false;
       });
+    return;
+  }
+
+  if (speechSynthesisApi) {
+    fallbackSpeak(turn.text);
     return;
   }
 
@@ -1794,6 +1801,7 @@ function fallbackSpeak(text) {
   }
 
   speechSynthesisApi.cancel();
+  updateVoiceStatus("ManoVarta is replying aloud...");
   const utterance = new SpeechSynthesisUtterance(text);
   utterance.lang = mapVoiceLanguage(state.language);
   const voice = pickVoice(utterance.lang);
@@ -1801,6 +1809,7 @@ function fallbackSpeak(text) {
     utterance.voice = voice;
   }
   utterance.onend = () => {
+    updateVoiceStatus("Your turn. Speak when ready.");
     maybeResumeVoiceLoop();
   };
   utterance.onerror = () => {

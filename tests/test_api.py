@@ -16,8 +16,8 @@ def test_root_serves_browser_demo():
 
     assert response.status_code == 200
     assert "ManoVarta | Multilingual mental health check-in" in response.text
-    assert "Start check-in" in response.text
-    assert "Talk instead" in response.text
+    assert "Begin private check-in" in response.text
+    assert "Start talking" in response.text
 
 
 def test_review_route_serves_hidden_presenter_surface():

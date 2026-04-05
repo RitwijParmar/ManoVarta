@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#1d4a4f" />
+    <meta name="theme-color" content="#203741" />
     <title>ManoVarta | Multilingual mental health check-in</title>
     <link rel="icon" href="/app-assets/favicon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="/app-assets/app.css" />
@@ -162,7 +162,7 @@
                 <p class="eyebrow">Start gently</p>
                 <h2>What feels heaviest today?</h2>
                 <p class="subtitle">
-                  Type one honest sentence or tap the mic. ManoVarta replies in English, हिंदी, or Hinglish and keeps the conversation gentle.
+                  Start with one honest line. If you prefer, tap the mic and ManoVarta can keep the conversation going aloud.
                 </p>
               </div>
 
@@ -187,7 +187,7 @@
                     <option value="hinglish">Hinglish</option>
                   </select>
                 </label>
-                <button id="startButton" class="button primary">Start check-in</button>
+                <button id="startButton" class="button primary">Begin private check-in</button>
                 <span class="welcome-note">No account required to begin.</span>
               </div>
 
@@ -195,7 +195,7 @@
                 <div class="section-head compact">
                   <div>
                     <p class="eyebrow">Start with what feels easiest</p>
-                    <h3>Quick first lines</h3>
+                    <h3>Easy openings</h3>
                   </div>
                   <span class="chip accent">Confidence boosters</span>
                 </div>
@@ -310,7 +310,7 @@
               <div class="section-head compact">
                 <div>
                   <p class="eyebrow">Gentle nudges</p>
-                  <h3>Small prompts when words are hard to find</h3>
+                  <h3>Helpful prompts when words feel far away</h3>
                 </div>
                 <span class="chip bonus">Gamified nudges</span>
               </div>
@@ -323,10 +323,24 @@
             <section class="composer-panel">
               <div class="section-head compact">
                 <div>
-                  <p class="mini-label">Reply in your own words</p>
+                  <p class="mini-label">Voice-first conversation</p>
                   <p id="composerHelper" class="summary-text">
                     ManoVarta mirrors your pace and keeps the next question focused.
                   </p>
+                </div>
+              </div>
+
+              <div class="conversation-mode">
+                <div class="conversation-mode-copy">
+                  <p class="eyebrow">Conversation mode</p>
+                  <h3>Speak naturally. ManoVarta listens, answers aloud, and opens the mic again.</h3>
+                </div>
+                <div class="conversation-mode-rail" aria-hidden="true">
+                  <span class="mode-step">Listen</span>
+                  <span class="mode-dot"></span>
+                  <span class="mode-step">Reply</span>
+                  <span class="mode-dot"></span>
+                  <span class="mode-step">Continue</span>
                 </div>
               </div>
 
@@ -350,7 +364,7 @@
 
                 <div class="composer-toolbar">
                   <div class="voice-cluster">
-                    <button id="micButton" type="button" class="button secondary">Talk instead</button>
+                    <button id="micButton" type="button" class="button primary voice-button">Start talking</button>
                     <p id="voiceStatus" class="voice-status">Voice ready when supported by the browser.</p>
                   </div>
 
@@ -365,7 +379,7 @@
                     </label>
                   </div>
 
-                  <button type="submit" class="button primary">Send</button>
+                  <button type="submit" class="button secondary send-button">Send</button>
                 </div>
               </form>
             </section>
