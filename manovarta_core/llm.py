@@ -137,7 +137,7 @@ class _LocalGenerationClient:
     def chat_completion(self, *, messages, temperature: float, max_tokens: int):
         prompt_inputs = self._apply_template(messages)
         generation_kwargs = {
-            "max_new_tokens": min(max_tokens, 160),
+            "max_new_tokens": min(max_tokens, 96),
             "pad_token_id": self._tokenizer.pad_token_id or self._tokenizer.eos_token_id,
             "eos_token_id": self._tokenizer.eos_token_id,
             "do_sample": temperature > 0.05,
@@ -230,7 +230,7 @@ class HuggingFaceResponder:
         focus_label = ITEM_INDEX[target_item].label if target_item else "general follow-up"
         transcript = "\n".join(
             f"{turn.speaker}: {turn.text}"
-            for turn in session.turns[-8:]
+            for turn in session.turns[-6:]
         )
         unresolved = ", ".join(snapshot.unresolved_items[:6]) or "none"
         safety = snapshot.safety.level

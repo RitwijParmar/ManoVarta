@@ -180,7 +180,9 @@ def add_turn(session_id: str, payload: ChatTurnRequest) -> ChatTurnResponse:
         raise HTTPException(status_code=404, detail="Session not found.")
 
     store.add_turn(session_id, "user", payload.text, session.language)
-    snapshot = engine.analyze(session.turns, session.language)
+    user_turns = sum(1 for turn in session.turns if turn.speaker == "user")
+    use_llm = user_turns >= runtime_config.live_llm_turn_threshold
+    snapshot = engine.analyze(session.turns, session.language, use_llm=use_llm)
     fallback_text, asked_item = planner.next_reply(snapshot, session)
     reply_text, source = responder.compose_reply(session, snapshot, asked_item, fallback_text)
     if asked_item and asked_item not in session.asked_items:
@@ -192,7 +194,13 @@ def add_turn(session_id: str, payload: ChatTurnRequest) -> ChatTurnResponse:
         session.language,
         notes=f"source:{source}",
     )
-    return ChatTurnResponse(session_id=session_id, assistant_turn=assistant_turn, snapshot=snapshot)
+    return ChatTurnResponse(
+        session_id=session_id,
+        assistant_turn=assistant_turn,
+        snapshot=snapshot,
+        summary=build_summary(session, snapshot),
+        rows=[row.model_dump() for row in build_rows(snapshot)],
+    )
 
 
 @app.get("/chat/sessions/{session_id}", response_model=SessionDetailResponse)

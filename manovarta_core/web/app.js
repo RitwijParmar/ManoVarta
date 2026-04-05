@@ -6,6 +6,7 @@ const state = {
   runtime: null,
   isBusy: false,
   recentCheckins: [],
+  voiceLoopArmed: false,
 };
 
 const HISTORY_KEY = "manovarta_recent_checkins_v2";
@@ -307,6 +308,10 @@ function setBusy(isBusy) {
   chatForm.querySelector('button[type="submit"]').disabled = isBusy;
 }
 
+function handsFreeVoiceEnabled() {
+  return Boolean(autoSendToggle?.checked && speakToggle?.checked);
+}
+
 function setStatusBanner(message, tone = "info") {
   statusBanner.textContent = message;
   statusBanner.className = `status-banner ${tone}`;
@@ -559,6 +564,20 @@ function setLink(anchor, href) {
   anchor.classList.remove("disabled-link");
 }
 
+function buildClientExportPayload(payload) {
+  if (!payload?.snapshot) {
+    return null;
+  }
+  return {
+    __partial: true,
+    session_id: state.sessionId,
+    language: state.language,
+    summary: payload.summary || "",
+    snapshot: payload.snapshot,
+    rows: payload.rows || [],
+  };
+}
+
 function runtimeToText(payload) {
   if (payload.hybrid_safety_enabled) {
     if (payload.cloud_voice_enabled) {
@@ -759,9 +778,9 @@ async function startSession() {
     sessionMeta.textContent = "Your private check-in is open. Start with whatever feels most real right now.";
     updateSessionBadge();
     setSessionLiveState(true);
-    downloadButton.disabled = true;
-    setLink(summaryLink, null);
-    setLink(exportLink, null);
+    downloadButton.disabled = false;
+    setLink(summaryLink, `/chat/sessions/${payload.session_id}/summary`);
+    setLink(exportLink, `/chat/sessions/${payload.session_id}/export`);
     resetInsightPanel();
     setDisclosureState(demoPanel, demoToggle, false, {
       open: "Show demo scenarios",
@@ -787,6 +806,10 @@ function renderSystemMessage(text) {
 }
 
 function renderTurn(turn) {
+  const emptyCard = chatLog.querySelector(".empty-chat-card");
+  if (emptyCard) {
+    emptyCard.remove();
+  }
   const card = document.createElement("article");
   const isSystem = String(turn.text || "").startsWith("[System]");
   const speakerLabel = isSystem
@@ -1239,7 +1262,8 @@ async function refreshExport() {
   setLink(exportLink, `/chat/sessions/${state.sessionId}/export`);
 }
 
-async function sendMessageText(text) {
+async function sendMessageText(text, options = {}) {
+  const { fromVoice = false } = options;
   const cleaned = (text || "").trim();
   if (!cleaned) {
     return;
@@ -1255,8 +1279,13 @@ async function sendMessageText(text) {
   try {
     stopListening();
     setVoicePreview("", { visible: false });
+    state.voiceLoopArmed = fromVoice && handsFreeVoiceEnabled();
     if (speechSynthesisApi) {
       speechSynthesisApi.cancel();
+    }
+    if (currentAudio) {
+      currentAudio.pause();
+      currentAudio = null;
     }
 
     renderTurn({ speaker: "user", text: cleaned });
@@ -1268,17 +1297,27 @@ async function sendMessageText(text) {
       body: JSON.stringify({ text: cleaned }),
     });
     if (!response.ok) {
-      throw new Error(`Turn failed (${response.status})`);
+      const detail = await response.text();
+      throw new Error(`Turn failed (${response.status}): ${detail}`);
     }
     const payload = await response.json();
     renderTurn(payload.assistant_turn);
+    state.exportPayload = buildClientExportPayload(payload);
+    if (payload.snapshot && payload.summary) {
+      renderSnapshot({
+        snapshot: payload.snapshot,
+        summary: payload.summary,
+        rows: payload.rows || [],
+      });
+      rememberCheckin(state.exportPayload);
+    }
     maybeSpeak(payload.assistant_turn);
-    await refreshExport();
     setStatusBanner(LANGUAGE_UI[state.language].turnSuccess, "success");
   } catch (error) {
     console.error(error);
     renderSystemMessage("Turn failed due to a runtime error. Please retry.");
     setStatusBanner("Turn failed. Check runtime and retry.", "error");
+    state.voiceLoopArmed = false;
   } finally {
     setBusy(false);
   }
@@ -1286,10 +1325,19 @@ async function sendMessageText(text) {
 
 async function sendTurn(event) {
   event.preventDefault();
-  await sendMessageText(messageInput.value);
+  await sendMessageText(messageInput.value, { fromVoice: false });
 }
 
-function downloadExport() {
+async function downloadExport() {
+  if ((!state.exportPayload || state.exportPayload.__partial) && state.sessionId) {
+    try {
+      await refreshExport();
+    } catch (error) {
+      console.error(error);
+      setStatusBanner("Could not prepare the export right now. Please retry.", "error");
+      return;
+    }
+  }
   if (!state.exportPayload) {
     return;
   }
@@ -1343,6 +1391,32 @@ function updateMicButtonLabel() {
   micButton.textContent = autoSendToggle?.checked ? "Speak and auto-send" : "Tap to talk";
 }
 
+function maybeResumeVoiceLoop() {
+  if (!state.voiceLoopArmed || !handsFreeVoiceEnabled() || state.isBusy) {
+    return;
+  }
+  window.setTimeout(() => {
+    if (!state.voiceLoopArmed || !handsFreeVoiceEnabled() || state.isBusy || listening) {
+      return;
+    }
+    if (shouldPreferBrowserVoice()) {
+      startBrowserVoiceCapture("Your turn. Speak when ready.");
+      return;
+    }
+    if (backendVoiceAvailable()) {
+      updateVoiceStatus("Your turn. Recording will start now.");
+      startBackendRecording().catch((error) => {
+        console.error(error);
+        if (recognition) {
+          startBrowserVoiceCapture("Your turn. Switching to browser voice...");
+          return;
+        }
+        updateVoiceStatus("Voice conversation could not restart. Tap the mic to continue.", true);
+      });
+    }
+  }, 450);
+}
+
 function cleanupMediaStream() {
   if (mediaStream) {
     mediaStream.getTracks().forEach((track) => track.stop());
@@ -1362,7 +1436,7 @@ function handleCapturedTranscript(transcript, sourceLabel = "voice") {
   setVoicePreview(cleaned, { visible: true });
   updateVoiceStatus(`Transcript captured from ${sourceLabel}.`);
   if (autoSendToggle.checked) {
-    chatForm.requestSubmit();
+    void sendMessageText(cleaned, { fromVoice: true });
   }
 }
 
@@ -1492,15 +1566,31 @@ function setupVoice() {
     }
     messageInput.value = pendingVoiceTranscript;
     if (autoSendToggle.checked) {
-      chatForm.requestSubmit();
+      void sendMessageText(pendingVoiceTranscript, { fromVoice: true });
     } else {
       messageInput.focus();
       updateVoiceStatus("Transcript moved into the message box.");
     }
   });
   autoSendToggle?.addEventListener("change", () => {
+    if (autoSendToggle.checked && speakToggle && !speakToggle.checked) {
+      speakToggle.checked = true;
+    }
+    if (!autoSendToggle.checked) {
+      state.voiceLoopArmed = false;
+    }
     updateMicButtonLabel();
     setVoicePreview(pendingVoiceTranscript, { visible: Boolean(pendingVoiceTranscript) });
+    updateVoiceStatus(
+      autoSendToggle.checked
+        ? "Hands-free voice is on. Speak, stop, and ManoVarta will answer aloud."
+        : "Auto-send is off. You can review the transcript before sending."
+    );
+  });
+  speakToggle?.addEventListener("change", () => {
+    if (!speakToggle.checked) {
+      state.voiceLoopArmed = false;
+    }
   });
   languageSelect.addEventListener("change", () => {
     if (recognition) {
@@ -1524,6 +1614,9 @@ function setupVoice() {
     updateVoiceStatus("Tap the mic, speak, and stop. ManoVarta will capture your words.");
   } else {
     updateVoiceStatus("Tap the mic to record. ManoVarta will transcribe it in the cloud.");
+  }
+  if (autoSendToggle?.checked && speakToggle && !speakToggle.checked) {
+    speakToggle.checked = true;
   }
   updateMicButtonLabel();
 }
@@ -1570,6 +1663,7 @@ function stopListening() {
 
 function maybeSpeak(turn) {
   if (!speakToggle.checked || turn.speaker !== "assistant") {
+    state.voiceLoopArmed = false;
     return;
   }
 
@@ -1596,29 +1690,48 @@ function maybeSpeak(turn) {
         currentAudio.onended = () => {
           URL.revokeObjectURL(url);
           currentAudio = null;
+          maybeResumeVoiceLoop();
+        };
+        currentAudio.onerror = () => {
+          URL.revokeObjectURL(url);
+          currentAudio = null;
+          fallbackSpeak(turn.text);
         };
         currentAudio.play().catch(() => {
           URL.revokeObjectURL(url);
           currentAudio = null;
+          fallbackSpeak(turn.text);
         });
       })
       .catch((error) => {
         console.error(error);
+        fallbackSpeak(turn.text);
       });
     return;
   }
 
+  fallbackSpeak(turn.text);
+}
+
+function fallbackSpeak(text) {
   if (!speechSynthesisApi) {
+    state.voiceLoopArmed = false;
     return;
   }
 
   speechSynthesisApi.cancel();
-  const utterance = new SpeechSynthesisUtterance(turn.text);
+  const utterance = new SpeechSynthesisUtterance(text);
   utterance.lang = mapVoiceLanguage(state.language);
   const voice = pickVoice(utterance.lang);
   if (voice) {
     utterance.voice = voice;
   }
+  utterance.onend = () => {
+    maybeResumeVoiceLoop();
+  };
+  utterance.onerror = () => {
+    state.voiceLoopArmed = false;
+  };
   speechSynthesisApi.speak(utterance);
 }
 

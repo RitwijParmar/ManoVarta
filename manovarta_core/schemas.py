@@ -171,6 +171,8 @@ class ChatTurnResponse(BaseModel):
     session_id: str
     assistant_turn: Turn
     snapshot: ScreeningSnapshot
+    summary: Optional[str] = None
+    rows: List[dict] = Field(default_factory=list)
 
 
 class SessionDetailResponse(BaseModel):
