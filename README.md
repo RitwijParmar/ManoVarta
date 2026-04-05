@@ -1,53 +1,266 @@
 # ManoVarta
 
-ManoVarta is a text-first multilingual screening prototype for English, Hindi, and limited Hinglish conversations. The project is designed around PHQ-9 and GAD-7 style item inference, evidence spans, confidence tracking, and a separate safety pass.
+ManoVarta is a multilingual conversational screening system for mental health. Instead of administering PHQ-9 and GAD-7 as a rigid form, it conducts a guided dialogue, extracts symptom evidence from open-ended responses, assigns item-level questionnaire scores, tracks uncertainty, and routes safety-critical cases through a separate escalation path.
 
-The current repository includes two layers:
+The project was built for the "Conversational AI Chatbot for Multilingual Mental Health Screening" assignment, with English and Hindi as the required languages and Hinglish treated as an additional real-world robustness condition.
 
-- `FastAPI` runtime endpoints for chat, transcript scoring, and summary generation
-- `Django` admin models for seed data, review workflow, and annotation support
-- self-hosted local `transformers` inference path for live chat drafting and extraction
-- browser voice wrapper using speech recognition and speech synthesis when supported
-- Colab-ready training scripts for extractor and safety fine-tuning
-- Vertex AI submitter/worker scripts for Aya continuation training with DAIC-WOZ auxiliary supervision
+ManoVarta is a research prototype and screening-support system. It is not a therapy product, not a diagnostic device, and not a replacement for licensed clinical care.
 
-The runtime now exposes an explicit coverage planner as part of the snapshot state. That planner tracks touched items, resolved items, abstained items, a follow-up queue, and a review queue so contradictory evidence is surfaced instead of being silently forced into a score.
+## Current status
 
-The goal is a credible research prototype, not a therapy product or diagnostic system.
+The final repository state is not just a notebook experiment. It includes:
 
-## Dataset snapshot
+- a FastAPI runtime for chat, transcript scoring, summaries, voice endpoints, and runtime inspection
+- a Django admin/data layer for seed data, annotation workflow, and review support
+- self-hosted local inference for the deployed runtime
+- a hybrid safety stack with rules plus a promoted local safety checkpoint
+- patient-profile onboarding in the actual user flow
+- browser voice plus backend speech-to-text and text-to-speech routes
+- a final ACL-format report bundle in PDF, DOCX, and LaTeX
+- a final project presentation deck in PPTX
+- a clean phase submission zip with compact relevant weights included
 
-The checked-in synthetic annotated corpus now uses a `curated core + silver extension` design:
+## Final results
 
-- `48` patient profiles
-- `48` curated conversation records
-- `132` silver conversation variants built from the curated core
-- `180` total conversation records
-- balanced language coverage: `60` English, `60` Hindi, `60` Hinglish
-- review mix: `24` `consensus_final`, `24` `double_annotated`, `132` `draft`
-- safety mix: `127` none, `37` review, `16` urgent
-- nuance coverage that now includes guarded openings, deny-then-reveal cases, Hindi somatic phrasing, Hinglish code-mixing, passive disappearance language, contradiction-style disclosures, burden language, exam/work masking, caregiving stress, breakup narratives, and low-engagement short replies
+Final live runtime metrics from `reports/live_runtime_eval_20260404.json`:
 
-The current processed split after export is:
+| Metric | Value |
+| --- | --- |
+| Coverage completeness | `0.783` |
+| Exact match rate | `0.639` |
+| Macro-F1 | `0.251` |
+| MAE | `0.424` |
+| Safety precision | `1.000` |
+| Safety recall | `1.000` |
+| Parse failures | `0` |
 
-- extractor: `84` train / `48` dev / `48` test
-- follow-up: `120` train / `96` dev / `144` test
-- safety: `84` train / `48` dev / `48` test
+Language-wise live runtime breakdown:
 
-Everything is still synthetic pilot data, but it is now large enough to exercise the training and evaluation pipeline without the earlier tiny-sample bottleneck. The curated core is the higher-trust subset for careful review and error analysis; the silver layer is mainly there to improve robustness to conversational variation.
+| Language | Coverage | Exact | Macro-F1 | MAE |
+| --- | --- | --- | --- | --- |
+| English | `0.844` | `0.667` | `0.239` | `0.370` |
+| Hindi | `0.719` | `0.609` | `0.242` | `0.435` |
+| Hinglish | `0.786` | `0.636` | `0.232` | `0.477` |
 
-## Project layout
+Assignment-aligned evaluation from `reports/final_assignment_completion_report.json`:
+
+- Disclosure Efficiency: average `2.292` user turns to a stable item score
+- Safety Accuracy: precision `1.0`, recall `1.0`, F1 `1.0`
+- Latency: cold start `937.69 ms`, warm median `32.73 ms`, warm p95 `32.89 ms`
+- Discourse Effectiveness: coverage `0.783`, exact `0.639`, macro-F1 `0.251`, parse failures `0`
+
+## Live deployment
+
+The final public runtime URL recorded in the current report bundle is:
+
+- `https://manovarta-runtime-122722888597.us-east4.run.app`
+
+The live deployment report currently describes:
+
+- `provider: local`
+- `self_hosted_inference_enabled: true`
+- `hybrid_safety_enabled: true`
+- `local_safety_checkpoint_enabled: true`
+- `speech_to_text_enabled: true`
+- `text_to_speech_enabled: true`
+
+## What the system does
+
+At runtime, ManoVarta works as a structured conversational pipeline:
+
+1. The user selects language and optionally enters profile context.
+2. The dialogue planner decides what topic needs to be covered next.
+3. The extractor pulls questionnaire-aligned evidence from the conversation.
+4. The scorer updates PHQ-9 and GAD-7 item state.
+5. The runtime checks whether evidence is still insufficient and should trigger a follow-up question.
+6. The safety stack separately checks for `none`, `review`, or `urgent` risk.
+7. The response generator turns the current screening state into the next natural question.
+8. The voice layer optionally handles microphone input and spoken replies.
+
+This separation was one of the main project findings. Direct prompting alone was not enough. The strongest improvements came from:
+
+- evidence-first extraction instead of raw transcript scoring
+- separate safety fusion instead of trusting the main conversational model
+- coverage-aware planning instead of a fixed questionnaire order
+- language-sensitive lexical and verifier passes
+- targeted post-hoc calibration instead of one more generic retrain
+
+## Why Aya was chosen for extraction
+
+The extractor decision was based on measured behavior, not model branding.
+
+Important checkpoints in the project:
+
+| System | Coverage | Exact | Macro-F1 | Notes |
+| --- | --- | --- | --- | --- |
+| Heuristic seed runtime | `0.022` | `0.635` | `0.058` | misleadingly sparse |
+| Early raw Aya scoring check | `0.009` | `0.400` | `0.006` | fluent but clinically silent |
+| Local Qwen2.5-1.5B probe | `0.429` | `0.667` | `0.129` | saved probe, Hindi brittle |
+| Retrospective Llama 3.1 8B probe | `0.893` | `0.640` | `0.190` | good tiny-slice coverage, still worse than Aya on macro-F1 and safety behavior |
+| Aya offline extractor baseline | `0.913` | `0.562` | `0.272` | first strong archived multilingual extractor result |
+| Final live runtime | `0.783` | `0.639` | `0.251` | deployment-ready, safe default |
+
+Interpretation:
+
+- Qwen was useful as an early compact-model path, but the saved probe was too brittle to justify multilingual extractor selection.
+- Llama 3.1 8B was tested later through a real local MLX 4-bit probe and looked stronger than Qwen on a tiny multilingual slice, but it still did not beat the archived Aya extractor on the main held-out comparison and over-escalated safety on benign examples.
+- Aya remained the best extractor backbone because it was the first model family in the project to produce a strong archived multilingual evaluation.
+- The final deployed runtime later moved to self-hosted local inference for productization, but the extractor design decisions were still driven by the Aya result path.
+
+## Safety design
+
+Safety is handled separately from ordinary item scoring.
+
+The runtime combines:
+
+- rule-based safety monitoring
+- a promoted local safety checkpoint
+- runtime corroboration logic to reduce false positives
+
+This separation mattered. The project initially had a stronger raw extractor than a safe deployed system. Later calibration made the runtime much safer without collapsing back into useless abstention.
+
+Current safety result:
+
+- final live runtime safety precision `1.0`
+- final live runtime safety recall `1.0`
+
+## Bonus features implemented
+
+Both bonus features were implemented in the final product:
+
+- Gamification
+  - interactive confidence boosters
+  - guided first-line prompts
+  - adaptive nudges that encourage more descriptive disclosure
+- Linguistic personalization
+  - style-aware follow-up shaping
+  - gentler prompts for guarded users
+  - smaller prompts for brief users
+  - more open prompts for detailed users
+  - code-mix awareness for Hinglish interactions
+
+## Voice support
+
+The final system is more than a browser-only speech demo.
+
+Voice stack:
+
+- browser speech recognition and speech synthesis when available
+- backend `/voice/transcribe`
+- backend `/voice/speak`
+- cloud STT/TTS support in deployment
+
+Current state:
+
+- good enough for the project brief
+- not yet a fully streaming duplex phone-call product
+
+That means:
+
+- microphone input works in the browser flow
+- spoken replies can be generated through the backend
+- continuous voice mode exists
+- but this is still a product prototype, not a production telephony stack
+
+## Saved weights and model artifacts
+
+Important saved artifacts in this repo:
+
+### Final compact extractor artifacts
+
+- `outputs/local_mps/extractor-qwen25-1_5b-best-compact/`
+
+This directory contains:
+
+- `adapter_model.safetensors`
+- tokenizer files
+- adapter config
+- compact training outputs kept for reproducibility
+
+### Final promoted safety inference checkpoint
+
+- `outputs/local_safety_boost/safety-indicbert-best-infer-fp16/`
+
+This directory contains the promoted inference-only safety checkpoint used in the final hybrid runtime path.
+
+### Additional experiment artifacts
+
+- `reports/local_mps/qwen25_1_5b_best_compact_probe_eval_20260405.json`
+- `reports/local_mps/granite_3_1_2b_instruct_probe_eval_20260405.json`
+- `reports/local_mps/llama_3_1_8b_instruct_4bit_probe_eval_20260405.json`
+
+These are useful for documenting model selection, but they are small retrospective probes, not full held-out multilingual benchmarks.
+
+## Final report and presentation
+
+Final report assets:
+
+- `reports/acl_paper/project2_acl_report.pdf`
+- `reports/acl_paper/project2_acl_report.docx`
+- `reports/acl_paper/project2_acl_report.tex`
+- `reports/acl_paper/project2_acl_report.bib`
+
+Final presentation:
+
+- `reports/acl_paper/project2_presentation.pptx`
+
+Supporting report bundle:
+
+- `reports/final_assignment_completion_report.md`
+- `reports/final_assignment_completion_report.json`
+- `reports/best_current_system_report.md`
+- `reports/best_current_system_report.json`
+- `reports/live_runtime_eval_20260404.json`
+
+## Clean submission bundle
+
+A cleaned phase submission bundle is prepared at:
+
+- `submission/ProjectPhase3_UBid1_UBid2.zip`
+
+This bundle includes:
+
+- working code
+- tests
+- seed and processed data
+- final PDF report
+- final DOCX report
+- final PPTX presentation
+- key evaluation artifacts
+- compact relevant saved weights
+
+This bundle intentionally excludes:
+
+- `.env.local`
+- `.venv`
+- `.DS_Store`
+- `__pycache__`
+- `data/external/`
+- giant historical zip bundles under `artifacts/`
+- unnecessary intermediate checkpoints
+
+If you want to rebuild the presentation or submission package:
+
+```bash
+python3 tools/build_project2_presentation.py
+python3 tools/build_phase3_submission_bundle.py
+```
+
+## Repository layout
 
 | Path | Purpose |
 | --- | --- |
-| `manovarta_core/` | shared screening logic, schemas, safety, dialogue, and FastAPI app |
-| `manovarta_admin/` | Django project configuration |
-| `screening/` | Django app for profiles, conversations, evidence, and reviews |
-| `data/seed/` | seed profiles and conversations for local testing |
-| `tests/` | API and scoring tests |
-| `README_phase1.md` | proposal and Milestone 1 package summary |
-| `data_nuance_strategy.md` | rationale for the curated core, silver variants, and nuance dimensions |
-| `tools/demo_cli.py` | terminal demo loop using the same runtime logic |
+| `manovarta_core/` | FastAPI app, dialogue logic, extraction, scoring, safety, voice, schemas |
+| `manovarta_admin/` | Django project config |
+| `screening/` | Django app for profiles, conversations, evidence, and review |
+| `data/seed/` | synthetic multilingual seed data |
+| `data/processed/` | exported train/dev/test JSONL splits |
+| `reports/` | evaluation bundles, runtime reports, final assignment reports |
+| `reports/acl_paper/` | final paper, bibliography, figures, presentation |
+| `outputs/` | saved model checkpoints and promoted runtime artifacts |
+| `tools/` | training, evaluation, packaging, and presentation scripts |
+| `tests/` | unit and runtime tests |
+| `submission/` | cleaned final submission bundle |
 
 ## Local setup
 
@@ -57,73 +270,24 @@ source .venv/bin/activate
 pip install -e .[dev]
 ```
 
-## Run the API
+## Run the API locally
 
 ```bash
 source .venv/bin/activate
 uvicorn manovarta_core.api:app --reload
 ```
 
-## Shipped baseline
+Useful endpoints:
 
-The current shipped baseline is frozen at git tag `shipped-baseline-2026-04-04`.
-
-It uses:
-
-- self-hosted chat/runtime drafting: `Qwen/Qwen2.5-0.5B-Instruct`
-- self-hosted structured extraction: `Qwen/Qwen2.5-0.5B-Instruct`
-- safety: hybrid runtime with rule monitor plus an auto-discovered local checkpoint
-
-The shipped reference docs are:
-
-- `reports/ship_note_2026-04-04.md`
-- `reports/best_current_system_report.md`
-
-To package the lean shipped demo/submission bundle:
-
-```bash
-make ship-bundle
-```
-
-That writes:
-
-- `artifacts/manovarta_shipped_baseline_20260404.zip`
-
-## Deployment
-
-For a production-like local demo, the repo now includes container deployment assets:
-
-- `Dockerfile`
-- `docker-compose.demo.yml`
-- `render.yaml`
-
-Local container demo:
-
-```bash
-docker compose -f docker-compose.demo.yml up --build
-```
-
-This serves the browser runtime on port `8000`. The compose stack uses the baked-in
-self-hosted local model image and mounts the promoted
-inference-only safety checkpoint if it exists locally at:
-
-- `outputs/local_safety_boost/safety-indicbert-best-infer-fp16`
-
-For cloud deployment, `render.yaml` provides a simple HTTPS-ready web service blueprint.
-Because browser voice relies on Web Speech APIs, HTTPS deployment is the right path for live microphone demos.
-
-## Final assignment report
-
-To generate the assignment-aligned completion bundle with the exact rubric terms:
-
-```bash
-make assignment-report
-```
-
-That writes:
-
-- `reports/final_assignment_completion_report.json`
-- `reports/final_assignment_completion_report.md`
+- `/`
+- `/health`
+- `/runtime/config`
+- `/chat/sessions`
+- `/chat/turn`
+- `/screen/transcript`
+- `/voice/transcribe`
+- `/voice/speak`
+- `/knowledge/base`
 
 ## Run Django admin
 
@@ -149,7 +313,9 @@ source .venv/bin/activate
 pytest
 ```
 
-## Seed-data utilities
+## Data generation and export
+
+Seed-data utilities:
 
 ```bash
 python tools/generate_seed_scaleup.py
@@ -157,194 +323,75 @@ python tools/generate_seed_nuance_pack.py
 python tools/generate_seed_silver_variants.py
 python tools/dataset_stats.py
 python tools/validate_seed_data.py
-python tools/evaluate_seed_runtime.py --mode heuristic
 ```
 
-The scale-up and nuance generators add harder disclosure patterns without overwriting the original curated packs. The silver-variant generator then produces additional guarded, minimizing, and self-correcting versions for robustness experiments.
-
-If `HF_TOKEN` is set, you can still compare an external hosted extraction path:
-
-```bash
-python tools/evaluate_seed_runtime.py --mode llm
-python tools/evaluate_seed_runtime.py --mode llm --model moonshotai/Kimi-K2-Instruct
-python tools/compare_llm_baselines.py
-```
-
-## Annotation workflow helpers
-
-```bash
-python tools/build_annotation_packets.py
-```
-
-This exports a compact JSONL packet with transcript turns, metadata, and blank slots for a second annotation pass.
-
-## Training data export
+Training/export utilities:
 
 ```bash
 python tools/create_data_splits.py
 python tools/export_training_sets.py
 ```
 
-That prepares:
+This writes the extractor, follow-up, and safety training sets under `data/processed/`.
 
-- extractor fine-tuning sets,
-- follow-up generation sets,
-- safety classification sets.
+## Evaluation utilities
 
-For the extractor, the export now also writes a stronger train set:
-
-- `extractor_train_best.jsonl`: compact-schema supervision with extra Hindi and Hinglish weighting
-- `extractor_train_best_augmented_daic.jsonl`: same idea plus capped English `DAIC-WOZ` auxiliary data when `--daic-root` is provided
-
-You can optionally add `DAIC-WOZ` as an auxiliary English-only extractor source:
+Heuristic and hosted-LLM comparison:
 
 ```bash
-python tools/fetch_daic_woz.py --output-dir data/external/DAIC-WOZ
-# Optional: pull a small sample of train session zips.
-python tools/fetch_daic_woz.py --output-dir data/external/DAIC-WOZ --session-split train --max-session-zips 5
-python tools/export_training_sets.py --daic-root /path/to/DAIC-WOZ
+python tools/evaluate_seed_runtime.py --mode heuristic
+python tools/evaluate_seed_runtime.py --mode llm
+python tools/compare_llm_baselines.py
 ```
 
-The official DAIC-WOZ source index used by the helper script is:
-`https://dcapswoz.ict.usc.edu/wwwdaicwoz/`
-
-That writes:
-
-- `extractor_daic_train.jsonl`
-- `extractor_daic_dev.jsonl`
-- `extractor_daic_test.jsonl`
-- `extractor_train_augmented_daic.jsonl`
-
-The DAIC export is intentionally kept separate from the main multilingual split. It is best used to improve English depression-item extraction, not to claim better Hindi or Hinglish coverage.
-
-## How to improve Hindi and Hinglish
-
-`DAIC-WOZ` helps mostly with English PHQ-style supervision. For Hindi and Hinglish, the higher-return path is:
-
-- add more gold reviewed Hindi and Hinglish conversations, especially off-by-one severity cases
-- add more code-mixed, guarded, somatic, and contradiction-heavy examples
-- use Aya or Qwen as a teacher to draft Hindi and Hinglish variants, then manually review them
-- keep the multilingual test split separate from any English-only auxiliary corpus
-
-In other words: use `DAIC-WOZ` to sharpen the English extractor, but improve Hindi and Hinglish with targeted multilingual data rather than hoping an English interview corpus transfers cleanly.
-
-## Optional Hugging Face hookup
-
-If you want live response drafting through Hugging Face Inference Providers, set:
-
-```bash
-export HF_TOKEN=...
-export MANOVARTA_CHAT_MODEL=Qwen/Qwen2.5-7B-Instruct
-export MANOVARTA_EXTRACTION_MODEL=CohereLabs/aya-expanse-32b
-```
-
-You can also put the same values in a local `.env.local` file. It is ignored by git.
-
-Then verify auth with:
-
-```bash
-python tools/hf_smoketest.py
-```
-
-The current default split is:
-
-- chat/runtime drafting: `Qwen/Qwen2.5-7B-Instruct`
-- structured extraction: `CohereLabs/aya-expanse-32b`
-
-That split keeps latency reasonable while using the stronger multilingual model where it matters most.
-
-If you want the optional semantic safety encoder in runtime, also set:
-
-```bash
-export MANOVARTA_SEMANTIC_SAFETY_MODEL=ai4bharat/IndicBERTv2-MLM-only
-```
-
-That path is optional and heavier, so it is best tested in Colab first.
-
-The runtime now also auto-discovers a promoted local safety checkpoint when either of these directories exists:
-
-- `outputs/local_safety_boost/safety-indicbert-best-infer-fp16`
-- `outputs/local_safety_boost/safety-indicbert-best`
-
-That means the hybrid safety stack can come up by default without editing `.env.local`. If you want to override it manually, set:
-
-```bash
-export MANOVARTA_LOCAL_SAFETY_CHECKPOINT=/absolute/path/to/checkpoint
-```
-
-## Optional Colab encoder work
-
-If you want to test the Hindi-sensitive encoder path on GPU:
-
-```bash
-pip install -e .[gpu]
-python tools/semantic_safety_eval.py --model ai4bharat/IndicBERTv2-MLM-only
-```
-
-There is also a Colab-specific walkthrough in `experiments/colab/README.md`.
-Full fine-tuning commands live in `training/README.md`.
-The ready-to-run notebook is `experiments/colab/manovarta_training_colab.ipynb`.
-
-If you want the full remote train/eval path in one command on Colab GPU, use:
-
-```bash
-python tools/run_colab_full_pipeline.py --device cuda
-```
-
-If you want to continue-train Aya on Vertex AI instead of Colab, use the submitter in `tools/run_vertex_aya_continue.py`. The worker reuses the same compact-schema DAIC continuation flow and uploads checkpoints/reports back into GCS.
-
-## Saved evaluation bundle
-
-To write a durable evaluation summary into `reports/`:
-
-```bash
-python tools/generate_eval_bundle.py
-```
-
-You can optionally include a local checkpoint path:
-
-```bash
-python tools/generate_eval_bundle.py --checkpoint outputs/extractor-qwen25
-```
-
-To package the current recommended runtime stack and the latest hybrid Colab validation into a single report:
+Runtime and report generation:
 
 ```bash
 python tools/generate_best_current_system_report.py
+python tools/generate_assignment_completion_report.py
+python tools/generate_acl_report_figures.py
+python tools/build_acl_report_artifacts.py
 ```
 
-To package trained outputs after a Colab or local run:
+## Deployment
+
+Deployment assets included in the repo:
+
+- `Dockerfile`
+- `docker-compose.demo.yml`
+- `render.yaml`
+
+Local container demo:
 
 ```bash
-python tools/package_training_artifacts.py --source-dir outputs
+docker compose -f docker-compose.demo.yml up --build
 ```
 
-If you finish a Colab training run and want the repo-friendly outputs in one pass:
+## Rebuilding the current project artifacts
 
 ```bash
-python tools/finalize_colab_run.py \
-  --checkpoint-path outputs/extractor-qwen25 \
-  --semantic-model ai4bharat/IndicBERTv2-MLM-only
+python3 tools/build_project2_presentation.py
+python3 tools/build_phase3_submission_bundle.py
+python3 tools/build_acl_report_artifacts.py
 ```
 
-That will:
+## Important limitations
 
-- run checkpoint, heuristic, semantic safety, and live LLM evaluation when available
-- save durable JSON reports under `reports/colab_run/`
-- write a Markdown bundle summary
-- package `outputs/` and `reports/colab_run/` into `artifacts/manovarta_colab_bundle.zip`
+This repo is honest about what is done and what is still limited.
 
-If you also want a Drive copy from Colab:
+- The system is a research prototype, not a clinically validated product.
+- The seed corpus is still synthetic and relatively small.
+- Hindi is currently the weakest final language slice.
+- Voice is real, but not yet a streaming duplex telephony product.
+- Some planning-stage models, such as Gemma and Mistral, were discussed during development, but there is no reproducible final archived held-out result for them in the repo.
+- The Qwen and Llama probe artifacts are small comparison probes, not full end-to-end benchmarks.
 
-```bash
-python tools/finalize_colab_run.py \
-  --checkpoint-path outputs/extractor-qwen25 \
-  --semantic-model ai4bharat/IndicBERTv2-MLM-only \
-  --drive-dir /content/drive/MyDrive/ManoVartaOutputs
-```
+## Safety and ethics note
 
-## Notes
+ManoVarta is intended for research and educational screening support only.
 
-- Large-model hosting is intentionally left out of this repository.
-- Voice uses browser-native APIs, so it depends on microphone permission and browser support.
-- Seed data is synthetic and should be treated as pilot material only.
+- It should not be used as a diagnostic authority.
+- It should not be used as a substitute for emergency or licensed mental-health care.
+- Human review remains mandatory for real high-risk settings.
+
+If you are adapting this code for real-world use, privacy, consent, clinical review, and safety escalation design must be treated as first-class requirements rather than post-processing details.
