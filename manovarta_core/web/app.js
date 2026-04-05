@@ -752,35 +752,57 @@ function applyLanguageDefaults(language) {
   renderStarterDeck(language);
 }
 
-async function startSession() {
-  setBusy(true);
-  try {
-    state.language = languageSelect.value;
-    applyLanguageDefaults(state.language);
-    stopListening();
-    setVoicePreview("", { visible: false });
+async function requestSessionStart(options = {}) {
+  const {
+    resetChat = true,
+    renderOpening = true,
+    announce = true,
+    speakOpening = true,
+    stopVoiceCapture = true,
+  } = options;
 
-    const response = await fetch("/chat/sessions", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ language: state.language, profile: collectProfileContext() }),
-    });
-    if (!response.ok) {
-      throw new Error(`Could not start session (${response.status})`);
-    }
-    const payload = await response.json();
-    state.sessionId = payload.session_id;
-    state.exportPayload = null;
+  state.language = languageSelect.value;
+  applyLanguageDefaults(state.language);
+  if (stopVoiceCapture) {
+    stopListening();
+  }
+  setVoicePreview("", { visible: false });
+
+  const response = await fetch("/chat/sessions", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ language: state.language, profile: collectProfileContext() }),
+  });
+  if (!response.ok) {
+    throw new Error(`Could not start session (${response.status})`);
+  }
+
+  const payload = await response.json();
+  state.sessionId = payload.session_id;
+  state.exportPayload = null;
+  if (resetChat) {
     chatLog.innerHTML = "";
+  }
+  if (renderOpening) {
     renderTurn(payload.assistant_turn);
+  }
+
+  state.voiceLoopArmed = handsFreeVoiceEnabled();
+  if (renderOpening && speakOpening) {
     maybeSpeak(payload.assistant_turn);
-    sessionMeta.classList.remove("empty");
-    sessionMeta.textContent = "Your private check-in is open. Start with whatever feels most real right now.";
-    updateSessionBadge();
-    setSessionLiveState(true);
-    downloadButton.disabled = false;
-    setLink(summaryLink, `/chat/sessions/${payload.session_id}/summary`);
-    setLink(exportLink, `/chat/sessions/${payload.session_id}/export`);
+  } else if (state.voiceLoopArmed) {
+    maybeResumeVoiceLoop();
+  }
+
+  sessionMeta.classList.remove("empty");
+  sessionMeta.textContent = "Your private check-in is open. Start with whatever feels most real right now.";
+  updateSessionBadge();
+  setSessionLiveState(true);
+  downloadButton.disabled = false;
+  setLink(summaryLink, `/chat/sessions/${payload.session_id}/summary`);
+  setLink(exportLink, `/chat/sessions/${payload.session_id}/export`);
+
+  if (announce) {
     resetInsightPanel();
     setDisclosureState(demoPanel, demoToggle, false, {
       open: "Show demo scenarios",
@@ -792,6 +814,15 @@ async function startSession() {
     });
     updateVoiceStatus(LANGUAGE_UI[state.language].sessionReady);
     setStatusBanner(LANGUAGE_UI[state.language].startSuccess, "success");
+  }
+
+  return payload;
+}
+
+async function startSession() {
+  setBusy(true);
+  try {
+    await requestSessionStart();
   } catch (error) {
     console.error(error);
     renderSystemMessage("Session start failed. Check backend health and try again.");
@@ -1263,7 +1294,7 @@ async function refreshExport() {
 }
 
 async function sendMessageText(text, options = {}) {
-  const { fromVoice = false } = options;
+  const { fromVoice = false, allowRecovery = true } = options;
   const cleaned = (text || "").trim();
   if (!cleaned) {
     return;
@@ -1291,11 +1322,26 @@ async function sendMessageText(text, options = {}) {
     renderTurn({ speaker: "user", text: cleaned });
     messageInput.value = "";
 
-    const response = await fetch(`/chat/sessions/${state.sessionId}/turns`, {
+    let response = await fetch(`/chat/sessions/${state.sessionId}/turns`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ text: cleaned }),
     });
+    if (response.status === 404 && allowRecovery) {
+      setStatusBanner("The session refreshed in the background. Sending your last message again...", "info");
+      await requestSessionStart({
+        resetChat: false,
+        renderOpening: false,
+        announce: false,
+        speakOpening: false,
+        stopVoiceCapture: false,
+      });
+      response = await fetch(`/chat/sessions/${state.sessionId}/turns`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text: cleaned }),
+      });
+    }
     if (!response.ok) {
       const detail = await response.text();
       throw new Error(`Turn failed (${response.status}): ${detail}`);
@@ -1391,12 +1437,16 @@ function updateMicButtonLabel() {
   micButton.textContent = autoSendToggle?.checked ? "Speak and auto-send" : "Tap to talk";
 }
 
+function assistantAudioActive() {
+  return Boolean(currentAudio || (speechSynthesisApi && (speechSynthesisApi.speaking || speechSynthesisApi.pending)));
+}
+
 function maybeResumeVoiceLoop() {
-  if (!state.voiceLoopArmed || !handsFreeVoiceEnabled() || state.isBusy) {
+  if (!state.voiceLoopArmed || !handsFreeVoiceEnabled() || state.isBusy || assistantAudioActive()) {
     return;
   }
   window.setTimeout(() => {
-    if (!state.voiceLoopArmed || !handsFreeVoiceEnabled() || state.isBusy || listening) {
+    if (!state.voiceLoopArmed || !handsFreeVoiceEnabled() || state.isBusy || listening || assistantAudioActive()) {
       return;
     }
     if (shouldPreferBrowserVoice()) {
@@ -1540,10 +1590,16 @@ function setupVoice() {
       listening = false;
       updateMicButtonLabel();
       if (event.error === "not-allowed" || event.error === "service-not-allowed") {
+        state.voiceLoopArmed = false;
         updateVoiceStatus("Microphone access is blocked. Allow mic access in the browser and try again.", true);
         return;
       }
       if (event.error === "no-speech") {
+        if (handsFreeVoiceEnabled() && state.voiceLoopArmed) {
+          updateVoiceStatus("I did not catch speech that time. Listening again...");
+          maybeResumeVoiceLoop();
+          return;
+        }
         updateVoiceStatus("I did not catch speech that time. Try once more.", true);
         return;
       }
@@ -1553,6 +1609,10 @@ function setupVoice() {
     recognition.onend = () => {
       listening = false;
       updateMicButtonLabel();
+      if (handsFreeVoiceEnabled() && state.voiceLoopArmed && !state.isBusy && !pendingVoiceTranscript) {
+        maybeResumeVoiceLoop();
+        return;
+      }
       if (!voiceStatus.classList.contains("error")) {
         updateVoiceStatus("Voice ready.");
       }
@@ -1578,18 +1638,26 @@ function setupVoice() {
     }
     if (!autoSendToggle.checked) {
       state.voiceLoopArmed = false;
+    } else if (state.sessionId) {
+      state.voiceLoopArmed = true;
     }
     updateMicButtonLabel();
     setVoicePreview(pendingVoiceTranscript, { visible: Boolean(pendingVoiceTranscript) });
     updateVoiceStatus(
       autoSendToggle.checked
-        ? "Hands-free voice is on. Speak, stop, and ManoVarta will answer aloud."
-        : "Auto-send is off. You can review the transcript before sending."
+        ? "Continuous voice is on. Speak, pause, and ManoVarta will answer aloud."
+        : "Continuous voice is off. You can review the transcript before sending."
     );
+    if (autoSendToggle.checked && state.sessionId) {
+      maybeResumeVoiceLoop();
+    }
   });
   speakToggle?.addEventListener("change", () => {
     if (!speakToggle.checked) {
       state.voiceLoopArmed = false;
+      if (autoSendToggle?.checked) {
+        autoSendToggle.checked = false;
+      }
     }
   });
   languageSelect.addEventListener("change", () => {
@@ -1611,7 +1679,7 @@ function setupVoice() {
   });
 
   if (SpeechRecognitionCtor) {
-    updateVoiceStatus("Tap the mic, speak, and stop. ManoVarta will capture your words.");
+    updateVoiceStatus("Tap the mic to start. In continuous voice mode, ManoVarta will keep the conversation moving aloud.");
   } else {
     updateVoiceStatus("Tap the mic to record. ManoVarta will transcribe it in the cloud.");
   }
@@ -1652,6 +1720,7 @@ function toggleListening() {
 }
 
 function stopListening() {
+  state.voiceLoopArmed = false;
   if (recognition && listening) {
     recognition.stop();
     return;
@@ -1670,6 +1739,11 @@ function maybeSpeak(turn) {
   if (currentAudio) {
     currentAudio.pause();
     currentAudio = null;
+  }
+
+  if (speechSynthesisApi) {
+    fallbackSpeak(turn.text);
+    return;
   }
 
   if (state.runtime?.text_to_speech_enabled) {
@@ -1705,12 +1779,12 @@ function maybeSpeak(turn) {
       })
       .catch((error) => {
         console.error(error);
-        fallbackSpeak(turn.text);
+        state.voiceLoopArmed = false;
       });
     return;
   }
 
-  fallbackSpeak(turn.text);
+  state.voiceLoopArmed = false;
 }
 
 function fallbackSpeak(text) {

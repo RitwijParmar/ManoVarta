@@ -35,6 +35,7 @@ class RuntimeConfig:
     semantic_safety_model: Optional[str]
     semantic_safety_review_threshold: float
     semantic_safety_urgent_threshold: float
+    live_chat_llm_analysis_enabled: bool
     live_llm_turn_threshold: int
     local_safety_checkpoint: Optional[str] = None
 
@@ -136,6 +137,7 @@ def get_runtime_config() -> RuntimeConfig:
         semantic_safety_model=os.getenv("MANOVARTA_SEMANTIC_SAFETY_MODEL"),
         semantic_safety_review_threshold=float(os.getenv("MANOVARTA_SEMANTIC_REVIEW_THRESHOLD", "0.64")),
         semantic_safety_urgent_threshold=float(os.getenv("MANOVARTA_SEMANTIC_URGENT_THRESHOLD", "0.72")),
+        live_chat_llm_analysis_enabled=os.getenv("MANOVARTA_LIVE_CHAT_LLM_ANALYSIS", "false").strip().lower() in {"1", "true", "yes", "on"},
         live_llm_turn_threshold=int(os.getenv("MANOVARTA_LIVE_LLM_TURN_THRESHOLD", "2")),
         local_safety_checkpoint=discover_local_safety_checkpoint(),
     )

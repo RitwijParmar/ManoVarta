@@ -106,6 +106,7 @@ def runtime_settings() -> dict:
         "local_safety_checkpoint_enabled": bool(runtime_config.local_safety_checkpoint),
         "local_safety_checkpoint_path": runtime_config.local_safety_checkpoint,
         "remote_safety_fallback_enabled": bool(hf_safety_assessor and hf_safety_assessor.enabled),
+        "live_chat_llm_analysis_enabled": runtime_config.live_chat_llm_analysis_enabled,
         "cloud_voice_enabled": voice_runtime.enabled,
         "speech_to_text_enabled": voice_runtime.speech_to_text,
         "text_to_speech_enabled": voice_runtime.text_to_speech,
@@ -181,7 +182,7 @@ def add_turn(session_id: str, payload: ChatTurnRequest) -> ChatTurnResponse:
 
     store.add_turn(session_id, "user", payload.text, session.language)
     user_turns = sum(1 for turn in session.turns if turn.speaker == "user")
-    use_llm = user_turns >= runtime_config.live_llm_turn_threshold
+    use_llm = runtime_config.live_chat_llm_analysis_enabled and user_turns >= runtime_config.live_llm_turn_threshold
     snapshot = engine.analyze(session.turns, session.language, use_llm=use_llm)
     fallback_text, asked_item = planner.next_reply(snapshot, session)
     reply_text, source = responder.compose_reply(session, snapshot, asked_item, fallback_text)
