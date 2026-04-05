@@ -1,26 +1,26 @@
-@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Newsreader:opsz,wght@6..72,600;6..72,700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Manrope:wght@400;500;600;700;800&display=swap");
 
 :root {
-  --bg: #f2efe8;
-  --bg-deep: #e4e1d9;
-  --surface: rgba(255, 251, 247, 0.84);
-  --surface-strong: rgba(255, 253, 249, 0.96);
-  --surface-ink: #17272c;
-  --surface-soft: #5c6b71;
-  --surface-faint: #829196;
-  --line: rgba(23, 39, 44, 0.1);
-  --line-strong: rgba(23, 39, 44, 0.18);
-  --sage: #dfeae2;
-  --sage-deep: #1b7166;
-  --sea: #0c5a61;
-  --sea-soft: rgba(12, 90, 97, 0.1);
-  --amber: #f0b667;
-  --apricot: #d98054;
-  --rose: #b85f58;
-  --success: #2f7c61;
-  --shadow-xl: 0 28px 80px rgba(27, 41, 45, 0.12);
-  --shadow-lg: 0 18px 40px rgba(27, 41, 45, 0.1);
-  --shadow-md: 0 12px 26px rgba(27, 41, 45, 0.08);
+  --bg: #f7f0e7;
+  --bg-deep: #e7daca;
+  --surface: rgba(255, 249, 242, 0.84);
+  --surface-strong: rgba(255, 252, 247, 0.97);
+  --surface-ink: #1d2b2d;
+  --surface-soft: #5f6864;
+  --surface-faint: #8d867c;
+  --line: rgba(29, 43, 45, 0.08);
+  --line-strong: rgba(29, 43, 45, 0.16);
+  --sage: #dde5de;
+  --sage-deep: #204f55;
+  --sea: #1d4a4f;
+  --sea-soft: rgba(29, 74, 79, 0.08);
+  --amber: #d7a56b;
+  --apricot: #c77a48;
+  --rose: #9c5d5d;
+  --success: #2e6f59;
+  --shadow-xl: 0 34px 72px rgba(40, 37, 31, 0.11);
+  --shadow-lg: 0 20px 42px rgba(40, 37, 31, 0.09);
+  --shadow-md: 0 12px 22px rgba(40, 37, 31, 0.065);
   --radius-3xl: 34px;
   --radius-2xl: 26px;
   --radius-xl: 20px;
@@ -43,10 +43,10 @@ body {
   color: var(--surface-ink);
   font-family: "Manrope", "Avenir Next", "Segoe UI", sans-serif;
   background:
-    radial-gradient(circle at 10% 10%, rgba(12, 90, 97, 0.12), transparent 20%),
-    radial-gradient(circle at 90% 12%, rgba(217, 128, 84, 0.18), transparent 18%),
-    radial-gradient(circle at 50% 100%, rgba(47, 124, 97, 0.08), transparent 30%),
-    linear-gradient(180deg, #fcfaf5 0%, var(--bg) 54%, var(--bg-deep) 100%);
+    radial-gradient(circle at 12% 12%, rgba(29, 74, 79, 0.11), transparent 18%),
+    radial-gradient(circle at 88% 10%, rgba(199, 122, 72, 0.14), transparent 18%),
+    radial-gradient(circle at 80% 72%, rgba(154, 93, 93, 0.08), transparent 22%),
+    linear-gradient(180deg, #fffaf4 0%, var(--bg) 52%, var(--bg-deep) 100%);
 }
 
 h1,
@@ -117,25 +117,25 @@ textarea {
 .page-glow {
   z-index: -2;
   background:
-    radial-gradient(circle at 14% 22%, rgba(12, 90, 97, 0.12), transparent 18%),
-    radial-gradient(circle at 80% 10%, rgba(217, 128, 84, 0.14), transparent 16%),
-    radial-gradient(circle at 70% 78%, rgba(47, 124, 97, 0.1), transparent 24%);
+    radial-gradient(circle at 16% 24%, rgba(29, 74, 79, 0.1), transparent 18%),
+    radial-gradient(circle at 82% 12%, rgba(215, 165, 107, 0.15), transparent 16%),
+    radial-gradient(circle at 68% 78%, rgba(199, 122, 72, 0.08), transparent 22%);
 }
 
 .page-noise {
   z-index: -3;
-  opacity: 0.14;
+  opacity: 0.08;
   background-image:
     linear-gradient(rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.04)),
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180' viewBox='0 0 180 180'%3E%3Cg fill='none' stroke='rgba(23,39,44,0.045)' stroke-width='1'%3E%3Cpath d='M0 30h180M0 90h180M0 150h180M30 0v180M90 0v180M150 0v180'/%3E%3C/g%3E%3C/svg%3E");
 }
 
 .shell {
-  width: min(1480px, 100%);
+  width: min(1440px, 100%);
   margin: 0 auto;
-  padding: 28px;
+  padding: 30px;
   display: grid;
-  gap: 24px;
+  gap: 28px;
 }
 
 .topbar,
@@ -164,42 +164,34 @@ textarea {
 .topbar {
   align-items: center;
   justify-content: space-between;
+  padding: 8px 2px;
 }
 
 .brandblock {
   align-items: center;
-  gap: 16px;
+  gap: 14px;
 }
 
-.brand-orb {
-  width: 58px;
-  height: 58px;
-  border-radius: 20px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  color: #fff;
-  font-weight: 800;
-  letter-spacing: 0.01em;
-  font-size: 1.45rem;
-  background:
-    radial-gradient(circle at 35% 30%, rgba(255, 255, 255, 0.24), transparent 30%),
-    linear-gradient(140deg, #0d786f 0%, #0d5b62 100%);
-  box-shadow: 0 18px 34px rgba(13, 91, 98, 0.22);
+.brand-mark {
+  inline-size: 64px;
+  block-size: 64px;
+  flex: 0 0 auto;
+  filter: drop-shadow(0 14px 22px rgba(29, 74, 79, 0.12));
 }
 
 .brand-copy h1,
-.hero-copy h2,
 .conversation-topbar h2,
 .section-head h3,
 .modal-card h2 {
-  font-family: "Newsreader", "Iowan Old Style", serif;
+  font-family: "Fraunces", "Iowan Old Style", serif;
+  font-variation-settings: "SOFT" 60, "WONK" 0;
 }
 
 .brand-copy h1 {
-  font-size: 1.28rem;
-  line-height: 1.05;
-  max-width: 22ch;
+  font-size: 1.18rem;
+  line-height: 1.08;
+  max-width: 20ch;
+  letter-spacing: -0.02em;
 }
 
 .eyebrow,
@@ -210,9 +202,9 @@ textarea {
 .history-meta {
   color: var(--surface-faint);
   font-size: 0.72rem;
-  font-weight: 800;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: none;
 }
 
 .topbar-actions {
@@ -224,17 +216,17 @@ textarea {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 6px;
+  padding: 5px;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.72);
-  border: 1px solid rgba(23, 39, 44, 0.08);
-  box-shadow: 0 10px 24px rgba(27, 41, 45, 0.08);
+  background: rgba(255, 252, 247, 0.7);
+  border: 1px solid rgba(29, 43, 45, 0.06);
+  box-shadow: 0 8px 18px rgba(40, 37, 31, 0.06);
 }
 
 .language-tab {
   min-width: 104px;
-  min-height: 52px;
-  padding: 10px 14px;
+  min-height: 48px;
+  padding: 8px 14px;
   border-radius: 999px;
   background: transparent;
   color: var(--surface-soft);
@@ -250,9 +242,9 @@ textarea {
 }
 
 .language-tab.is-active {
-  background: linear-gradient(140deg, rgba(12, 90, 97, 0.96), rgba(14, 114, 106, 0.92));
+  background: linear-gradient(140deg, rgba(29, 74, 79, 0.98), rgba(20, 57, 62, 0.96));
   color: #fff;
-  box-shadow: 0 12px 20px rgba(12, 90, 97, 0.22);
+  box-shadow: 0 12px 20px rgba(29, 74, 79, 0.18);
 }
 
 .tab-label {
@@ -286,11 +278,11 @@ textarea {
 }
 
 .service-health {
-  font-size: 0.92rem;
-  padding: 9px 13px;
+  font-size: 0.86rem;
+  padding: 8px 12px;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.68);
-  border: 1px solid rgba(255, 255, 255, 0.82);
+  background: rgba(255, 252, 247, 0.7);
+  border: 1px solid rgba(29, 43, 45, 0.05);
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -367,7 +359,7 @@ textarea {
 .panel {
   border-radius: var(--radius-3xl);
   box-shadow: var(--shadow-xl);
-  padding: 24px;
+  padding: 26px;
 }
 
 .status-card,
@@ -388,7 +380,7 @@ textarea {
 .sanctuary-card,
 .conversation-panel {
   background:
-    linear-gradient(180deg, rgba(255, 253, 249, 0.96) 0%, rgba(255, 250, 245, 0.88) 100%);
+    linear-gradient(180deg, rgba(255, 251, 246, 0.98) 0%, rgba(255, 247, 239, 0.9) 100%);
 }
 
 .sanctuary-card,
@@ -584,31 +576,32 @@ textarea {
   padding: 16px;
   border-radius: 20px;
   background:
-    linear-gradient(160deg, rgba(255, 255, 255, 0.9), rgba(247, 243, 236, 0.82));
-  border: 1px solid rgba(255, 255, 255, 0.76);
+    linear-gradient(160deg, rgba(255, 255, 255, 0.82), rgba(248, 240, 230, 0.76));
+  border: 1px solid rgba(255, 255, 255, 0.65);
   box-shadow: var(--shadow-md);
 }
 
 .tone-icon {
   inline-size: 42px;
   block-size: 42px;
-  border-radius: 14px;
+  border-radius: 999px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: rgba(12, 90, 97, 0.08);
+  background: rgba(29, 74, 79, 0.08);
   color: var(--sea);
   font-weight: 800;
-  font-size: 1rem;
+  font-size: 0.82rem;
+  letter-spacing: 0.08em;
 }
 
 .trust-pill {
-  padding: 14px 16px;
-  border-radius: 18px;
+  padding: 12px 14px;
+  border-radius: 999px;
   color: var(--surface-soft);
-  font-size: 0.92rem;
+  font-size: 0.88rem;
   background:
-    linear-gradient(135deg, rgba(223, 234, 226, 0.6), rgba(255, 255, 255, 0.84));
+    linear-gradient(135deg, rgba(255, 255, 255, 0.72), rgba(245, 237, 228, 0.84));
 }
 
 .ritual-stats {
@@ -753,10 +746,11 @@ body.session-live .welcome-stage {
 }
 
 .welcome-copy h2 {
-  font-family: "Newsreader", "Iowan Old Style", serif;
+  font-family: "Fraunces", "Iowan Old Style", serif;
   font-size: clamp(2.7rem, 6vw, 5.8rem);
-  line-height: 0.9;
+  line-height: 0.88;
   max-width: 10ch;
+  letter-spacing: -0.045em;
 }
 
 .welcome-visual {
@@ -765,10 +759,10 @@ body.session-live .welcome-stage {
   border-radius: 30px;
   overflow: hidden;
   background:
-    radial-gradient(circle at 22% 25%, rgba(240, 182, 103, 0.28), transparent 20%),
-    radial-gradient(circle at 82% 24%, rgba(12, 90, 97, 0.24), transparent 22%),
-    linear-gradient(145deg, rgba(226, 238, 231, 0.96), rgba(255, 248, 240, 0.96));
-  border: 1px solid rgba(255, 255, 255, 0.86);
+    radial-gradient(circle at 22% 25%, rgba(215, 165, 107, 0.22), transparent 20%),
+    radial-gradient(circle at 82% 24%, rgba(29, 74, 79, 0.18), transparent 22%),
+    linear-gradient(145deg, rgba(241, 234, 223, 0.98), rgba(252, 246, 238, 0.98));
+  border: 1px solid rgba(255, 255, 255, 0.82);
   box-shadow: var(--shadow-lg);
 }
 
@@ -794,28 +788,28 @@ body.session-live .welcome-stage {
   position: absolute;
   inset: 50% auto auto 50%;
   transform: translate(-50%, -50%);
-  inline-size: 152px;
-  block-size: 152px;
+  inline-size: 166px;
+  block-size: 166px;
   border-radius: 999px;
   display: grid;
   place-items: center;
   text-align: center;
-  color: #fff;
   background:
-    radial-gradient(circle at 30% 28%, rgba(255, 255, 255, 0.24), transparent 34%),
-    linear-gradient(160deg, #0d786f, #0c5a61);
-  box-shadow: 0 24px 46px rgba(12, 90, 97, 0.24);
+    radial-gradient(circle at 30% 28%, rgba(255, 255, 255, 0.8), transparent 36%),
+    linear-gradient(160deg, rgba(255, 255, 255, 0.96), rgba(245, 235, 224, 0.92));
+  box-shadow: 0 24px 46px rgba(40, 37, 31, 0.12);
+  border: 1px solid rgba(29, 43, 45, 0.06);
 }
 
-.welcome-core-mark {
-  font-family: "Newsreader", serif;
-  font-size: 2.9rem;
-  line-height: 1;
+.welcome-mark {
+  inline-size: 94px;
+  block-size: 94px;
+  filter: drop-shadow(0 14px 18px rgba(29, 74, 79, 0.08));
 }
 
 .welcome-core-line {
   padding: 0 18px 18px;
-  color: rgba(255, 255, 255, 0.8);
+  color: rgba(29, 43, 45, 0.55);
   font-size: 0.72rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -828,11 +822,11 @@ body.session-live .welcome-stage {
   display: inline-flex;
   align-items: center;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.88);
+  background: rgba(255, 252, 247, 0.94);
   color: var(--surface-soft);
-  font-size: 0.82rem;
+  font-size: 0.78rem;
   font-weight: 700;
-  box-shadow: 0 10px 22px rgba(27, 41, 45, 0.1);
+  box-shadow: 0 10px 22px rgba(40, 37, 31, 0.08);
 }
 
 .welcome-float-a { inset: 28px auto auto 28px; }
@@ -848,7 +842,7 @@ body.session-live .welcome-stage {
 
 .welcome-note {
   color: var(--surface-soft);
-  font-size: 0.92rem;
+  font-size: 0.86rem;
 }
 
 .welcome-assurances {
@@ -872,16 +866,20 @@ body.session-live .welcome-stage {
 }
 
 .storyboard-grid {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: 1.2fr 1fr;
 }
 
 .story-card {
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.88), rgba(247, 243, 238, 0.84));
+    linear-gradient(180deg, rgba(255, 255, 255, 0.86), rgba(248, 240, 230, 0.84));
+}
+
+.story-card:first-child {
+  grid-column: 1 / -1;
 }
 
 .focus-row {
-  grid-template-columns: 1.1fr 1.3fr 0.9fr;
+  display: none;
 }
 
 .focus-card {
@@ -909,7 +907,7 @@ body.session-live .welcome-stage {
   min-height: 360px;
   border-radius: 28px;
   background:
-    linear-gradient(180deg, rgba(251, 248, 242, 0.92), rgba(243, 239, 231, 0.9));
+    linear-gradient(180deg, rgba(255, 251, 246, 0.95), rgba(246, 239, 229, 0.92));
   border: 1px solid rgba(255, 255, 255, 0.78);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.88), var(--shadow-lg);
   overflow: hidden;
@@ -957,7 +955,7 @@ body.session-live .welcome-stage {
 .bubble {
   max-width: min(78%, 720px);
   padding: 16px 18px;
-  border-radius: 22px;
+  border-radius: 24px;
   line-height: 1.7;
   font-size: 0.97rem;
   box-shadow: var(--shadow-md);
@@ -971,7 +969,7 @@ body.session-live .welcome-stage {
 
 .message.user .bubble {
   background:
-    linear-gradient(160deg, rgba(12, 90, 97, 0.95), rgba(20, 117, 108, 0.92));
+    linear-gradient(160deg, rgba(29, 74, 79, 0.98), rgba(23, 57, 62, 0.96));
   color: #fff;
   border-top-right-radius: 10px;
 }
@@ -1106,8 +1104,8 @@ body.session-live .welcome-stage {
 .button.primary {
   color: #fff;
   background:
-    linear-gradient(140deg, #0d786f 0%, #0e5e65 100%);
-  box-shadow: 0 14px 26px rgba(13, 94, 101, 0.26);
+    linear-gradient(140deg, #1d4a4f 0%, #16383c 100%);
+  box-shadow: 0 14px 24px rgba(29, 74, 79, 0.2);
 }
 
 .button.secondary,
@@ -1128,8 +1126,8 @@ body.session-live .welcome-stage {
 .emergency-link {
   color: #fff;
   background:
-    linear-gradient(140deg, #b95a4e 0%, #943a34 100%);
-  box-shadow: 0 14px 24px rgba(148, 58, 52, 0.2);
+    linear-gradient(140deg, #b96a55 0%, #995042 100%);
+  box-shadow: 0 14px 24px rgba(153, 80, 66, 0.18);
 }
 
 .disabled-link {
@@ -1402,8 +1400,9 @@ th {
     block-size: 128px;
   }
 
-  .welcome-core-mark {
-    font-size: 2.5rem;
+  .welcome-mark {
+    inline-size: 76px;
+    block-size: 76px;
   }
 
   .profile-form-grid,
