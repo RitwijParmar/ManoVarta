@@ -42,6 +42,10 @@ class RuntimeConfig:
         return bool(self.hf_token and self.model_provider == "huggingface")
 
     @property
+    def local_inference_enabled(self) -> bool:
+        return self.model_provider == "local"
+
+    @property
     def semantic_safety_enabled(self) -> bool:
         return bool(self.semantic_safety_model)
 

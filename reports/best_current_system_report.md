@@ -1,23 +1,23 @@
 # Best Current System Report
 
-- Generated: `2026-04-05T02:53:11.005980+00:00`
-- Git revision: `a81a784`
+- Generated: `2026-04-05T04:14:17.884196+00:00`
+- Git revision: `f29f89c`
 - Public runtime URL: `https://manovarta-runtime-122722888597.us-east4.run.app`
 
 ## Default Runtime
 
-- Provider: `huggingface`
-- Chat model: `Qwen/Qwen2.5-7B-Instruct`
-- Extraction model: `CohereLabs/aya-expanse-32b`
+- Provider: `local`
+- Chat model: `/models/qwen2.5-0.5b-instruct`
+- Extraction model: `/models/qwen2.5-0.5b-instruct`
 - Hybrid safety enabled: `True`
 - Rule safety monitor enabled: `True`
-- Local safety checkpoint: `outputs/local_safety_boost/safety-indicbert-best`
+- Local safety checkpoint: `/tmp/manovarta_local_safety_checkpoint/59e9264e860d`
 
 ## Live Deployment Runtime
 
-- Provider: `huggingface`
-- Chat model: `Qwen/Qwen2.5-7B-Instruct`
-- Extraction model: `CohereLabs/aya-expanse-32b`
+- Provider: `local`
+- Chat model: `/models/qwen2.5-0.5b-instruct`
+- Extraction model: `/models/qwen2.5-0.5b-instruct`
 - Hybrid safety enabled: `True`
 - Cloud voice enabled: `True`
 - Local safety checkpoint enabled: `True`
@@ -67,7 +67,6 @@
 
 - Hindi is now the weakest language slice in the live runtime evaluation at coverage 0.719.
 - Live runtime coverage still trails the best offline extractor baseline, so hosted extraction reliability remains the next coverage bottleneck.
-- Production inference still depends on hosted Hugging Face models rather than a fully self-hosted extractor stack.
 
 ## Sources
 

@@ -383,10 +383,22 @@ function setLink(anchor, href) {
 
 function runtimeToText(payload) {
   if (payload.hybrid_safety_enabled) {
+    if (payload.self_hosted_inference_enabled && payload.cloud_voice_enabled) {
+      return "Ready for a guided multilingual check-in with self-hosted local inference, stronger safety support, and cloud voice.";
+    }
+    if (payload.self_hosted_inference_enabled) {
+      return "Ready for a guided multilingual check-in with self-hosted local inference and stronger safety support.";
+    }
     if (payload.cloud_voice_enabled) {
       return "Ready for a guided multilingual check-in with stronger safety support and cloud voice.";
     }
     return "Ready for a guided multilingual check-in with stronger safety support.";
+  }
+  if (payload.self_hosted_inference_enabled) {
+    if (payload.cloud_voice_enabled) {
+      return "Ready for a guided conversation in English, Hindi, or Hinglish with self-hosted local inference and cloud voice.";
+    }
+    return "Ready for a guided conversation in English, Hindi, or Hinglish with self-hosted local inference.";
   }
   if (payload.huggingface_enabled) {
     if (payload.cloud_voice_enabled) {
@@ -404,7 +416,8 @@ function runtimeToDetail(payload) {
       ? "semantic safety enabled"
       : "rule + HF safety enabled";
   const voiceMode = payload.cloud_voice_enabled ? "cloud STT/TTS enabled" : "browser voice wrapper";
-  return `${payload.provider} runtime · chat ${payload.chat_model} · extraction ${payload.extraction_model} · ${safetyMode} · ${voiceMode}`;
+  const providerLabel = payload.self_hosted_inference_enabled ? "self-hosted local runtime" : `${payload.provider} runtime`;
+  return `${providerLabel} · chat ${payload.chat_model} · extraction ${payload.extraction_model} · ${safetyMode} · ${voiceMode}`;
 }
 
 function renderRuntime(payload) {

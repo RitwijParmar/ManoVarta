@@ -8,6 +8,9 @@ services:
     env_file:
       - .env.local
     environment:
+      MANOVARTA_MODEL_PROVIDER: local
+      MANOVARTA_CHAT_MODEL: /models/qwen2.5-0.5b-instruct
+      MANOVARTA_EXTRACTION_MODEL: /models/qwen2.5-0.5b-instruct
       MANOVARTA_LOCAL_SAFETY_CHECKPOINT: /app/outputs/local_safety_boost/safety-indicbert-best-infer-fp16
     volumes:
       - ./outputs/local_safety_boost/safety-indicbert-best-infer-fp16:/app/outputs/local_safety_boost/safety-indicbert-best-infer-fp16:ro

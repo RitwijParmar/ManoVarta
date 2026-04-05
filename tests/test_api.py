@@ -36,6 +36,7 @@ def test_runtime_config_reports_huggingface_disabled_by_default():
     assert "provider" in body
     assert "chat_model" in body
     assert "huggingface_enabled" in body
+    assert "self_hosted_inference_enabled" in body
 
 
 def test_demo_bootstrap_exposes_runtime_profiles_and_links():

@@ -1,23 +1,24 @@
 {
-  "generated_at": "2026-04-05T02:53:11.005980+00:00",
-  "git_revision": "a81a784",
+  "generated_at": "2026-04-05T04:14:17.884196+00:00",
+  "git_revision": "f29f89c",
   "public_runtime_url": "https://manovarta-runtime-122722888597.us-east4.run.app",
   "recommended_default_runtime": {
-    "provider": "huggingface",
-    "chat_model": "Qwen/Qwen2.5-7B-Instruct",
-    "extraction_model": "CohereLabs/aya-expanse-32b",
-    "local_safety_checkpoint": "outputs/local_safety_boost/safety-indicbert-best",
+    "provider": "local",
+    "chat_model": "/models/qwen2.5-0.5b-instruct",
+    "extraction_model": "/models/qwen2.5-0.5b-instruct",
+    "local_safety_checkpoint": "/tmp/manovarta_local_safety_checkpoint/59e9264e860d",
     "hybrid_safety_enabled": true,
     "rule_safety_monitor_enabled": true,
     "semantic_safety_enabled": false,
-    "decision": "Use the Aya extractor with the promoted local safety checkpoint and rule monitor as the default runtime."
+    "decision": "Use the self-hosted local runtime with the promoted local safety checkpoint and rule monitor as the default deployment path."
   },
   "live_deployment_runtime": {
-    "provider": "huggingface",
-    "chat_model": "Qwen/Qwen2.5-7B-Instruct",
-    "extraction_model": "CohereLabs/aya-expanse-32b",
-    "safety_model": "CohereLabs/aya-expanse-32b",
-    "huggingface_enabled": true,
+    "provider": "local",
+    "chat_model": "/models/qwen2.5-0.5b-instruct",
+    "extraction_model": "/models/qwen2.5-0.5b-instruct",
+    "safety_model": "/models/qwen2.5-0.5b-instruct",
+    "huggingface_enabled": false,
+    "self_hosted_inference_enabled": true,
     "semantic_safety_enabled": false,
     "semantic_safety_model": null,
     "hybrid_safety_enabled": true,
@@ -1326,8 +1327,7 @@
     ],
     "known_gaps": [
       "Hindi is now the weakest language slice in the live runtime evaluation at coverage 0.719.",
-      "Live runtime coverage still trails the best offline extractor baseline, so hosted extraction reliability remains the next coverage bottleneck.",
-      "Production inference still depends on hosted Hugging Face models rather than a fully self-hosted extractor stack."
+      "Live runtime coverage still trails the best offline extractor baseline, so hosted extraction reliability remains the next coverage bottleneck."
     ]
   }
 }

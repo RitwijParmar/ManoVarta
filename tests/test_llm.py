@@ -21,9 +21,55 @@ def _disabled_config():
     )
 
 
+def _local_config():
+    return RuntimeConfig(
+        model_provider="local",
+        chat_model="/models/qwen2.5-0.5b-instruct",
+        extraction_model="/models/qwen2.5-0.5b-instruct",
+        safety_model="/models/qwen2.5-0.5b-instruct",
+        hf_token=None,
+        hf_timeout=30.0,
+        assistant_temperature=0.2,
+        assistant_max_tokens=180,
+        extraction_max_tokens=900,
+        safety_max_tokens=180,
+        semantic_safety_model=None,
+        semantic_safety_review_threshold=0.64,
+        semantic_safety_urgent_threshold=0.72,
+    )
+
+
 def test_huggingface_responder_stays_disabled_without_token():
     responder = HuggingFaceResponder(_disabled_config())
     assert responder.enabled is False
+
+
+def test_local_responder_uses_self_hosted_provider(monkeypatch):
+    class _Response:
+        def __init__(self, content):
+            self.choices = [type("Choice", (), {"message": type("Message", (), {"content": content})()})()]
+
+    class _FakeClient:
+        def chat_completion(self, *, messages, temperature, max_tokens):
+            return _Response("Take your time. What feels heaviest right now?")
+
+    monkeypatch.setattr("manovarta_core.llm._build_text_generation_client", lambda config, model_name: _FakeClient())
+    responder = HuggingFaceResponder(_local_config())
+    session = ChatSession(session_id="local-session", language="en", turns=[Turn(turn_id=1, speaker="user", text="I feel overwhelmed.", language_tag="en")])
+    snapshot = ScreeningSnapshot(
+        language="en",
+        items={},
+        evidence_spans=[],
+        unresolved_items=[],
+        totals={"PHQ9": None, "GAD7": None},
+        safety=SafetyFlag(level="none"),
+        coverage=CoveragePlan(total_items=16, touched_items=0, completion_ratio=0.0, dialogue=DialoguePlan()),
+    )
+
+    reply, source = responder.compose_reply(session, snapshot, None, "Fallback")
+
+    assert reply == "Take your time. What feels heaviest right now?"
+    assert source == "local"
 
 
 def test_huggingface_extractor_stays_disabled_without_token():

@@ -211,11 +211,19 @@ def build_report(
     if live_runtime.get("provider") == "huggingface":
         known_gaps.append("Production inference still depends on hosted Hugging Face models rather than a fully self-hosted extractor stack.")
 
-    return {
-        "generated_at": datetime.now(timezone.utc).isoformat(),
-        "git_revision": git_revision(),
-        "public_runtime_url": DEFAULT_LIVE_RUNTIME_URL,
-        "recommended_default_runtime": {
+    if live_runtime.get("provider") == "local":
+        recommended_default_runtime = {
+            "provider": "local",
+            "chat_model": live_runtime.get("chat_model"),
+            "extraction_model": live_runtime.get("extraction_model"),
+            "local_safety_checkpoint": normalize_path_value(live_runtime.get("local_safety_checkpoint_path")),
+            "hybrid_safety_enabled": live_runtime.get("hybrid_safety_enabled", False),
+            "rule_safety_monitor_enabled": True,
+            "semantic_safety_enabled": live_runtime.get("semantic_safety_enabled", False),
+            "decision": "Use the self-hosted local runtime with the promoted local safety checkpoint and rule monitor as the default deployment path.",
+        }
+    else:
+        recommended_default_runtime = {
             "provider": config.model_provider,
             "chat_model": config.chat_model,
             "extraction_model": config.extraction_model,
@@ -224,7 +232,13 @@ def build_report(
             "rule_safety_monitor_enabled": True,
             "semantic_safety_enabled": config.semantic_safety_enabled,
             "decision": "Use the Aya extractor with the promoted local safety checkpoint and rule monitor as the default runtime.",
-        },
+        }
+
+    return {
+        "generated_at": datetime.now(timezone.utc).isoformat(),
+        "git_revision": git_revision(),
+        "public_runtime_url": DEFAULT_LIVE_RUNTIME_URL,
+        "recommended_default_runtime": recommended_default_runtime,
         "live_deployment_runtime": live_runtime,
         "source_artifacts": {
             "aya_baseline_json": "reports/aya_colab_eval_a100_20260328.json",

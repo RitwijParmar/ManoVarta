@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-05T02:53:25Z",
+  "generated_at": "2026-04-05T04:12:58Z",
   "source_reports": {
     "hybrid_runtime_validation": "reports/live_runtime_eval_20260404.json",
     "best_current_system": "reports/best_current_system_report.json",
@@ -80,11 +80,12 @@
       },
       "public_runtime_url": "https://manovarta-runtime-122722888597.us-east4.run.app",
       "live_runtime": {
-        "provider": "huggingface",
-        "chat_model": "Qwen/Qwen2.5-7B-Instruct",
-        "extraction_model": "CohereLabs/aya-expanse-32b",
-        "safety_model": "CohereLabs/aya-expanse-32b",
-        "huggingface_enabled": true,
+        "provider": "local",
+        "chat_model": "/models/qwen2.5-0.5b-instruct",
+        "extraction_model": "/models/qwen2.5-0.5b-instruct",
+        "safety_model": "/models/qwen2.5-0.5b-instruct",
+        "huggingface_enabled": false,
+        "self_hosted_inference_enabled": true,
         "semantic_safety_enabled": false,
         "semantic_safety_model": null,
         "hybrid_safety_enabled": true,
@@ -121,10 +122,10 @@
       "source": "live runtime endpoint evaluation"
     },
     "latency": {
-      "cold_start_ms": 9896.66,
-      "warm_avg_ms": 80.1,
-      "warm_median_ms": 88.65,
-      "warm_p95_ms": 88.66,
+      "cold_start_ms": 937.69,
+      "warm_avg_ms": 29.55,
+      "warm_median_ms": 32.73,
+      "warm_p95_ms": 32.89,
       "samples": 6,
       "note": "Measured through the FastAPI chat endpoint with Hugging Face network calls disabled so the number reflects deterministic local screening latency rather than hosted-model round trips."
     },

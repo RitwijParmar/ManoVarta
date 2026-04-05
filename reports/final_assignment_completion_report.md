@@ -1,6 +1,6 @@
 # Final Assignment Completion Report
 
-- Generated: `2026-04-05T02:53:25Z`
+- Generated: `2026-04-05T04:12:58Z`
 - Shipped baseline tag: `shipped-baseline-2026-04-04`
 
 ## Requirement Status
@@ -41,10 +41,10 @@
 
 ### Latency
 
-- Cold-start turn latency: `9896.66 ms`
-- Warm average turn latency: `80.1 ms`
-- Warm median turn latency: `88.65 ms`
-- Warm p95 turn latency: `88.66 ms`
+- Cold-start turn latency: `937.69 ms`
+- Warm average turn latency: `29.55 ms`
+- Warm median turn latency: `32.73 ms`
+- Warm p95 turn latency: `32.89 ms`
 
 ### Discourse Effectiveness
 

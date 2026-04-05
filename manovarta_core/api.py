@@ -99,6 +99,7 @@ def runtime_settings() -> dict:
         "extraction_model": runtime_config.extraction_model,
         "safety_model": runtime_config.safety_model,
         "huggingface_enabled": runtime_config.huggingface_enabled,
+        "self_hosted_inference_enabled": runtime_config.local_inference_enabled,
         "semantic_safety_enabled": runtime_config.semantic_safety_enabled,
         "semantic_safety_model": runtime_config.semantic_safety_model,
         "hybrid_safety_enabled": bool(runtime_config.local_safety_checkpoint),

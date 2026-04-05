@@ -6,7 +6,7 @@ The current repository includes two layers:
 
 - `FastAPI` runtime endpoints for chat, transcript scoring, and summary generation
 - `Django` admin models for seed data, review workflow, and annotation support
-- optional `Hugging Face` responder path for live chat drafting when `HF_TOKEN` is configured
+- self-hosted local `transformers` inference path for live chat drafting and extraction
 - browser voice wrapper using speech recognition and speech synthesis when supported
 - Colab-ready training scripts for extractor and safety fine-tuning
 - Vertex AI submitter/worker scripts for Aya continuation training with DAIC-WOZ auxiliary supervision
@@ -70,8 +70,8 @@ The current shipped baseline is frozen at git tag `shipped-baseline-2026-04-04`.
 
 It uses:
 
-- chat/runtime drafting: `Qwen/Qwen2.5-7B-Instruct`
-- structured extraction: `CohereLabs/aya-expanse-32b`
+- self-hosted chat/runtime drafting: `Qwen/Qwen2.5-0.5B-Instruct`
+- self-hosted structured extraction: `Qwen/Qwen2.5-0.5B-Instruct`
 - safety: hybrid runtime with rule monitor plus an auto-discovered local checkpoint
 
 The shipped reference docs are:
@@ -103,7 +103,8 @@ Local container demo:
 docker compose -f docker-compose.demo.yml up --build
 ```
 
-This serves the browser runtime on port `8000`. The compose stack mounts the promoted
+This serves the browser runtime on port `8000`. The compose stack uses the baked-in
+self-hosted local model image and mounts the promoted
 inference-only safety checkpoint if it exists locally at:
 
 - `outputs/local_safety_boost/safety-indicbert-best-infer-fp16`
@@ -161,7 +162,7 @@ python tools/evaluate_seed_runtime.py --mode heuristic
 
 The scale-up and nuance generators add harder disclosure patterns without overwriting the original curated packs. The silver-variant generator then produces additional guarded, minimizing, and self-correcting versions for robustness experiments.
 
-If `HF_TOKEN` is set, you can also compare the current LLM extraction path:
+If `HF_TOKEN` is set, you can still compare an external hosted extraction path:
 
 ```bash
 python tools/evaluate_seed_runtime.py --mode llm

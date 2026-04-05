@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import json
 import time
+from functools import lru_cache
+from threading import Lock
 from typing import Any, Optional, Tuple
 
 from manovarta_core.config import RuntimeConfig
@@ -15,6 +17,14 @@ try:
     from huggingface_hub import InferenceClient
 except ImportError:  # pragma: no cover
     InferenceClient = None
+
+try:  # pragma: no cover
+    import torch
+    from transformers import AutoModelForCausalLM, AutoTokenizer
+except ImportError:  # pragma: no cover
+    AutoModelForCausalLM = None
+    AutoTokenizer = None
+    torch = None
 
 
 EXTRACTOR_TOPIC_GUIDANCE = ("mood", "sleep", "energy", "self_view", "focus", "anxiety", "safety")
@@ -82,16 +92,102 @@ ENGLISH_TROUBLE_RELAXING_CUES = (
 )
 
 
+class _ChatCompletionMessage:
+    def __init__(self, content: str) -> None:
+        self.content = content
+
+
+class _ChatCompletionChoice:
+    def __init__(self, content: str) -> None:
+        self.message = _ChatCompletionMessage(content)
+
+
+class _ChatCompletionOutput:
+    def __init__(self, content: str) -> None:
+        self.choices = [_ChatCompletionChoice(content)]
+
+
+@lru_cache(maxsize=4)
+def _load_local_generation_backend(model_name: str, token: Optional[str]):
+    if AutoTokenizer is None or AutoModelForCausalLM is None or torch is None:
+        raise RuntimeError("transformers runtime is not installed")
+
+    tokenizer = AutoTokenizer.from_pretrained(
+        model_name,
+        token=token,
+        trust_remote_code=True,
+    )
+    model = AutoModelForCausalLM.from_pretrained(
+        model_name,
+        token=token,
+        trust_remote_code=True,
+        low_cpu_mem_usage=True,
+    )
+    if tokenizer.pad_token_id is None and tokenizer.eos_token_id is not None:
+        tokenizer.pad_token = tokenizer.eos_token
+    model.eval()
+    return tokenizer, model
+
+
+class _LocalGenerationClient:
+    def __init__(self, model_name: str, token: Optional[str]) -> None:
+        self._tokenizer, self._model = _load_local_generation_backend(model_name, token)
+        self._lock = Lock()
+
+    def chat_completion(self, *, messages, temperature: float, max_tokens: int):
+        prompt_inputs = self._apply_template(messages)
+        generation_kwargs = {
+            "max_new_tokens": min(max_tokens, 160),
+            "pad_token_id": self._tokenizer.pad_token_id or self._tokenizer.eos_token_id,
+            "eos_token_id": self._tokenizer.eos_token_id,
+            "do_sample": temperature > 0.05,
+        }
+        if generation_kwargs["do_sample"]:
+            generation_kwargs["temperature"] = max(temperature, 0.2)
+
+        with self._lock:
+            with torch.inference_mode():
+                generated = self._model.generate(**prompt_inputs, **generation_kwargs)
+
+        prompt_length = prompt_inputs["input_ids"].shape[-1]
+        completion = generated[:, prompt_length:]
+        content = self._tokenizer.batch_decode(completion, skip_special_tokens=True)[0].strip()
+        return _ChatCompletionOutput(content)
+
+    def _apply_template(self, messages):
+        try:
+            model_inputs = self._tokenizer.apply_chat_template(
+                messages,
+                tokenize=True,
+                add_generation_prompt=True,
+                return_tensors="pt",
+                return_dict=True,
+            )
+        except Exception:
+            prompt = "\n".join(f"{message['role']}: {message['content']}" for message in messages) + "\nassistant:"
+            model_inputs = self._tokenizer(prompt, return_tensors="pt")
+        return model_inputs
+
+
+def _build_text_generation_client(config: RuntimeConfig, model_name: str):
+    if config.local_inference_enabled:
+        try:
+            return _LocalGenerationClient(model_name, config.hf_token)
+        except Exception:
+            return None
+    if config.huggingface_enabled and InferenceClient is not None:
+        return InferenceClient(
+            model=model_name,
+            token=config.hf_token,
+            timeout=config.hf_timeout,
+        )
+    return None
+
+
 class HuggingFaceResponder:
     def __init__(self, config: RuntimeConfig) -> None:
         self.config = config
-        self._client = None
-        if self.config.huggingface_enabled and InferenceClient is not None:
-            self._client = InferenceClient(
-                model=self.config.chat_model,
-                token=self.config.hf_token,
-                timeout=self.config.hf_timeout,
-            )
+        self._client = _build_text_generation_client(self.config, self.config.chat_model)
 
     @property
     def enabled(self) -> bool:
@@ -121,7 +217,7 @@ class HuggingFaceResponder:
         cleaned = self._clean_content(content, fallback_text)
         if not cleaned:
             return fallback_text, "template"
-        return cleaned, "huggingface"
+        return cleaned, self.config.model_provider
 
     def _build_messages(
         self,
@@ -190,13 +286,7 @@ class HuggingFaceResponder:
 class HuggingFaceExtractor:
     def __init__(self, config: RuntimeConfig) -> None:
         self.config = config
-        self._client = None
-        if self.config.huggingface_enabled and InferenceClient is not None:
-            self._client = InferenceClient(
-                model=self.config.extraction_model,
-                token=self.config.hf_token,
-                timeout=self.config.hf_timeout,
-            )
+        self._client = _build_text_generation_client(self.config, self.config.extraction_model)
 
     @property
     def enabled(self) -> bool:
@@ -205,6 +295,21 @@ class HuggingFaceExtractor:
     def extract(self, turns: list[Turn], language: str) -> Optional[dict]:
         if not self.enabled:
             return None
+
+        if self.config.local_inference_enabled:
+            transcript = self._build_extraction_transcript(turns)
+            full_transcript = self._build_extraction_transcript(turns, include_assistant=True)
+            item_lines = self._item_lines(include_hints=False)
+            payload = self._run_attempt_sequence(
+                language,
+                transcript,
+                full_transcript,
+                item_lines,
+                prefer_compact=True,
+            )
+            if language.lower() == "en":
+                return self._refine_english_anxiety_payload(full_transcript, payload)
+            return payload
 
         if language.lower() == "en":
             return self._extract_with_english_windows(turns)
@@ -260,6 +365,8 @@ class HuggingFaceExtractor:
             item_lines,
             prefer_compact=prefer_compact,
         )
+        if self.config.local_inference_enabled:
+            attempts = attempts[:1]
 
         last_payload = None
         for index, (messages, max_tokens) in enumerate(attempts):
@@ -291,6 +398,14 @@ class HuggingFaceExtractor:
         *,
         prefer_compact: bool = False,
     ) -> list[tuple[list[dict[str, str]], int]]:
+        if self.config.local_inference_enabled:
+            return [
+                (
+                    self._build_compact_extraction_messages(language, primary_transcript),
+                    min(self.config.extraction_max_tokens, 96),
+                ),
+            ]
+
         if prefer_compact:
             return [
                 (
@@ -326,7 +441,10 @@ class HuggingFaceExtractor:
         return parse_extractor_payload(content)
 
     def _build_extraction_transcript(self, turns: list[Turn], *, include_assistant: bool = False) -> str:
-        selected_turns = turns[-12:] if include_assistant else [turn for turn in turns if turn.speaker == "user"][-6:]
+        if self.config.local_inference_enabled:
+            selected_turns = turns[-8:] if include_assistant else [turn for turn in turns if turn.speaker == "user"][-4:]
+        else:
+            selected_turns = turns[-12:] if include_assistant else [turn for turn in turns if turn.speaker == "user"][-6:]
         return "\n".join(f"{turn.speaker}: {turn.text}" for turn in selected_turns)
 
     def _build_english_window_transcripts(self, turns: list[Turn]) -> list[str]:
@@ -542,6 +660,9 @@ class HuggingFaceExtractor:
                     "Return strict JSON only with keys: items, safety_level, safety_cues, notes. "
                     "Only include supported items with values 1, 2, or 3. "
                     "Each item should include item_id, value, and evidence_quote. "
+                    "Keep evidence quotes short. "
+                    "Use compact one-line JSON. "
+                    'Example: {"items":[{"item_id":"phq_q3_sleep","value":2,"evidence_quote":"sleep breaks at 3 am"}],"safety_level":"none","safety_cues":[],"notes":"brief"}. '
                     "Use safety_level exactly as one of: none, review, urgent."
                 ),
             },
@@ -553,7 +674,8 @@ class HuggingFaceExtractor:
                     f"{compact_items}\n\n"
                     "Indirect cues count when clearly supported, including: skipped meals, not sleeping through the night, "
                     "mind not sticking, feeling weak or like a burden, heart racing, replaying worries, wanting to disappear, "
-                    "or saying everything should end.\n\n"
+                    "or saying everything should end.\n"
+                    'If nothing is supported, return {"items":[],"safety_level":"none","safety_cues":[],"notes":"none"}.\n\n'
                     f"User disclosures:\n{transcript}"
                 ),
             },
@@ -766,13 +888,7 @@ class HuggingFaceExtractor:
 class HuggingFaceSafetyAssessor:
     def __init__(self, config: RuntimeConfig) -> None:
         self.config = config
-        self._client = None
-        if self.config.huggingface_enabled and InferenceClient is not None:
-            self._client = InferenceClient(
-                model=self.config.safety_model,
-                token=self.config.hf_token,
-                timeout=self.config.hf_timeout,
-            )
+        self._client = _build_text_generation_client(self.config, self.config.safety_model) if self.config.safety_model else None
 
     @property
     def enabled(self) -> bool:

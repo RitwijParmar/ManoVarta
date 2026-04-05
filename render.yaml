@@ -8,8 +8,8 @@ services:
     healthCheckPath: /health
     envVars:
       - key: MANOVARTA_MODEL_PROVIDER
-        value: huggingface
+        value: local
       - key: MANOVARTA_CHAT_MODEL
-        value: Qwen/Qwen2.5-7B-Instruct
+        value: /models/qwen2.5-0.5b-instruct
       - key: MANOVARTA_EXTRACTION_MODEL
-        value: CohereLabs/aya-expanse-32b
+        value: /models/qwen2.5-0.5b-instruct

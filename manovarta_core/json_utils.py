@@ -65,6 +65,18 @@ def parse_extractor_payload(text: str) -> dict[str, Any] | None:
         items.append({"item_id": item_id, "value": value})
 
     if not items:
+        for match in re.finditer(
+            r'(?im)(?P<item_id>(?:phq|gad)_q\d+_[a-z_]+)\s*(?:[:=|\-]|->|\bis\b)\s*(?P<value>[0-3])',
+            cleaned,
+        ):
+            item_id = match.group("item_id").strip()
+            value = int(match.group("value"))
+            if not item_id or item_id in seen:
+                continue
+            seen.add(item_id)
+            items.append({"item_id": item_id, "value": value})
+
+    if not items:
         return None
 
     safety_match = re.search(r'"safety_level"\s*:\s*"([^"]+)"', cleaned)
@@ -97,7 +109,7 @@ def normalize_extractor_payload(payload: dict[str, Any]) -> dict[str, Any] | Non
             value = int(item.get("value"))
         except (TypeError, ValueError):
             continue
-        if value < 0 or value > 3:
+        if value < 1 or value > 3:
             continue
         normalized_item = {"item_id": item_id, "value": value}
         if "evidence_quote" in item and str(item.get("evidence_quote", "")).strip():

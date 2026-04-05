@@ -47,6 +47,22 @@ def test_parse_extractor_payload_normalizes_compact_schema_and_safety_aliases():
     assert payload["safety_level"] == "review"
 
 
+def test_parse_extractor_payload_salvages_line_based_items():
+    payload = parse_extractor_payload(
+        "gad_q3_excessive_worry: 2\n"
+        "gad_q4_trouble_relaxing -> 1\n"
+        "phq_q3_sleep is 2"
+    )
+
+    assert payload is not None
+    assert [item["item_id"] for item in payload["items"]] == [
+        "gad_q3_excessive_worry",
+        "gad_q4_trouble_relaxing",
+        "phq_q3_sleep",
+    ]
+    assert [item["value"] for item in payload["items"]] == [2, 1, 2]
+
+
 def test_normalize_safety_level_maps_aliases():
     assert normalize_safety_level("high_caution") == "review"
     assert normalize_safety_level("crisis") == "urgent"
