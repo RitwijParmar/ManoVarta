@@ -1,10 +1,10 @@
 @import url("https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Manrope:wght@400;500;600;700;800&display=swap");
 
 :root {
-  --bg: #f5efe6;
-  --bg-deep: #e1d6c6;
-  --surface: rgba(255, 251, 246, 0.8);
-  --surface-strong: rgba(255, 252, 248, 0.96);
+  --bg: #e8ddd1;
+  --bg-deep: #b9ab9b;
+  --surface: rgba(255, 250, 245, 0.78);
+  --surface-strong: rgba(255, 252, 248, 0.94);
   --surface-ink: #18242a;
   --surface-soft: #566167;
   --surface-faint: #8d8579;
@@ -18,9 +18,9 @@
   --apricot: #b96c4b;
   --rose: #8f5458;
   --success: #2f6a58;
-  --shadow-xl: 0 40px 80px rgba(29, 32, 35, 0.12);
-  --shadow-lg: 0 24px 48px rgba(29, 32, 35, 0.1);
-  --shadow-md: 0 14px 28px rgba(29, 32, 35, 0.075);
+  --shadow-xl: 0 42px 84px rgba(20, 24, 28, 0.16);
+  --shadow-lg: 0 26px 52px rgba(20, 24, 28, 0.12);
+  --shadow-md: 0 16px 30px rgba(20, 24, 28, 0.085);
   --radius-3xl: 34px;
   --radius-2xl: 26px;
   --radius-xl: 20px;
@@ -43,10 +43,10 @@ body {
   color: var(--surface-ink);
   font-family: "Manrope", "Avenir Next", "Segoe UI", sans-serif;
   background:
-    radial-gradient(circle at 10% 12%, rgba(39, 70, 80, 0.13), transparent 18%),
+    radial-gradient(circle at 10% 12%, rgba(26, 49, 58, 0.22), transparent 19%),
     radial-gradient(circle at 86% 12%, rgba(201, 159, 101, 0.18), transparent 18%),
-    radial-gradient(circle at 76% 76%, rgba(185, 108, 75, 0.1), transparent 22%),
-    linear-gradient(180deg, #fffaf4 0%, var(--bg) 54%, var(--bg-deep) 100%);
+    radial-gradient(circle at 76% 76%, rgba(118, 79, 64, 0.14), transparent 24%),
+    linear-gradient(180deg, #f2e8dd 0%, var(--bg) 45%, var(--bg-deep) 100%);
 }
 
 h1,
@@ -117,9 +117,9 @@ textarea {
 .page-glow {
   z-index: -2;
   background:
-    radial-gradient(circle at 16% 24%, rgba(39, 70, 80, 0.11), transparent 18%),
-    radial-gradient(circle at 82% 12%, rgba(201, 159, 101, 0.17), transparent 16%),
-    radial-gradient(circle at 68% 78%, rgba(185, 108, 75, 0.09), transparent 22%);
+    radial-gradient(circle at 16% 24%, rgba(26, 49, 58, 0.2), transparent 20%),
+    radial-gradient(circle at 82% 12%, rgba(201, 159, 101, 0.16), transparent 16%),
+    radial-gradient(circle at 68% 78%, rgba(118, 79, 64, 0.12), transparent 24%);
 }
 
 .page-noise {
@@ -166,8 +166,8 @@ textarea {
   justify-content: space-between;
   padding: 14px 18px;
   border-radius: 28px;
-  background: rgba(255, 251, 246, 0.62);
-  border: 1px solid rgba(255, 255, 255, 0.74);
+  background: rgba(249, 243, 236, 0.56);
+  border: 1px solid rgba(255, 255, 255, 0.58);
   box-shadow: var(--shadow-lg);
   backdrop-filter: blur(18px);
 }
@@ -1190,10 +1190,36 @@ body.session-live .welcome-stage {
 
 .button.emergency-link,
 .emergency-link {
-  color: #fff;
+  color: #f9f3ea;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding-inline: 12px 16px;
   background:
-    linear-gradient(140deg, #b96c4b 0%, #934f3b 100%);
-  box-shadow: 0 14px 24px rgba(147, 79, 59, 0.18);
+    linear-gradient(140deg, rgba(34, 45, 53, 0.98) 0%, rgba(24, 31, 37, 0.98) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 16px 28px rgba(17, 21, 24, 0.18);
+}
+
+.emergency-kicker {
+  min-width: 40px;
+  min-height: 32px;
+  padding: 0 10px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(201, 159, 101, 0.18);
+  color: #f2cf97;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
+.emergency-copy {
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
 }
 
 .voice-button {
