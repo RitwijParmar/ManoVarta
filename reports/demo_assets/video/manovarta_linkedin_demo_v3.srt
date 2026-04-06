@@ -1,0 +1,45 @@
+1
+00:00:00,000 --> 00:00:06,860
+This is Mano Vaarta. It opens like a calm private
+check-in, not a rigid form.
+
+2
+00:00:06,580 --> 00:00:16,250
+Users can switch between English, Hindi, and Hinglish
+right away, because real conversations rarely stay inside
+one perfectly clean language.
+
+3
+00:00:15,970 --> 00:00:25,330
+Starting a session takes one tap. After that, the layout
+stays simple. Conversation on the left. Quiet guidance on
+the right.
+
+4
+00:00:25,050 --> 00:00:35,630
+Now I can type naturally. I do not have to translate my
+feelings into questionnaire language. I can just say that
+sleep keeps breaking and focus is getting worse.
+
+5
+00:00:35,350 --> 00:00:42,760
+The reply does not rush into a score. It reflects what it
+heard, and then asks the next useful follow-up.
+
+6
+00:00:42,480 --> 00:00:52,920
+At the same time, the product keeps a plain-language
+summary, explains why the next question matters, and keeps
+comfort and safety visible in the background.
+
+7
+00:00:52,640 --> 00:01:04,350
+If typing feels tiring, voice replies and continuous voice
+mode can take over. The goal is a smoother back and forth,
+closer to a guided conversation than a form.
+
+8
+00:01:04,070 --> 00:01:14,440
+What matters is that the product feels calmer, more
+conversational, and easier to return to. That is the idea
+behind Mano Vaarta.

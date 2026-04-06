@@ -20,3 +20,9 @@ outputs/
 artifacts/
 logs/
 reports/local_mps/
+submission/
+reports/demo_assets/states/
+reports/demo_assets/video/tmp/
+reports/demo_assets/video/polished_tmp/
+data/external/
+manovarta.egg-info/

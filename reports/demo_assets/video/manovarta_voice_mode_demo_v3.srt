@@ -1,0 +1,23 @@
+1
+00:00:00,000 --> 00:00:07,320
+Here the session has already started, and the voice area
+is ready without making the whole app feel like a control
+panel.
+
+2
+00:00:07,040 --> 00:00:16,330
+One tap enables speak and auto-send. Then continuous voice
+mode and spoken replies keep the loop going with less
+keyboard friction.
+
+3
+00:00:16,050 --> 00:00:25,600
+After the user speaks, Mano Vaarta can answer aloud and
+keep the next turn ready. That makes it feel closer to a
+guided conversation.
+
+4
+00:00:25,320 --> 00:00:33,500
+The point is not flashy voice AI. It is a calmer
+hands-free check-in for moments when typing feels like
+extra work.

@@ -208,39 +208,12 @@ Supporting report bundle:
 - `reports/best_current_system_report.json`
 - `reports/live_runtime_eval_20260404.json`
 
-## Clean submission bundle
+Final demo videos:
 
-A cleaned phase submission bundle is prepared at:
-
-- `submission/ProjectPhase3_UBid1_UBid2.zip`
-
-This bundle includes:
-
-- working code
-- tests
-- seed and processed data
-- final PDF report
-- final DOCX report
-- final PPTX presentation
-- key evaluation artifacts
-- compact relevant saved weights
-
-This bundle intentionally excludes:
-
-- `.env.local`
-- `.venv`
-- `.DS_Store`
-- `__pycache__`
-- `data/external/`
-- giant historical zip bundles under `artifacts/`
-- unnecessary intermediate checkpoints
-
-If you want to rebuild the presentation or submission package:
-
-```bash
-python3 tools/build_project2_presentation.py
-python3 tools/build_phase3_submission_bundle.py
-```
+- `reports/demo_assets/video/manovarta_linkedin_demo_v3.mp4`
+- `reports/demo_assets/video/manovarta_linkedin_demo_v3.srt`
+- `reports/demo_assets/video/manovarta_voice_mode_demo_v3.mp4`
+- `reports/demo_assets/video/manovarta_voice_mode_demo_v3.srt`
 
 ## Repository layout
 
@@ -253,10 +226,10 @@ python3 tools/build_phase3_submission_bundle.py
 | `data/processed/` | exported train/dev/test JSONL splits |
 | `reports/` | evaluation bundles, runtime reports, final assignment reports |
 | `reports/acl_paper/` | final paper, bibliography, figures, presentation |
+| `reports/demo_assets/video/` | final LinkedIn demo and voice-mode demo assets |
 | `outputs/` | saved model checkpoints and promoted runtime artifacts |
-| `tools/` | training, evaluation, packaging, and presentation scripts |
+| `tools/` | evaluation and report-generation utilities still relevant to the final system |
 | `tests/` | unit and runtime tests |
-| `submission/` | cleaned final submission bundle |
 
 ## Local setup
 
@@ -361,14 +334,6 @@ Local container demo:
 
 ```bash
 docker compose -f docker-compose.demo.yml up --build
-```
-
-## Rebuilding the current project artifacts
-
-```bash
-python3 tools/build_project2_presentation.py
-python3 tools/build_phase3_submission_bundle.py
-python3 tools/build_acl_report_artifacts.py
 ```
 
 ## Important limitations
