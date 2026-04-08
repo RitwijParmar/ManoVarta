@@ -154,6 +154,27 @@ def test_english_mood_opening_prefers_mood_branch():
     assert "worry starts" not in reply.lower()
 
 
+def test_first_turn_uses_specific_reflection_instead_of_generic_prefix():
+    planner = DialoguePlanner()
+    session = ChatSession(
+        session_id="specific-reflection-first-turn",
+        language="en",
+        turns=[
+            Turn(
+                turn_id=1,
+                speaker="user",
+                text="I have been feeling low and disconnected from things I usually enjoy.",
+                language_tag="en",
+            )
+        ],
+    )
+
+    snapshot = ConversationScorer().analyze(session.turns, "en", SafetyFlag(level="none"))
+    reply, _ = planner.next_reply(snapshot, session)
+
+    assert reply.startswith("It sounds like things that usually matter to you are feeling flatter right now.")
+
+
 def test_substantive_first_turn_gets_targeted_followup():
     planner = DialoguePlanner()
     session = ChatSession(

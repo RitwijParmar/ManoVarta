@@ -354,6 +354,49 @@ TOPIC_REFLECTIONS = {
     },
 }
 
+ITEM_REFLECTIONS = {
+    "phq_q1_anhedonia": {
+        "en": "It sounds like things that usually matter to you are feeling flatter right now.",
+        "hi": "लगता है जो चीज़ें पहले मायने रखती थीं, उनमें अभी मन कम लग रहा है।",
+        "hinglish": "Lag raha hai jo cheezein pehle matter karti thi, unmein ab mann kam lag raha hai.",
+    },
+    "phq_q2_low_mood": {
+        "en": "It sounds like the days themselves have been feeling heavy.",
+        "hi": "लगता है दिन अपने-आप में ही भारी लग रहे हैं।",
+        "hinglish": "Lag raha hai din khud hi heavy feel ho rahe hain.",
+    },
+    "phq_q3_sleep": {
+        "en": "It sounds like sleep is getting hit in a real way.",
+        "hi": "लगता है इसका असर नींद पर साफ़ पड़ रहा है।",
+        "hinglish": "Lag raha hai iska effect sleep par kaafi clearly aa raha hai.",
+    },
+    "phq_q6_worthlessness": {
+        "en": "It sounds like this is starting to affect how you are seeing yourself too.",
+        "hi": "लगता है इसका असर इस पर भी पड़ रहा है कि आप अपने बारे में क्या महसूस कर रहे हैं।",
+        "hinglish": "Lag raha hai iska effect is par bhi aa raha hai ki aap apne baare mein kya feel kar rahe ho.",
+    },
+    "phq_q7_concentration": {
+        "en": "It sounds like this is making it harder to stay with work or study.",
+        "hi": "लगता है इसकी वजह से काम या पढ़ाई पर टिके रहना मुश्किल हो रहा है।",
+        "hinglish": "Lag raha hai is wajah se work ya study par tikna mushkil ho raha hai.",
+    },
+    "gad_q2_control_worry": {
+        "en": "It sounds like the worry is hard to switch off once it starts.",
+        "hi": "लगता है चिंता शुरू होने के बाद उसे रोकना आसान नहीं पड़ रहा।",
+        "hinglish": "Lag raha hai worry ek baar start ho jaaye to switch off karna easy nahi pad raha.",
+    },
+    "gad_q4_trouble_relaxing": {
+        "en": "It sounds like settling down is taking more effort than it should.",
+        "hi": "लगता है खुद को शांत करना जितना होना चाहिए, उससे ज़्यादा मुश्किल हो रहा है।",
+        "hinglish": "Lag raha hai settle hona jitna hona chahiye usse zyada effort le raha hai.",
+    },
+    "gad_q5_restlessness": {
+        "en": "It sounds like your mind or body is staying keyed up for longer than you want.",
+        "hi": "लगता है दिमाग या शरीर उम्मीद से ज़्यादा देर तक बेचैन बना रहता है।",
+        "hinglish": "Lag raha hai mind ya body expected se zyada der tak keyed up rehte hain.",
+    },
+}
+
 ITEM_FOLLOW_UPS: Dict[str, Dict[str, Dict[str, str]]] = {
     "phq_q1_anhedonia": {
         "default": {
@@ -1397,6 +1440,7 @@ class DialoguePlanner:
         session: Optional[ChatSession] = None,
     ) -> str:
         prefix = REFLECTION_PREFIXES[language][plan.user_style.empathy_level]
+        specific_reflection = self._build_specific_reflection(language, plan, session)
         suffix = self._style_suffix(language, plan)
         last_assistant_text = self._last_assistant_text(session)
         repeated_topic_probe = (
@@ -1424,6 +1468,13 @@ class DialoguePlanner:
             support_line = ""
         if self._already_used_segment(last_assistant_text, support_line):
             support_line = ""
+        if (
+            specific_reflection
+            and not repeated_topic_probe
+            and not self._already_used_segment(last_assistant_text, specific_reflection)
+            and (plan.stage == "rapport" or not support_line)
+        ):
+            prefix = specific_reflection
         use_prefix = (
             prefix
             and not repeated_topic_probe
@@ -1438,6 +1489,24 @@ class DialoguePlanner:
         if suffix:
             parts.append(suffix)
         return " ".join(part.strip() for part in parts if part and part.strip())
+
+    def _build_specific_reflection(
+        self,
+        language: str,
+        plan: DialoguePlan,
+        session: Optional[ChatSession],
+    ) -> str:
+        if session is None:
+            return ""
+        latest_signal_items = self._latest_signal_items(session)
+        if plan.target_item in ITEM_REFLECTIONS:
+            return ITEM_REFLECTIONS[plan.target_item][language]
+        for item_id in latest_signal_items:
+            if item_id in ITEM_REFLECTIONS:
+                return ITEM_REFLECTIONS[item_id][language]
+        if plan.target_topic in TOPIC_REFLECTIONS:
+            return TOPIC_REFLECTIONS[plan.target_topic][language]
+        return ""
 
     def _build_prompt_for_target(self, language: str, plan: DialoguePlan, session: ChatSession) -> Optional[str]:
         item_prompt = self._build_item_prompt(language, plan, session)
