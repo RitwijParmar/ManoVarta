@@ -94,8 +94,16 @@ def detect_bonus_features(project_root: Path = PROJECT_ROOT) -> dict[str, object
     llm_code = (project_root / "manovarta_core" / "llm.py").read_text(encoding="utf-8")
     web_code = (project_root / "manovarta_core" / "web" / "app.js").read_text(encoding="utf-8")
     index_html = (project_root / "manovarta_core" / "web" / "index.html").read_text(encoding="utf-8")
-    linguistic = all(token in dialogue_code + llm_code for token in ("user_style", "code_mix", "verbosity", "openness"))
-    gamification = all(token in web_code + index_html for token in ("nudgeDeck", "starterDeck", "Gamified nudges", "Confidence boosters"))
+    schema_code = (project_root / "manovarta_core" / "schemas.py").read_text(encoding="utf-8")
+    api_code = (project_root / "manovarta_core" / "api.py").read_text(encoding="utf-8")
+    linguistic = all(
+        token in dialogue_code + llm_code + schema_code
+        for token in ("steering_preference", "reflective_anchor", "continuity_note", "recommended_nudges")
+    )
+    gamification = all(
+        token in web_code + index_html + schema_code + api_code
+        for token in ("nudgeDeck", "starterDeck", "nudge_strategy", "nudge_events", "recommended_nudges", "recent_checkins")
+    )
     implemented = []
     missing = []
     if gamification:
@@ -109,7 +117,7 @@ def detect_bonus_features(project_root: Path = PROJECT_ROOT) -> dict[str, object
     return {
         "implemented": implemented,
         "missing": missing,
-        "note": "The product now combines adaptive nudges for richer narrative disclosure with backend personalization based on pacing, openness, and code-mix.",
+        "note": "The product now combines adaptive nudges with backend feedback tracking, continuity-aware context, and steering that adapts to pacing, openness, burden, and code-mix.",
     }
 
 
@@ -156,6 +164,95 @@ def build_disclosure_efficiency_sample(sample_size: int = 30) -> dict[str, objec
         "avg_turns_to_stable_score": round(mean(stable_turns), 3) if stable_turns else None,
         "median_turns_to_stable_score": round(median(stable_turns), 3) if stable_turns else None,
         "note": "This is computed by replaying seed conversations turn by turn and finding the earliest user-turn prefix where an item score matches the conversation-final value and stays there.",
+    }
+
+
+def build_bonus_validation_sample() -> dict[str, object]:
+    from fastapi.testclient import TestClient
+    from manovarta_core import config as cfg
+
+    old_hf = os.environ.get("HF_TOKEN")
+    old_hub = os.environ.get("HUGGINGFACEHUB_API_TOKEN")
+    os.environ["HF_TOKEN"] = ""
+    os.environ["HUGGINGFACEHUB_API_TOKEN"] = ""
+    cfg.get_runtime_config.cache_clear()
+
+    try:
+        import manovarta_core.api as api
+
+        api = importlib.reload(api)
+        client = TestClient(api.app)
+
+        brief_session_id = client.post("/chat/sessions", json={"language": "en"}).json()["session_id"]
+        brief_turn = client.post(
+            f"/chat/sessions/{brief_session_id}/turns",
+            json={"text": "Just tired. Not sure."},
+        ).json()
+        brief_dialogue = brief_turn["snapshot"]["coverage"]["dialogue"]
+        nudge_strategy = (brief_dialogue.get("recommended_nudges") or ["example"])[0]
+
+        nudged_turn = client.post(
+            f"/chat/sessions/{brief_session_id}/turns",
+            json={
+                "text": "I am always tired, my sleep schedule is messed up, and my appetite is off most days.",
+                "nudge_id": nudge_strategy,
+                "nudge_strategy": nudge_strategy,
+                "nudge_title": "Validation nudge",
+            },
+        ).json()
+        nudged_dialogue = nudged_turn["snapshot"]["coverage"]["dialogue"]
+        nudged_coverage = nudged_turn["snapshot"]["coverage"]
+        brief_coverage = brief_turn["snapshot"]["coverage"]
+        nudge_event = api.store.get(brief_session_id).nudge_events[-1]
+
+        hindi_session_id = client.post(
+            "/chat/sessions",
+            json={
+                "language": "hi",
+                "profile": {
+                    "recent_checkins": [
+                        {"topic": "sleep", "language": "hi", "safety": "none", "completion": 0.5, "summary": "Neend par baat hui thi."}
+                    ]
+                },
+            },
+        ).json()["session_id"]
+        hindi_turn = client.post(
+            f"/chat/sessions/{hindi_session_id}/turns",
+            json={"text": "पिछले कुछ दिनों से रात में नींद टूट जाती है और सुबह काम पर ध्यान नहीं लगता।"},
+        ).json()
+        hindi_dialogue = hindi_turn["snapshot"]["coverage"]["dialogue"]
+
+        hinglish_session_id = client.post("/chat/sessions", json={"language": "hinglish"}).json()["session_id"]
+        hinglish_turn = client.post(
+            f"/chat/sessions/{hinglish_session_id}/turns",
+            json={"text": "Sleep break hoti rehti hai aur mind calm nahi hota."},
+        ).json()
+        hinglish_dialogue = hinglish_turn["snapshot"]["coverage"]["dialogue"]
+    finally:
+        if old_hf is None:
+            os.environ.pop("HF_TOKEN", None)
+        else:
+            os.environ["HF_TOKEN"] = old_hf
+        if old_hub is None:
+            os.environ.pop("HUGGINGFACEHUB_API_TOKEN", None)
+        else:
+            os.environ["HUGGINGFACEHUB_API_TOKEN"] = old_hub
+        cfg.get_runtime_config.cache_clear()
+
+    return {
+        "nudge_feedback_loop_present": float(nudged_dialogue["disclosure"]["nudge_effectiveness"]) > 0,
+        "nudge_queue_after_brief_turn": brief_dialogue.get("recommended_nudges", []),
+        "nudged_touched_delta": int(nudged_coverage["touched_items"]) - int(brief_coverage["touched_items"]),
+        "nudge_words_added": int(nudge_event.words_added),
+        "nudge_evidence_gain": int(nudge_event.evidence_gain),
+        "nudge_resolved_gain": int(nudge_event.resolved_gain),
+        "nudge_outcome": nudge_event.outcome,
+        "style_adaptation_checks": {
+            "brief_guarded_guided": brief_dialogue["user_style"]["steering_preference"] == "guided",
+            "hindi_continuity_note": bool(hindi_dialogue.get("continuity_note")),
+            "hinglish_code_mix_high": hinglish_dialogue["user_style"]["code_mix"] == "high",
+        },
+        "note": "Validation uses local API smoke sessions plus stored nudge events to confirm that nudges feed back into dialogue state, increase narrative detail, and that continuity and code-mix cues reach the planner for English, Devanagari Hindi, and Hinglish turns.",
     }
 
 
@@ -228,6 +325,7 @@ def build_assignment_report() -> dict[str, object]:
     voice = detect_voice_layer()
     deployment = detect_deployment_assets()
     bonus = detect_bonus_features()
+    bonus_validation = build_bonus_validation_sample()
     disclosure = build_disclosure_efficiency_sample()
     latency = measure_latency_template_path()
 
@@ -295,6 +393,7 @@ def build_assignment_report() -> dict[str, object]:
                 "source": runtime_source,
             },
             "latency": latency,
+            "bonus_validation": bonus_validation,
             "discourse_effectiveness": {
                 "coverage_completeness": hybrid_overall["coverage_completeness"],
                 "exact_match_rate": hybrid_overall["exact_match_rate"],
@@ -323,6 +422,7 @@ def render_markdown(report: dict[str, object]) -> str:
     disclosure = evals["disclosure_efficiency"]
     latency = evals["latency"]
     safety = evals["safety_accuracy"]
+    bonus_validation = evals["bonus_validation"]
     discourse = evals["discourse_effectiveness"]
 
     lines = [
@@ -373,6 +473,18 @@ def render_markdown(report: dict[str, object]) -> str:
         f"- Warm average turn latency: `{latency['warm_avg_ms']} ms`",
         f"- Warm median turn latency: `{latency['warm_median_ms']} ms`",
         f"- Warm p95 turn latency: `{latency['warm_p95_ms']} ms`",
+        "",
+        "### Bonus Validation",
+        "",
+        f"- Nudge feedback loop present: `{bonus_validation['nudge_feedback_loop_present']}`",
+        f"- First brief-turn nudge queue: `{', '.join(bonus_validation['nudge_queue_after_brief_turn'])}`",
+        f"- Nudged touched-item delta in smoke validation: `{bonus_validation['nudged_touched_delta']}`",
+        f"- Nudge words added: `{bonus_validation['nudge_words_added']}`",
+        f"- Nudge evidence gain: `{bonus_validation['nudge_evidence_gain']}`",
+        f"- Nudge resolved-item gain: `{bonus_validation['nudge_resolved_gain']}`",
+        f"- Nudge outcome: `{bonus_validation['nudge_outcome']}`",
+        f"- Style checks: `{bonus_validation['style_adaptation_checks']}`",
+        f"- Note: {bonus_validation['note']}",
         "",
         "### Discourse Effectiveness",
         "",
