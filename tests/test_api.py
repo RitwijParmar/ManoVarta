@@ -3,6 +3,9 @@ import io
 from fastapi.testclient import TestClient
 
 import manovarta_core.api as api_module
+from manovarta_core.dialogue import DialoguePlanner
+from manovarta_core.engine import RuntimeEngine
+from manovarta_core.schemas import ChatSession, DialoguePlan, Turn
 
 
 app = api_module.app
@@ -236,3 +239,129 @@ def test_brief_guarded_reply_sets_guarded_style_profile():
     assert "?" in reply
     assert "hurting yourself" not in reply.lower()
     assert any(token in reply.lower() for token in ("tired", "feeling", "example", "detail", "changes"))
+
+
+def test_recent_checkins_feed_continuity_note_into_dialogue_plan():
+    start = client.post(
+        "/chat/sessions",
+        json={
+            "language": "hi",
+            "profile": {
+                "recent_checkins": [
+                    {"topic": "sleep", "language": "hi", "safety": "none", "completion": 0.5, "summary": "Neend par baat hui thi."}
+                ]
+            },
+        },
+    )
+    session_id = start.json()["session_id"]
+
+    turn = client.post(
+        f"/chat/sessions/{session_id}/turns",
+        json={"text": "पिछले कुछ दिनों से रात में नींद टूट जाती है और सुबह ध्यान नहीं लगता।"},
+    )
+
+    assert turn.status_code == 200
+    dialogue = turn.json()["snapshot"]["coverage"]["dialogue"]
+    assert dialogue["continuity_note"]
+
+
+def test_nudge_metadata_updates_feedback_loop_and_recommended_nudges():
+    start = client.post("/chat/sessions", json={"language": "en"})
+    session_id = start.json()["session_id"]
+
+    first_turn = client.post(
+        f"/chat/sessions/{session_id}/turns",
+        json={"text": "Just tired. Not sure."},
+    )
+    assert first_turn.status_code == 200
+    first_dialogue = first_turn.json()["snapshot"]["coverage"]["dialogue"]
+    nudge_strategy = (first_dialogue["recommended_nudges"] or ["example"])[0]
+
+    second_turn = client.post(
+        f"/chat/sessions/{session_id}/turns",
+        json={
+            "text": "I am always tired, my sleep schedule is messed up, and my appetite is off most days.",
+            "nudge_id": nudge_strategy,
+            "nudge_strategy": nudge_strategy,
+            "nudge_title": "Example nudge",
+        },
+    )
+
+    assert second_turn.status_code == 200
+    second_dialogue = second_turn.json()["snapshot"]["coverage"]["dialogue"]
+    assert second_dialogue["disclosure"]["nudge_effectiveness"] > 0
+    assert second_dialogue["recommended_nudges"]
+    stored_session = api_module.store.get(session_id)
+    assert stored_session is not None
+    assert stored_session.nudge_events
+    latest_nudge = stored_session.nudge_events[-1]
+    assert latest_nudge.outcome == "helpful"
+    assert latest_nudge.words_added >= 12
+    assert latest_nudge.evidence_gain >= 1
+
+
+def test_api_records_repeated_target_items_for_loop_prevention(monkeypatch):
+    monkeypatch.setattr(api_module.planner, "next_reply", lambda snapshot, session: ("Follow-up question?", "gad_q5_restlessness"))
+    monkeypatch.setattr(api_module.responder, "compose_reply", lambda session, snapshot, asked_item, fallback_text: (fallback_text, "template"))
+
+    start = client.post("/chat/sessions", json={"language": "en"})
+    session_id = start.json()["session_id"]
+
+    first_turn = client.post(
+        f"/chat/sessions/{session_id}/turns",
+        json={"text": "I feel restless at night."},
+    )
+    second_turn = client.post(
+        f"/chat/sessions/{session_id}/turns",
+        json={"text": "About four days a week."},
+    )
+
+    assert first_turn.status_code == 200
+    assert second_turn.status_code == 200
+    stored_session = api_module.store.get(session_id)
+    assert stored_session is not None
+    assert stored_session.asked_items[-2:] == ["gad_q5_restlessness", "gad_q5_restlessness"]
+
+
+def test_restlessness_followup_changes_dimension_after_timing_answer():
+    planner = DialoguePlanner()
+    session = ChatSession(
+        session_id="restless-followup",
+        language="en",
+        turns=[
+            Turn(turn_id=1, speaker="assistant", text="At what times do you feel restless the most?", language_tag="en"),
+            Turn(turn_id=2, speaker="user", text="During night, around four days a week.", language_tag="en"),
+        ],
+        asked_items=["gad_q5_restlessness"],
+    )
+    plan = DialoguePlan(target_topic="anxiety", target_item="gad_q5_restlessness")
+
+    prompt = planner._build_item_prompt("en", plan, session)
+
+    assert prompt is not None
+    assert "helps me understand how often it happens" in prompt or "That timing helps." in prompt
+    assert "body cannot sit still" in prompt or "inner agitation" in prompt
+
+
+def test_followup_keeps_recent_probe_item_for_short_frequency_answer():
+    planner = DialoguePlanner()
+    engine = RuntimeEngine()
+    session = ChatSession(
+        session_id="continuity-frequency",
+        language="en",
+        turns=[
+            Turn(turn_id=1, speaker="assistant", text="When you try to settle down, is it harder to quiet your thoughts, relax your body, or both?", language_tag="en"),
+            Turn(turn_id=2, speaker="user", text="About four days a week.", language_tag="en"),
+        ],
+        asked_items=["gad_q4_trouble_relaxing"],
+    )
+
+    snapshot = engine.analyze(session.turns, session.language, use_llm=False)
+    coverage = planner.build_plan(snapshot, session)
+    plan = coverage.dialogue
+    prompt = planner._build_item_prompt("en", plan, session)
+
+    assert plan.target_item == "gad_q4_trouble_relaxing"
+    assert prompt is not None
+    assert "how often it happens" in prompt
+    assert "busy mind" in prompt or "tense body" in prompt
