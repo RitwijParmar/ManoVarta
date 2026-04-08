@@ -216,6 +216,27 @@ const PROFILE_UI_COPY = {
   },
 };
 
+const COMPOSER_UI_COPY = {
+  en: {
+    collapse: "Fold text box",
+    expand: "Open text box",
+    emptyHint: "Text box is folded away. Open it when you want to type, or use the mic below.",
+    draftPrefix: "Draft saved:",
+  },
+  hi: {
+    collapse: "टेक्स्ट बॉक्स समेटें",
+    expand: "टेक्स्ट बॉक्स खोलें",
+    emptyHint: "टेक्स्ट बॉक्स अभी समेटा गया है। जब लिखना हो तब खोलिए, या नीचे माइक्रोफ़ोन इस्तेमाल कीजिए।",
+    draftPrefix: "सहेजा गया मसौदा:",
+  },
+  hinglish: {
+    collapse: "Text box fold karo",
+    expand: "Text box kholo",
+    emptyHint: "Text box fold hai. Jab type karna ho tab kholo, ya neeche mic use karo.",
+    draftPrefix: "Draft saved:",
+  },
+};
+
 const STARTER_LIBRARY = {
   en: [
     {
@@ -733,6 +754,12 @@ const chatLog = document.getElementById("chatLog");
 const sessionMeta = document.getElementById("sessionMeta");
 const sessionBadge = document.getElementById("sessionBadge");
 const sessionGoal = document.getElementById("sessionGoal");
+const composerPanel = document.getElementById("composerPanel");
+const composerToggle = document.getElementById("composerToggle");
+const composerToggleLabel = document.getElementById("composerToggleLabel");
+const composerDraftArea = document.getElementById("composerDraftArea");
+const composerCollapsedHint = document.getElementById("composerCollapsedHint");
+const composerCollapsedText = document.getElementById("composerCollapsedText");
 const messageInput = document.getElementById("messageInput");
 const languageSelect = document.getElementById("languageSelect");
 const startButton = document.getElementById("startButton");
@@ -1228,6 +1255,43 @@ function setPlaceholderIfPresent(node, text) {
   }
 }
 
+function updateComposerToggleCopy(language = state.language) {
+  const copy = COMPOSER_UI_COPY[language] || COMPOSER_UI_COPY.en;
+  const collapsed = composerPanel?.classList.contains("is-collapsed");
+  setTextIfPresent(composerToggleLabel, collapsed ? copy.expand : copy.collapse);
+  if (composerToggle) {
+    composerToggle.setAttribute("aria-expanded", String(!collapsed));
+    composerToggle.setAttribute("aria-label", collapsed ? copy.expand : copy.collapse);
+  }
+}
+
+function updateComposerCollapsedHint(language = state.language) {
+  const copy = COMPOSER_UI_COPY[language] || COMPOSER_UI_COPY.en;
+  if (!composerCollapsedText || !messageInput) {
+    return;
+  }
+  const draft = messageInput.value.trim();
+  if (!draft) {
+    composerCollapsedText.textContent = copy.emptyHint;
+    return;
+  }
+  const compact = draft.length > 110 ? `${draft.slice(0, 107)}...` : draft;
+  composerCollapsedText.textContent = `${copy.draftPrefix} ${compact}`;
+}
+
+function setComposerCollapsed(collapsed, { focusInput = false } = {}) {
+  if (!composerPanel || !composerCollapsedHint) {
+    return;
+  }
+  composerPanel.classList.toggle("is-collapsed", Boolean(collapsed));
+  composerCollapsedHint.classList.toggle("is-hidden", !collapsed);
+  updateComposerToggleCopy(state.language);
+  updateComposerCollapsedHint(state.language);
+  if (!collapsed && focusInput) {
+    messageInput?.focus();
+  }
+}
+
 function applySurfaceCopy(language) {
   const copy = (LANGUAGE_UI[language] || LANGUAGE_UI.en).surface || LANGUAGE_UI.en.surface;
   const profileCopy = PROFILE_UI_COPY[language] || PROFILE_UI_COPY.en;
@@ -1265,6 +1329,8 @@ function applySurfaceCopy(language) {
   setPlaceholderIfPresent(profileSupportInput, profileCopy.placeholders.support);
   setPlaceholderIfPresent(profileContextInput, profileCopy.placeholders.context);
   updateProfileSummarySurface(language);
+  updateComposerToggleCopy(language);
+  updateComposerCollapsedHint(language);
 }
 
 function updateSessionBadge() {
@@ -2280,8 +2346,10 @@ function applyNudge(text) {
     : null;
   const current = messageInput.value.trim();
   messageInput.value = current ? `${current} ${payload.text}` : payload.text;
+  setComposerCollapsed(false, { focusInput: true });
   messageInput.focus();
   messageInput.setSelectionRange(messageInput.value.length, messageInput.value.length);
+  updateComposerCollapsedHint(state.language);
   if (state.latestDialogue) {
     renderNudges(state.language, state.latestDialogue);
   }
@@ -2621,6 +2689,7 @@ async function sendMessageText(text, options = {}) {
 
     renderTurn({ speaker: "user", text: cleaned });
     messageInput.value = "";
+    updateComposerCollapsedHint(state.language);
     const pendingNudge = state.pendingNudge;
     state.pendingNudge = null;
 
@@ -2804,6 +2873,8 @@ function handleCapturedTranscript(transcript, sourceLabel = "voice") {
     return;
   }
   messageInput.value = cleaned;
+  setComposerCollapsed(false, { focusInput: !autoSendToggle.checked });
+  updateComposerCollapsedHint(state.language);
   setVoicePreview(cleaned, { visible: true });
   setVoiceState("thinking");
   updateVoiceStatus(`Transcript captured from ${sourceLabel}.`);
@@ -2953,6 +3024,8 @@ function setupVoice() {
       return;
     }
     messageInput.value = pendingVoiceTranscript;
+    setComposerCollapsed(false, { focusInput: !autoSendToggle.checked });
+    updateComposerCollapsedHint(state.language);
     if (autoSendToggle.checked) {
       void sendMessageText(pendingVoiceTranscript, { fromVoice: true });
     } else {
@@ -3227,6 +3300,10 @@ profileSheet?.addEventListener("click", (event) => {
     setProfileSheetOpen(false);
   }
 });
+composerToggle?.addEventListener("click", () => {
+  const collapsed = composerPanel?.classList.contains("is-collapsed");
+  setComposerCollapsed(!collapsed, { focusInput: Boolean(collapsed) });
+});
 chatForm.addEventListener("submit", sendTurn);
 downloadButton?.addEventListener("click", downloadExport);
 backstageToggle?.addEventListener("click", () => {
@@ -3290,6 +3367,8 @@ ritualRestartButton?.addEventListener("click", async () => {
     await startSession();
   }
   messageInput.value = prompt;
+  setComposerCollapsed(false, { focusInput: true });
+  updateComposerCollapsedHint(state.language);
   messageInput.focus();
 });
 document.addEventListener("keydown", (event) => {
@@ -3303,6 +3382,7 @@ document.addEventListener("keydown", (event) => {
 
 [profileNameInput, profileAgeInput, profileOccupationInput, profileLivingInput, profileSupportInput, profileContextInput]
   .forEach((input) => input?.addEventListener("input", () => updateProfileSummarySurface(state.language)));
+messageInput?.addEventListener("input", () => updateComposerCollapsedHint(state.language));
 
 if (demoPanel && demoToggle) {
   setDisclosureState(demoPanel, demoToggle, false, {
@@ -3326,6 +3406,7 @@ if (backstagePanel && backstageToggle) {
 setupVoice();
 applyLanguageDefaults(state.language);
 updateProfileSummarySurface(state.language);
+setComposerCollapsed(false);
 updateSessionBadge();
 resetInsightPanel();
 state.recentCheckins = loadRecentCheckins();

@@ -1115,6 +1115,11 @@ body.session-live .welcome-stage {
   gap: 14px;
 }
 
+.composer-panel-head {
+  align-items: start;
+  gap: 16px;
+}
+
 .composer-panel {
   position: sticky;
   bottom: 18px;
@@ -1126,6 +1131,57 @@ body.session-live .composer-panel {
   position: sticky;
   bottom: 18px;
   z-index: 5;
+}
+
+.composer-toggle {
+  white-space: nowrap;
+  min-height: 42px;
+}
+
+.composer-toggle-icon {
+  font-size: 1rem;
+  line-height: 1;
+  transition: transform 180ms ease;
+}
+
+.composer-panel.is-collapsed .composer-toggle-icon {
+  transform: rotate(-180deg);
+}
+
+.composer-draft-area {
+  display: grid;
+  gap: 12px;
+}
+
+.composer-dropbar {
+  inline-size: 54px;
+  block-size: 5px;
+  border-radius: 999px;
+  margin: 0 auto;
+  background: rgba(20, 27, 32, 0.12);
+}
+
+.composer-collapsed-hint {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 16px;
+  border-radius: 18px;
+  border: 1px dashed rgba(53, 90, 95, 0.24);
+  background: rgba(238, 228, 214, 0.42);
+}
+
+.composer-collapsed-hint.is-hidden {
+  display: none;
+}
+
+.composer-panel.is-collapsed .conversation-mode,
+.composer-panel.is-collapsed .composer-draft-area {
+  display: none;
+}
+
+.composer-panel.is-collapsed .call-state-card {
+  margin-top: 2px;
 }
 
 .conversation-mode {
@@ -1189,6 +1245,7 @@ body.session-live .composer-panel {
 .composer-toolbar {
   align-items: center;
   justify-content: space-between;
+  gap: 12px;
 }
 
 .voice-cluster {
@@ -1662,6 +1719,10 @@ th {
   .toggle {
     width: 100%;
     justify-content: center;
+  }
+
+  .composer-toggle {
+    width: 100%;
   }
 
   .composer-panel {

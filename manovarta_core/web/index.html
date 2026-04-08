@@ -286,14 +286,18 @@
               <div id="nudgeDeck" class="nudge-deck"></div>
             </section>
 
-            <section class="composer-panel">
-              <div class="section-head compact">
+            <section id="composerPanel" class="composer-panel">
+              <div class="section-head compact composer-panel-head">
                 <div>
                   <p class="mini-label">Voice-first conversation</p>
                   <p id="composerHelper" class="summary-text">
                     ManoVarta adapts to how much detail you are giving and keeps the next question focused.
                   </p>
                 </div>
+                <button id="composerToggle" type="button" class="button ghost subtle composer-toggle" aria-expanded="true">
+                  <span id="composerToggleLabel">Fold text box</span>
+                  <span class="composer-toggle-icon" aria-hidden="true">▾</span>
+                </button>
               </div>
 
               <div class="conversation-mode">
@@ -323,21 +327,30 @@
               </div>
 
               <form id="chatForm" class="composer">
-                <textarea
-                  id="messageInput"
-                  rows="3"
-                  placeholder="Describe what changed, when it happens, and how it affects your day..."
-                ></textarea>
+                <div id="composerDraftArea" class="composer-draft-area">
+                  <div class="composer-dropbar" aria-hidden="true"></div>
+                  <textarea
+                    id="messageInput"
+                    rows="3"
+                    placeholder="Describe what changed, when it happens, and how it affects your day..."
+                  ></textarea>
 
-                <div id="voicePreview" class="voice-preview is-hidden" aria-live="polite">
-                  <div class="voice-preview-copy">
-                    <p class="mini-label">Live transcript ribbon</p>
-                    <p id="voicePreviewText" class="summary-text">Transcript preview</p>
+                  <div id="voicePreview" class="voice-preview is-hidden" aria-live="polite">
+                    <div class="voice-preview-copy">
+                      <p class="mini-label">Live transcript ribbon</p>
+                      <p id="voicePreviewText" class="summary-text">Transcript preview</p>
+                    </div>
+                    <div class="voice-preview-actions">
+                      <span id="voiceSendMode" class="chip soft">Auto-send on</span>
+                      <button id="voiceUseButton" type="button" class="button ghost">Use transcript</button>
+                    </div>
                   </div>
-                  <div class="voice-preview-actions">
-                    <span id="voiceSendMode" class="chip soft">Auto-send on</span>
-                    <button id="voiceUseButton" type="button" class="button ghost">Use transcript</button>
-                  </div>
+                </div>
+
+                <div id="composerCollapsedHint" class="composer-collapsed-hint is-hidden" aria-live="polite">
+                  <p id="composerCollapsedText" class="summary-text">
+                    Text box is folded away. Open it when you want to type, or use the mic below.
+                  </p>
                 </div>
 
                 <div class="composer-toolbar">
