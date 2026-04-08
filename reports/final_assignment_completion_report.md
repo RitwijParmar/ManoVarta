@@ -1,6 +1,6 @@
 # Final Assignment Completion Report
 
-- Generated: `2026-04-05T04:12:58Z`
+- Generated: `2026-04-08T08:38:35Z`
 - Shipped baseline tag: `shipped-baseline-2026-04-04`
 
 ## Requirement Status
@@ -12,7 +12,7 @@
 - Task 1 smart screening: `complete`
 - Task 2 LLM inference engine: `complete`
 - Task 3 safety trigger system: `complete`
-- Deployment assets in repo: `complete`
+- Deployment assets in repo: `partial`
 - Bonus implemented: `gamification, linguistic_personalization`
 
 ## Voice Capability
@@ -22,7 +22,7 @@
 - Browser text-to-speech present: `True`
 - Cloud speech-to-text route present: `True`
 - Cloud text-to-speech route present: `True`
-- Transcript-before-submit flow present: `True`
+- Transcript-before-submit flow present: `False`
 - Note: Voice now supports backend Google Cloud STT/TTS for English, Hindi, and Hinglish-oriented use, with browser speech kept as a fallback wrapper.
 
 ## Evaluation & Validation
@@ -41,10 +41,22 @@
 
 ### Latency
 
-- Cold-start turn latency: `937.69 ms`
-- Warm average turn latency: `29.55 ms`
-- Warm median turn latency: `32.73 ms`
-- Warm p95 turn latency: `32.89 ms`
+- Cold-start turn latency: `7.0 ms`
+- Warm average turn latency: `8.77 ms`
+- Warm median turn latency: `9.73 ms`
+- Warm p95 turn latency: `10.34 ms`
+
+### Bonus Validation
+
+- Nudge feedback loop present: `True`
+- First brief-turn nudge queue: `anxiety, example, impact`
+- Nudged touched-item delta in smoke validation: `3`
+- Nudge words added: `17`
+- Nudge evidence gain: `3`
+- Nudge resolved-item gain: `0`
+- Nudge outcome: `helpful`
+- Style checks: `{'brief_guarded_guided': True, 'hindi_continuity_note': True, 'hinglish_code_mix_high': True}`
+- Note: Validation uses local API smoke sessions plus stored nudge events to confirm that nudges feed back into dialogue state, increase narrative detail, and that continuity and code-mix cues reach the planner for English, Devanagari Hindi, and Hinglish turns.
 
 ### Discourse Effectiveness
 
@@ -58,7 +70,7 @@
 - Dockerfile: `True`
 - Docker Compose demo stack: `True`
 - Render blueprint: `True`
-- Shipped bundle: `True`
+- Shipped bundle: `False`
 - Public runtime URL: `https://manovarta-runtime-122722888597.us-east4.run.app`
 - Live hybrid safety enabled: `True`
 - Live cloud voice enabled: `True`
@@ -67,7 +79,7 @@
 ## Bonus
 
 - Implemented: `gamification, linguistic_personalization`
-- Note: The product now combines adaptive nudges for richer narrative disclosure with backend personalization based on pacing, openness, and code-mix.
+- Note: The product now combines adaptive nudges with backend feedback tracking, continuity-aware context, and steering that adapts to pacing, openness, burden, and code-mix.
 
 ## Final Note
 
