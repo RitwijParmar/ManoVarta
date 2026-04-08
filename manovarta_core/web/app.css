@@ -1010,6 +1010,38 @@ body.session-live .welcome-stage {
     linear-gradient(180deg, rgba(255, 254, 251, 0.94), rgba(247, 242, 237, 0.88));
 }
 
+.nudge-panel {
+  padding-block: 14px;
+}
+
+.nudge-details {
+  display: grid;
+  gap: 12px;
+}
+
+.nudge-summary {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  cursor: pointer;
+}
+
+.nudge-summary::-webkit-details-marker {
+  display: none;
+}
+
+.nudge-summary h3 {
+  font-size: 1.02rem;
+  line-height: 1.18;
+}
+
+.nudge-details:not([open]) .nudge-deck,
+.nudge-details:not([open]) .panel-subtitle {
+  display: none;
+}
+
 .composer {
   display: grid;
   gap: 14px;
