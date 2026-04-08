@@ -35,8 +35,8 @@ class RuntimeConfig:
     semantic_safety_model: Optional[str]
     semantic_safety_review_threshold: float
     semantic_safety_urgent_threshold: float
-    live_chat_llm_analysis_enabled: bool
-    live_llm_turn_threshold: int
+    live_chat_llm_analysis_enabled: bool = False
+    live_llm_turn_threshold: int = 2
     local_safety_checkpoint: Optional[str] = None
 
     @property
