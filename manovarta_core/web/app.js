@@ -7,9 +7,40 @@ const state = {
   isBusy: false,
   recentCheckins: [],
   voiceLoopArmed: false,
+  pendingNudge: null,
 };
 
 const HISTORY_KEY = "manovarta_recent_checkins_v2";
+
+const TOKEN_LABELS = {
+  hi: {
+    check_in: "बातचीत",
+    mood: "मनोदशा",
+    sleep: "नींद",
+    energy: "ऊर्जा",
+    self_view: "अपने बारे में सोच",
+    focus: "ध्यान",
+    anxiety: "चिंता",
+    safety: "सुरक्षा",
+    none: "सामान्य",
+    review: "समीक्षा",
+    urgent: "तत्काल",
+    hybrid: "संकर",
+    local: "स्थानीय",
+    rapport: "शुरुआती समझ",
+    clarification: "स्पष्टता",
+    summary: "सार",
+    exploration: "खोज",
+    risk_check: "सुरक्षा-जाँच",
+    clarify: "स्पष्ट करना",
+    symptom_probe: "लक्षण-जाँच",
+    summarize: "सार बनाना",
+    handoff: "मानवीय सहायता",
+    rising: "बढ़ता हुआ",
+    easing: "हल्का होता हुआ",
+    stable: "स्थिर",
+  },
+};
 
 const LANGUAGE_UI = {
   en: {
@@ -21,12 +52,12 @@ const LANGUAGE_UI = {
     nudgeIntro: "These small prompts help you share useful detail without making the conversation feel heavy.",
   },
   hi: {
-    placeholder: "Jo badla hai, kab zyada hota hai, aur din bhar par kya asar padta hai, woh likhiye...",
-    sessionReady: "Ab aap aaraam se type ya bol sakte hain.",
-    startSuccess: "Aapka private check-in Hindi mein shuru ho gaya.",
-    turnSuccess: "Shukriya. ManoVarta ne yeh hold kar liya hai aur agle jawab ke liye ready hai.",
-    runtimeReady: "Sab ready hai. Jo sabse aasaan lage, wahi se baat shuru kijiye.",
-    nudgeIntro: "Yeh chhote prompts bina pressure ke useful detail nikalne mein madad karte hain.",
+    placeholder: "जो बदला है, कब ज़्यादा होता है, और दिन भर पर क्या असर पड़ता है, वह लिखिए...",
+    sessionReady: "अब आप आराम से टाइप या बोल सकते हैं।",
+    startSuccess: "आपका निजी चेक-इन हिंदी में शुरू हो गया।",
+    turnSuccess: "शुक्रिया। मनोवार्ता ने यह संभाल लिया है और अगले जवाब के लिए तैयार है।",
+    runtimeReady: "सब तैयार है। जो सबसे आसान लगे, वहीं से बात शुरू कीजिए।",
+    nudgeIntro: "ये छोटे संकेत बिना दबाव के ज़रूरी विवरण साझा करने में मदद करते हैं।",
   },
   hinglish: {
     placeholder: "Kya change hua, kab zyada feel hota hai, aur daily routine par kya impact hai, woh share karo...",
@@ -58,19 +89,19 @@ const STARTER_LIBRARY = {
   ],
   hi: [
     {
-      title: "Energy se start kijiye",
-      description: "Jab thakan ya bojh sabse zyada noticeable ho.",
-      text: "Pichhle kuchh dino se mujhe aam se zyada thakan feel ho rahi hai, aur din nikalna mushkil lag raha hai.",
+      title: "थकान से शुरुआत कीजिए",
+      description: "जब थकान या बोझ सबसे ज़्यादा महसूस हो रहा हो।",
+      text: "पिछले कुछ दिनों से मुझे सामान्य से ज़्यादा थकान महसूस हो रही है, और दिन निकालना मुश्किल लग रहा है।",
     },
     {
-      title: "Neend se start kijiye",
-      description: "Jab sabse pehla badlav neend mein dikha ho.",
-      text: "Meri neend ka pattern kaafi badal gaya hai, aur uska asar mood aur focus par pad raha hai.",
+      title: "नींद से शुरुआत कीजिए",
+      description: "जब सबसे पहला बदलाव नींद में दिखाई दिया हो।",
+      text: "मेरी नींद का पैटर्न काफ़ी बदल गया है, और उसका असर मनोदशा और ध्यान पर पड़ रहा है।",
     },
     {
-      title: "Chinta se start kijiye",
-      description: "Jab dimag zyada bhaag raha ho ya tanav body mein feel ho.",
-      text: "Mera dimag kaafi zyada chinta mein rehta hai aur bina wajah bhi tension feel hoti rehti hai.",
+      title: "चिंता से शुरुआत कीजिए",
+      description: "जब दिमाग बहुत तेज़ चल रहा हो या तनाव शरीर में महसूस हो रहा हो।",
+      text: "मेरा दिमाग काफ़ी ज़्यादा चिंता में रहता है और बिना वजह भी तनाव बना रहता है।",
     },
   ],
   hinglish: [
@@ -132,39 +163,39 @@ const NUDGE_LIBRARY = {
   },
   hi: {
     example: {
-      title: "Ek recent example dijiye",
-      description: "Sirf ek recent moment batane se bhi kaafi signal mil jata hai.",
-      text: "Ek recent example jo yaad aa raha hai woh yeh hai ki ",
+      title: "एक हाल का उदाहरण दीजिए",
+      description: "सिर्फ़ एक हाल की घटना बताने से भी काफ़ी संकेत मिल जाते हैं।",
+      text: "एक हाल का उदाहरण जो याद आ रहा है, वह यह है कि ",
     },
     timing: {
-      title: "Kab zyada hota hai batayiye",
-      description: "Subah, raat, kaam ke waqt, ya akela hone par zyada hota hai to woh batayiye.",
-      text: "Yeh zyada tab hota hai jab ",
+      title: "कब ज़्यादा होता है, बताइए",
+      description: "सुबह, रात, काम के समय, या अकेले होने पर ज़्यादा होता है तो वह बताइए।",
+      text: "यह ज़्यादा तब होता है जब ",
     },
     impact: {
-      title: "Rozmarra par asar batayiye",
-      description: "Padhai, kaam, neend, bhook, ya routine par kya farq pada hai woh likhiye.",
-      text: "Iska roz ke routine par asar yeh hua hai ki ",
+      title: "रोज़मर्रा पर असर बताइए",
+      description: "पढ़ाई, काम, नींद, भूख, या दिनचर्या पर क्या फ़र्क पड़ा है, वह लिखिए।",
+      text: "इसका रोज़ की दिनचर्या पर असर यह हुआ है कि ",
     },
     mood: {
-      title: "Sabse bhaari hissa batayiye",
-      description: "Udaasi, dil na lagna, guilt, ya thakan mein se kya zyada bhaari hai woh batayiye.",
-      text: "Sabse bhaari hissa mere liye yeh hai ki ",
+      title: "सबसे भारी हिस्सा बताइए",
+      description: "उदासी, मन न लगना, अपराधबोध, या थकान में से क्या सबसे भारी है, वह बताइए।",
+      text: "मेरे लिए सबसे भारी हिस्सा यह है कि ",
     },
     sleep: {
-      title: "Neend ka pattern clear kijiye",
-      description: "Sone mein der lagti hai, beech mein uthte hain, ya zyada sote hain, woh batayiye.",
-      text: "Neend ki dikkat zyada is tarah ki hai ki ",
+      title: "नींद का ढंग साफ़ कीजिए",
+      description: "सोने में देर लगती है, बीच में उठते हैं, या बहुत ज़्यादा सोते हैं, वह बताइए।",
+      text: "नींद की दिक्कत ज़्यादा इस तरह की है कि ",
     },
     anxiety: {
-      title: "Chinta ka pattern batayiye",
-      description: "Zehn ki chinta, sharir ka tanav, ya dono saath mein feel hota hai, woh likhiye.",
-      text: "Chinta zyada mujhe is tarah feel hoti hai ki ",
+      title: "चिंता का ढंग बताइए",
+      description: "दिमाग की चिंता, शरीर का तनाव, या दोनों साथ में महसूस होते हैं, वह लिखिए।",
+      text: "चिंता मुझे ज़्यादा इस तरह महसूस होती है कि ",
     },
     safety: {
-      title: "Chhota jawab bhi theek hai",
-      description: "Sensitive sawal par haan/nahin aur ek chhoti line bhi kaafi hai.",
-      text: "Mera seedha jawab yeh hai ki ",
+      title: "छोटा जवाब भी ठीक है",
+      description: "संवेदनशील सवाल पर हाँ/नहीं और एक छोटी पंक्ति भी काफ़ी है।",
+      text: "मेरा सीधा जवाब यह है कि ",
     },
   },
   hinglish: {
@@ -350,8 +381,14 @@ function setSessionLiveState(isLive) {
   document.body.classList.toggle("session-live", Boolean(isLive));
 }
 
-function humanizeToken(value) {
-  return String(value || "")
+function humanizeToken(value, language = state.language) {
+  const raw = String(value || "");
+  const normalized = raw.replaceAll(" ", "_").toLowerCase();
+  const localized = TOKEN_LABELS[language]?.[normalized];
+  if (localized) {
+    return localized;
+  }
+  return raw
     .replaceAll("_", " ")
     .replace(/\b\w/g, (match) => match.toUpperCase());
 }
@@ -399,6 +436,13 @@ function collectProfileContext() {
     living_situation: profileLivingInput?.value.trim() || null,
     support_system: profileSupportInput?.value.trim() || null,
     context_note: profileContextInput?.value.trim() || null,
+    recent_checkins: (state.recentCheckins || []).slice(0, 3).map((entry) => ({
+      topic: entry.topic || "check_in",
+      language: entry.language || state.language,
+      safety: entry.safety || "none",
+      completion: Number(entry.completion || 0),
+      summary: String(entry.summary || "").slice(0, 180),
+    })),
   };
 }
 
@@ -485,7 +529,9 @@ function renderHistory() {
   }
 
   const latest = entries[0];
-  ritualCopy.textContent = `Latest saved focus: ${humanizeToken(latest.topic || "check_in").toLowerCase()} in ${String(latest.language || "en").toUpperCase()}.`;
+  ritualCopy.textContent = state.language === "hi"
+    ? `हाल में सहेजा गया मुख्य फोकस: ${humanizeToken(latest.topic || "check_in", "hi")} (${String(latest.language || "en").toUpperCase()}).`
+    : `Latest saved focus: ${humanizeToken(latest.topic || "check_in").toLowerCase()} in ${String(latest.language || "en").toUpperCase()}.`;
 
   historyList.innerHTML = "";
   entries.slice(0, 4).forEach((entry) => {
@@ -494,11 +540,11 @@ function renderHistory() {
     const summary = String(entry.summary || "A private check-in was saved on this device.").slice(0, 140);
     card.innerHTML = `
       <p class="history-meta">${escapeHtml(formatCheckinDate(entry.savedAt))} · ${escapeHtml(String(entry.language || "en").toUpperCase())}</p>
-      <strong>${escapeHtml(humanizeToken(entry.topic || "check_in"))}</strong>
+      <strong>${escapeHtml(humanizeToken(entry.topic || "check_in", state.language))}</strong>
       <p>${escapeHtml(summary)}${summary.length >= 140 ? "..." : ""}</p>
       <div class="history-tags">
         <span class="history-tag">${escapeHtml(Math.round(Number(entry.completion || 0) * 100))}% complete</span>
-        <span class="history-tag">${escapeHtml(humanizeToken(entry.safety || "none"))} safety</span>
+        <span class="history-tag">${escapeHtml(state.language === "hi" ? `${humanizeToken(entry.safety || "none", "hi")} सुरक्षा` : `${humanizeToken(entry.safety || "none")} safety`)}</span>
       </div>
     `;
     historyList.appendChild(card);
@@ -780,6 +826,7 @@ async function requestSessionStart(options = {}) {
   const payload = await response.json();
   state.sessionId = payload.session_id;
   state.exportPayload = null;
+  state.pendingNudge = null;
   if (resetChat) {
     chatLog.innerHTML = "";
   }
@@ -888,7 +935,7 @@ function buildBonusSignals(dialogue, coverage) {
     `${completion}% covered`,
     `${humanizeToken(dialogue.target_topic)} focus`,
     posture,
-    dialogue.next_action === "risk_check" ? "Safety pause" : "Guided follow-up",
+    dialogue.fatigue === "high" ? "Low-burden follow-up" : dialogue.next_action === "risk_check" ? "Safety pause" : "Guided follow-up",
   ];
 }
 
@@ -905,14 +952,50 @@ function buildResponsePosture(userStyle) {
   return "Balanced guided pace";
 }
 
-function buildPersonalizationSummary(dialogue) {
-  const { verbosity, openness, code_mix: codeMix, distress_trend: distressTrend } = dialogue.user_style;
-  return `ManoVarta is noticing ${verbosity} responses, ${openness} disclosure, ${codeMix} code-mix, and a ${distressTrend} pattern, then adjusting the conversation to stay natural instead of robotic.`;
+function resolveUiLanguage(language) {
+  return language || state.language || "en";
 }
 
-function buildComposerHelper(dialogue) {
+function buildPersonalizationSummary(dialogue, language = state.language) {
+  const uiLanguage = resolveUiLanguage(language);
+  if (uiLanguage === "hi") {
+    return "मनोवार्ता आपके जवाब की लंबाई, खुलापन और भाषा के ढंग को देखकर अगला सवाल बदल रही है। यह किसी तय स्क्रिप्ट पर नहीं चल रही।";
+  }
+  const { verbosity, openness, code_mix: codeMix, distress_trend: distressTrend, steering_preference: steeringPreference } = dialogue.user_style;
+  return `ManoVarta is adapting to ${verbosity} responses, ${openness} disclosure, ${codeMix} code-mix, and a ${distressTrend} pattern. Right now it is using a ${steeringPreference} steering style instead of a fixed script.`;
+}
+
+function buildComposerHelper(dialogue, language = state.language) {
+  const uiLanguage = resolveUiLanguage(language);
+  if (uiLanguage === "hi") {
+    if (dialogue.next_action === "risk_check") {
+      return "यहाँ छोटा और सीधा जवाब भी काफ़ी है। मनोवार्ता सामान्य प्रवाह पर लौटने से पहले सावधानी से सुरक्षा-जाँच कर रही है।";
+    }
+    if (dialogue.fatigue === "high") {
+      return "अभी गति हल्की रखी जा रही है। एक छोटा सा ठोस विवरण भी काफ़ी है।";
+    }
+    if (dialogue.readiness === "ready_to_close") {
+      return "तस्वीर अब काफ़ी साफ़ हो रही है। पुनरावलोकन से पहले बस एक आख़िरी स्पष्टता काफ़ी हो सकती है।";
+    }
+    if (dialogue.user_style.openness === "guarded") {
+      return "हल्का मोड चालू है: एक हाल का उदाहरण या रोज़मर्रा पर एक असर बताना भी काफ़ी है।";
+    }
+    if (dialogue.user_style.verbosity === "brief") {
+      return "छोटे जवाब भी ठीक हैं। एक उदाहरण या समय का एक संकेत बहुत मदद करेगा।";
+    }
+    if (dialogue.user_style.verbosity === "detailed") {
+      return "वर्णनात्मक मोड चालू है: जो हिस्सा सबसे ज़रूरी लग रहा है, उसी पर टिकिए। मनोवार्ता पीछे से उसे शांति से व्यवस्थित करेगी।";
+    }
+    return "मनोवार्ता आपके दिए गए विवरण के हिसाब से अगला सवाल बदल रही है और वही अगला हिस्सा पूछ रही है जो सबसे ज़्यादा स्पष्टता देगा।";
+  }
   if (dialogue.next_action === "risk_check") {
     return "A short direct answer is enough here. ManoVarta is doing a careful safety check before returning to the normal flow.";
+  }
+  if (dialogue.fatigue === "high") {
+    return "The pace is being kept light right now. One short concrete detail is enough.";
+  }
+  if (dialogue.readiness === "ready_to_close") {
+    return "The picture is getting steady. One final clarification may be enough before the recap.";
   }
   if (dialogue.user_style.openness === "guarded") {
     return "Low-pressure mode is active: one recent example or one daily-life impact is enough.";
@@ -923,12 +1006,31 @@ function buildComposerHelper(dialogue) {
   if (dialogue.user_style.verbosity === "detailed") {
     return "Narrative mode is active: stay with the part that feels most important and ManoVarta will organize it quietly in the background.";
   }
-  return "ManoVarta is mirroring your pace and asking the next question that adds the most useful clarity.";
+  return "ManoVarta is adapting to how much detail you are giving and asking for the next piece that adds real clarity.";
 }
 
-function buildNudgeSubtitle(dialogue) {
+function buildNudgeSubtitle(dialogue, language = state.language) {
+  const uiLanguage = resolveUiLanguage(language);
+  if (uiLanguage === "hi") {
+    if (dialogue.next_action === "risk_check") {
+      return "यह एक संवेदनशील जाँच है: छोटा और सीधा जवाब भी काफ़ी है। आपको लंबा पैराग्राफ़ लिखने की ज़रूरत नहीं है।";
+    }
+    if ((dialogue.disclosure?.nudge_effectiveness || 0) < 0) {
+      return "पिछले संकेत से ज़्यादा विवरण नहीं खुला, इसलिए ये संकेत अब थोड़ा अलग रास्ता सुझा रहे हैं।";
+    }
+    if (dialogue.user_style.openness === "guarded") {
+      return "जो संकेत सबसे आसान लगे, वही चुनिए। मनोवार्ता उसी छोटे विवरण से दबाव कम रखेगी और आगे बढ़ेगी।";
+    }
+    if (dialogue.user_style.verbosity === "brief") {
+      return "बस एक अतिरिक्त ठोस विवरण सत्र को अस्पष्ट संकेत से स्थिर प्रमाण तक ले जा सकता है।";
+    }
+      return "ये संकेत कम संदेशों में ज़्यादा मज़बूत प्रमाण इकट्ठा करने में मदद करते हैं।";
+  }
   if (dialogue.next_action === "risk_check") {
     return "Sensitive checkpoint: a short direct answer is enough. You do not need to write a long paragraph.";
+  }
+  if ((dialogue.disclosure?.nudge_effectiveness || 0) < 0) {
+    return "The last prompt did not unlock much detail, so these nudges shift strategy and try a different angle.";
   }
   if (dialogue.user_style.openness === "guarded") {
     return "Pick the easiest nudge. ManoVarta will use that small detail to reduce pressure and keep moving.";
@@ -939,9 +1041,28 @@ function buildNudgeSubtitle(dialogue) {
   return "These nudges help the system collect stronger evidence with fewer turns.";
 }
 
-function buildNudgeMeta(dialogue) {
+function buildNudgeMeta(dialogue, language = state.language) {
+  const uiLanguage = resolveUiLanguage(language);
+  if (uiLanguage === "hi") {
+    if (dialogue.next_action === "risk_check") {
+      return "हल्का संकेत";
+    }
+    if ((dialogue.disclosure?.nudge_effectiveness || 0) > 0.2) {
+      return "पिछली बार उपयोगी";
+    }
+    if (dialogue.user_style.openness === "guarded" || dialogue.user_style.verbosity === "brief") {
+      return "जल्दी स्पष्टता";
+    }
+    if (dialogue.user_style.verbosity === "detailed") {
+      return "विवरण को बढ़ाने वाला संकेत";
+    }
+    return "प्रमाण मज़बूत करने वाला संकेत";
+  }
   if (dialogue.next_action === "risk_check") {
     return "Low-pressure prompt";
+  }
+  if ((dialogue.disclosure?.nudge_effectiveness || 0) > 0.2) {
+    return "Helpful last time";
   }
   if (dialogue.user_style.openness === "guarded" || dialogue.user_style.verbosity === "brief") {
     return "Fast confidence unlock";
@@ -952,13 +1073,39 @@ function buildNudgeMeta(dialogue) {
   return "Evidence booster";
 }
 
-function buildSessionMetaLine(dialogue, coverage, safety) {
+function buildSessionMetaLine(dialogue, coverage, safety, language = state.language) {
+  const uiLanguage = resolveUiLanguage(language);
+  if (uiLanguage === "hi") {
+    if (safety.level === "none") {
+      return "अभी मनोवार्ता इसी हिस्से को थोड़ा और साफ़ कर रही है, जबकि सुरक्षा-जाँच पृष्ठभूमि में शांत रूप से चल रही है।";
+    }
+    return "अभी मनोवार्ता बातचीत को इसी हिस्से पर टिकाए हुए है, और सुरक्षा पर थोड़ा ज़्यादा ध्यान रखा जा रहा है।";
+  }
   const topic = humanizeToken(dialogue.target_topic);
   const safetyLine = safety.level === "none" ? "safety monitoring stays in the background" : `${humanizeToken(safety.level)} safety care is active`;
   return `Right now ManoVarta is staying with ${topic.toLowerCase()}, while ${safetyLine}.`;
 }
 
-function buildPatientSummary(dialogue, safety) {
+function buildPatientSummary(dialogue, safety, language = state.language) {
+  const uiLanguage = resolveUiLanguage(language);
+  if (uiLanguage === "hi") {
+    if (safety.level === "urgent") {
+      return "मनोवार्ता ने कुछ ऐसा सुना है जिसके लिए तुरंत मानवीय मदद ज़रूरी हो सकती है, इसलिए यह सामान्य जाँच-प्रवाह से हट रही है।";
+    }
+    if (safety.level === "review") {
+      return "कुछ संवेदनशील बात सामने आई है, इसलिए बातचीत अब थोड़ी ज़्यादा सावधानी से आगे बढ़ रही है।";
+    }
+    if (dialogue.stage === "rapport") {
+      return "बातचीत अभी दिशा पकड़ रही है। मनोवार्ता समझ रही है कि अभी सबसे ज़्यादा दबाव किस हिस्से से आ रहा है।";
+    }
+    if (dialogue.stage === "clarification") {
+      return "उपयोगी जानकारी मिल चुकी है, लेकिन आगे बढ़ने से पहले एक बात और साफ़ करनी है।";
+    }
+    if (dialogue.stage === "summary") {
+      return "अब तस्वीर काफ़ी साफ़ हो रही है। मनोवार्ता एक स्थिर सार के काफ़ी पास है।";
+    }
+    return "अभी मनोवार्ता इस हिस्से को समझ रही है और देख रही है कि इसका रोज़मर्रा की ज़िंदगी पर क्या असर पड़ रहा है।";
+  }
   const topic = humanizeToken(dialogue.target_topic).toLowerCase();
   if (safety.level === "urgent") {
     return "ManoVarta heard something that may need immediate human support, so it is shifting away from normal screening.";
@@ -978,9 +1125,41 @@ function buildPatientSummary(dialogue, safety) {
   return `Right now ManoVarta is exploring ${topic} and how it is affecting day-to-day life.`;
 }
 
-function buildWhyThisQuestion(dialogue) {
+function buildWhyThisQuestion(dialogue, language = state.language) {
+  const uiLanguage = resolveUiLanguage(language);
+  const itemReasonMap = uiLanguage === "hi"
+    ? {
+        phq_q3_sleep: "अगला सवाल यह साफ़ कर रहा है कि नींद की दिक्कत किस तरह की है, ताकि मनोवार्ता सिर्फ़ समय सुनकर अनुमान न लगा ले।",
+        gad_q2_control_worry: "अगला सवाल यह समझ रहा है कि चिंता पर काबू पाना मुश्किल है या नहीं, सिर्फ़ यह नहीं कि चिंता मौजूद है।",
+        gad_q4_trouble_relaxing: "अगला सवाल यह देख रहा है कि यह ज़्यादा व्यस्त दिमाग है, तना हुआ शरीर है, या दोनों, ताकि अगला सवाल सटीक रहे।",
+        gad_q5_restlessness: "अगला सवाल यह समझ रहा है कि बेचैनी किस तरह सामने आती है, सिर्फ़ यह नहीं कि कब होती है।",
+      }
+    : {
+        phq_q3_sleep: "The next question is checking what kind of sleep disruption this is, so ManoVarta does not confuse timing with the sleep problem itself.",
+        gad_q2_control_worry: "The next question is checking whether the worry is hard to control, not just whether it is present.",
+        gad_q4_trouble_relaxing: "The next question is checking whether this is a busy mind, a tense body, or both, so the follow-up stays precise.",
+        gad_q5_restlessness: "The next question is checking how the restlessness shows up, not just when it happens, so ManoVarta does not keep circling the same point.",
+      };
+  if (uiLanguage === "hi") {
+    if (dialogue.next_action === "risk_check") {
+      return "यह सवाल पहले इसलिए पूछा जा रहा है क्योंकि सुरक्षा, जाँच जल्दी पूरी करने से ज़्यादा महत्वपूर्ण है।";
+    }
+    if (dialogue.target_item && itemReasonMap[dialogue.target_item]) {
+      return itemReasonMap[dialogue.target_item];
+    }
+    if (dialogue.stage === "clarification") {
+      return "यह सवाल एक छूटी हुई बात साफ़ करने के लिए है, ताकि मनोवार्ता अनुमान लगाने के बजाय स्पष्ट समझ बना सके।";
+    }
+    if (dialogue.user_style.openness === "guarded") {
+      return "अगला सवाल जानबूझकर छोटा और हल्का रखा गया है, ताकि जवाब देना आसान रहे।";
+    }
+    return "अगला सवाल उसी हिस्से पर है जहाँ बातचीत को अभी सबसे मज़बूत प्रमाण की ज़रूरत है।";
+  }
   if (dialogue.next_action === "risk_check") {
     return "This question comes first because safety matters more than finishing the screening quickly.";
+  }
+  if (dialogue.target_item && itemReasonMap[dialogue.target_item]) {
+    return itemReasonMap[dialogue.target_item];
   }
   if (dialogue.stage === "clarification") {
     return `The assistant is checking one missing detail so it does not guess about ${humanizeToken(dialogue.target_topic).toLowerCase()}.`;
@@ -991,7 +1170,17 @@ function buildWhyThisQuestion(dialogue) {
   return `The next question is about ${humanizeToken(dialogue.target_topic).toLowerCase()} because that is where the conversation still needs the strongest evidence.`;
 }
 
-function buildSafetyNarrative(safety) {
+function buildSafetyNarrative(safety, language = state.language) {
+  const uiLanguage = resolveUiLanguage(language);
+  if (uiLanguage === "hi") {
+    if (safety.level === "urgent") {
+      return "अभी सुरक्षा-सहायता को सबसे ऊपर रखा जा रहा है।";
+    }
+    if (safety.level === "review") {
+      return "एक संवेदनशील संकेत दिखा है, इसलिए मनोवार्ता अब थोड़ा और सावधानी से आगे बढ़ रही है।";
+    }
+    return "पूरी बातचीत के दौरान सुरक्षा-जाँच शांत रूप से पृष्ठभूमि में चलती रहती है।";
+  }
   if (safety.level === "urgent") {
     return "Safety support is being prioritized right now.";
   }
@@ -1001,9 +1190,22 @@ function buildSafetyNarrative(safety) {
   return "Safety checks are running quietly in the background throughout the conversation.";
 }
 
-function buildReflectionPrompt(snapshot, summary) {
+function buildReflectionPrompt(snapshot, summary, language = state.language) {
+  const uiLanguage = resolveUiLanguage(language);
   const safety = snapshot?.safety?.level || "none";
   const completion = Number(snapshot?.coverage?.completion_ratio || 0);
+  if (uiLanguage === "hi") {
+    if (safety === "urgent") {
+      return "इस बातचीत में कुछ ऐसा सामने आया है जिस पर तुरंत मानवीय मदद ज़रूरी हो सकती है। अभी सामान्य जाँच रोककर तुरंत सहायता लें।";
+    }
+    if (safety === "review") {
+      return "इस सत्र में कुछ संवेदनशील बात सामने आई है। चाहें तो यहीं रुकें, छोटा जवाब दें, या किसी भरोसेमंद सहारे के साथ फिर लौटें।";
+    }
+    if (completion >= 0.7) {
+      return "मनोवार्ता के पास अब काफ़ी साफ़ तस्वीर है। आप चाहें तो यहीं रुक सकते हैं या बाद में लौट सकते हैं।";
+    }
+    return "यदि अभी के लिए इतना काफ़ी लगे तो आप यहीं रुक सकते हैं, या तस्वीर को थोड़ा और साफ़ करने के लिए एक और सवाल ले सकते हैं।";
+  }
   if (safety === "urgent") {
     return "This check-in surfaced something urgent. Pause the screening flow and reach for immediate human support now.";
   }
@@ -1021,10 +1223,12 @@ function pickNudges(language, dialogue) {
   const nudges = [];
   const add = (key) => {
     const entry = bank[key];
-    if (entry && !nudges.includes(entry)) {
-      nudges.push(entry);
+    if (entry && !nudges.some((nudge) => nudge.key === key)) {
+      nudges.push({ key, ...entry });
     }
   };
+
+  (dialogue.recommended_nudges || []).forEach(add);
 
   if (dialogue.next_action === "risk_check" || dialogue.target_topic === "safety") {
     add("safety");
@@ -1050,8 +1254,12 @@ function pickNudges(language, dialogue) {
 }
 
 function applyNudge(text) {
+  const payload = typeof text === "string" ? { text, key: null, title: null } : text;
+  state.pendingNudge = payload.key
+    ? { id: payload.key, strategy: payload.key, title: payload.title || payload.key }
+    : null;
   const current = messageInput.value.trim();
-  messageInput.value = current ? `${current} ${text}` : text;
+  messageInput.value = current ? `${current} ${payload.text}` : payload.text;
   messageInput.focus();
   messageInput.setSelectionRange(messageInput.value.length, messageInput.value.length);
 }
@@ -1064,11 +1272,11 @@ function renderNudges(language, dialogue) {
     button.type = "button";
     button.className = "nudge-card";
     button.innerHTML = `
-      <span class="nudge-meta">${escapeHtml(buildNudgeMeta(dialogue))}</span>
+      <span class="nudge-meta">${escapeHtml(buildNudgeMeta(dialogue, language))}</span>
       <strong>${escapeHtml(nudge.title)}</strong>
       <span>${escapeHtml(nudge.description)}</span>
     `;
-    button.addEventListener("click", () => applyNudge(nudge.text));
+    button.addEventListener("click", () => applyNudge(nudge));
     nudgeDeck.appendChild(button);
   });
 }
@@ -1100,9 +1308,12 @@ function renderSnapshot(payload) {
     target_topic: "mood",
     held_back_items: [],
     transition_hint: "Start a conversation to see how steering changes.",
-    user_style: { verbosity: "balanced", openness: "cautious", distress_trend: "unclear", code_mix: "low" },
+    user_style: { verbosity: "balanced", openness: "cautious", distress_trend: "unclear", code_mix: "low", steering_preference: "balanced" },
     disclosure: { items_per_user_turn: 0, resolved_per_user_turn: 0 },
     user_turns: 0,
+    readiness: "opening",
+    fatigue: "low",
+    recommended_nudges: [],
   };
   const coverage = snapshot.coverage || {
     total_items: 16,
@@ -1122,11 +1333,11 @@ function renderSnapshot(payload) {
     detailModeLabel.textContent = humanizeToken(snapshot.mode);
   }
   summaryText.textContent = summary;
-  patientSummary.textContent = buildPatientSummary(dialogue, snapshot.safety);
-  whyThisQuestion.textContent = buildWhyThisQuestion(dialogue);
-  safetyNarrative.textContent = buildSafetyNarrative(snapshot.safety);
+  patientSummary.textContent = buildPatientSummary(dialogue, snapshot.safety, snapshot.language);
+  whyThisQuestion.textContent = buildWhyThisQuestion(dialogue, snapshot.language);
+  safetyNarrative.textContent = buildSafetyNarrative(snapshot.safety, snapshot.language);
   if (reflectionPrompt) {
-    reflectionPrompt.textContent = buildReflectionPrompt(snapshot, summary);
+    reflectionPrompt.textContent = buildReflectionPrompt(snapshot, summary, snapshot.language);
   }
 
   const completion = Math.round((coverage.completion_ratio || 0) * 100);
@@ -1145,7 +1356,7 @@ function renderSnapshot(payload) {
   plannerTransition.textContent = `${dialogue.rationale || "Planner rationale unavailable."} ${dialogue.transition_hint || ""}`.trim();
   sessionGoal.textContent = buildSessionGoal(dialogue, snapshot.safety);
   sessionMeta.classList.remove("empty");
-  sessionMeta.textContent = buildSessionMetaLine(dialogue, coverage, snapshot.safety);
+  sessionMeta.textContent = buildSessionMetaLine(dialogue, coverage, snapshot.safety, snapshot.language);
 
   bonusSignals.innerHTML = "";
   buildBonusSignals(dialogue, coverage).forEach((signal) => {
@@ -1157,9 +1368,9 @@ function renderSnapshot(payload) {
 
   personalizationBlend.textContent = `${dialogue.user_style.code_mix} code-mix`;
   personalizationPacing.textContent = buildResponsePosture(dialogue.user_style);
-  personalizationSummary.textContent = buildPersonalizationSummary(dialogue);
-  composerHelper.textContent = buildComposerHelper(dialogue);
-  nudgeSubtitle.textContent = buildNudgeSubtitle(dialogue);
+  personalizationSummary.textContent = buildPersonalizationSummary(dialogue, snapshot.language);
+  composerHelper.textContent = buildComposerHelper(dialogue, snapshot.language);
+  nudgeSubtitle.textContent = buildNudgeSubtitle(dialogue, snapshot.language);
   renderNudges(snapshot.language, dialogue);
   renderTopicMap(coverage.topic_states || []);
 
@@ -1227,6 +1438,7 @@ function renderSnapshot(payload) {
 }
 
 function resetInsightPanel() {
+  const hindi = state.language === "hi";
   phqTotal.textContent = "0";
   gadTotal.textContent = "0";
   safetyLevel.textContent = "none";
@@ -1246,19 +1458,35 @@ function resetInsightPanel() {
   plannerTrend.textContent = "Unclear";
   plannerEfficiency.textContent = "0.00 items/turn";
   plannerHeldBack.textContent = "none";
-  plannerTransition.textContent = "Start a conversation to see how the next topic is selected.";
-  summaryText.textContent = "Start a conversation to generate the first summary.";
-  patientSummary.textContent = "Start a conversation to see a gentle plain-language summary here.";
-  whyThisQuestion.textContent = "Start a conversation to see why the next question is being asked.";
-  safetyNarrative.textContent = "Safety checks are running quietly in the background throughout the conversation.";
-  sessionGoal.textContent = "Build comfort first, then understand the main concern clearly.";
+  plannerTransition.textContent = hindi
+    ? "बातचीत शुरू होने पर यहाँ दिखेगा कि अगला विषय कैसे चुना जा रहा है।"
+    : "Start a conversation to see how the next topic is selected.";
+  summaryText.textContent = hindi
+    ? "बातचीत शुरू होने पर यहाँ पहला सार दिखाई देगा।"
+    : "Start a conversation to generate the first summary.";
+  patientSummary.textContent = hindi
+    ? "बातचीत शुरू होने पर यहाँ एक सरल सार दिखाई देगा।"
+    : "Start a conversation to see a gentle plain-language summary here.";
+  whyThisQuestion.textContent = hindi
+    ? "बातचीत शुरू होने पर यहाँ दिखेगा कि अगला सवाल क्यों पूछा जा रहा है।"
+    : "Start a conversation to see why the next question is being asked.";
+  safetyNarrative.textContent = hindi
+    ? "पूरी बातचीत के दौरान सुरक्षा-जाँच शांत रूप से पृष्ठभूमि में चलती रहती है।"
+    : "Safety checks are running quietly in the background throughout the conversation.";
+  sessionGoal.textContent = hindi
+    ? "पहले सहजता बनाइए, फिर मुख्य चिंता को साफ़ समझिए।"
+    : "Build comfort first, then understand the main concern clearly.";
   topicMap.innerHTML = '<span class="topic-pill">No topic map yet.</span>';
   unresolvedCount.textContent = "0 queued";
   reviewCount.textContent = "0 flagged";
-  unresolvedList.innerHTML = "<li>No follow-up queue yet.</li>";
-  reviewList.innerHTML = "<li>No review flags right now.</li>";
-  itemTableBody.innerHTML = '<tr><td colspan="4" class="empty-cell">No item scores yet.</td></tr>';
-  evidenceList.innerHTML = '<li class="empty-cell">No evidence spans yet.</li>';
+    unresolvedList.innerHTML = hindi ? "<li>अभी कोई अगला लंबित सवाल नहीं है।</li>" : "<li>No follow-up queue yet.</li>";
+    reviewList.innerHTML = hindi ? "<li>अभी कोई समीक्षा संकेत नहीं है।</li>" : "<li>No review flags right now.</li>";
+  itemTableBody.innerHTML = hindi
+      ? '<tr><td colspan="4" class="empty-cell">अभी किसी बिंदु का अंकन उपलब्ध नहीं है।</td></tr>'
+    : '<tr><td colspan="4" class="empty-cell">No item scores yet.</td></tr>';
+  evidenceList.innerHTML = hindi
+      ? '<li class="empty-cell">अभी कोई प्रमाण अंश उपलब्ध नहीं है।</li>'
+    : '<li class="empty-cell">No evidence spans yet.</li>';
   bonusSignals.innerHTML = `
     <span class="signal-pill">Gentle pacing</span>
     <span class="signal-pill">Voice available</span>
@@ -1266,14 +1494,20 @@ function resetInsightPanel() {
   `;
   personalizationBlend.textContent = "low code-mix";
   personalizationPacing.textContent = "Balanced guided pacing";
-  personalizationSummary.textContent = "Start a session to see how ManoVarta adapts to the user’s language style and disclosure pace.";
+  personalizationSummary.textContent = hindi
+      ? "सत्र शुरू होने पर यहाँ दिखेगा कि मनोवार्ता अपनी गति, मार्गदर्शन-शैली और अगली पूछताछ का दबाव कैसे बदलती है।"
+    : "Start a session to see how ManoVarta adapts its pacing, steering style, and follow-up burden.";
   if (reflectionPrompt) {
-    reflectionPrompt.textContent = "Once the conversation starts settling, ManoVarta will leave a simple recap here so you know what it is holding onto.";
+    reflectionPrompt.textContent = hindi
+      ? "जब बातचीत थोड़ा स्थिर होगी, मनोवार्ता यहाँ एक सरल पुनरावलोकन छोड़ेगी ताकि आपको पता रहे कि वह क्या संभाल रही है।"
+      : "Once the conversation starts settling, ManoVarta will leave a simple recap here so you know what it is holding onto.";
   }
   renderNudges(state.language, {
     target_topic: "mood",
     next_action: "open_question",
-    user_style: { verbosity: "balanced", openness: "cautious", code_mix: "low" },
+    user_style: { verbosity: "balanced", openness: "cautious", code_mix: "low", steering_preference: "balanced" },
+    disclosure: { nudge_effectiveness: 0 },
+    recommended_nudges: [],
   });
 }
 
@@ -1321,11 +1555,19 @@ async function sendMessageText(text, options = {}) {
 
     renderTurn({ speaker: "user", text: cleaned });
     messageInput.value = "";
+    const pendingNudge = state.pendingNudge;
+    state.pendingNudge = null;
 
     let response = await fetch(`/chat/sessions/${state.sessionId}/turns`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ text: cleaned }),
+      body: JSON.stringify({
+        text: cleaned,
+        from_voice: fromVoice,
+        nudge_id: pendingNudge?.id || null,
+        nudge_strategy: pendingNudge?.strategy || null,
+        nudge_title: pendingNudge?.title || null,
+      }),
     });
     if (response.status === 404 && allowRecovery) {
       setStatusBanner("The session refreshed in the background. Sending your last message again...", "info");
@@ -1339,7 +1581,13 @@ async function sendMessageText(text, options = {}) {
       response = await fetch(`/chat/sessions/${state.sessionId}/turns`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text: cleaned }),
+        body: JSON.stringify({
+          text: cleaned,
+          from_voice: fromVoice,
+          nudge_id: pendingNudge?.id || null,
+          nudge_strategy: pendingNudge?.strategy || null,
+          nudge_title: pendingNudge?.title || null,
+        }),
       });
     }
     if (!response.ok) {
