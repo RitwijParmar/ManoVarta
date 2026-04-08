@@ -204,6 +204,8 @@ class HuggingFaceResponder:
     ) -> Tuple[str, str]:
         if not self.enabled or snapshot.safety.level == "urgent":
             return fallback_text, "template"
+        if snapshot.safety.level == "review" and snapshot.coverage.dialogue.target_topic == "safety":
+            return fallback_text, "template"
         if self._should_prefer_fallback(session, target_item):
             return fallback_text, "template"
 
@@ -255,6 +257,7 @@ class HuggingFaceResponder:
             "If the user is guarded or brief, ask one smaller concrete follow-up and make it clear that a short answer is okay. "
             "If the user is detailed, let them continue in their own words instead of forcing a checklist. "
             "If the user's code-mix is medium or high, mirror it lightly and naturally without caricature or slang overload. "
+            "Do not stack gratitude, continuity reminders, and reflective paraphrases in the same short reply. "
             "Do not repeat the previous assistant question in the same wording. "
             "If the user already answered timing or frequency, move to what the symptom feels like, how strong it is, or how it affects the day. "
             "Sound warm, calm, and respectful. "

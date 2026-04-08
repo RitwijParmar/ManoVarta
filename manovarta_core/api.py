@@ -19,6 +19,7 @@ from manovarta_core.scoring import ConversationScorer
 from manovarta_core.schemas import (
     ChatTurnRequest,
     ChatTurnResponse,
+    ChatSession,
     NudgeEvent,
     SessionExportResponse,
     SessionDetailResponse,
@@ -72,6 +73,15 @@ engine = RuntimeEngine(
 
 if WEB_DIR.exists():
     app.mount("/app-assets", StaticFiles(directory=WEB_DIR), name="app-assets")
+
+
+def _should_use_live_llm(session: ChatSession) -> bool:
+    user_turns = sum(1 for turn in session.turns if turn.speaker == "user")
+    if runtime_config.live_chat_llm_analysis_enabled and user_turns >= runtime_config.live_llm_turn_threshold:
+        return True
+    if not session.turns:
+        return False
+    return safety_monitor.assess(session.turns).level in {"review", "urgent"}
 
 
 @app.get("/", include_in_schema=False)
@@ -196,8 +206,7 @@ def add_turn(session_id: str, payload: ChatTurnRequest) -> ChatTurnResponse:
         session.language,
         notes=" | ".join(user_notes) if user_notes else None,
     )
-    user_turns = sum(1 for turn in session.turns if turn.speaker == "user")
-    use_llm = runtime_config.live_chat_llm_analysis_enabled and user_turns >= runtime_config.live_llm_turn_threshold
+    use_llm = _should_use_live_llm(session)
     snapshot = engine.analyze(session.turns, session.language, use_llm=use_llm)
     if payload.nudge_id and payload.nudge_strategy:
         evidence_gain = max(snapshot.coverage.touched_items - previous_snapshot.coverage.touched_items, 0)

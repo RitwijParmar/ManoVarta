@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import re
 from dataclasses import dataclass
 from typing import Iterable, List, Sequence
 
@@ -40,6 +41,17 @@ URGENT_INTENT_CUES = (
     "सब खत्म कर दूँ",
     "सब खत्म कर दू",
     "खुद को नुकसान",
+)
+
+URGENT_INTENT_PATTERNS = (
+    r"\bi\s+wish\s+i\s+(?:could\s+)?sleep\s+and\s+not\s+wake\s+up\b",
+    r"\bi\s+(?:wish|keep\s+wishing|sometimes\s+think|sometimes\s+feel)\s+(?:that\s+)?i\s+(?:would\s+)?not\s+wake\s+up\b",
+    r"\b(?:it|things|life)\s+(?:might|may|would)\s+be\s+easier\s+(?:if\s+)?i\s+(?:did\s+not|didn\s+t|do\s+not|don\s+t|would\s+not|wouldn\s+t)\s+wake\s+up\b",
+    r"\b(?:better|easier)\s+(?:if\s+)?i\s+(?:did\s+not|didn\s+t|do\s+not|don\s+t)\s+wake\s+up\b",
+    r"\bkaash\s+main\s+(?:subah\s+)?na\s+uthu[nm]?\b",
+    r"\b(?:agar|shayad)\s+main\s+(?:subah\s+)?na\s+uthu[nm]?\b",
+    r"काश\s+मैं\s+(?:सुबह\s+)?न\s+उठूँ",
+    r"अगर\s+मैं\s+(?:सुबह\s+)?न\s+उठूँ",
 )
 
 URGENT_METHOD_CUES = (
@@ -122,7 +134,10 @@ class SafetyMonitor:
         all_text = "\n".join(turn.text for turn in user_turns)
         recent_text = "\n".join(turn.text for turn in recent_turns)
 
-        urgent_hits = self._collect_hits(all_text, recent_text, URGENT_INTENT_CUES)
+        urgent_hits = self._dedupe_hits(
+            self._collect_hits(all_text, recent_text, URGENT_INTENT_CUES)
+            + self._collect_pattern_hits(all_text, recent_text, URGENT_INTENT_PATTERNS)
+        )
         method_hits = self._collect_hits(all_text, recent_text, URGENT_METHOD_CUES)
         time_hits = self._collect_hits(all_text, recent_text, URGENT_TIME_CUES)
         review_hits = self._collect_hits(all_text, recent_text, REVIEW_CUES)
@@ -184,6 +199,35 @@ class SafetyMonitor:
                 )
             )
         return hits
+
+    def _collect_pattern_hits(self, all_text: str, recent_text: str, patterns: Sequence[str]) -> List[CueHit]:
+        hits: List[CueHit] = []
+        normalized_all = normalize_text(all_text)
+        normalized_recent = normalize_text(recent_text)
+        for pattern in patterns:
+            for match in re.finditer(pattern, normalized_all):
+                phrase = match.group(0).strip()
+                if not phrase:
+                    continue
+                hits.append(
+                    CueHit(
+                        phrase=phrase,
+                        snippet=phrase,
+                        recent=bool(re.search(pattern, normalized_recent)),
+                    )
+                )
+        return hits
+
+    def _dedupe_hits(self, hits: Sequence[CueHit]) -> List[CueHit]:
+        deduped: List[CueHit] = []
+        seen: set[tuple[str, str, bool]] = set()
+        for hit in hits:
+            key = (hit.phrase, hit.snippet, hit.recent)
+            if key in seen:
+                continue
+            seen.add(key)
+            deduped.append(hit)
+        return deduped
 
     def _build_flag(self, level: str, hits: Sequence[CueHit], rationale: str) -> SafetyFlag:
         cues = list(dict.fromkeys(hit.snippet or hit.phrase for hit in hits))

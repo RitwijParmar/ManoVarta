@@ -474,6 +474,56 @@ def test_huggingface_responder_rejects_duplicate_question_wording():
     assert source == "template"
 
 
+def test_huggingface_responder_prefers_template_for_review_level_safety():
+    class _Response:
+        def __init__(self, content):
+            self.choices = [type("Choice", (), {"message": type("Message", (), {"content": content})()})()]
+
+    class _FakeClient:
+        def chat_completion(self, *, messages, temperature, max_tokens):
+            return _Response("Are you sure you want to talk about that right now?")
+
+    responder = HuggingFaceResponder(_local_config())
+    responder._client = _FakeClient()
+    session = ChatSession(
+        session_id="safety-review-template",
+        language="en",
+        turns=[
+            Turn(turn_id=1, speaker="user", text="I think it might be easier if I do not wake up.", language_tag="en"),
+        ],
+    )
+    snapshot = ScreeningSnapshot(
+        language="en",
+        items={},
+        evidence_spans=[],
+        unresolved_items=["phq_q9_self_harm"],
+        totals={"PHQ9": None, "GAD7": None},
+        safety=SafetyFlag(level="review"),
+        coverage=CoveragePlan(
+            total_items=16,
+            touched_items=1,
+            completion_ratio=0.06,
+            dialogue=DialoguePlan(
+                stage="safety",
+                next_action="risk_check",
+                current_topic="safety",
+                target_topic="safety",
+                target_item="phq_q9_self_harm",
+                rationale="Safety-sensitive wording should stay on the deterministic fallback.",
+                transition_hint="Pause normal screening and ask a direct safety question.",
+                user_style=UserStyleProfile(),
+                disclosure=DisclosureMetrics(),
+            ),
+        ),
+    )
+
+    fallback = "I want to check carefully because your safety matters. Have thoughts of hurting yourself or not wanting to be alive shown up at all?"
+    reply, source = responder.compose_reply(session, snapshot, "phq_q9_self_harm", fallback)
+
+    assert reply == fallback
+    assert source == "template"
+
+
 def test_huggingface_responder_rejects_meta_note_leak():
     class _Response:
         def __init__(self, content):

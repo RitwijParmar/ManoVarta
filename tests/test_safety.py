@@ -24,6 +24,23 @@ def test_urgent_safety_handles_direct_self_harm_language():
     assert flag.needs_human_review is True
 
 
+def test_urgent_safety_handles_passive_not_waking_up_paraphrase():
+    turns = [
+        Turn(
+            turn_id=1,
+            speaker="user",
+            text="I have been feeling low and sometimes I think it might be easier if I do not wake up.",
+            language_tag="en",
+        ),
+    ]
+
+    flag = SafetyMonitor().assess(turns)
+
+    assert flag.level == "urgent"
+    assert flag.needs_human_review is True
+    assert any("wake up" in cue.lower() for cue in flag.cues)
+
+
 def test_review_safety_handles_burden_language():
     turns = [
         Turn(

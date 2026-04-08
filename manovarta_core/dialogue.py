@@ -40,9 +40,9 @@ CLOSING_MESSAGES = {
 }
 
 RAPPORT_PROMPTS = {
-    "en": "Thanks for sharing that. Has it been feeling more like low mood, constant worry, poor sleep, or a mix of those?",
-    "hi": "यह साझा करने के लिए शुक्रिया। क्या यह ज़्यादा उदासी, लगातार चिंता, नींद की दिक्कत, या इनका मिश्रण लग रहा है?",
-    "hinglish": "Yeh share karne ke liye thanks. Kya yeh zyada low mood, constant worry, sleep issue, ya in sab ka mix lag raha hai?",
+    "en": "Has it been feeling more like low mood, constant worry, poor sleep, or a mix of those?",
+    "hi": "क्या यह ज़्यादा उदासी, लगातार चिंता, नींद की दिक्कत, या इनका मिश्रण लग रहा है?",
+    "hinglish": "Kya yeh zyada low mood, constant worry, sleep issue, ya in sab ka mix lag raha hai?",
 }
 
 REFLECTION_PREFIXES = {
@@ -1162,10 +1162,22 @@ class DialoguePlanner:
         prefix = REFLECTION_PREFIXES[language][plan.user_style.empathy_level]
         suffix = self._style_suffix(language, plan)
         parts = [prefix]
-        if plan.continuity_note:
-            parts.append(plan.continuity_note)
-        if plan.reflective_anchor:
-            parts.append(plan.reflective_anchor)
+        support_line = ""
+        continuity_ready = bool(
+            plan.continuity_note
+            and plan.user_turns >= 2
+            and plan.stage != "rapport"
+            and plan.target_topic not in {"rapport", "safety"}
+            and plan.current_topic == plan.target_topic
+        )
+        if continuity_ready and plan.user_style.steering_preference != "guided":
+            support_line = plan.continuity_note
+        elif plan.reflective_anchor and plan.stage != "rapport":
+            support_line = plan.reflective_anchor
+        elif continuity_ready:
+            support_line = plan.continuity_note
+        if support_line:
+            parts.append(support_line)
         parts.append(base_prompt)
         if suffix:
             parts.append(suffix)
@@ -1248,6 +1260,8 @@ class DialoguePlanner:
         return None
 
     def _style_suffix(self, language: str, plan: DialoguePlan) -> str:
+        if plan.stage == "rapport":
+            return ""
         if plan.next_action == "risk_check" or plan.target_topic == "safety":
             return SAFETY_SHORT_ANSWER_SUFFIXES[language]
         if plan.fatigue == "high":

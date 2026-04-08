@@ -265,6 +265,43 @@ def test_recent_checkins_feed_continuity_note_into_dialogue_plan():
     assert dialogue["continuity_note"]
 
 
+def test_hindi_first_reply_does_not_surface_continuity_note_during_rapport():
+    start = client.post(
+        "/chat/sessions",
+        json={
+            "language": "hi",
+            "profile": {
+                "recent_checkins": [
+                    {"topic": "sleep", "language": "hi", "safety": "none", "completion": 0.5, "summary": "Neend par baat hui thi."}
+                ]
+            },
+        },
+    )
+    session_id = start.json()["session_id"]
+
+    turn = client.post(
+        f"/chat/sessions/{session_id}/turns",
+        json={"text": "पिछले कुछ दिनों से रात में नींद टूट जाती है और सुबह ध्यान नहीं लगता।"},
+    )
+
+    assert turn.status_code == 200
+    reply = turn.json()["assistant_turn"]["text"]
+    assert "हाल की नींद बातचीत" not in reply
+    assert "क्या यह ज़्यादा उदासी" in reply
+
+
+def test_safety_sensitive_first_disclosure_forces_live_analysis():
+    session = ChatSession(
+        session_id="safety-force-llm",
+        language="en",
+        turns=[
+            Turn(turn_id=1, speaker="user", text="I think it might be easier if I do not wake up.", language_tag="en"),
+        ],
+    )
+
+    assert api_module._should_use_live_llm(session) is True
+
+
 def test_nudge_metadata_updates_feedback_loop_and_recommended_nudges():
     start = client.post("/chat/sessions", json={"language": "en"})
     session_id = start.json()["session_id"]
