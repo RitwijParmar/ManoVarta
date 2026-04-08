@@ -21,13 +21,17 @@ def test_root_serves_browser_demo():
     assert "ManoVarta | Multilingual mental health check-in" in response.text
     assert "Begin private check-in" in response.text
     assert "Start talking" in response.text
+    assert 'id="profileSheet"' in response.text
+    assert 'id="composerToggle"' in response.text
     assert "Presenter tools" not in response.text
+    assert 'id="backstagePanel"' not in response.text
 
 
 def test_review_route_serves_hidden_presenter_surface():
     response = client.get("/review")
 
     assert response.status_code == 200
+    assert 'id="phqTotal"' in response.text
     assert "Presenter tools" in response.text
     assert "Hidden details for demos, evaluation, and care-team review" in response.text
 

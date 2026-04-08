@@ -1697,9 +1697,48 @@ function runtimeToDetail(payload) {
   return `${providerLabel} · chat ${payload.chat_model} · extraction ${payload.extraction_model} · ${safetyMode} · ${voiceMode}`;
 }
 
+function hasReviewDetails() {
+  return Boolean(
+    summaryText &&
+    phqTotal &&
+    gadTotal &&
+    safetyLevel &&
+    snapshotMode &&
+    plannerStage &&
+    plannerAction &&
+    plannerTopic &&
+    plannerStyle &&
+    plannerTrend &&
+    plannerEfficiency &&
+    plannerHeldBack &&
+    plannerTransition &&
+    topicMap &&
+    unresolvedCount &&
+    unresolvedList &&
+    reviewCount &&
+    reviewList &&
+    itemTableBody &&
+    evidenceList &&
+    personalizationBlend &&
+    personalizationPacing &&
+    personalizationSummary
+  );
+}
+
+function setServiceHealthState(status) {
+  if (!serviceHealth) {
+    return;
+  }
+  const ready = status === "ok";
+  serviceHealth.textContent = ready ? "Ready" : "Waking up";
+  serviceHealth.className = `service-health ${ready ? "good" : "warn"}`;
+}
+
 function renderRuntime(payload) {
   state.runtime = payload;
-  runtimeInfo.textContent = runtimeToText(payload);
+  if (runtimeInfo) {
+    runtimeInfo.textContent = runtimeToText(payload);
+  }
   if (runtimeDetail) {
     runtimeDetail.textContent = runtimeToDetail(payload);
   }
@@ -1795,10 +1834,7 @@ async function fetchBootstrap() {
     }
     const payload = await response.json();
     renderRuntime(payload.runtime);
-    serviceHealth.textContent = payload.health.status === "ok"
-      ? "Ready"
-      : "Waking up";
-    serviceHealth.className = `service-health ${payload.health.status === "ok" ? "good" : "warn"}`;
+    setServiceHealthState(payload.health.status);
     state.profiles = payload.profiles || [];
     renderProfiles(state.profiles);
     renderApiLinks(payload.links || []);
@@ -1816,10 +1852,7 @@ async function fetchBootstrap() {
   const healthPayload = await healthResponse.json();
   const profilesPayload = await profilesResponse.json();
   renderRuntime(runtimePayload);
-  serviceHealth.textContent = healthPayload.status === "ok"
-    ? "Ready"
-    : "Waking up";
-  serviceHealth.className = `service-health ${healthPayload.status === "ok" ? "good" : "warn"}`;
+  setServiceHealthState(healthPayload.status);
   state.profiles = (profilesPayload || []).map((profile) => {
     const background = profile.background_profile || {};
     const symptoms = profile.symptom_profile || {};
@@ -2374,6 +2407,9 @@ function renderNudges(language, dialogue) {
 }
 
 function renderTopicMap(topicStates) {
+  if (!topicMap) {
+    return;
+  }
   if (!topicStates.length) {
     topicMap.innerHTML = '<span class="topic-pill">No topic map yet.</span>';
     return;
@@ -2417,16 +2453,7 @@ function renderSnapshot(payload) {
   };
   state.latestDialogue = dialogue;
 
-  phqTotal.textContent = snapshot.totals.PHQ9 ?? 0;
-  gadTotal.textContent = snapshot.totals.GAD7 ?? 0;
-  safetyLevel.textContent = snapshot.safety.level;
-  safetyLevel.className = `metric-value small ${snapshot.safety.level}`;
-  snapshotMode.textContent = humanizeToken(snapshot.mode);
-  if (detailModeLabel) {
-    detailModeLabel.textContent = humanizeToken(snapshot.mode);
-  }
   setSnapshotLiveState(true);
-  summaryText.textContent = summary;
   patientSummary.textContent = buildPatientSummary(dialogue, snapshot.safety, snapshot.language);
   whyThisQuestion.textContent = buildWhyThisQuestion(dialogue, snapshot.language);
   safetyNarrative.textContent = buildSafetyNarrative(snapshot.safety, snapshot.language);
@@ -2438,16 +2465,6 @@ function renderSnapshot(payload) {
   coverageText.textContent = `${coverage.touched_items}/${coverage.total_items} explored`;
   progressMeterFill.style.width = `${Math.max(completion, coverage.touched_items ? 8 : 0)}%`;
   progressMeterLabel.textContent = buildProgressLabel(coverage);
-
-  plannerStage.textContent = dialogue.stage;
-  plannerStage.className = `chip soft stage-${dialogue.stage}`;
-  plannerAction.textContent = humanizeToken(dialogue.next_action);
-  plannerTopic.textContent = humanizeToken(dialogue.target_topic);
-  plannerStyle.textContent = `${dialogue.user_style.verbosity} · ${dialogue.user_style.openness}`;
-  plannerTrend.textContent = humanizeToken(dialogue.user_style.distress_trend);
-  plannerEfficiency.textContent = `${Number(dialogue.disclosure.items_per_user_turn || 0).toFixed(2)} items/turn`;
-  plannerHeldBack.textContent = dialogue.held_back_items.length ? dialogue.held_back_items.join(", ") : "none";
-  plannerTransition.textContent = `${dialogue.rationale || "Planner rationale unavailable."} ${dialogue.transition_hint || ""}`.trim();
   sessionGoal.textContent = buildSessionGoal(dialogue, snapshot.safety);
   sessionMeta.classList.remove("empty");
   sessionMeta.textContent = buildSessionMetaLine(dialogue, coverage, snapshot.safety, snapshot.language);
@@ -2479,6 +2496,31 @@ function renderSnapshot(payload) {
   }
   renderNudges(snapshot.language, dialogue);
   renderNextSteps(dialogue.target_topic, snapshot.language);
+  if (!hasReviewDetails()) {
+    return;
+  }
+
+  phqTotal.textContent = snapshot.totals.PHQ9 ?? 0;
+  gadTotal.textContent = snapshot.totals.GAD7 ?? 0;
+  safetyLevel.textContent = snapshot.safety.level;
+  safetyLevel.className = `metric-value small ${snapshot.safety.level}`;
+  snapshotMode.textContent = humanizeToken(snapshot.mode);
+  if (detailModeLabel) {
+    detailModeLabel.textContent = humanizeToken(snapshot.mode);
+  }
+  summaryText.textContent = summary;
+  plannerStage.textContent = dialogue.stage;
+  plannerStage.className = `chip soft stage-${dialogue.stage}`;
+  plannerAction.textContent = humanizeToken(dialogue.next_action);
+  plannerTopic.textContent = humanizeToken(dialogue.target_topic);
+  plannerStyle.textContent = `${dialogue.user_style.verbosity} · ${dialogue.user_style.openness}`;
+  plannerTrend.textContent = humanizeToken(dialogue.user_style.distress_trend);
+  plannerEfficiency.textContent = `${Number(dialogue.disclosure.items_per_user_turn || 0).toFixed(2)} items/turn`;
+  plannerHeldBack.textContent = dialogue.held_back_items.length ? dialogue.held_back_items.join(", ") : "none";
+  plannerTransition.textContent = `${dialogue.rationale || "Planner rationale unavailable."} ${dialogue.transition_hint || ""}`.trim();
+  personalizationBlend.textContent = `${dialogue.user_style.code_mix} code-mix`;
+  personalizationPacing.textContent = buildResponsePosture(dialogue.user_style);
+  personalizationSummary.textContent = buildPersonalizationSummary(dialogue, snapshot.language);
   renderTopicMap(coverage.topic_states || []);
 
   unresolvedCount.textContent = `${coverage.next_items.length} queued`;
@@ -2548,31 +2590,9 @@ function resetInsightPanel() {
   const hindi = state.language === "hi";
   state.latestDialogue = null;
   setSnapshotLiveState(false);
-  phqTotal.textContent = "0";
-  gadTotal.textContent = "0";
-  safetyLevel.textContent = "none";
-  safetyLevel.className = "metric-value small none";
-  snapshotMode.textContent = "Heuristic";
-  if (detailModeLabel) {
-    detailModeLabel.textContent = "Guided conversation";
-  }
   coverageText.textContent = "Just getting started";
   progressMeterFill.style.width = "0%";
   progressMeterLabel.textContent = "Nothing explored yet";
-  plannerStage.textContent = "rapport";
-  plannerStage.className = "chip soft";
-  plannerAction.textContent = "Open Question";
-  plannerTopic.textContent = "Mood";
-  plannerStyle.textContent = "balanced · cautious";
-  plannerTrend.textContent = "Unclear";
-  plannerEfficiency.textContent = "0.00 items/turn";
-  plannerHeldBack.textContent = "none";
-  plannerTransition.textContent = hindi
-    ? "बातचीत शुरू होने पर यहाँ दिखेगा कि अगला विषय कैसे चुना जा रहा है।"
-    : "Start a conversation to see how the next topic is selected.";
-  summaryText.textContent = hindi
-    ? "बातचीत शुरू होने पर यहाँ पहला सार दिखाई देगा।"
-    : "Start a conversation to generate the first summary.";
   patientSummary.textContent = hindi
     ? "बातचीत शुरू होने पर यहाँ एक सरल सार दिखाई देगा।"
     : "Start a conversation to see a gentle plain-language summary here.";
@@ -2585,27 +2605,11 @@ function resetInsightPanel() {
   sessionGoal.textContent = hindi
     ? "पहले सहजता बनाइए, फिर मुख्य चिंता को साफ़ समझिए।"
     : "Build comfort first, then understand the main concern clearly.";
-  topicMap.innerHTML = '<span class="topic-pill">No topic map yet.</span>';
-  unresolvedCount.textContent = "0 queued";
-  reviewCount.textContent = "0 flagged";
-    unresolvedList.innerHTML = hindi ? "<li>अभी कोई अगला लंबित सवाल नहीं है।</li>" : "<li>No follow-up queue yet.</li>";
-    reviewList.innerHTML = hindi ? "<li>अभी कोई समीक्षा संकेत नहीं है।</li>" : "<li>No review flags right now.</li>";
-  itemTableBody.innerHTML = hindi
-      ? '<tr><td colspan="4" class="empty-cell">अभी किसी बिंदु का अंकन उपलब्ध नहीं है।</td></tr>'
-    : '<tr><td colspan="4" class="empty-cell">No item scores yet.</td></tr>';
-  evidenceList.innerHTML = hindi
-      ? '<li class="empty-cell">अभी कोई प्रमाण अंश उपलब्ध नहीं है।</li>'
-    : '<li class="empty-cell">No evidence spans yet.</li>';
   bonusSignals.innerHTML = `
     <span class="signal-pill">Gentle pacing</span>
     <span class="signal-pill">Voice available</span>
     <span class="signal-pill">Safety checks on</span>
   `;
-  personalizationBlend.textContent = "low code-mix";
-  personalizationPacing.textContent = "Balanced guided pacing";
-  personalizationSummary.textContent = hindi
-      ? "सत्र शुरू होने पर यहाँ दिखेगा कि मनोवार्ता अपनी गति, मार्गदर्शन-शैली और अगली पूछताछ का दबाव कैसे बदलती है।"
-    : "Start a session to see how ManoVarta adapts its pacing, steering style, and follow-up burden.";
   if (reflectionPrompt) {
     reflectionPrompt.textContent = hindi
       ? "जब बातचीत थोड़ा स्थिर होगी, मनोवार्ता यहाँ एक सरल पुनरावलोकन छोड़ेगी ताकि आपको पता रहे कि वह क्या संभाल रही है।"
@@ -2633,6 +2637,46 @@ function resetInsightPanel() {
   }
   if (nudgeQuestTrack) {
     nudgeQuestTrack.innerHTML = "";
+  }
+  if (hasReviewDetails()) {
+    phqTotal.textContent = "0";
+    gadTotal.textContent = "0";
+    safetyLevel.textContent = "none";
+    safetyLevel.className = "metric-value small none";
+    snapshotMode.textContent = "Heuristic";
+    if (detailModeLabel) {
+      detailModeLabel.textContent = "Guided conversation";
+    }
+    plannerStage.textContent = "rapport";
+    plannerStage.className = "chip soft";
+    plannerAction.textContent = "Open Question";
+    plannerTopic.textContent = "Mood";
+    plannerStyle.textContent = "balanced · cautious";
+    plannerTrend.textContent = "Unclear";
+    plannerEfficiency.textContent = "0.00 items/turn";
+    plannerHeldBack.textContent = "none";
+    plannerTransition.textContent = hindi
+      ? "बातचीत शुरू होने पर यहाँ दिखेगा कि अगला विषय कैसे चुना जा रहा है।"
+      : "Start a conversation to see how the next topic is selected.";
+    summaryText.textContent = hindi
+      ? "बातचीत शुरू होने पर यहाँ पहला सार दिखाई देगा।"
+      : "Start a conversation to generate the first summary.";
+    topicMap.innerHTML = '<span class="topic-pill">No topic map yet.</span>';
+    unresolvedCount.textContent = "0 queued";
+    reviewCount.textContent = "0 flagged";
+    unresolvedList.innerHTML = hindi ? "<li>अभी कोई अगला लंबित सवाल नहीं है।</li>" : "<li>No follow-up queue yet.</li>";
+    reviewList.innerHTML = hindi ? "<li>अभी कोई समीक्षा संकेत नहीं है।</li>" : "<li>No review flags right now.</li>";
+    itemTableBody.innerHTML = hindi
+      ? '<tr><td colspan="4" class="empty-cell">अभी किसी बिंदु का अंकन उपलब्ध नहीं है।</td></tr>'
+      : '<tr><td colspan="4" class="empty-cell">No item scores yet.</td></tr>';
+    evidenceList.innerHTML = hindi
+      ? '<li class="empty-cell">अभी कोई प्रमाण अंश उपलब्ध नहीं है।</li>'
+      : '<li class="empty-cell">No evidence spans yet.</li>';
+    personalizationBlend.textContent = "low code-mix";
+    personalizationPacing.textContent = "Balanced guided pacing";
+    personalizationSummary.textContent = hindi
+      ? "सत्र शुरू होने पर यहाँ दिखेगा कि मनोवार्ता अपनी गति, मार्गदर्शन-शैली और अगली पूछताछ का दबाव कैसे बदलती है।"
+      : "Start a session to see how ManoVarta adapts its pacing, steering style, and follow-up burden.";
   }
   renderNextSteps("default", state.language);
   renderNudges(state.language, {
@@ -3435,6 +3479,8 @@ fetchBootstrap()
   })
   .catch((error) => {
     console.error(error);
-    runtimeInfo.textContent = "Runtime config unavailable.";
+    if (runtimeInfo) {
+      runtimeInfo.textContent = "Runtime config unavailable.";
+    }
     setStatusBanner("Backend bootstrap failed. Verify API service.", "error");
   });
