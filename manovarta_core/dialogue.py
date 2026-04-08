@@ -540,7 +540,7 @@ ITEM_SIGNAL_MARKERS: Dict[str, Tuple[str, ...]] = {
     "phq_q7_concentration": ("focus", "concentrat", "attention", "cannot focus", "can't focus", "harder to focus", "hard to focus", "taking longer to get started", "takes longer to get started", "mind taking longer", "mind feels slow", "brain fog", "ध्यान", "focus nahi", "ध्यान नहीं टिक", "mind blanks", "screen", "start hone mein time lagta", "start hone me time lagta", "mind ko start hone mein time lagta", "mind ko start hone me time lagta", "दिमाग धीमा"),
     "gad_q2_control_worry": ("worry", "loop", "looping", "replay", "mind won't stop", "mind wont stop", "चिंता", "सोच बंद"),
     "gad_q3_excessive_worry": ("future", "rent", "family", "money", "what if", "awful", "सब कुछ", "हर बात"),
-    "gad_q4_trouble_relaxing": ("switch off", "settle down", "quiet your thoughts", "तनाव", "शांत", "relax", "off karna", "busy mind", "tense body", "body tense", "tense lagti"),
+    "gad_q4_trouble_relaxing": ("switch off", "settle down", "quiet your thoughts", "तनाव", "शांत", "relax", "off karna", "busy mind", "tense body", "body tense", "tense in my body", "body stays tense", "stay tense in my body", "tense lagti"),
     "gad_q5_restlessness": ("restless", "restlessness", "sit still", "pacing", "बेचैनी", "chain se baith", "move around"),
 }
 
@@ -1248,6 +1248,12 @@ class DialoguePlanner:
                 return "phq_q7_concentration"
             if target_topic == "energy" and available("phq_q4_fatigue"):
                 return "phq_q4_fatigue"
+
+        if last_item == "gad_q2_control_worry" and target_topic == "anxiety":
+            if "gad_q4_trouble_relaxing" in recent_signal_items and available("gad_q4_trouble_relaxing"):
+                return "gad_q4_trouble_relaxing"
+            if "gad_q5_restlessness" in recent_signal_items and available("gad_q5_restlessness"):
+                return "gad_q5_restlessness"
 
         if last_item == "gad_q5_restlessness":
             if self._has_timing_or_frequency_answer(latest_user_text):

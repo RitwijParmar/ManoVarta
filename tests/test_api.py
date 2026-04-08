@@ -587,6 +587,29 @@ def test_english_low_energy_followup_stays_on_focus_or_energy_live_flow():
     assert "mindfulness" not in reply
 
 
+def test_english_anxiety_body_tension_pivots_to_relaxation_live_flow():
+    start = client.post("/chat/sessions", json={"language": "en"})
+    session_id = start.json()["session_id"]
+
+    first_turn = client.post(
+        f"/chat/sessions/{session_id}/turns",
+        json={"text": "My mind keeps worrying even when nothing is wrong and I cannot switch it off at night."},
+    )
+    assert first_turn.status_code == 200
+
+    second_turn = client.post(
+        f"/chat/sessions/{session_id}/turns",
+        json={"text": "It loops for hours and I stay tense in my body too."},
+    )
+
+    assert second_turn.status_code == 200
+    reply = second_turn.json()["assistant_turn"]["text"].lower()
+    dialogue = second_turn.json()["snapshot"]["coverage"]["dialogue"]
+    assert dialogue["target_item"] == "gad_q4_trouble_relaxing"
+    assert "can you pull your mind away from it" not in reply
+    assert "relax your body" in reply or "quiet your thoughts" in reply or "tense body" in reply
+
+
 def test_hinglish_tense_body_followup_does_not_jump_to_generic_fear_item():
     start = client.post("/chat/sessions", json={"language": "hinglish"})
     session_id = start.json()["session_id"]

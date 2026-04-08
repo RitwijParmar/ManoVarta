@@ -462,3 +462,34 @@ def test_hinglish_low_energy_slow_start_stays_on_focus_or_energy_branch():
     assert asked_item in {"phq_q7_concentration", "phq_q4_fatigue"}
     assert "worry start hoti hai" not in reply.lower()
     assert "loop hoti rehti hai" not in reply.lower()
+
+
+def test_anxiety_body_tension_signal_pivots_from_control_worry_to_relaxation():
+    planner = DialoguePlanner()
+    session = ChatSession(
+        session_id="anxiety-to-relaxation",
+        language="en",
+        turns=[
+            Turn(
+                turn_id=1,
+                speaker="assistant",
+                text="When the worry starts, can you pull your mind away from it, or does it keep looping even when you try to stop it?",
+                language_tag="en",
+            ),
+            Turn(
+                turn_id=2,
+                speaker="user",
+                text="It loops for hours and I stay tense in my body too.",
+                language_tag="en",
+            ),
+        ],
+        asked_items=["gad_q2_control_worry"],
+    )
+
+    snapshot = ConversationScorer().analyze(session.turns, "en", SafetyFlag(level="none"))
+    coverage = planner.build_plan(snapshot, session)
+    reply, asked_item = planner.next_reply(snapshot, session)
+
+    assert coverage.dialogue.target_item == "gad_q4_trouble_relaxing"
+    assert asked_item == "gad_q4_trouble_relaxing"
+    assert "quiet your thoughts" in reply.lower() or "relax your body" in reply.lower()
