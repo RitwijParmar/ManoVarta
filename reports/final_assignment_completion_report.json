@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-05T04:12:58Z",
+  "generated_at": "2026-04-08T08:38:35Z",
   "source_reports": {
     "hybrid_runtime_validation": "reports/live_runtime_eval_20260404.json",
     "best_current_system": "reports/best_current_system_report.json",
@@ -23,7 +23,7 @@
       "browser_text_to_speech": true,
       "cloud_speech_to_text": true,
       "cloud_text_to_speech": true,
-      "transcript_before_submit": true,
+      "transcript_before_submit": false,
       "note": "Voice now supports backend Google Cloud STT/TTS for English, Hindi, and Hinglish-oriented use, with browser speech kept as a fallback wrapper."
     },
     "patient_profile_onboarding": {
@@ -65,7 +65,7 @@
       ]
     },
     "deployment": {
-      "status": "complete",
+      "status": "partial",
       "assets": {
         "dockerfile": "Dockerfile",
         "docker_compose_demo": "docker-compose.demo.yml",
@@ -76,7 +76,7 @@
         "dockerfile": true,
         "docker_compose_demo": true,
         "render_blueprint": true,
-        "shipped_bundle": true
+        "shipped_bundle": false
       },
       "public_runtime_url": "https://manovarta-runtime-122722888597.us-east4.run.app",
       "live_runtime": {
@@ -92,6 +92,7 @@
         "local_safety_checkpoint_enabled": true,
         "local_safety_checkpoint_path": "/tmp/manovarta_local_safety_checkpoint/59e9264e860d",
         "remote_safety_fallback_enabled": false,
+        "live_chat_llm_analysis_enabled": false,
         "cloud_voice_enabled": true,
         "speech_to_text_enabled": true,
         "text_to_speech_enabled": true
@@ -104,7 +105,7 @@
         "linguistic_personalization"
       ],
       "missing": [],
-      "note": "The product now combines adaptive nudges for richer narrative disclosure with backend personalization based on pacing, openness, and code-mix."
+      "note": "The product now combines adaptive nudges with backend feedback tracking, continuity-aware context, and steering that adapts to pacing, openness, burden, and code-mix."
     }
   },
   "evaluation_validation": {
@@ -122,12 +123,31 @@
       "source": "live runtime endpoint evaluation"
     },
     "latency": {
-      "cold_start_ms": 937.69,
-      "warm_avg_ms": 29.55,
-      "warm_median_ms": 32.73,
-      "warm_p95_ms": 32.89,
+      "cold_start_ms": 7.0,
+      "warm_avg_ms": 8.77,
+      "warm_median_ms": 9.73,
+      "warm_p95_ms": 10.34,
       "samples": 6,
       "note": "Measured through the FastAPI chat endpoint with Hugging Face network calls disabled so the number reflects deterministic local screening latency rather than hosted-model round trips."
+    },
+    "bonus_validation": {
+      "nudge_feedback_loop_present": true,
+      "nudge_queue_after_brief_turn": [
+        "anxiety",
+        "example",
+        "impact"
+      ],
+      "nudged_touched_delta": 3,
+      "nudge_words_added": 17,
+      "nudge_evidence_gain": 3,
+      "nudge_resolved_gain": 0,
+      "nudge_outcome": "helpful",
+      "style_adaptation_checks": {
+        "brief_guarded_guided": true,
+        "hindi_continuity_note": true,
+        "hinglish_code_mix_high": true
+      },
+      "note": "Validation uses local API smoke sessions plus stored nudge events to confirm that nudges feed back into dialogue state, increase narrative detail, and that continuity and code-mix cues reach the planner for English, Devanagari Hindi, and Hinglish turns."
     },
     "discourse_effectiveness": {
       "coverage_completeness": 0.783,
@@ -141,14 +161,14 @@
   "shipped_baseline": {
     "tag": "shipped-baseline-2026-04-04",
     "default_runtime": {
-      "provider": "huggingface",
-      "chat_model": "Qwen/Qwen2.5-7B-Instruct",
-      "extraction_model": "CohereLabs/aya-expanse-32b",
-      "local_safety_checkpoint": "outputs/local_safety_boost/safety-indicbert-best",
+      "provider": "local",
+      "chat_model": "/models/qwen2.5-0.5b-instruct",
+      "extraction_model": "/models/qwen2.5-0.5b-instruct",
+      "local_safety_checkpoint": "/tmp/manovarta_local_safety_checkpoint/59e9264e860d",
       "hybrid_safety_enabled": true,
       "rule_safety_monitor_enabled": true,
       "semantic_safety_enabled": false,
-      "decision": "Use the Aya extractor with the promoted local safety checkpoint and rule monitor as the default runtime."
+      "decision": "Use the self-hosted local runtime with the promoted local safety checkpoint and rule monitor as the default deployment path."
     },
     "bundle": "artifacts/manovarta_shipped_baseline_20260404.zip"
   },
