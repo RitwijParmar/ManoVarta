@@ -677,3 +677,54 @@ def test_huggingface_responder_prefers_template_for_local_hindi_reply():
 
     assert reply == fallback
     assert source == "template"
+
+
+def test_huggingface_responder_prefers_template_for_local_english_screening_turn():
+    class _Response:
+        def __init__(self, content):
+            self.choices = [type("Choice", (), {"message": type("Message", (), {"content": content})()})()]
+
+    class _FakeClient:
+        def chat_completion(self, *, messages, temperature, max_tokens):
+            return _Response("It sounds like you're experiencing a lot of stress. Would you like some techniques that might help?")
+
+    responder = HuggingFaceResponder(_local_config())
+    responder._client = _FakeClient()
+    session = ChatSession(
+        session_id="local-english-screening-fallback",
+        language="en",
+        turns=[
+            Turn(turn_id=1, speaker="assistant", text="When you try to work or study, is it more that your attention slips away, or that you keep coming back to the same line and it still does not stick?", language_tag="en"),
+            Turn(turn_id=2, speaker="user", text="It feels like low energy plus my mind taking longer to get started.", language_tag="en"),
+        ],
+    )
+    snapshot = ScreeningSnapshot(
+        language="en",
+        items={},
+        evidence_spans=[],
+        unresolved_items=["phq_q4_fatigue"],
+        totals={"PHQ9": None, "GAD7": None},
+        safety=SafetyFlag(level="none"),
+        coverage=CoveragePlan(
+            total_items=16,
+            touched_items=1,
+            completion_ratio=0.1,
+            dialogue=DialoguePlan(
+                stage="clarification",
+                next_action="clarify",
+                current_topic="focus",
+                target_topic="energy",
+                target_item="phq_q4_fatigue",
+                rationale="Keep the follow-up anchored to energy and activation, not generic advice.",
+                transition_hint="Move from focus trouble into what the low-energy slowdown feels like.",
+                user_style=UserStyleProfile(),
+                disclosure=DisclosureMetrics(),
+            ),
+        ),
+    )
+
+    fallback = "It sounds like the day is taking more effort than it used to. Is it more like low energy through the day, changes in appetite, or both?"
+    reply, source = responder.compose_reply(session, snapshot, "phq_q4_fatigue", fallback)
+
+    assert reply == fallback
+    assert source == "template"

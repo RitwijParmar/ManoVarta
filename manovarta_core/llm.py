@@ -206,7 +206,7 @@ class HuggingFaceResponder:
             return fallback_text, "template"
         if snapshot.safety.level == "review" and snapshot.coverage.dialogue.target_topic == "safety":
             return fallback_text, "template"
-        if self._should_prefer_fallback(session, target_item):
+        if self._should_prefer_fallback(session, snapshot, target_item):
             return fallback_text, "template"
 
         try:
@@ -360,7 +360,15 @@ class HuggingFaceResponder:
         )
         return any(marker in normalized for marker in meta_markers)
 
-    def _should_prefer_fallback(self, session: ChatSession, target_item: Optional[str]) -> bool:
+    def _should_prefer_fallback(self, session: ChatSession, snapshot: ScreeningSnapshot, target_item: Optional[str]) -> bool:
+        dialogue = snapshot.coverage.dialogue
+        if (
+            self.config.model_provider == "local"
+            and target_item
+            and dialogue.stage in {"rapport", "clarification", "exploration"}
+            and dialogue.target_topic != "safety"
+        ):
+            return True
         if self.config.model_provider == "local" and session.language in {"hi", "hinglish"}:
             return True
         if not target_item or target_item not in ITEM_INDEX:

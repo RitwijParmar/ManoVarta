@@ -362,3 +362,103 @@ def test_hindi_heavy_burden_opening_prefers_mood_branch():
     assert coverage.dialogue.target_topic == "mood"
     assert asked_item in {"phq_q1_anhedonia", "phq_q2_low_mood"}
     assert "चिंता शुरू होती है" not in reply
+
+
+def test_english_low_energy_slow_start_stays_on_focus_or_energy_branch():
+    planner = DialoguePlanner()
+    session = ChatSession(
+        session_id="english-focus-energy-guard",
+        language="en",
+        turns=[
+            Turn(
+                turn_id=1,
+                speaker="user",
+                text="Lately I sleep late, feel heavy in the morning, and it is harder to focus at work.",
+                language_tag="en",
+            ),
+            Turn(
+                turn_id=2,
+                speaker="assistant",
+                text="When this hits, does it sit more like sadness or heaviness through the day, or does it come in waves around certain times?",
+                language_tag="en",
+            ),
+            Turn(
+                turn_id=3,
+                speaker="user",
+                text="Mostly in the mornings and after lunch. It happens around four days a week.",
+                language_tag="en",
+            ),
+            Turn(
+                turn_id=4,
+                speaker="assistant",
+                text="When you try to work or study, is it more that your attention slips away, or that you keep coming back to the same line and it still does not stick?",
+                language_tag="en",
+            ),
+            Turn(
+                turn_id=5,
+                speaker="user",
+                text="It feels like low energy plus my mind taking longer to get started.",
+                language_tag="en",
+            ),
+        ],
+        asked_items=["phq_q2_low_mood", "phq_q7_concentration"],
+    )
+
+    snapshot = ConversationScorer().analyze(session.turns, "en", SafetyFlag(level="none"))
+    coverage = planner.build_plan(snapshot, session)
+    reply, asked_item = planner.next_reply(snapshot, session)
+
+    assert coverage.dialogue.target_topic in {"focus", "energy"}
+    assert asked_item in {"phq_q7_concentration", "phq_q4_fatigue"}
+    assert "worry starts" not in reply.lower()
+    assert "looping even when you try to stop it" not in reply.lower()
+
+
+def test_hinglish_low_energy_slow_start_stays_on_focus_or_energy_branch():
+    planner = DialoguePlanner()
+    session = ChatSession(
+        session_id="hinglish-focus-energy-guard",
+        language="hinglish",
+        turns=[
+            Turn(
+                turn_id=1,
+                speaker="user",
+                text="Lately meri sleep late ho rahi hai, subah heavy feel hota hai, aur kaam par focus karna harder ho gaya hai.",
+                language_tag="hinglish",
+            ),
+            Turn(
+                turn_id=2,
+                speaker="assistant",
+                text="Jab yeh feel hota hai, kya yeh zyada poore din ki sadness ya heaviness jaisa rehta hai, ya kuch specific times par waves mein aata hai?",
+                language_tag="hinglish",
+            ),
+            Turn(
+                turn_id=3,
+                speaker="user",
+                text="Yeh mostly subah aur lunch ke baad zyada hota hai. Week mein around chaar din hota hai.",
+                language_tag="hinglish",
+            ),
+            Turn(
+                turn_id=4,
+                speaker="assistant",
+                text="Jab aap work ya study par baithte ho, kya zyada aisa hota hai ki attention baar baar slip ho jata hai, ya same line par wapas aate rehte ho lekin woh stick nahi karti?",
+                language_tag="hinglish",
+            ),
+            Turn(
+                turn_id=5,
+                speaker="user",
+                text="Lagta low energy bhi hai aur mind ko start hone mein time lagta hai.",
+                language_tag="hinglish",
+            ),
+        ],
+        asked_items=["phq_q2_low_mood", "phq_q7_concentration"],
+    )
+
+    snapshot = ConversationScorer().analyze(session.turns, "hinglish", SafetyFlag(level="none"))
+    coverage = planner.build_plan(snapshot, session)
+    reply, asked_item = planner.next_reply(snapshot, session)
+
+    assert coverage.dialogue.target_topic in {"focus", "energy"}
+    assert asked_item in {"phq_q7_concentration", "phq_q4_fatigue"}
+    assert "worry start hoti hai" not in reply.lower()
+    assert "loop hoti rehti hai" not in reply.lower()

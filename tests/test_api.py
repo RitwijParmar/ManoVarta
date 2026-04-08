@@ -463,6 +463,35 @@ def test_restlessness_followup_pivots_after_short_timing_answer():
     assert "sit still" in reply or "inner agitation" in reply or "pacing" in reply or "busy mind" in reply or "tense body" in reply
 
 
+def test_restlessness_frequency_answer_stays_on_restlessness_branch_before_worry_control():
+    start = client.post("/chat/sessions", json={"language": "en"})
+    session_id = start.json()["session_id"]
+
+    first_turn = client.post(
+        f"/chat/sessions/{session_id}/turns",
+        json={"text": "I have been feeling restless lately and it gets worse during the night."},
+    )
+    assert first_turn.status_code == 200
+
+    second_turn = client.post(
+        f"/chat/sessions/{session_id}/turns",
+        json={"text": "Mostly during the night."},
+    )
+    assert second_turn.status_code == 200
+
+    third_turn = client.post(
+        f"/chat/sessions/{session_id}/turns",
+        json={"text": "About four days a week."},
+    )
+
+    assert third_turn.status_code == 200
+    reply = third_turn.json()["assistant_turn"]["text"].lower()
+    dialogue = third_turn.json()["snapshot"]["coverage"]["dialogue"]
+    assert dialogue["target_item"] == "gad_q5_restlessness"
+    assert "can you pull your mind away from it" not in reply
+    assert "sit still" in reply or "inner agitation" in reply or "pacing" in reply
+
+
 def test_hindi_sleep_followup_acknowledges_timing_answer():
     start = client.post("/chat/sessions", json={"language": "hi"})
     session_id = start.json()["session_id"]
@@ -526,6 +555,38 @@ def test_hindi_mood_followup_pivots_to_focus_or_interest_not_anxiety():
     assert "चिंता शुरू" not in reply
 
 
+def test_english_low_energy_followup_stays_on_focus_or_energy_live_flow():
+    start = client.post("/chat/sessions", json={"language": "en"})
+    session_id = start.json()["session_id"]
+
+    first_turn = client.post(
+        f"/chat/sessions/{session_id}/turns",
+        json={"text": "Lately I sleep late, feel heavy in the morning, and it is harder to focus at work."},
+    )
+    assert first_turn.status_code == 200
+
+    second_turn = client.post(
+        f"/chat/sessions/{session_id}/turns",
+        json={"text": "Mostly in the mornings and after lunch. It happens around four days a week."},
+    )
+    assert second_turn.status_code == 200
+
+    third_turn = client.post(
+        f"/chat/sessions/{session_id}/turns",
+        json={"text": "It feels like low energy plus my mind taking longer to get started."},
+    )
+
+    assert third_turn.status_code == 200
+    reply = third_turn.json()["assistant_turn"]["text"].lower()
+    dialogue = third_turn.json()["snapshot"]["coverage"]["dialogue"]
+    assert dialogue["target_topic"] in {"focus", "energy"}
+    assert dialogue["target_item"] in {"phq_q7_concentration", "phq_q4_fatigue"}
+    assert "worry starts" not in reply
+    assert "looping even when you try to stop it" not in reply
+    assert "techniques" not in reply
+    assert "mindfulness" not in reply
+
+
 def test_hinglish_tense_body_followup_does_not_jump_to_generic_fear_item():
     start = client.post("/chat/sessions", json={"language": "hinglish"})
     session_id = start.json()["session_id"]
@@ -544,6 +605,36 @@ def test_hinglish_tense_body_followup_does_not_jump_to_generic_fear_item():
     assert second_turn.status_code == 200
     dialogue = second_turn.json()["snapshot"]["coverage"]["dialogue"]
     assert dialogue["target_item"] in {"gad_q4_trouble_relaxing", "phq_q3_sleep"}
+
+
+def test_hinglish_low_energy_followup_stays_on_focus_or_energy_live_flow():
+    start = client.post("/chat/sessions", json={"language": "hinglish"})
+    session_id = start.json()["session_id"]
+
+    first_turn = client.post(
+        f"/chat/sessions/{session_id}/turns",
+        json={"text": "Lately meri sleep late ho rahi hai, subah heavy feel hota hai, aur kaam par focus karna harder ho gaya hai."},
+    )
+    assert first_turn.status_code == 200
+
+    second_turn = client.post(
+        f"/chat/sessions/{session_id}/turns",
+        json={"text": "Yeh mostly subah aur lunch ke baad zyada hota hai. Week mein around chaar din hota hai."},
+    )
+    assert second_turn.status_code == 200
+
+    third_turn = client.post(
+        f"/chat/sessions/{session_id}/turns",
+        json={"text": "Lagta low energy bhi hai aur mind ko start hone mein time lagta hai."},
+    )
+
+    assert third_turn.status_code == 200
+    reply = third_turn.json()["assistant_turn"]["text"].lower()
+    dialogue = third_turn.json()["snapshot"]["coverage"]["dialogue"]
+    assert dialogue["target_topic"] in {"focus", "energy"}
+    assert dialogue["target_item"] in {"phq_q7_concentration", "phq_q4_fatigue"}
+    assert "worry start hoti hai" not in reply
+    assert "loop hoti rehti hai" not in reply
 
 
 def test_hinglish_recent_relaxation_branch_uses_fresh_followup_wording():
