@@ -161,4 +161,16 @@ def profile_summary(profile: object) -> str:
     context_note = getattr(profile, "context_note", None)
     if context_note:
         bits.append(f"context_note={context_note}")
+    recent_checkins = getattr(profile, "recent_checkins", None) or []
+    if recent_checkins:
+        compact = []
+        for entry in recent_checkins[:2]:
+            if not isinstance(entry, dict):
+                continue
+            topic = str(entry.get("topic") or "check_in")
+            language = str(entry.get("language") or "en").upper()
+            safety = str(entry.get("safety") or "none")
+            compact.append(f"{topic}/{language}/{safety}")
+        if compact:
+            bits.append(f"recent_checkins={'; '.join(compact)}")
     return ", ".join(bits) if bits else "No user profile context provided."
