@@ -308,17 +308,19 @@
             </div>
 
             <section class="nudge-panel">
-              <div class="section-head compact">
-                <div>
-                  <p class="eyebrow">Gentle nudges</p>
-                  <h3>Helpful prompts when words feel far away</h3>
-                </div>
-                <span class="chip bonus">Gamified nudges</span>
-              </div>
-              <p id="nudgeSubtitle" class="panel-subtitle">
-                Choose a prompt if you want help getting started or adding more detail.
-              </p>
-              <div id="nudgeDeck" class="nudge-deck"></div>
+              <details class="nudge-details">
+                <summary class="nudge-summary">
+                  <div>
+                    <p class="eyebrow">Optional prompt help</p>
+                    <h3>Need help phrasing it?</h3>
+                  </div>
+                  <span class="chip bonus">Optional</span>
+                </summary>
+                <p id="nudgeSubtitle" class="panel-subtitle">
+                  Open this only if you want help getting started or adding one clearer detail.
+                </p>
+                <div id="nudgeDeck" class="nudge-deck"></div>
+              </details>
             </section>
 
             <section class="composer-panel">
@@ -326,7 +328,7 @@
                 <div>
                   <p class="mini-label">Voice-first conversation</p>
                   <p id="composerHelper" class="summary-text">
-                    ManoVarta mirrors your pace and keeps the next question focused.
+                    ManoVarta adapts to how much detail you are giving and keeps the next question focused.
                   </p>
                 </div>
               </div>
@@ -540,7 +542,7 @@
                 </article>
               </div>
               <p id="personalizationSummary" class="summary-text">
-                Start a session to see how ManoVarta adapts to language style and disclosure pace.
+                Start a session to see how ManoVarta adapts pacing, steering style, and follow-up burden.
               </p>
             </article>
           </div>
