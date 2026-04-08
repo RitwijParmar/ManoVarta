@@ -19,6 +19,7 @@ from manovarta_core.scoring import ConversationScorer
 from manovarta_core.schemas import (
     ChatTurnRequest,
     ChatTurnResponse,
+    NudgeEvent,
     SessionExportResponse,
     SessionDetailResponse,
     StartSessionRequest,
@@ -180,13 +181,44 @@ def add_turn(session_id: str, payload: ChatTurnRequest) -> ChatTurnResponse:
     if session is None:
         raise HTTPException(status_code=404, detail="Session not found.")
 
-    store.add_turn(session_id, "user", payload.text, session.language)
+    prior_user_turns = sum(1 for turn in session.turns if turn.speaker == "user")
+    prior_use_llm = runtime_config.live_chat_llm_analysis_enabled and prior_user_turns >= runtime_config.live_llm_turn_threshold
+    previous_snapshot = engine.analyze(session.turns, session.language, use_llm=prior_use_llm)
+    user_notes = []
+    if payload.from_voice:
+        user_notes.append("source:voice")
+    if payload.nudge_id:
+        user_notes.append(f"nudge:{payload.nudge_id}")
+    user_turn = store.add_turn(
+        session_id,
+        "user",
+        payload.text,
+        session.language,
+        notes=" | ".join(user_notes) if user_notes else None,
+    )
     user_turns = sum(1 for turn in session.turns if turn.speaker == "user")
     use_llm = runtime_config.live_chat_llm_analysis_enabled and user_turns >= runtime_config.live_llm_turn_threshold
     snapshot = engine.analyze(session.turns, session.language, use_llm=use_llm)
+    if payload.nudge_id and payload.nudge_strategy:
+        evidence_gain = max(snapshot.coverage.touched_items - previous_snapshot.coverage.touched_items, 0)
+        resolved_gain = max(len(snapshot.coverage.resolved_items) - len(previous_snapshot.coverage.resolved_items), 0)
+        words_added = len(payload.text.split())
+        outcome = "helpful" if evidence_gain > 0 or resolved_gain > 0 or words_added >= 18 else "unhelpful"
+        session.nudge_events.append(
+            NudgeEvent(
+                nudge_id=payload.nudge_id,
+                strategy=payload.nudge_strategy,
+                title=payload.nudge_title,
+                turn_id=user_turn.turn_id,
+                words_added=words_added,
+                evidence_gain=evidence_gain,
+                resolved_gain=resolved_gain,
+                outcome=outcome,
+            )
+        )
     fallback_text, asked_item = planner.next_reply(snapshot, session)
     reply_text, source = responder.compose_reply(session, snapshot, asked_item, fallback_text)
-    if asked_item and asked_item not in session.asked_items:
+    if asked_item:
         session.asked_items.append(asked_item)
     assistant_turn = store.add_turn(
         session_id,
