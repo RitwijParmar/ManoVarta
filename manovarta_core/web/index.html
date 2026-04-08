@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#1a2830" />
+    <meta name="theme-color" content="#141b20" />
     <title>ManoVarta | Multilingual mental health check-in</title>
     <link rel="icon" href="/app-assets/favicon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="/app-assets/app.css" />
@@ -18,7 +18,7 @@
           <img class="brand-mark" src="/app-assets/brand-mark.svg" alt="ManoVarta" />
           <div class="brand-copy">
             <p class="eyebrow">ManoVarta</p>
-            <h1>A private check-in for sleep, stress, low mood, and worry.</h1>
+            <h1 id="brandTagline">A quieter way to understand sleep, stress, low mood, and worry.</h1>
           </div>
         </div>
 
@@ -37,8 +37,6 @@
               <span class="tab-script">हिंग्लिश</span>
             </button>
           </div>
-          <p id="serviceHealth" class="service-health">Checking service health...</p>
-          <button id="architectureButton" type="button" class="button ghost subtle">Trust & privacy</button>
           <a class="button emergency-link" href="https://988lifeline.org/" target="_blank" rel="noopener noreferrer">
             <span class="emergency-kicker">988</span>
             <span class="emergency-copy">Crisis support</span>
@@ -48,69 +46,19 @@
 
       <main class="product-grid">
         <aside class="sanctuary-column">
-          <section class="panel sanctuary-card">
-            <div class="section-head compact">
-              <div>
-                <p class="eyebrow">Session anchor</p>
-                <h3>Quiet themes ManoVarta keeps in view</h3>
-              </div>
-              <span class="chip soft">Private</span>
-            </div>
-
-            <div class="sanctuary-status">
-              <article class="status-card">
-                <p class="mini-label">Readiness</p>
-                <p id="runtimeInfo" class="summary-text">Loading readiness status...</p>
-              </article>
-              <div id="statusBanner" class="status-banner info">
-                ManoVarta is ready. Start whenever you feel comfortable.
-              </div>
-            </div>
-
-            <div class="focus-tone-grid">
-              <article class="tone-card">
-                <span class="tone-icon">S</span>
-                <div>
-                  <p class="mini-label">Sleep</p>
-                  <p class="summary-text">नींद, restless nights, waking, oversleeping</p>
-                </div>
-              </article>
-              <article class="tone-card">
-                <span class="tone-icon">M</span>
-                <div>
-                  <p class="mini-label">Mood</p>
-                  <p class="summary-text">heaviness, numbness, guilt, low energy</p>
-                </div>
-              </article>
-              <article class="tone-card">
-                <span class="tone-icon">W</span>
-                <div>
-                  <p class="mini-label">Worry</p>
-                  <p class="summary-text">चिंता, overthinking, tension, not switching off</p>
-                </div>
-              </article>
-            </div>
-
-            <div class="trust-row">
-              <span class="trust-pill">No rigid form</span>
-              <span class="trust-pill">Voice or text</span>
-              <span class="trust-pill">Quiet safety checks</span>
-            </div>
-          </section>
-
           <section class="panel ritual-card">
             <div class="section-head compact">
               <div>
-                <p class="eyebrow">Care rhythm</p>
-                <h3>Your recent check-ins</h3>
+                <p class="eyebrow">Return gently</p>
+                <h3>Your recent rhythm</h3>
               </div>
-              <span class="chip soft">Saved on this device</span>
+              <span class="chip soft">On this device</span>
             </div>
 
             <div class="ritual-stats">
               <article class="ritual-stat">
                 <strong id="ritualCount">0</strong>
-                <span>saved reflections</span>
+                <span>saved check-ins</span>
               </article>
               <article class="ritual-stat">
                 <strong id="ritualStreak">0</strong>
@@ -118,8 +66,16 @@
               </article>
             </div>
 
+            <article class="ritual-spotlight">
+              <p class="mini-label">Last time</p>
+              <p id="ritualTheme" class="ritual-theme">No pattern yet.</p>
+              <p id="ritualPattern" class="summary-text">
+                After your first conversation, ManoVarta will quietly remember the tone and timing that felt most relevant.
+              </p>
+            </article>
+
             <p id="ritualCopy" class="summary-text">
-              After your first conversation, ManoVarta will keep a lightweight private memory here so the app feels easier to return to.
+              After your first conversation, ManoVarta will keep a lightweight private memory here so returning feels gentler, not repetitive.
             </p>
 
             <div id="historyList" class="history-list">
@@ -128,21 +84,27 @@
                 <p>Start one conversation and your recent reflections will appear here.</p>
               </article>
             </div>
+
+            <button id="ritualRestartButton" type="button" class="button secondary ritual-restart">
+              Start from what mattered last time
+            </button>
           </section>
 
-          <section class="panel comfort-card">
+          <section class="panel comfort-card care-plan-card">
             <div class="section-head compact">
               <div>
-                <p class="eyebrow">Comfort first</p>
-                <h3>This should feel like a private companion, not a dashboard.</h3>
+                <p class="eyebrow">Tonight’s next step</p>
+                <h3>A small plan, not just a score</h3>
               </div>
             </div>
-            <p class="summary-text">
-              If something feels too sensitive, a short answer is enough. ManoVarta can work with fragments, pauses, and partial explanations.
+            <p id="nextStepTitle" class="next-step-title">A useful next step will appear here.</p>
+            <p id="nextStepText" class="summary-text">
+              Once the conversation has enough signal, ManoVarta will suggest one concrete thing that fits the main pattern it is hearing.
             </p>
-            <p class="quiet-note">
-              If you are in immediate danger or feel you may harm yourself, contact local emergency services or 988 right away.
-            </p>
+            <div id="nextStepActions" class="next-step-actions"></div>
+            <div id="guidedStepBody" class="guided-step-body">
+              Choose a next step to see a short guided plan here.
+            </div>
           </section>
         </aside>
 
@@ -151,32 +113,42 @@
             <div class="conversation-topbar">
               <div>
                 <p class="eyebrow">Private conversation</p>
-                <h2>Your check-in space</h2>
+                <h2>One place to say what feels true right now.</h2>
               </div>
               <span id="sessionBadge" class="chip soft">No session</span>
             </div>
 
             <div id="sessionMeta" class="session-meta empty">No active session yet.</div>
+            <div id="statusBanner" class="status-banner info">
+              ManoVarta is ready. Start whenever you feel comfortable.
+            </div>
 
             <section class="welcome-stage">
               <div class="welcome-copy">
-                <p class="eyebrow">Start gently</p>
-                <h2>What feels heaviest today?</h2>
-                <p class="subtitle">
-                  Start with one honest line. If you prefer, tap the mic and ManoVarta can keep the conversation going aloud.
+                <p id="welcomeEyebrow" class="eyebrow">Start gently</p>
+                <h2 id="welcomeTitle">Start with one true thing.</h2>
+                <p id="welcomeSubtitle" class="subtitle">
+                  You can type one line or speak naturally. ManoVarta will gather the rest gently, without making the first step feel clinical.
                 </p>
               </div>
 
-              <div class="welcome-visual">
-                <div class="welcome-halo welcome-halo-a"></div>
-                <div class="welcome-halo welcome-halo-b"></div>
-                <div class="welcome-core">
-                  <img class="welcome-mark" src="/app-assets/brand-mark.svg" alt="" />
-                  <span class="welcome-core-line">mind · mann · मन</span>
-                </div>
-                <div class="welcome-float welcome-float-a">नींद</div>
-                <div class="welcome-float welcome-float-b">stress</div>
-                <div class="welcome-float welcome-float-c">चिंता</div>
+              <div class="trust-strip">
+                <span class="trust-item">
+                  <span class="trust-icon">◍</span>
+                  <span id="trustItemAccount">No account to begin</span>
+                </span>
+                <span class="trust-item">
+                  <span class="trust-icon">◍</span>
+                  <span id="trustItemVoice">Speak or type</span>
+                </span>
+                <span class="trust-item">
+                  <span class="trust-icon">◍</span>
+                  <span id="trustItemSafety">Quiet safety checks</span>
+                </span>
+                <span class="trust-item">
+                  <span class="trust-icon">◍</span>
+                  <span id="trustItemPressure">Brief answers are okay</span>
+                </span>
               </div>
 
               <div class="welcome-actions">
@@ -189,16 +161,16 @@
                   </select>
                 </label>
                 <button id="startButton" class="button primary">Begin private check-in</button>
-                <span class="welcome-note">No account required to begin.</span>
+                <span id="welcomeNote" class="welcome-note">No account required to begin.</span>
               </div>
 
               <section class="starter-section">
                 <div class="section-head compact">
                   <div>
-                    <p class="eyebrow">Start with what feels easiest</p>
-                    <h3>Easy openings</h3>
+                    <p id="starterEyebrow" class="eyebrow">Start with what feels easiest</p>
+                    <h3 id="starterTitle">Choose a softer opening if you want one</h3>
                   </div>
-                  <span class="chip accent">Confidence boosters</span>
+                  <span class="chip accent">Low-pressure starters</span>
                 </div>
                 <div id="starterDeck" class="starter-deck"></div>
               </section>
@@ -236,63 +208,64 @@
                 </div>
               </details>
 
-              <div class="welcome-assurances">
-                <span class="trust-pill">No long form</span>
-                <span class="trust-pill">Speak or type</span>
-                <span class="trust-pill">Brief answers are okay</span>
-              </div>
             </section>
 
-            <section class="storyboard-grid">
-              <article class="story-card">
-                <p class="mini-label">Story so far</p>
-                <p id="patientSummary" class="summary-text">
-                  Start a conversation to see a gentle summary here.
-                </p>
-              </article>
-              <article class="story-card">
-                <p class="mini-label">Why this question</p>
-                <p id="whyThisQuestion" class="summary-text">
-                  ManoVarta will explain the next question in plain language here.
-                </p>
-              </article>
-              <article class="story-card">
-                <p class="mini-label">Comfort and safety</p>
-                <p id="safetyNarrative" class="summary-text">
-                  Safety checks are running quietly in the background throughout the conversation.
-                </p>
-              </article>
-            </section>
-
-            <section class="focus-row">
-              <article class="focus-card">
-                <p class="mini-label">Current guide</p>
-                <p id="sessionGoal" class="focus-copy">
-                  Build comfort first, then understand the main concern clearly.
-                </p>
-              </article>
-
-              <article class="focus-card progress-card">
-                <div class="progress-head">
+            <section class="companion-panel">
+              <details class="companion-details" open>
+                <summary class="companion-summary">
                   <div>
-                    <p class="mini-label">How complete this feels</p>
-                    <p id="progressMeterLabel" class="summary-text">Nothing explored yet.</p>
+                    <p class="eyebrow">Conversation guide</p>
+                    <h3>What ManoVarta is holding in view</h3>
                   </div>
-                  <span id="coverageText" class="chip soft">Just getting started</span>
-                </div>
-                <div class="progress-track">
-                  <div id="progressMeterFill" class="progress-fill" style="width: 0%"></div>
-                </div>
-              </article>
+                  <div class="companion-summary-meta">
+                    <span id="coverageText" class="chip soft">Just getting started</span>
+                  </div>
+                </summary>
 
-              <article class="focus-card">
-                <p class="mini-label">Adaptive support</p>
-                <div id="bonusSignals" class="bonus-signals">
-                  <span class="signal-pill">Gentle pacing</span>
-                  <span class="signal-pill">Voice available</span>
-                  <span class="signal-pill">Safety checks on</span>
+                <div class="companion-grid">
+                  <article class="companion-card companion-card-primary">
+                    <p class="mini-label">What I’m hearing</p>
+                    <p id="patientSummary" class="summary-text">
+                      Start a conversation to see a gentle summary here.
+                    </p>
+                  </article>
+                  <article class="companion-card">
+                    <p class="mini-label">Why this question</p>
+                    <p id="whyThisQuestion" class="summary-text">
+                      ManoVarta will explain the next question in plain language here.
+                    </p>
+                  </article>
+                  <article class="companion-card">
+                    <p class="mini-label">Comfort and safety</p>
+                    <p id="safetyNarrative" class="summary-text">
+                      Safety checks are running quietly in the background throughout the conversation.
+                    </p>
+                  </article>
                 </div>
-              </article>
+
+                <div class="companion-footer">
+                  <article class="companion-card progress-card">
+                    <div class="progress-head">
+                      <div>
+                        <p class="mini-label">How complete this feels</p>
+                        <p id="progressMeterLabel" class="summary-text">Nothing explored yet.</p>
+                      </div>
+                      <span id="sessionGoal" class="chip warm">Comfort first</span>
+                    </div>
+                    <div class="progress-track">
+                      <div id="progressMeterFill" class="progress-fill" style="width: 0%"></div>
+                    </div>
+                  </article>
+                  <article class="companion-card signals-card">
+                    <p class="mini-label">Adaptive support</p>
+                    <div id="bonusSignals" class="bonus-signals">
+                      <span class="signal-pill">Gentle pacing</span>
+                      <span class="signal-pill">Voice available</span>
+                      <span class="signal-pill">Safety checks on</span>
+                    </div>
+                  </article>
+                </div>
+              </details>
             </section>
 
             <div class="chat-stage">
@@ -308,19 +281,30 @@
             </div>
 
             <section class="nudge-panel">
-              <details class="nudge-details">
-                <summary class="nudge-summary">
-                  <div>
-                    <p class="eyebrow">Optional prompt help</p>
-                    <h3>Need help phrasing it?</h3>
-                  </div>
-                  <span class="chip bonus">Optional</span>
-                </summary>
-                <p id="nudgeSubtitle" class="panel-subtitle">
-                  Open this only if you want help getting started or adding one clearer detail.
-                </p>
-                <div id="nudgeDeck" class="nudge-deck"></div>
-              </details>
+              <div class="section-head compact">
+                <div>
+                  <p id="nudgeEyebrow" class="eyebrow">Narrative nudges</p>
+                  <h3 id="nudgeTitle">Small prompts that unlock better signal</h3>
+                </div>
+                <span id="nudgeMeterLabel" class="chip bonus">Signal just starting</span>
+              </div>
+              <p id="nudgeCoach" class="panel-subtitle">
+                One concrete moment or one timing detail usually helps more than a long general paragraph.
+              </p>
+              <div class="nudge-quest">
+                <p id="nudgeQuestLabel" class="mini-label">Three anchors make the story clearer</p>
+                <div id="nudgeQuestTrack" class="nudge-quest-track" aria-live="polite"></div>
+              </div>
+              <div class="nudge-meter">
+                <div id="nudgeMeterFill" class="nudge-meter-fill" style="width: 18%"></div>
+              </div>
+              <p id="nudgeOutcome" class="quiet-note">
+                ManoVarta uses these prompts to reduce repeated follow-ups, not to pressure you into oversharing.
+              </p>
+              <p id="nudgeSubtitle" class="panel-subtitle">
+                Open this only if you want help getting started or adding one clearer detail.
+              </p>
+              <div id="nudgeDeck" class="nudge-deck"></div>
             </section>
 
             <section class="composer-panel">
@@ -336,15 +320,27 @@
               <div class="conversation-mode">
                 <div class="conversation-mode-copy">
                   <p class="eyebrow">Conversation mode</p>
-                  <h3>Speak naturally. ManoVarta listens, answers aloud, and opens the mic again.</h3>
+                  <h3>Speak naturally. ManoVarta listens, thinks, replies aloud, and reopens the mic.</h3>
                 </div>
                 <div class="conversation-mode-rail" aria-hidden="true">
                   <span class="mode-step">Listen</span>
+                  <span class="mode-dot"></span>
+                  <span class="mode-step">Think</span>
                   <span class="mode-dot"></span>
                   <span class="mode-step">Reply</span>
                   <span class="mode-dot"></span>
                   <span class="mode-step">Continue</span>
                 </div>
+              </div>
+
+              <div class="call-state-card">
+                <div class="call-state-copy">
+                  <span id="voiceStatePill" class="voice-state-pill idle">Ready</span>
+                  <p id="voiceStatus" class="voice-status">Voice ready when supported by the browser.</p>
+                </div>
+                <button id="voiceInterruptButton" type="button" class="button ghost subtle">
+                  Tap to interrupt
+                </button>
               </div>
 
               <form id="chatForm" class="composer">
@@ -356,7 +352,7 @@
 
                 <div id="voicePreview" class="voice-preview is-hidden" aria-live="polite">
                   <div class="voice-preview-copy">
-                    <p class="mini-label">Captured voice note</p>
+                    <p class="mini-label">Live transcript ribbon</p>
                     <p id="voicePreviewText" class="summary-text">Transcript preview</p>
                   </div>
                   <div class="voice-preview-actions">
@@ -368,7 +364,6 @@
                 <div class="composer-toolbar">
                   <div class="voice-cluster">
                     <button id="micButton" type="button" class="button primary voice-button">Start talking</button>
-                    <p id="voiceStatus" class="voice-status">Voice ready when supported by the browser.</p>
                   </div>
 
                   <div class="voice-toggles">
@@ -391,19 +386,36 @@
               <div class="section-head compact">
                 <div>
                   <p class="eyebrow">After this check-in</p>
-                  <h3>Your simple recap</h3>
+                  <h3>Leave with something useful</h3>
                 </div>
               </div>
-              <p id="reflectionPrompt" class="summary-text">
-                Once the conversation starts settling, ManoVarta will leave a simple recap here so you know what it is holding onto.
-              </p>
+              <div class="outcome-grid">
+                <article class="outcome-card">
+                  <p class="mini-label">What I’m hearing</p>
+                  <p id="reflectionPrompt" class="summary-text">
+                    Once the conversation starts settling, ManoVarta will leave a simple recap here so you know what it is holding onto.
+                  </p>
+                </article>
+                <article class="outcome-card">
+                  <p class="mini-label">What may help tonight</p>
+                  <p class="summary-text">
+                    ManoVarta will suggest one low-pressure next step based on what seems most active: sleep, worry, heaviness, or low energy.
+                  </p>
+                </article>
+                <article class="outcome-card">
+                  <p class="mini-label">Would you like a 2-minute next step?</p>
+                  <p class="summary-text">
+                    Pick a guided step on the side whenever you want something practical, not just another question.
+                  </p>
+                </article>
+              </div>
             </section>
 
             <footer class="conversation-footer">
-              <button id="backstageToggle" type="button" class="button ghost subtle review-only">Presenter tools</button>
               <p class="footer-copy">
                 Comfort first. The conversation stays focused on what feels real right now.
               </p>
+              <button id="architectureButton" type="button" class="button ghost subtle review-only">How it works</button>
             </footer>
           </section>
         </section>
@@ -451,16 +463,24 @@
             <span id="plannerTrend" class="chip soft">unclear</span>
           </div>
 
-          <div class="detail-meta">
-            <div class="detail-copy">
-              <p class="planner-label">Technical runtime</p>
-              <p id="runtimeDetail" class="summary-text">Loading runtime details...</p>
+            <div class="detail-meta">
+              <div class="detail-copy">
+                <p class="planner-label">Technical runtime</p>
+                <p id="runtimeDetail" class="summary-text">Loading runtime details...</p>
+              </div>
+              <div class="detail-copy">
+                <p class="planner-label">Patient surface health</p>
+                <p id="serviceHealth" class="summary-text">Checking service health...</p>
+              </div>
+              <div class="detail-copy">
+                <p class="planner-label">Runtime readiness</p>
+                <p id="runtimeInfo" class="summary-text">Loading readiness status...</p>
+              </div>
+              <div class="detail-copy">
+                <p class="planner-label">Planner transition</p>
+                <p id="plannerTransition" class="summary-text">Start a conversation to see how the next topic is selected.</p>
+              </div>
             </div>
-            <div class="detail-copy">
-              <p class="planner-label">Planner transition</p>
-              <p id="plannerTransition" class="summary-text">Start a conversation to see how the next topic is selected.</p>
-            </div>
-          </div>
 
           <div class="metrics">
             <article class="metric-card">

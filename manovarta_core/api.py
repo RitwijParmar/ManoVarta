@@ -1,7 +1,8 @@
+import re
 from pathlib import Path
 
 from fastapi import FastAPI, File, HTTPException, Response, UploadFile
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, HTMLResponse
 from fastapi.staticfiles import StaticFiles
 
 from manovarta_core.config import get_runtime_config
@@ -75,6 +76,22 @@ if WEB_DIR.exists():
     app.mount("/app-assets", StaticFiles(directory=WEB_DIR), name="app-assets")
 
 
+REVIEW_BUTTON_RE = re.compile(r"\s*<button id=\"architectureButton\".*?</button>", re.DOTALL)
+
+
+def _render_shell(include_review: bool) -> HTMLResponse:
+    html = (WEB_DIR / "index.html").read_text(encoding="utf-8")
+    if include_review:
+        return HTMLResponse(html)
+
+    html = REVIEW_BUTTON_RE.sub("", html, count=1)
+    backstage_start = html.find('<section id="backstagePanel"')
+    script_start = html.find('<script src="/app-assets/app.js" defer></script>')
+    if backstage_start != -1 and script_start != -1:
+        html = f"{html[:backstage_start]}    </div>\n\n    {html[script_start:]}"
+    return HTMLResponse(html)
+
+
 def _should_use_live_llm(session: ChatSession) -> bool:
     user_turns = sum(1 for turn in session.turns if turn.speaker == "user")
     if runtime_config.live_chat_llm_analysis_enabled and user_turns >= runtime_config.live_llm_turn_threshold:
@@ -87,16 +104,16 @@ def _should_use_live_llm(session: ChatSession) -> bool:
 
 
 @app.get("/", include_in_schema=False)
-def index() -> FileResponse:
-    return FileResponse(WEB_DIR / "index.html")
+def index() -> HTMLResponse:
+    return _render_shell(include_review=False)
 
 
 @app.get("/review", include_in_schema=False)
-def review() -> FileResponse:
+def review() -> Response:
     review_path = WEB_DIR / "review.html"
     if review_path.exists():
         return FileResponse(review_path)
-    return FileResponse(WEB_DIR / "index.html")
+    return _render_shell(include_review=True)
 
 
 @app.get("/health")

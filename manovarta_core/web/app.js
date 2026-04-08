@@ -8,6 +8,9 @@ const state = {
   recentCheckins: [],
   voiceLoopArmed: false,
   pendingNudge: null,
+  voiceState: "idle",
+  currentNextSteps: [],
+  latestDialogue: null,
 };
 
 const HISTORY_KEY = "manovarta_recent_checkins_v2";
@@ -50,6 +53,24 @@ const LANGUAGE_UI = {
     turnSuccess: "Thanks. ManoVarta is holding onto that and is ready for the next part.",
     runtimeReady: "Ready when you are. Start with whatever feels easiest to say.",
     nudgeIntro: "These small prompts help you share useful detail without making the conversation feel heavy.",
+    surface: {
+      brandTagline: "A quieter way to understand sleep, stress, low mood, and worry.",
+      welcomeEyebrow: "Start gently",
+      welcomeTitle: "Start with one true thing.",
+      welcomeSubtitle: "You can type one line or speak naturally. ManoVarta will gather the rest gently, without making the first step feel clinical.",
+      welcomeNote: "No account required to begin.",
+      trustItems: [
+        "No account to begin",
+        "Speak or type",
+        "Quiet safety checks",
+        "Brief answers are okay",
+      ],
+      starterEyebrow: "Start with what feels easiest",
+      starterTitle: "Choose a softer opening if you want one",
+      nudgeEyebrow: "Narrative nudges",
+      nudgeTitle: "Small prompts that unlock better signal",
+      nudgeQuestLabel: "Three anchors make the story clearer",
+    },
   },
   hi: {
     placeholder: "जो बदला है, कब ज़्यादा होता है, और दिन भर पर क्या असर पड़ता है, वह लिखिए...",
@@ -58,6 +79,24 @@ const LANGUAGE_UI = {
     turnSuccess: "शुक्रिया। मनोवार्ता ने यह संभाल लिया है और अगले जवाब के लिए तैयार है।",
     runtimeReady: "सब तैयार है। जो सबसे आसान लगे, वहीं से बात शुरू कीजिए।",
     nudgeIntro: "ये छोटे संकेत बिना दबाव के ज़रूरी विवरण साझा करने में मदद करते हैं।",
+    surface: {
+      brandTagline: "नींद, तनाव, भारी मन और चिंता को थोड़ा साफ़ समझने का एक शांत तरीका।",
+      welcomeEyebrow: "धीरे से शुरू कीजिए",
+      welcomeTitle: "बस एक सच्ची बात से शुरुआत कीजिए।",
+      welcomeSubtitle: "आप एक पंक्ति टाइप कर सकते हैं या स्वाभाविक रूप से बोल सकते हैं। मनोवार्ता आगे की बात धीरे-धीरे समेट लेगी, ताकि शुरुआत जाँच जैसी न लगे।",
+      welcomeNote: "शुरू करने के लिए किसी खाते की ज़रूरत नहीं है।",
+      trustItems: [
+        "बिना खाते के शुरुआत",
+        "बोलकर या लिखकर",
+        "शांत सुरक्षा-जाँच",
+        "छोटा जवाब भी ठीक है",
+      ],
+      starterEyebrow: "जो सबसे आसान लगे, वहीं से शुरू कीजिए",
+      starterTitle: "अगर चाहें तो एक हल्की शुरुआत चुन लीजिए",
+      nudgeEyebrow: "कहानी को थोड़ा साफ़ करने वाले संकेत",
+      nudgeTitle: "छोटे संकेत, ताकि दोहराव कम हो और बात जल्दी स्पष्ट हो",
+      nudgeQuestLabel: "तीन छोटे आधार कहानी को साफ़ बनाते हैं",
+    },
   },
   hinglish: {
     placeholder: "Kya change hua, kab zyada feel hota hai, aur daily routine par kya impact hai, woh share karo...",
@@ -66,6 +105,24 @@ const LANGUAGE_UI = {
     turnSuccess: "Thanks. ManoVarta ne yeh note kar liya hai aur next message ke liye ready hai.",
     runtimeReady: "Everything is ready. Jo easiest lage, usse start karo.",
     nudgeIntro: "Yeh nudges thodi aur clear detail lane mein help karte hain, bina conversation ko heavy banaye.",
+    surface: {
+      brandTagline: "Sleep, stress, low mood aur worry ko thoda clearer samajhne ka ek quiet tareeka.",
+      welcomeEyebrow: "Aaraam se start karo",
+      welcomeTitle: "Bas ek sachchi line se start karo.",
+      welcomeSubtitle: "Tum ek line type kar sakte ho ya naturally bol sakte ho. ManoVarta baaki context gently gather karegi, bina isse clinical feel banaye.",
+      welcomeNote: "Start karne ke liye account ki zaroorat nahi hai.",
+      trustItems: [
+        "Account ke bina start",
+        "Bolkar ya type karke",
+        "Quiet safety checks",
+        "Short reply bhi okay hai",
+      ],
+      starterEyebrow: "Jo easiest lage, usse start karo",
+      starterTitle: "Chaaho to ek softer opening choose karo",
+      nudgeEyebrow: "Narrative nudges",
+      nudgeTitle: "Chhote prompts jo signal ko jaldi clearer banate hain",
+      nudgeQuestLabel: "Teen anchors story ko clearer banate hain",
+    },
   },
 };
 
@@ -237,6 +294,351 @@ const NUDGE_LIBRARY = {
   },
 };
 
+const NEXT_STEP_LIBRARY = {
+  en: {
+    sleep: [
+      {
+        key: "sleep_wind_down",
+        title: "2-minute wind-down",
+        blurb: "A soft routine to lower the night-time spike before trying to sleep again.",
+        steps: [
+          "Put the phone face down for two minutes.",
+          "Take one slower exhale than inhale, five times.",
+          "Name the biggest sleep obstacle in one line, then let it wait until morning.",
+        ],
+      },
+      {
+        key: "sleep_unload",
+        title: "Night mind unload",
+        blurb: "Useful when the body is tired but the mind is still looping.",
+        steps: [
+          "Write or say the top three thoughts still running.",
+          "Label each as tonight, tomorrow, or not mine to solve right now.",
+          "Pick only one thing that actually belongs to tonight.",
+        ],
+      },
+    ],
+    anxiety: [
+      {
+        key: "breathing_reset",
+        title: "Breathing reset",
+        blurb: "Good when the body feels tight or the mind is racing.",
+        steps: [
+          "Exhale fully once before trying to slow anything down.",
+          "Breathe in for four and out for six, five rounds.",
+          "After the fifth round, notice whether the mind, body, or both softened first.",
+        ],
+      },
+      {
+        key: "worry_parking",
+        title: "Worry parking",
+        blurb: "Useful when thoughts keep reopening the same loop.",
+        steps: [
+          "Name the worry in one sentence.",
+          "Add one line: what would count as enough for tonight?",
+          "Park the rest with a time to revisit it tomorrow.",
+        ],
+      },
+    ],
+    mood: [
+      {
+        key: "low_energy_step",
+        title: "Low-energy micro-step",
+        blurb: "Designed for flat or heavy days when a full plan feels unrealistic.",
+        steps: [
+          "Choose one task that can be done in under two minutes.",
+          "Do it badly on purpose if that helps you start.",
+          "Stop after two minutes unless momentum appears naturally.",
+        ],
+      },
+      {
+        key: "signal_to_someone",
+        title: "Quiet human contact",
+        blurb: "When heaviness feels isolating, a low-pressure contact cue can help.",
+        steps: [
+          "Think of one person who feels less effortful than others.",
+          "Send one line: 'Just checking in, today feels a bit heavy.'",
+          "Do not force a longer conversation if you do not want one.",
+        ],
+      },
+    ],
+    focus: [
+      {
+        key: "focus_reset",
+        title: "Focus reset",
+        blurb: "Helps when the mind keeps scattering between tasks.",
+        steps: [
+          "Write the next task in five words or fewer.",
+          "Hide every other tab or paper for two minutes.",
+          "Do only the first visible action, not the whole task.",
+        ],
+      },
+      {
+        key: "brain_unload",
+        title: "Brain unload",
+        blurb: "Useful when concentration drops because too many things are open at once.",
+        steps: [
+          "Dump every unfinished thought into one quick list.",
+          "Mark one as now, one as later, and ignore the rest.",
+          "Return only to the 'now' item for the next few minutes.",
+        ],
+      },
+    ],
+    self_view: [
+      {
+        key: "self_view_soften",
+        title: "Self-talk soften",
+        blurb: "A short way to loosen harsh self-judgment without forcing positivity.",
+        steps: [
+          "Write the harsh thought exactly as it sounds.",
+          "Replace 'always' or 'never' with one truer word.",
+          "End with one sentence you could say to someone else in the same position.",
+        ],
+      },
+    ],
+    default: [
+      {
+        key: "quiet_recap",
+        title: "Quiet recap",
+        blurb: "A simple two-minute way to stop the conversation from evaporating.",
+        steps: [
+          "Say or write the one feeling that was strongest today.",
+          "Add when it peaked.",
+          "Add what would make tonight 5% easier.",
+        ],
+      },
+    ],
+  },
+  hi: {
+    sleep: [
+      {
+        key: "sleep_wind_down",
+        title: "2 मिनट की नींद-तैयारी",
+        blurb: "जब रात में बेचैनी बढ़ती है, तब शरीर और दिमाग को थोड़ा नीचे लाने के लिए।",
+        steps: [
+          "फ़ोन को दो मिनट के लिए उल्टा रख दीजिए।",
+          "पाँच बार ऐसी साँस लीजिए जिसमें छोड़ना, लेने से थोड़ा लंबा हो।",
+          "बस एक पंक्ति में लिखिए कि नींद में सबसे बड़ी रुकावट क्या लग रही है।",
+        ],
+      },
+      {
+        key: "sleep_unload",
+        title: "रात का मन हल्का करना",
+        blurb: "जब शरीर थका हो लेकिन दिमाग बंद न हो रहा हो।",
+        steps: [
+          "जो तीन बातें सबसे ज़्यादा घूम रही हैं, उन्हें लिखिए या बोलिए।",
+          "हर बात के सामने लिखिए: आज रात, कल, या अभी मेरे हाथ में नहीं।",
+          "आज रात वाली सिर्फ़ एक बात को रखिए, बाक़ी छोड़ दीजिए।",
+        ],
+      },
+    ],
+    anxiety: [
+      {
+        key: "breathing_reset",
+        title: "साँस का छोटा रीसेट",
+        blurb: "जब शरीर तना हुआ लगे या दिमाग तेज़ दौड़ रहा हो।",
+        steps: [
+          "पहले एक लंबी साँस छोड़िए।",
+          "फिर पाँच बार 4 गिनती में साँस लें और 6 गिनती में छोड़ें।",
+          "अंत में ध्यान दें कि पहले दिमाग हल्का हुआ या शरीर।",
+        ],
+      },
+      {
+        key: "worry_parking",
+        title: "चिंता को थोड़ी देर के लिए पार्क कीजिए",
+        blurb: "जब वही बात बार-बार वापस आ रही हो।",
+        steps: [
+          "चिंता को एक वाक्य में नाम दीजिए।",
+          "फिर लिखिए: आज रात के लिए इतना काफ़ी होगा अगर...",
+          "बाक़ी बात को कल देखने के समय के साथ छोड़ दीजिए।",
+        ],
+      },
+    ],
+    mood: [
+      {
+        key: "low_energy_step",
+        title: "कम ऊर्जा वाला छोटा कदम",
+        blurb: "जब कुछ भी शुरू करना भारी लग रहा हो।",
+        steps: [
+          "कोई एक काम चुनिए जो दो मिनट से कम में शुरू हो सके।",
+          "उसे बिल्कुल सही करने की कोशिश मत कीजिए।",
+          "सिर्फ़ दो मिनट कीजिए, फिर रुकना भी ठीक है।",
+        ],
+      },
+      {
+        key: "signal_to_someone",
+        title: "किसी एक भरोसेमंद इंसान को संकेत",
+        blurb: "जब भारीपन के साथ अकेलापन भी बढ़ रहा हो।",
+        steps: [
+          "ऐसे एक व्यक्ति को सोचिए जिनसे बात करना सबसे कम भारी लगे।",
+          "बस एक पंक्ति भेजिए: 'आज थोड़ा भारी लग रहा है।'",
+          "लंबी बातचीत करना ज़रूरी नहीं है।",
+        ],
+      },
+    ],
+    focus: [
+      {
+        key: "focus_reset",
+        title: "ध्यान रीसेट",
+        blurb: "जब दिमाग एक काम पर टिक नहीं पा रहा हो।",
+        steps: [
+          "अगला काम पाँच शब्दों से कम में लिखिए।",
+          "बाक़ी सब चीज़ें दो मिनट के लिए हटाइए।",
+          "पूरे काम पर नहीं, सिर्फ़ पहले छोटे कदम पर जाइए।",
+        ],
+      },
+      {
+        key: "brain_unload",
+        title: "दिमाग का त्वरित उतार",
+        blurb: "जब एक साथ बहुत सारी बातें खुली हों।",
+        steps: [
+          "जो भी अधूरा दिमाग में है, जल्दी-जल्दी लिख दीजिए।",
+          "एक को अभी, एक को बाद में, बाकी को अभी नहीं।",
+          "फिर सिर्फ़ 'अभी' वाली बात पर लौटिए।",
+        ],
+      },
+    ],
+    self_view: [
+      {
+        key: "self_view_soften",
+        title: "अपने बारे में नरम वाक्य",
+        blurb: "कठोर आत्म-आलोचना को थोड़ी सच्ची और थोड़ी नरम भाषा में बदलने के लिए।",
+        steps: [
+          "मन में चल रहा कठोर वाक्य ठीक-ठीक लिखिए।",
+          "उसमें 'हमेशा' या 'कभी नहीं' जैसे शब्द हटाकर सच्चा शब्द रखिए।",
+          "फिर वही बात ऐसे लिखिए जैसे किसी अपने से कहते।",
+        ],
+      },
+    ],
+    default: [
+      {
+        key: "quiet_recap",
+        title: "शांत पुनरावलोकन",
+        blurb: "आज की बातचीत को हल्के ढंग से समेटने के लिए।",
+        steps: [
+          "आज की सबसे बड़ी भावना को एक शब्द में नाम दीजिए।",
+          "कब सबसे ज़्यादा महसूस हुई, वह जोड़िए।",
+          "आज रात 5% आसान क्या बना सकता है, वह लिखिए।",
+        ],
+      },
+    ],
+  },
+  hinglish: {
+    sleep: [
+      {
+        key: "sleep_wind_down",
+        title: "2-minute wind-down",
+        blurb: "Jab night spike hota hai aur body tired hone ke baad bhi mind active rehta hai.",
+        steps: [
+          "Phone ko do minute ke liye face down rakho.",
+          "Paanch baar inhale se thoda lamba exhale karo.",
+          "Bas ek line mein likho ki sleep ko sabse zyada kya tod raha hai.",
+        ],
+      },
+      {
+        key: "sleep_unload",
+        title: "Night mind unload",
+        blurb: "Body tired ho, par mind abhi bhi loop mein ho, tab use karo.",
+        steps: [
+          "Top 3 thoughts likho jo abhi bhi chal rahi hain.",
+          "Har ek ke saamne likho: aaj raat, kal, ya abhi mere control mein nahi.",
+          "Sirf ek cheez rakho jo aaj raat ki hai.",
+        ],
+      },
+    ],
+    anxiety: [
+      {
+        key: "breathing_reset",
+        title: "Breathing reset",
+        blurb: "Mind fast ho ya body tight ho, tab quick reset ke liye.",
+        steps: [
+          "Ek baar poori saans bahar nikalo.",
+          "Phir 4 count in aur 6 count out, paanch rounds.",
+          "End mein notice karo pehle mind soften hua ya body.",
+        ],
+      },
+      {
+        key: "worry_parking",
+        title: "Worry parking",
+        blurb: "Jab same thought baar-baar reopen ho raha ho.",
+        steps: [
+          "Worry ko ek sentence mein bolo.",
+          "Add karo: aaj raat ke liye enough kya hoga.",
+          "Baaki ko kal ke time ke saath park kar do.",
+        ],
+      },
+    ],
+    mood: [
+      {
+        key: "low_energy_step",
+        title: "Low-energy micro-step",
+        blurb: "Jab kuch start karna bhi heavy lag raha ho.",
+        steps: [
+          "Ek kaam choose karo jo do minute mein start ho sake.",
+          "Use perfect karne ki try mat karo.",
+          "Bas do minute tak karo, phir rukna bhi fine hai.",
+        ],
+      },
+      {
+        key: "signal_to_someone",
+        title: "Quiet human contact",
+        blurb: "Jab heaviness ke saath isolation bhi feel ho raha ho.",
+        steps: [
+          "Ek aisa person socho jo least effortful lage.",
+          "Bas ek line bhejo: 'Aaj thoda heavy lag raha hai.'",
+          "Long conversation force karna zaroori nahi hai.",
+        ],
+      },
+    ],
+    focus: [
+      {
+        key: "focus_reset",
+        title: "Focus reset",
+        blurb: "Jab mind ek kaam par tik hi nahi raha ho.",
+        steps: [
+          "Next task ko 5 words se kam mein likho.",
+          "Baaki tabs ya distractions do minute ke liye hata do.",
+          "Whole task nahi, sirf first visible step karo.",
+        ],
+      },
+      {
+        key: "brain_unload",
+        title: "Brain unload",
+        blurb: "Jab bahut saari open loops ek saath chal rahi hon.",
+        steps: [
+          "Saare unfinished thoughts ek quick list mein dump karo.",
+          "Ek ko now, ek ko later, baaki ko abhi ignore.",
+          "Sirf now item par wapas aao.",
+        ],
+      },
+    ],
+    self_view: [
+      {
+        key: "self_view_soften",
+        title: "Self-talk soften",
+        blurb: "Harsh self-judgment ko thoda zyada true aur thoda zyada gentle banana.",
+        steps: [
+          "Jo harsh line mind mein chal rahi hai, use exactly likho.",
+          "Usme se 'always' ya 'never' ko ek zyada true word se replace karo.",
+          "Phir wahi baat kisi close friend ko bolte, waise likho.",
+        ],
+      },
+    ],
+    default: [
+      {
+        key: "quiet_recap",
+        title: "Quiet recap",
+        blurb: "Aaj ki baat ko halka sa hold karne ke liye.",
+        steps: [
+          "Aaj ki strongest feeling ko name karo.",
+          "Kab peak hui woh add karo.",
+          "Aaj raat 5% easier kya karega, woh likho.",
+        ],
+      },
+    ],
+  },
+};
+
 const chatLog = document.getElementById("chatLog");
 const sessionMeta = document.getElementById("sessionMeta");
 const sessionBadge = document.getElementById("sessionBadge");
@@ -262,6 +664,10 @@ const progressMeterLabel = document.getElementById("progressMeterLabel");
 const bonusSignals = document.getElementById("bonusSignals");
 const nudgeDeck = document.getElementById("nudgeDeck");
 const nudgeSubtitle = document.getElementById("nudgeSubtitle");
+const nudgeCoach = document.getElementById("nudgeCoach");
+const nudgeMeterFill = document.getElementById("nudgeMeterFill");
+const nudgeMeterLabel = document.getElementById("nudgeMeterLabel");
+const nudgeOutcome = document.getElementById("nudgeOutcome");
 const composerHelper = document.getElementById("composerHelper");
 const patientSummary = document.getElementById("patientSummary");
 const whyThisQuestion = document.getElementById("whyThisQuestion");
@@ -276,8 +682,32 @@ const profileContextInput = document.getElementById("profileContextInput");
 const ritualCount = document.getElementById("ritualCount");
 const ritualStreak = document.getElementById("ritualStreak");
 const ritualCopy = document.getElementById("ritualCopy");
+const ritualTheme = document.getElementById("ritualTheme");
+const ritualPattern = document.getElementById("ritualPattern");
+const ritualRestartButton = document.getElementById("ritualRestartButton");
 const historyList = document.getElementById("historyList");
 const reflectionPrompt = document.getElementById("reflectionPrompt");
+const nextStepTitle = document.getElementById("nextStepTitle");
+const nextStepText = document.getElementById("nextStepText");
+const nextStepActions = document.getElementById("nextStepActions");
+const guidedStepBody = document.getElementById("guidedStepBody");
+const voiceStatePill = document.getElementById("voiceStatePill");
+const voiceInterruptButton = document.getElementById("voiceInterruptButton");
+const brandTagline = document.getElementById("brandTagline");
+const welcomeEyebrow = document.getElementById("welcomeEyebrow");
+const welcomeTitle = document.getElementById("welcomeTitle");
+const welcomeSubtitle = document.getElementById("welcomeSubtitle");
+const welcomeNote = document.getElementById("welcomeNote");
+const trustItemAccount = document.getElementById("trustItemAccount");
+const trustItemVoice = document.getElementById("trustItemVoice");
+const trustItemSafety = document.getElementById("trustItemSafety");
+const trustItemPressure = document.getElementById("trustItemPressure");
+const starterEyebrow = document.getElementById("starterEyebrow");
+const starterTitle = document.getElementById("starterTitle");
+const nudgeEyebrow = document.getElementById("nudgeEyebrow");
+const nudgeTitle = document.getElementById("nudgeTitle");
+const nudgeQuestLabel = document.getElementById("nudgeQuestLabel");
+const nudgeQuestTrack = document.getElementById("nudgeQuestTrack");
 
 const runtimeInfo = document.getElementById("runtimeInfo");
 const runtimeDetail = document.getElementById("runtimeDetail");
@@ -353,13 +783,15 @@ function setHasHistory(hasHistory) {
 }
 
 function setDisclosureState(panel, button, open, labels) {
-  if (!panel || !button) {
+  if (!panel) {
     return;
   }
   panel.classList.toggle("is-hidden", !open);
   panel.setAttribute("aria-hidden", String(!open));
-  button.setAttribute("aria-expanded", String(open));
-  button.textContent = open ? labels.close : labels.open;
+  if (button) {
+    button.setAttribute("aria-expanded", String(open));
+    button.textContent = open ? labels.close : labels.open;
+  }
 }
 
 function toggleDisclosure(panel, button, labels) {
@@ -379,6 +811,15 @@ function closeArchitectureModal() {
 
 function setSessionLiveState(isLive) {
   document.body.classList.toggle("session-live", Boolean(isLive));
+}
+
+function setSnapshotLiveState(isLive) {
+  document.body.classList.toggle("has-snapshot", Boolean(isLive));
+}
+
+function setLanguageMode(language) {
+  document.body.classList.remove("lang-en", "lang-hi", "lang-hinglish");
+  document.body.classList.add(`lang-${language || "en"}`);
 }
 
 function humanizeToken(value, language = state.language) {
@@ -409,12 +850,287 @@ function renderStarterDeck(language) {
   });
 }
 
+function estimateNarrativeStrength(dialogue) {
+  const disclosure = dialogue.disclosure || {};
+  const itemsPerTurn = Number(disclosure.items_per_user_turn || 0);
+  const resolvedPerTurn = Number(disclosure.resolved_per_user_turn || 0);
+  const nudgeEffect = Number(disclosure.nudge_effectiveness || 0);
+  let score = 0.18;
+  score += Math.min(itemsPerTurn, 2) * 0.22;
+  score += Math.min(resolvedPerTurn, 1.5) * 0.18;
+  score += Math.max(Math.min(nudgeEffect, 0.5), -0.2) * 0.24;
+  if (dialogue.user_style?.verbosity === "detailed") {
+    score += 0.14;
+  } else if (dialogue.user_style?.verbosity === "brief") {
+    score -= 0.05;
+  }
+  return Math.max(0.08, Math.min(score, 0.96));
+}
+
+function buildNudgeCoach(dialogue, language = state.language) {
+  const uiLanguage = resolveUiLanguage(language);
+  const topic = humanizeToken(dialogue.target_topic, uiLanguage).toLowerCase();
+  if (uiLanguage === "hi") {
+    if (dialogue.next_action === "risk_check") {
+      return "यहाँ छोटा और सीधा जवाब सबसे उपयोगी है। अभी उद्देश्य विस्तार नहीं, स्पष्टता और सुरक्षा है।";
+    }
+    if ((dialogue.disclosure?.nudge_effectiveness || 0) > 0.2) {
+      return "पिछले संकेत से उपयोगी स्पष्टता मिली। अब एक उदाहरण या रोज़मर्रा पर असर जोड़ने से अगला सवाल और सटीक हो जाएगा।";
+    }
+    if (dialogue.user_style.verbosity === "brief") {
+      return `अभी ${topic} के बारे में बस एक ठोस दृश्य, समय, या असर जोड़ना सबसे ज़्यादा मदद करेगा।`;
+    }
+    return "लंबा लिखना ज़रूरी नहीं है। एक छोटा लेकिन ठोस विवरण अगली पुनरावृत्ति कम कर देता है।";
+  }
+  if (uiLanguage === "hinglish") {
+    if (dialogue.next_action === "risk_check") {
+      return "Yahan short direct answer best hai. Abhi goal overshare karwana nahi, clarity aur safety hai.";
+    }
+    if ((dialogue.disclosure?.nudge_effectiveness || 0) > 0.2) {
+      return "Last nudge se useful clarity mili. Ab ek example ya daily impact add karoge to next question aur sharp ho jayega.";
+    }
+    if (dialogue.user_style.verbosity === "brief") {
+      return `Abhi ${topic} ke baare mein bas ek real scene, timing, ya impact add karna sabse helpful hoga.`;
+    }
+    return "Long paragraph ki zaroorat nahi. Ek concrete detail usually repeated follow-up ko kam kar deta hai.";
+  }
+  if (dialogue.next_action === "risk_check") {
+    return "A short direct answer helps most here. The goal right now is clarity and safety, not more detail for its own sake.";
+  }
+  if ((dialogue.disclosure?.nudge_effectiveness || 0) > 0.2) {
+    return "The last nudge unlocked useful signal. One example or one daily-life impact can now move the conversation forward faster.";
+  }
+  if (dialogue.user_style.verbosity === "brief") {
+    return `Right now the biggest unlock is one real moment, one timing detail, or one daily-life effect around ${topic}.`;
+  }
+  return "You do not need a long paragraph. One concrete detail usually removes a repeated follow-up.";
+}
+
+function buildNudgeOutcome(dialogue, language = state.language) {
+  const uiLanguage = resolveUiLanguage(language);
+  const effect = Number(dialogue.disclosure?.nudge_effectiveness || 0);
+  if (uiLanguage === "hi") {
+    if (effect > 0.2) {
+      return "पिछला संकेत काम आया। मनोवार्ता अब उसी से थोड़ा कम दोहराव के साथ आगे बढ़ सकती है।";
+    }
+    if (effect < 0) {
+      return "पिछला संकेत बहुत उपयोगी नहीं रहा, इसलिए अब थोड़े अलग तरह के संकेत दिखाए जा रहे हैं।";
+    }
+    return "ये संकेत बातचीत को स्पष्ट बनाने के लिए हैं, दबाव बढ़ाने के लिए नहीं।";
+  }
+  if (uiLanguage === "hinglish") {
+    if (effect > 0.2) {
+      return "Last nudge kaam aaya. Ab ManoVarta same point par kam repeat karegi.";
+    }
+    if (effect < 0) {
+      return "Last nudge se zyada detail nahi mili, isliye ab thoda different angle dikh raha hai.";
+    }
+    return "Yeh nudges pressure create nahi karte. Bas conversation ko thoda zyada concrete banate hain.";
+  }
+  if (effect > 0.2) {
+    return "The last nudge helped. ManoVarta can usually move forward with less repetition after that.";
+  }
+  if (effect < 0) {
+    return "The last nudge did not unlock much, so these prompts are changing angle instead of repeating themselves.";
+  }
+  return "These nudges are meant to make the story clearer, not heavier.";
+}
+
+function buildNudgeMeterLabel(dialogue, language = state.language) {
+  const uiLanguage = resolveUiLanguage(language);
+  const score = estimateNarrativeStrength(dialogue);
+  if (uiLanguage === "hi") {
+    if (score > 0.72) {
+      return "मज़बूत संकेत";
+    }
+    if (score > 0.45) {
+      return "अच्छी स्पष्टता";
+    }
+    return "संकेत बन रहा है";
+  }
+  if (score > 0.72) {
+    return "Strong signal";
+  }
+  if (score > 0.45) {
+    return "Good clarity";
+  }
+  return "Signal building";
+}
+
+function pickNextSteps(topic, language = state.language) {
+  const library = NEXT_STEP_LIBRARY[language] || NEXT_STEP_LIBRARY.en;
+  return library[topic] || library.default;
+}
+
+function buildNextStepLead(topic, language = state.language) {
+  const uiLanguage = resolveUiLanguage(language);
+  if (uiLanguage === "hi") {
+    if (topic === "sleep") {
+      return "अभी सबसे उपयोगी दिशा नींद के पहले या रात के बीच में आने वाली बेचैनी को थोड़ा नीचे लाना है।";
+    }
+    if (topic === "anxiety") {
+      return "अभी उद्देश्य चिंता को पूरी तरह हटाना नहीं, बल्कि उसे थोड़ी देर के लिए कम तीव्र बनाना है।";
+    }
+    if (topic === "mood" || topic === "self_view") {
+      return "अभी सबसे अच्छा अगला कदम बहुत छोटा और कम-ऊर्जा वाला होना चाहिए, ताकि बोझ और न बढ़े।";
+    }
+    if (topic === "focus") {
+      return "अभी एक ऐसा रीसेट मदद करेगा जो दिमाग को फिर से एक छोटी दिशा दे सके।";
+    }
+    return "अभी एक हल्का, व्यावहारिक अगला कदम सबसे ज़्यादा उपयोगी होगा।";
+  }
+  if (uiLanguage === "hinglish") {
+    if (topic === "sleep") {
+      return "Abhi best move sleep spike ko thoda niche lana hai, especially agar night mein restlessness ya waking aa rahi hai.";
+    }
+    if (topic === "anxiety") {
+      return "Abhi goal worry ko khatam karna nahi, bas uski intensity ko thoda niche lana hai.";
+    }
+    if (topic === "mood" || topic === "self_view") {
+      return "Abhi sabse helpful move bahut small aur low-energy hona chahiye, taki burden aur na badhe.";
+    }
+    if (topic === "focus") {
+      return "Ab ek short reset useful hoga jo mind ko dubara ek hi cheez par la sake.";
+    }
+    return "Abhi ek practical low-pressure next step sabse zyada useful rahega.";
+  }
+  if (topic === "sleep") {
+    return "The clearest next move is to lower the night-time spike a little, not solve the whole sleep pattern at once.";
+  }
+  if (topic === "anxiety") {
+    return "The best next move is to reduce intensity first, not argue with every thought.";
+  }
+  if (topic === "mood" || topic === "self_view") {
+    return "The next step should be deliberately small and low-energy so it does not feel like another burden.";
+  }
+  if (topic === "focus") {
+    return "A short reset is likely to help more than pushing harder right now.";
+  }
+  return "A small practical next step will help more than another abstract insight right now.";
+}
+
+function renderGuidedStep(step, language = state.language) {
+  if (!guidedStepBody) {
+    return;
+  }
+  if (!step) {
+    guidedStepBody.textContent = language === "hi"
+      ? "कोई अगला कदम चुनिए और यहाँ एक छोटा निर्देशित प्लान दिखाई देगा।"
+      : language === "hinglish"
+        ? "Koi next step choose karo aur yahan short guided plan dikhega."
+        : "Choose a next step and a short guided plan will appear here.";
+    return;
+  }
+  const ordered = step.steps.map((entry, index) => `${index + 1}. ${entry}`).join(" ");
+  guidedStepBody.textContent = ordered;
+}
+
+function renderNextSteps(topic, language = state.language) {
+  const safeTopic = topic || "default";
+  const steps = pickNextSteps(safeTopic, language);
+  state.currentNextSteps = steps;
+  if (nextStepTitle) {
+    nextStepTitle.textContent = steps[0]?.title || (language === "hi" ? "अगला कदम" : "Next step");
+  }
+  if (nextStepText) {
+    nextStepText.textContent = buildNextStepLead(safeTopic, language);
+  }
+  if (nextStepActions) {
+    nextStepActions.innerHTML = "";
+    steps.slice(0, 2).forEach((step, index) => {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = `button ${index === 0 ? "secondary" : "ghost"} next-step-button`;
+      button.textContent = step.title;
+      button.addEventListener("click", () => renderGuidedStep(step, language));
+      nextStepActions.appendChild(button);
+    });
+  }
+  renderGuidedStep(steps[0] || null, language);
+}
+
+function describeTimePattern(entries, language = state.language) {
+  if (!entries.length) {
+    return language === "hi"
+      ? "अभी समय-पैटर्न उपलब्ध नहीं है।"
+      : language === "hinglish"
+        ? "Abhi time pattern available nahi hai."
+        : "No time pattern yet.";
+  }
+  const hours = entries
+    .map((entry) => new Date(entry.savedAt))
+    .filter((date) => !Number.isNaN(date.getTime()))
+    .map((date) => date.getHours());
+  if (!hours.length) {
+    return language === "hi"
+      ? "हाल की बातचीतों का समय यहाँ दिखेगा।"
+      : language === "hinglish"
+        ? "Recent check-in timing yahan dikhegi."
+        : "Recent check-in timing will appear here.";
+  }
+  const average = hours.reduce((sum, value) => sum + value, 0) / hours.length;
+  let bucket = "late day";
+  if (average < 11) {
+    bucket = "morning";
+  } else if (average < 17) {
+    bucket = "afternoon";
+  } else if (average < 21) {
+    bucket = "evening";
+  } else {
+    bucket = "night";
+  }
+  if (language === "hi") {
+    const mapped = bucket === "morning" ? "सुबह" : bucket === "afternoon" ? "दोपहर" : bucket === "evening" ? "शाम" : "रात";
+    return `आप हाल में ज़्यादातर ${mapped} के समय लौटे हैं।`;
+  }
+  if (language === "hinglish") {
+    return `Tum recent check-ins zyada ${bucket} mein kar rahe ho.`;
+  }
+  return `You have mostly been returning in the ${bucket}.`;
+}
+
+function buildRestartPrompt(entry, language = state.language) {
+  const topic = humanizeToken(entry?.topic || "check_in", language).toLowerCase();
+  if (language === "hi") {
+    return `${topic} वाली बात को वहीं से फिर पकड़ना चाहता/चाहती हूँ जहाँ पिछली बार छोड़ा था।`;
+  }
+  if (language === "hinglish") {
+    return `Main ${topic} wali baat ko last time jahan chhoda tha, wahin se pick up karna chahta/chahti hoon.`;
+  }
+  return `I want to pick up the ${topic} thread from where we left it last time.`;
+}
+
 function syncLanguageTabs(language) {
   languageTabs.forEach((button) => {
     const active = button.getAttribute("data-language") === language;
     button.classList.toggle("is-active", active);
     button.setAttribute("aria-pressed", String(active));
   });
+}
+
+function setTextIfPresent(node, text) {
+  if (node && typeof text === "string") {
+    node.textContent = text;
+  }
+}
+
+function applySurfaceCopy(language) {
+  const copy = (LANGUAGE_UI[language] || LANGUAGE_UI.en).surface || LANGUAGE_UI.en.surface;
+  const trustItems = copy.trustItems || [];
+  setTextIfPresent(brandTagline, copy.brandTagline);
+  setTextIfPresent(welcomeEyebrow, copy.welcomeEyebrow);
+  setTextIfPresent(welcomeTitle, copy.welcomeTitle);
+  setTextIfPresent(welcomeSubtitle, copy.welcomeSubtitle);
+  setTextIfPresent(welcomeNote, copy.welcomeNote);
+  setTextIfPresent(trustItemAccount, trustItems[0]);
+  setTextIfPresent(trustItemVoice, trustItems[1]);
+  setTextIfPresent(trustItemSafety, trustItems[2]);
+  setTextIfPresent(trustItemPressure, trustItems[3]);
+  setTextIfPresent(starterEyebrow, copy.starterEyebrow);
+  setTextIfPresent(starterTitle, copy.starterTitle);
+  setTextIfPresent(nudgeEyebrow, copy.nudgeEyebrow);
+  setTextIfPresent(nudgeTitle, copy.nudgeTitle);
+  setTextIfPresent(nudgeQuestLabel, copy.nudgeQuestLabel);
 }
 
 function updateSessionBadge() {
@@ -518,7 +1234,21 @@ function renderHistory() {
   ritualStreak.textContent = String(computeCheckinStreak(entries));
 
   if (!entries.length) {
-    ritualCopy.textContent = "After your first conversation, ManoVarta will keep a lightweight private memory here so the app feels easier to return to.";
+    ritualCopy.textContent = "After your first conversation, ManoVarta will keep a lightweight private memory here so returning feels gentler, not repetitive.";
+    if (ritualTheme) {
+      ritualTheme.textContent = state.language === "hi"
+        ? "अभी कोई मुख्य पैटर्न नहीं।"
+        : state.language === "hinglish"
+          ? "Abhi koi clear pattern nahi."
+          : "No main pattern yet.";
+    }
+    if (ritualPattern) {
+      ritualPattern.textContent = state.language === "hi"
+        ? "पहले सत्र के बाद यहाँ हाल का विषय और लौटने का ढंग दिखाई देगा।"
+        : state.language === "hinglish"
+          ? "Pehle session ke baad yahan recent theme aur return pattern dikhne lagega."
+          : "After the first session, this will show the recent theme and return pattern.";
+    }
     historyList.innerHTML = `
       <article class="history-card empty">
         <p class="history-meta">No check-ins yet</p>
@@ -529,6 +1259,16 @@ function renderHistory() {
   }
 
   const latest = entries[0];
+  if (ritualTheme) {
+    ritualTheme.textContent = state.language === "hi"
+      ? `हाल का मुख्य फोकस: ${humanizeToken(latest.topic || "check_in", "hi")}`
+      : state.language === "hinglish"
+        ? `Last main focus: ${humanizeToken(latest.topic || "check_in", "en")}`
+        : `Last main focus: ${humanizeToken(latest.topic || "check_in")}`;
+  }
+  if (ritualPattern) {
+    ritualPattern.textContent = describeTimePattern(entries, state.language);
+  }
   ritualCopy.textContent = state.language === "hi"
     ? `हाल में सहेजा गया मुख्य फोकस: ${humanizeToken(latest.topic || "check_in", "hi")} (${String(latest.language || "en").toUpperCase()}).`
     : `Latest saved focus: ${humanizeToken(latest.topic || "check_in").toLowerCase()} in ${String(latest.language || "en").toUpperCase()}.`;
@@ -562,6 +1302,20 @@ function setVoicePreview(transcript = "", { visible = false } = {}) {
   if (voiceUseButton) {
     voiceUseButton.textContent = autoSendToggle?.checked ? "Send now" : "Use transcript";
   }
+}
+
+function setVoiceState(mode) {
+  state.voiceState = mode;
+  if (!voiceStatePill) {
+    return;
+  }
+  const labels = {
+    en: { idle: "Ready", listening: "Listening", thinking: "Thinking", speaking: "Speaking", error: "Mic issue" },
+    hi: { idle: "तैयार", listening: "सुन रहा है", thinking: "सोच रहा है", speaking: "बोल रहा है", error: "माइक समस्या" },
+    hinglish: { idle: "Ready", listening: "Listening", thinking: "Thinking", speaking: "Speaking", error: "Mic issue" },
+  };
+  voiceStatePill.textContent = labels[state.language]?.[mode] || labels.en[mode] || "Ready";
+  voiceStatePill.className = `voice-state-pill ${mode}`;
 }
 
 function detectRecordingMimeType() {
@@ -792,10 +1546,14 @@ async function fetchBootstrap() {
 
 function applyLanguageDefaults(language) {
   const copy = LANGUAGE_UI[language] || LANGUAGE_UI.en;
+  setLanguageMode(language);
+  applySurfaceCopy(language);
   messageInput.placeholder = copy.placeholder;
   nudgeSubtitle.textContent = copy.nudgeIntro;
   syncLanguageTabs(language);
   renderStarterDeck(language);
+  renderNextSteps("default", language);
+  renderGuidedStep(null, language);
 }
 
 async function requestSessionStart(options = {}) {
@@ -827,6 +1585,7 @@ async function requestSessionStart(options = {}) {
   state.sessionId = payload.session_id;
   state.exportPayload = null;
   state.pendingNudge = null;
+  setSnapshotLiveState(false);
   if (resetChat) {
     chatLog.innerHTML = "";
   }
@@ -936,6 +1695,7 @@ function buildBonusSignals(dialogue, coverage) {
     `${humanizeToken(dialogue.target_topic)} focus`,
     posture,
     dialogue.fatigue === "high" ? "Low-burden follow-up" : dialogue.next_action === "risk_check" ? "Safety pause" : "Guided follow-up",
+    (dialogue.disclosure?.nudge_effectiveness || 0) > 0.2 ? "Nudge worked" : "Narrative building",
   ];
 }
 
@@ -1071,6 +1831,36 @@ function buildNudgeMeta(dialogue, language = state.language) {
     return "Narrative booster";
   }
   return "Evidence booster";
+}
+
+function renderNudgeQuest(nudges, dialogue, language = state.language) {
+  if (!nudgeQuestTrack) {
+    return;
+  }
+  nudgeQuestTrack.innerHTML = "";
+  const itemsPerTurn = Number(dialogue.disclosure?.items_per_user_turn || 0);
+  const resolvedPerTurn = Number(dialogue.disclosure?.resolved_per_user_turn || 0);
+  const nudgeEffect = Number(dialogue.disclosure?.nudge_effectiveness || 0);
+  nudges.slice(0, 3).forEach((nudge, index) => {
+    const chip = document.createElement("span");
+    let status = "todo";
+    if (
+      (index === 0 && (itemsPerTurn >= 0.7 || nudgeEffect > 0.05))
+      || (index === 1 && (resolvedPerTurn >= 0.4 || nudgeEffect > 0.2))
+      || (index === 2 && (resolvedPerTurn >= 0.9 || nudgeEffect > 0.32))
+    ) {
+      status = "done";
+    }
+    if (state.pendingNudge?.strategy === nudge.key) {
+      status = "active";
+    }
+    chip.className = `nudge-quest-chip ${status}`;
+    chip.innerHTML = `
+      <span class="nudge-quest-step">${index + 1}</span>
+      <span class="nudge-quest-copy">${escapeHtml(nudge.title)}</span>
+    `;
+    nudgeQuestTrack.appendChild(chip);
+  });
 }
 
 function buildSessionMetaLine(dialogue, coverage, safety, language = state.language) {
@@ -1262,15 +2052,19 @@ function applyNudge(text) {
   messageInput.value = current ? `${current} ${payload.text}` : payload.text;
   messageInput.focus();
   messageInput.setSelectionRange(messageInput.value.length, messageInput.value.length);
+  if (state.latestDialogue) {
+    renderNudges(state.language, state.latestDialogue);
+  }
 }
 
 function renderNudges(language, dialogue) {
   const nudges = pickNudges(language, dialogue);
+  renderNudgeQuest(nudges, dialogue, language);
   nudgeDeck.innerHTML = "";
   nudges.forEach((nudge) => {
     const button = document.createElement("button");
     button.type = "button";
-    button.className = "nudge-card";
+    button.className = `nudge-card ${state.pendingNudge?.strategy === nudge.key ? "is-active" : ""}`;
     button.innerHTML = `
       <span class="nudge-meta">${escapeHtml(buildNudgeMeta(dialogue, language))}</span>
       <strong>${escapeHtml(nudge.title)}</strong>
@@ -1323,6 +2117,7 @@ function renderSnapshot(payload) {
     review_items: [],
     completion_ratio: 0,
   };
+  state.latestDialogue = dialogue;
 
   phqTotal.textContent = snapshot.totals.PHQ9 ?? 0;
   gadTotal.textContent = snapshot.totals.GAD7 ?? 0;
@@ -1332,6 +2127,7 @@ function renderSnapshot(payload) {
   if (detailModeLabel) {
     detailModeLabel.textContent = humanizeToken(snapshot.mode);
   }
+  setSnapshotLiveState(true);
   summaryText.textContent = summary;
   patientSummary.textContent = buildPatientSummary(dialogue, snapshot.safety, snapshot.language);
   whyThisQuestion.textContent = buildWhyThisQuestion(dialogue, snapshot.language);
@@ -1371,7 +2167,20 @@ function renderSnapshot(payload) {
   personalizationSummary.textContent = buildPersonalizationSummary(dialogue, snapshot.language);
   composerHelper.textContent = buildComposerHelper(dialogue, snapshot.language);
   nudgeSubtitle.textContent = buildNudgeSubtitle(dialogue, snapshot.language);
+  if (nudgeCoach) {
+    nudgeCoach.textContent = buildNudgeCoach(dialogue, snapshot.language);
+  }
+  if (nudgeOutcome) {
+    nudgeOutcome.textContent = buildNudgeOutcome(dialogue, snapshot.language);
+  }
+  if (nudgeMeterFill) {
+    nudgeMeterFill.style.width = `${Math.round(estimateNarrativeStrength(dialogue) * 100)}%`;
+  }
+  if (nudgeMeterLabel) {
+    nudgeMeterLabel.textContent = buildNudgeMeterLabel(dialogue, snapshot.language);
+  }
   renderNudges(snapshot.language, dialogue);
+  renderNextSteps(dialogue.target_topic, snapshot.language);
   renderTopicMap(coverage.topic_states || []);
 
   unresolvedCount.textContent = `${coverage.next_items.length} queued`;
@@ -1439,6 +2248,8 @@ function renderSnapshot(payload) {
 
 function resetInsightPanel() {
   const hindi = state.language === "hi";
+  state.latestDialogue = null;
+  setSnapshotLiveState(false);
   phqTotal.textContent = "0";
   gadTotal.textContent = "0";
   safetyLevel.textContent = "none";
@@ -1502,6 +2313,30 @@ function resetInsightPanel() {
       ? "जब बातचीत थोड़ा स्थिर होगी, मनोवार्ता यहाँ एक सरल पुनरावलोकन छोड़ेगी ताकि आपको पता रहे कि वह क्या संभाल रही है।"
       : "Once the conversation starts settling, ManoVarta will leave a simple recap here so you know what it is holding onto.";
   }
+  if (nudgeCoach) {
+    nudgeCoach.textContent = hindi
+      ? "एक ठोस उदाहरण, समय, या असर अक्सर लंबे सामान्य विवरण से ज़्यादा मदद करता है।"
+      : state.language === "hinglish"
+        ? "Ek concrete example, timing, ya impact often long generic paragraph se zyada useful hota hai."
+        : "One concrete example, timing detail, or daily-life effect often helps more than a long general paragraph.";
+  }
+  if (nudgeOutcome) {
+    nudgeOutcome.textContent = hindi
+      ? "ये संकेत बातचीत को स्पष्ट बनाने के लिए हैं, दबाव बढ़ाने के लिए नहीं।"
+      : state.language === "hinglish"
+        ? "Yeh nudges conversation ko clearer banane ke liye hain, pressure create karne ke liye nahi."
+        : "These nudges are here to make the story clearer, not heavier.";
+  }
+  if (nudgeMeterFill) {
+    nudgeMeterFill.style.width = "18%";
+  }
+  if (nudgeMeterLabel) {
+    nudgeMeterLabel.textContent = hindi ? "संकेत बन रहा है" : "Signal just starting";
+  }
+  if (nudgeQuestTrack) {
+    nudgeQuestTrack.innerHTML = "";
+  }
+  renderNextSteps("default", state.language);
   renderNudges(state.language, {
     target_topic: "mood",
     next_action: "open_question",
@@ -1545,6 +2380,7 @@ async function sendMessageText(text, options = {}) {
     stopListening();
     setVoicePreview("", { visible: false });
     state.voiceLoopArmed = fromVoice && handsFreeVoiceEnabled();
+    setVoiceState("thinking");
     if (speechSynthesisApi) {
       speechSynthesisApi.cancel();
     }
@@ -1607,11 +2443,15 @@ async function sendMessageText(text, options = {}) {
     }
     maybeSpeak(payload.assistant_turn);
     setStatusBanner(LANGUAGE_UI[state.language].turnSuccess, "success");
+    if (!speakToggle?.checked) {
+      setVoiceState("idle");
+    }
   } catch (error) {
     console.error(error);
     renderSystemMessage("Turn failed due to a runtime error. Please retry.");
     setStatusBanner("Turn failed. Check runtime and retry.", "error");
     state.voiceLoopArmed = false;
+    setVoiceState("error");
   } finally {
     setBusy(false);
   }
@@ -1698,10 +2538,12 @@ function maybeResumeVoiceLoop() {
       return;
     }
     if (shouldPreferBrowserVoice()) {
+      setVoiceState("listening");
       startBrowserVoiceCapture("Your turn. Speak when ready.");
       return;
     }
     if (backendVoiceAvailable()) {
+      setVoiceState("listening");
       updateVoiceStatus("Your turn. Recording will start now.");
       startBackendRecording().catch((error) => {
         console.error(error);
@@ -1726,12 +2568,14 @@ function cleanupMediaStream() {
 function handleCapturedTranscript(transcript, sourceLabel = "voice") {
   const cleaned = (transcript || "").trim();
   if (!cleaned) {
+    setVoiceState("error");
     updateVoiceStatus("I could not hear enough to transcribe. Please try again.", true);
     setVoicePreview("", { visible: false });
     return;
   }
   messageInput.value = cleaned;
   setVoicePreview(cleaned, { visible: true });
+  setVoiceState("thinking");
   updateVoiceStatus(`Transcript captured from ${sourceLabel}.`);
   if (autoSendToggle.checked) {
     void sendMessageText(cleaned, { fromVoice: true });
@@ -1793,6 +2637,7 @@ async function startBackendRecording() {
   };
   mediaRecorder.start();
   listening = true;
+  setVoiceState("listening");
   updateMicButtonLabel();
   updateVoiceStatus("Recording for cloud transcription...", false, true);
 }
@@ -1813,6 +2658,7 @@ function setupVoice() {
 
     recognition.onstart = () => {
       listening = true;
+      setVoiceState("listening");
       updateMicButtonLabel();
       setVoicePreview("", { visible: false });
       updateVoiceStatus("Listening now. Tap stop when you are done.", false, true);
@@ -1839,6 +2685,7 @@ function setupVoice() {
       updateMicButtonLabel();
       if (event.error === "not-allowed" || event.error === "service-not-allowed") {
         state.voiceLoopArmed = false;
+        setVoiceState("error");
         updateVoiceStatus("Microphone access is blocked. Allow mic access in the browser and try again.", true);
         return;
       }
@@ -1848,9 +2695,11 @@ function setupVoice() {
           maybeResumeVoiceLoop();
           return;
         }
+        setVoiceState("error");
         updateVoiceStatus("I did not catch speech that time. Try once more.", true);
         return;
       }
+      setVoiceState("error");
       updateVoiceStatus(`Voice error: ${event.error}`, true);
     };
 
@@ -1862,6 +2711,7 @@ function setupVoice() {
         return;
       }
       if (!voiceStatus.classList.contains("error")) {
+        setVoiceState("idle");
         updateVoiceStatus("Voice ready.");
       }
     };
@@ -1969,6 +2819,7 @@ function toggleListening() {
 
 function stopListening() {
   state.voiceLoopArmed = false;
+  setVoiceState("idle");
   if (recognition && listening) {
     recognition.stop();
     return;
@@ -1981,6 +2832,7 @@ function stopListening() {
 function maybeSpeak(turn) {
   if (!speakToggle.checked || turn.speaker !== "assistant") {
     state.voiceLoopArmed = false;
+    setVoiceState("idle");
     return;
   }
 
@@ -1990,6 +2842,7 @@ function maybeSpeak(turn) {
   }
 
   if (state.runtime?.text_to_speech_enabled) {
+    setVoiceState("speaking");
     updateVoiceStatus("ManoVarta is replying aloud...");
     fetch(`/voice/speak?language=${encodeURIComponent(state.language)}`, {
       method: "POST",
@@ -2009,46 +2862,55 @@ function maybeSpeak(turn) {
         currentAudio.onended = () => {
           URL.revokeObjectURL(url);
           currentAudio = null;
+          setVoiceState("idle");
           updateVoiceStatus("Your turn. Speak when ready.");
           maybeResumeVoiceLoop();
         };
         currentAudio.onerror = () => {
           URL.revokeObjectURL(url);
           currentAudio = null;
+          setVoiceState("idle");
           fallbackSpeak(turn.text);
         };
         currentAudio.play().catch(() => {
           URL.revokeObjectURL(url);
           currentAudio = null;
+          setVoiceState("idle");
           fallbackSpeak(turn.text);
         });
       })
       .catch((error) => {
         console.error(error);
         if (speechSynthesisApi) {
+          setVoiceState("speaking");
           fallbackSpeak(turn.text);
           return;
         }
         state.voiceLoopArmed = false;
+        setVoiceState("error");
       });
     return;
   }
 
   if (speechSynthesisApi) {
+    setVoiceState("speaking");
     fallbackSpeak(turn.text);
     return;
   }
 
   state.voiceLoopArmed = false;
+  setVoiceState("idle");
 }
 
 function fallbackSpeak(text) {
   if (!speechSynthesisApi) {
     state.voiceLoopArmed = false;
+    setVoiceState("idle");
     return;
   }
 
   speechSynthesisApi.cancel();
+  setVoiceState("speaking");
   updateVoiceStatus("ManoVarta is replying aloud...");
   const utterance = new SpeechSynthesisUtterance(text);
   utterance.lang = mapVoiceLanguage(state.language);
@@ -2057,11 +2919,13 @@ function fallbackSpeak(text) {
     utterance.voice = voice;
   }
   utterance.onend = () => {
+    setVoiceState("idle");
     updateVoiceStatus("Your turn. Speak when ready.");
     maybeResumeVoiceLoop();
   };
   utterance.onerror = () => {
     state.voiceLoopArmed = false;
+    setVoiceState("error");
   };
   speechSynthesisApi.speak(utterance);
 }
@@ -2102,6 +2966,9 @@ function updateVoiceStatus(message, isError = false, isActive = false) {
   voiceStatus.textContent = message;
   voiceStatus.classList.toggle("error", isError);
   voiceStatus.classList.toggle("active", isActive);
+  if (isError) {
+    setVoiceState("error");
+  }
 }
 
 function escapeHtml(text) {
@@ -2147,6 +3014,38 @@ architectureModal?.addEventListener("click", (event) => {
     closeArchitectureModal();
   }
 });
+voiceInterruptButton?.addEventListener("click", () => {
+  state.voiceLoopArmed = false;
+  if (speechSynthesisApi) {
+    speechSynthesisApi.cancel();
+  }
+  if (currentAudio) {
+    currentAudio.pause();
+    currentAudio = null;
+  }
+  stopListening();
+  setVoicePreview("", { visible: false });
+  setVoiceState("idle");
+  updateVoiceStatus(
+    state.language === "hi"
+      ? "आवाज़ बातचीत रोक दी गई है। जब चाहें फिर से माइक्रोफ़ोन शुरू कीजिए।"
+      : state.language === "hinglish"
+        ? "Voice conversation pause ho gayi hai. Jab chaho mic dubara start karo."
+        : "Voice conversation paused. Tap the mic whenever you want to continue."
+  );
+});
+ritualRestartButton?.addEventListener("click", async () => {
+  const latest = state.recentCheckins?.[0];
+  if (!latest) {
+    return;
+  }
+  const prompt = buildRestartPrompt(latest, state.language);
+  if (!state.sessionId) {
+    await startSession();
+  }
+  messageInput.value = prompt;
+  messageInput.focus();
+});
 document.addEventListener("keydown", (event) => {
   if (architectureModal && event.key === "Escape" && !architectureModal.classList.contains("is-hidden")) {
     closeArchitectureModal();
@@ -2179,9 +3078,16 @@ resetInsightPanel();
 state.recentCheckins = loadRecentCheckins();
 renderHistory();
 setSessionLiveState(false);
+setSnapshotLiveState(false);
+setVoiceState("idle");
 document.body.classList.toggle("review-mode", reviewMode);
+if (!reviewMode) {
+  architectureButton?.remove();
+  backstagePanel?.remove();
+  architectureModal?.remove();
+}
 if (reviewMode) {
-  if (backstagePanel && backstageToggle) {
+  if (backstagePanel) {
     setDisclosureState(backstagePanel, backstageToggle, true, {
       open: "Presenter tools",
       close: "Hide presenter tools",
