@@ -81,7 +81,9 @@ def _should_use_live_llm(session: ChatSession) -> bool:
         return True
     if not session.turns:
         return False
-    return safety_monitor.assess(session.turns).level in {"review", "urgent"}
+    # Elevated-risk turns should return immediately from the runtime safety stack
+    # instead of paying extractor latency.
+    return False
 
 
 @app.get("/", include_in_schema=False)

@@ -290,16 +290,16 @@ def test_hindi_first_reply_does_not_surface_continuity_note_during_rapport():
     assert "क्या यह ज़्यादा उदासी" in reply
 
 
-def test_safety_sensitive_first_disclosure_forces_live_analysis():
+def test_safety_sensitive_first_disclosure_skips_full_llm_when_rule_safety_is_enough():
     session = ChatSession(
-        session_id="safety-force-llm",
+        session_id="safety-fast-path",
         language="en",
         turns=[
             Turn(turn_id=1, speaker="user", text="I think it might be easier if I do not wake up.", language_tag="en"),
         ],
     )
 
-    assert api_module._should_use_live_llm(session) is True
+    assert api_module._should_use_live_llm(session) is False
 
 
 def test_nudge_metadata_updates_feedback_loop_and_recommended_nudges():
