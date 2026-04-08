@@ -47,16 +47,16 @@ RAPPORT_PROMPTS = {
 
 REFLECTION_PREFIXES = {
     "en": {
-        "moderate": "Thanks for explaining that.",
-        "high": "That sounds really hard, and I appreciate you saying it clearly.",
+        "moderate": "Thanks for sharing that.",
+        "high": "That sounds hard.",
     },
     "hi": {
         "moderate": "यह बताने के लिए शुक्रिया।",
-        "high": "यह काफ़ी मुश्किल लग रहा है, और आपने इसे इतनी साफ़ तरह बताया, उसके लिए शुक्रिया।",
+        "high": "यह काफ़ी मुश्किल लग रहा है।",
     },
     "hinglish": {
         "moderate": "Yeh share karne ke liye thanks.",
-        "high": "Yeh kaafi hard lag raha hai, aur aapne itni clearly bataya uske liye thanks.",
+        "high": "Yeh kaafi hard lag raha hai.",
     },
 }
 
@@ -86,19 +86,19 @@ SAFETY_SHORT_ANSWER_SUFFIXES = {
 
 TOPIC_PROMPTS: Dict[str, Dict[str, str]] = {
     "mood": {
-        "en": "That sounds heavy. On most days, has it felt more like low mood itself, or more like losing interest in things you usually enjoy?",
-        "hi": "यह काफ़ी भारी लग रहा है। ज़्यादातर दिनों में यह ज़्यादा उदास मन जैसा लगता है, या पहले जो चीज़ें अच्छी लगती थीं उनमें दिल कम लगता है?",
-        "hinglish": "Yeh kaafi heavy lag raha hai. Most days yeh zyada low mood jaisa lagta hai, ya pehle jo cheezein achhi lagti thi unmein mann kam lagta hai?",
+        "en": "On most days, has it felt more like low mood itself, or more like losing interest in things you usually enjoy?",
+        "hi": "ज़्यादातर दिनों में यह ज़्यादा उदास मन जैसा लगता है, या पहले जो चीज़ें अच्छी लगती थीं उनमें दिल कम लगता है?",
+        "hinglish": "Most days yeh zyada low mood jaisa lagta hai, ya pehle jo cheezein achhi lagti thi unmein mann kam lagta hai?",
     },
     "sleep": {
-        "en": "That sounds draining. Has sleep mostly been hard to start, hard to stay asleep, or are you sleeping more than usual?",
-        "hi": "यह थका देने वाला लग रहा है। नींद में ज़्यादा दिक्कत सोने की शुरुआत में है, बीच-बीच में उठने में, या ज़रूरत से ज़्यादा नींद आ रही है?",
-        "hinglish": "Yeh kaafi draining lag raha hai. Sleep issue zyada sone ki shuruat mein hai, beech beech mein uthne mein, ya usual se zyada sleep ho rahi hai?",
+        "en": "Has sleep mostly been hard to start, hard to stay asleep, or are you sleeping more than usual?",
+        "hi": "नींद में ज़्यादा दिक्कत सोने की शुरुआत में है, बीच-बीच में उठने में, या ज़रूरत से ज़्यादा नींद आ रही है?",
+        "hinglish": "Sleep issue zyada sone ki shuruat mein hai, beech beech mein uthne mein, ya usual se zyada sleep ho rahi hai?",
     },
     "energy": {
-        "en": "I want to understand the day-to-day impact a bit better. Is it more like low energy through the day, changes in appetite, or both?",
-        "hi": "मैं रोज़मर्रा के असर को थोड़ा बेहतर समझना चाहता हूँ। क्या बात ज़्यादा दिन भर की थकान की है, भूख के बदलाव की, या दोनों की?",
-        "hinglish": "Main day-to-day impact thoda better samajhna chahta hoon. Kya issue zyada low energy ka hai, appetite change ka, ya dono ka?",
+        "en": "Is it more like low energy through the day, changes in appetite, or both?",
+        "hi": "क्या बात ज़्यादा दिन भर की थकान की है, भूख के बदलाव की, या दोनों की?",
+        "hinglish": "Kya issue zyada low energy ka hai, appetite change ka, ya dono ka?",
     },
     "self_view": {
         "en": "When things feel this heavy, do you also end up blaming yourself or feeling like a burden?",
@@ -106,9 +106,9 @@ TOPIC_PROMPTS: Dict[str, Dict[str, str]] = {
         "hinglish": "Jab cheezein itni heavy lagti hain, kya aap khud ko zyada blame karte ho ya burden jaisa feel hota hai?",
     },
     "focus": {
-        "en": "When you try to study or work, is it more that your focus keeps breaking, or that your body feels slowed down or restless?",
-        "hi": "जब आप पढ़ने या काम करने बैठते हैं, क्या ज़्यादा दिक्कत ध्यान टूटने की होती है, या शरीर धीमा या बेचैन लगता है?",
-        "hinglish": "Jab aap study ya work karte ho, kya zyada issue focus break hone ka hota hai, ya body slow ya restless lagti hai?",
+        "en": "When you try to study or work, is it more that your focus keeps breaking, or that you keep rereading or rechecking because things do not stick?",
+        "hi": "जब आप पढ़ने या काम करने बैठते हैं, क्या ज़्यादा दिक्कत ध्यान टूटने की होती है, या एक ही चीज़ बार-बार देखनी पड़ती है क्योंकि बात टिकती नहीं?",
+        "hinglish": "Jab aap study ya work karte ho, kya zyada issue focus break hone ka hota hai, ya same cheez baar baar dekhni padti hai kyunki woh stick nahi karti?",
     },
     "anxiety": {
         "en": "Does this feel more like constant worry in your mind, tension in your body, or both at the same time?",
@@ -257,6 +257,12 @@ TIME_MARKERS = (
     "raat",
     "shaam",
     "din mein",
+    "रात",
+    "रात में",
+    "सुबह",
+    "सुबह में",
+    "शाम",
+    "देर रात",
 )
 FREQUENCY_MARKERS = (
     "every day",
@@ -274,6 +280,16 @@ FREQUENCY_MARKERS = (
     "har din",
     "hafte",
     "baar",
+    "दिन",
+    "दिनों",
+    "हफ़्ते",
+    "हफ्ते",
+    "बार",
+    "रोज़",
+    "रोज",
+    "हर दिन",
+    "अक्सर",
+    "ज़्यादातर",
 )
 SHORT_FOLLOWUP_MARKERS = (
     "yes",
@@ -339,6 +355,40 @@ TOPIC_REFLECTIONS = {
 }
 
 ITEM_FOLLOW_UPS: Dict[str, Dict[str, Dict[str, str]]] = {
+    "phq_q1_anhedonia": {
+        "default": {
+            "en": "When you try to do things you usually care about, does the interest drop before you start, or do you go through with them but feel very little from them?",
+            "hi": "जब आप उन कामों की तरफ़ जाते हैं जो पहले अच्छे लगते थे, क्या शुरू करने से पहले ही मन हट जाता है, या आप कर लेते हैं लेकिन उनसे बहुत कम महसूस होता है?",
+            "hinglish": "Jab aap un cheezon ki taraf jaate ho jo pehle achhi lagti thi, kya start karne se pehle hi mann hat jata hai, ya aap kar lete ho lekin unse bahut kam feel hota hai?",
+        },
+        "timing_known": {
+            "en": "That timing helps. Around that part of the day, does the interest fade before you start things, or do you still do them but feel very little from them?",
+            "hi": "यह समय-सूचना मददगार है। उस समय के आसपास, क्या काम शुरू करने से पहले ही मन हट जाता है, या आप कर लेते हैं लेकिन उनसे बहुत कम महसूस होता है?",
+            "hinglish": "Yeh timing helpful hai. Us waqt ke around, kya cheezon ko start karne se pehle hi mann hat jata hai, ya aap kar lete ho lekin unse bahut kam feel hota hai?",
+        },
+        "frequency_known": {
+            "en": "That helps me understand how often it happens. When it does, does the interest fade before you start things, or do you still do them but feel very little from them?",
+            "hi": "इससे मुझे समझ आ रहा है कि यह कितनी बार होता है। जब ऐसा होता है, क्या काम शुरू करने से पहले ही मन हट जाता है, या आप कर लेते हैं लेकिन उनसे बहुत कम महसूस होता है?",
+            "hinglish": "Isse samajh aa raha hai ki yeh kitni baar hota hai. Jab aisa hota hai, kya cheezon ko start karne se pehle hi mann hat jata hai, ya aap kar lete ho lekin unse bahut kam feel hota hai?",
+        },
+    },
+    "phq_q2_low_mood": {
+        "default": {
+            "en": "When this hits, does it sit more like sadness or heaviness through the day, or does it come in waves around certain times?",
+            "hi": "जब यह महसूस होता है, क्या यह ज़्यादा दिन भर की उदासी या भारीपन जैसा रहता है, या कुछ खास समय पर लहरों में आता है?",
+            "hinglish": "Jab yeh feel hota hai, kya yeh zyada poore din ki sadness ya heaviness jaisa rehta hai, ya kuch specific times par waves mein aata hai?",
+        },
+        "timing_known": {
+            "en": "That timing helps. Around that part of the day, does it feel more like a steady heaviness, or more like a wave that rises and then passes?",
+            "hi": "यह समय-सूचना मददगार है। उस समय के आसपास, क्या यह ज़्यादा लगातार भारीपन जैसा लगता है, या लहर की तरह आता-जाता है?",
+            "hinglish": "Yeh timing helpful hai. Us waqt ke around, kya yeh zyada steady heaviness jaisa lagta hai, ya wave ki tarah aata-jata hai?",
+        },
+        "frequency_known": {
+            "en": "That helps me understand how often it shows up. When it does, does it feel more like steady heaviness, or more like a wave that rises and passes?",
+            "hi": "इससे मुझे समझ आ रहा है कि यह कितनी बार होता है। जब ऐसा होता है, क्या यह ज़्यादा लगातार भारीपन जैसा लगता है, या लहर की तरह आता-जाता है?",
+            "hinglish": "Isse samajh aa raha hai ki yeh kitni baar hota hai. Jab aisa hota hai, kya yeh zyada steady heaviness jaisa lagta hai, ya wave ki tarah aata-jata hai?",
+        },
+    },
     "phq_q3_sleep": {
         "default": {
             "en": "When sleep gets disrupted, is it mostly hard to fall asleep, waking during the night, or waking too early?",
@@ -349,6 +399,18 @@ ITEM_FOLLOW_UPS: Dict[str, Dict[str, Dict[str, str]]] = {
             "en": "That timing helps. When it happens, is it more trouble falling asleep, staying asleep, or waking up too early?",
             "hi": "यह समय-सूचना मददगार है। जब ऐसा होता है, क्या ज़्यादा मुश्किल नींद आने में होती है, नींद बनाए रखने में, या बहुत जल्दी उठ जाने में?",
             "hinglish": "Yeh timing helpful hai. Jab yeh hota hai, kya zyada issue sleep start hone mein hota hai, sleep banaye rakhne mein, ya bahut jaldi uth jaane mein?",
+        },
+    },
+    "phq_q7_concentration": {
+        "default": {
+            "en": "When you try to work or study, is it more that your attention slips away, or that you keep coming back to the same line and it still does not stick?",
+            "hi": "जब आप काम या पढ़ाई पर बैठते हैं, क्या ज़्यादा ऐसा होता है कि ध्यान बार-बार भटक जाता है, या एक ही बात पर लौटते रहते हैं लेकिन वह टिकती नहीं?",
+            "hinglish": "Jab aap work ya study par baithte ho, kya zyada aisa hota hai ki attention baar baar slip ho jata hai, ya same line par wapas aate rehte ho lekin woh stick nahi karti?",
+        },
+        "frequency_known": {
+            "en": "That helps me understand how often it happens. When it does, does your attention drift away quickly, or do you get stuck rereading or rechecking the same thing?",
+            "hi": "इससे मुझे समझ आ रहा है कि यह कितनी बार होता है। जब ऐसा होता है, क्या ध्यान जल्दी भटक जाता है, या आप एक ही चीज़ को बार-बार देखते रहते हैं?",
+            "hinglish": "Isse samajh aa raha hai ki yeh kitni baar hota hai. Jab aisa hota hai, kya attention jaldi drift ho jata hai, ya aap same cheez baar baar dekhte rehte ho?",
         },
     },
     "gad_q2_control_worry": {
@@ -368,6 +430,11 @@ ITEM_FOLLOW_UPS: Dict[str, Dict[str, Dict[str, str]]] = {
             "en": "When you try to settle down, is it harder to quiet your thoughts, relax your body, or both?",
             "hi": "जब आप खुद को शांत करने की कोशिश करते हैं, क्या ज़्यादा मुश्किल दिमाग को शांत करना होता है, शरीर को ढीला करना, या दोनों?",
             "hinglish": "Jab aap settle hone ki koshish karte ho, kya zyada mushkil thoughts ko quiet karna hota hai, body relax karna, ya dono?",
+        },
+        "repeat_probe": {
+            "en": "It sounds like both mind and body can get pulled in here. When this builds up, does it settle once the moment passes, or does the tension stay stuck for a long time afterward?",
+            "hi": "लगता है यहाँ दिमाग और शरीर दोनों खिंच जाते हैं। जब यह बढ़ता है, क्या पल गुजरने के बाद यह शांत हो जाता है, या तनाव लंबे समय तक अटका रहता है?",
+            "hinglish": "Lag raha hai yahan mind aur body dono pull ho jaate hain. Jab yeh build hota hai, kya moment nikalne ke baad settle ho jata hai, ya tension kaafi der tak atka rehta hai?",
         },
         "timing_known": {
             "en": "That timing helps. When it hits, is it more like a busy mind, a tense body, or both together?",
@@ -398,6 +465,30 @@ ITEM_FOLLOW_UPS: Dict[str, Dict[str, Dict[str, str]]] = {
         },
     },
 }
+
+ITEM_SIGNAL_MARKERS: Dict[str, Tuple[str, ...]] = {
+    "phq_q1_anhedonia": ("not interested", "no interest", "disconnected", "nothing feels good", "usually enjoy", "used to enjoy", "mann nahi lagta", "मन नहीं लगता", "दिल नहीं करता"),
+    "phq_q2_low_mood": ("low mood", "sad", "down", "empty", "heavy", "heaviness", "मन भारी", "भारी", "उदास"),
+    "phq_q6_worthlessness": ("burden", "worthless", "useless", "बोझ", "बेकार", "मेरी वजह से"),
+    "phq_q3_sleep": ("sleep", "asleep", "wake", "waking", "sleep disturb", "neend disturb", "नींद", "रात", "रात में", "उठ जाती", "switch off"),
+    "phq_q7_concentration": ("focus", "concentrat", "attention", "cannot focus", "can't focus", "ध्यान", "focus nahi", "ध्यान नहीं टिक", "mind blanks", "screen"),
+    "gad_q2_control_worry": ("worry", "loop", "looping", "replay", "mind won't stop", "mind wont stop", "चिंता", "सोच बंद"),
+    "gad_q3_excessive_worry": ("future", "rent", "family", "money", "what if", "awful", "सब कुछ", "हर बात"),
+    "gad_q4_trouble_relaxing": ("switch off", "settle down", "quiet your thoughts", "तनाव", "शांत", "relax", "off karna", "busy mind", "tense body", "body tense", "tense lagti"),
+    "gad_q5_restlessness": ("restless", "restlessness", "sit still", "pacing", "बेचैनी", "chain se baith", "move around"),
+}
+
+TOPIC_SIGNAL_MARKERS: Dict[str, Tuple[str, ...]] = {
+    "mood": ("low mood", "sad", "down", "empty", "heavy", "heaviness", "disconnected", "usually enjoy", "used to enjoy", "उदासी", "उदास", "खाली", "low feel", "भारी", "मन भारी", "मन नहीं लगता"),
+    "sleep": ("sleep", "asleep", "wake up", "waking", "neend", "नींद", "सोने", "उठ जाती", "night", "रात"),
+    "energy": ("tired", "drained", "fatigue", "wiped", "थक", "थका", "थकान", "ऊर्जा"),
+    "self_view": ("burden", "worthless", "useless", "guilt", "बोझ", "बेकार", "गलती मेरी", "worthless"),
+    "focus": ("focus", "concentrat", "attention", "mind blanks", "cannot focus", "can't focus", "ध्यान", "focus nahi", "ध्यान नहीं", "ध्यान नहीं टिक", "screen"),
+    "anxiety": ("worry", "restless", "tense", "panic", "loop", "बेचैनी", "चिंता", "घबराहट", "mind won't stop"),
+    "safety": ("hurt myself", "not wake up", "suicide", "मर", "खुद को नुकसान", "zinda na"),
+}
+
+AFFECTIVE_TOPIC_FAMILY = {"mood", "sleep", "energy", "self_view", "focus"}
 
 
 @dataclass(frozen=True)
@@ -526,12 +617,24 @@ class DialoguePlanner:
         if plan.next_action == "summarize":
             return CLOSING_MESSAGES[language], None
         if plan.stage == "rapport":
-            return self._compose_prompt(language, RAPPORT_PROMPTS[language], plan), plan.target_item
+            targeted_prompt = self._build_prompt_for_target(language, plan, session)
+            if targeted_prompt and self._should_use_targeted_rapport(plan, session):
+                return self._compose_prompt(language, targeted_prompt, plan, session), plan.target_item
+            return self._compose_prompt(language, RAPPORT_PROMPTS[language], plan, session), plan.target_item
 
         prompt = self._build_prompt_for_target(language, plan, session)
         if prompt:
-            return self._compose_prompt(language, prompt, plan), plan.target_item
+            return self._compose_prompt(language, prompt, plan, session), plan.target_item
         return CLOSING_MESSAGES[language], None
+
+    def _should_use_targeted_rapport(self, plan: DialoguePlan, session: ChatSession) -> bool:
+        if not plan.target_item or plan.target_topic in {"rapport", "summary"}:
+            return False
+        latest_user_text = self._latest_user_text(session)
+        if not latest_user_text:
+            return False
+        words = len(latest_user_text.split())
+        return words >= 6 or self._has_timing_or_frequency_answer(latest_user_text)
 
     def build_plan(self, snapshot: ScreeningSnapshot, session: ChatSession) -> CoveragePlan:
         user_turns = [turn for turn in session.turns if turn.speaker == "user"]
@@ -562,6 +665,8 @@ class DialoguePlanner:
             fatigue,
         )
         target_item = self._select_target_item(snapshot, session, target_topic, held_back_items, fatigue, user_style)
+        if target_item and ITEM_TO_TOPIC.get(target_item) and ITEM_TO_TOPIC.get(target_item) != target_topic:
+            target_topic = ITEM_TO_TOPIC[target_item]
         next_items = self._rank_next_items(snapshot, session, target_topic, held_back_items, fatigue, user_style)
         review_items = [
             item_id
@@ -842,6 +947,8 @@ class DialoguePlanner:
             return "safety"
         if snapshot.safety.level == "review" and "phq_q9_self_harm" not in held_back_items:
             return "safety"
+        if user_turn_count == 1 and snapshot.coverage.touched_items >= 1:
+            return "clarification"
         if user_turn_count <= 1 and snapshot.coverage.touched_items < 3:
             return "rapport"
         if any(topic.status in {"review", "probing"} for topic in topic_states if topic.topic_id != "safety"):
@@ -874,6 +981,9 @@ class DialoguePlanner:
             return "safety"
         if stage == "summary":
             return current_topic if current_topic in TOPIC_GRAPH else "mood"
+        latest_signal_topics = self._latest_signal_topics(session)
+        recent_signal_topics = self._recent_signal_topics(session)
+
         if stage == "rapport":
             touched_candidates = [
                 topic
@@ -891,6 +1001,23 @@ class DialoguePlanner:
                         1.0 - topic.confidence,
                     ),
                 ).topic_id
+            signal_candidates = [
+                topic
+                for topic in topic_states
+                if topic.topic_id in latest_signal_topics and topic.topic_id != "safety"
+            ]
+            if signal_candidates:
+                preferred_signal = max(
+                    signal_candidates,
+                    key=lambda topic: (
+                        topic.topic_id == "mood" and "self_view" in latest_signal_topics and "phq_q6_worthlessness" in held_back_items,
+                        topic.priority,
+                        topic.topic_id == current_topic,
+                    ),
+                )
+                if preferred_signal.topic_id == "self_view" and "phq_q6_worthlessness" in held_back_items:
+                    return "mood"
+                return preferred_signal.topic_id
 
         held_back = set(held_back_items)
         candidates = [
@@ -902,6 +1029,8 @@ class DialoguePlanner:
             return current_topic if current_topic in TOPIC_GRAPH else "mood"
 
         recent_topics = [ITEM_TO_TOPIC.get(item_id) for item_id in session.asked_items[-3:] if ITEM_TO_TOPIC.get(item_id)]
+        affective_signal_active = bool(latest_signal_topics & AFFECTIVE_TOPIC_FAMILY)
+        anxiety_signal_active = "anxiety" in latest_signal_topics
 
         def rank(topic: TopicState) -> tuple[int, float]:
             score = topic.priority * 10
@@ -931,6 +1060,22 @@ class DialoguePlanner:
                 score += 8
             if user_style.steering_preference == "guided" and not topic.touched:
                 score += 4
+            if topic.topic_id in latest_signal_topics:
+                score += 18
+            elif topic.topic_id in recent_signal_topics:
+                score += 8
+            if current_topic in AFFECTIVE_TOPIC_FAMILY and affective_signal_active and not anxiety_signal_active:
+                if topic.topic_id in AFFECTIVE_TOPIC_FAMILY:
+                    score += 16
+                if topic.topic_id == current_topic:
+                    score += 8
+                if topic.topic_id == "anxiety":
+                    score -= 18
+            if current_topic == "anxiety" and anxiety_signal_active:
+                if topic.topic_id == "anxiety":
+                    score += 10
+                elif topic.topic_id in AFFECTIVE_TOPIC_FAMILY:
+                    score -= 4
             if topic.topic_id == "safety" and "phq_q9_self_harm" in held_back:
                 score -= 40
             if topic.topic_id == "safety" and snapshot.safety.level == "none":
@@ -948,6 +1093,9 @@ class DialoguePlanner:
         fatigue: FatigueLevel,
         user_style: UserStyleProfile,
     ) -> Optional[str]:
+        directed_followup = self._directed_followup_item(snapshot, session, target_topic, held_back_items)
+        if directed_followup:
+            return directed_followup
         continuity_item = self._continuity_item(snapshot, session, held_back_items, fatigue)
         if continuity_item and ITEM_TO_TOPIC.get(continuity_item) == target_topic:
             return continuity_item
@@ -962,7 +1110,76 @@ class DialoguePlanner:
         ]
         if not candidates:
             return None
+        latest_signal_items = self._latest_signal_items(session)
+        if latest_signal_items:
+            signaled_candidates = [item_id for item_id in candidates if item_id in latest_signal_items]
+            if signaled_candidates and (
+                not session.asked_items
+                or not self._has_timing_or_frequency_answer(self._latest_user_text(session))
+            ):
+                return max(
+                    signaled_candidates,
+                    key=lambda item_id: self._item_priority_score(snapshot, session, item_id, target_topic, fatigue, user_style),
+                )
         return max(candidates, key=lambda item_id: self._item_priority_score(snapshot, session, item_id, target_topic, fatigue, user_style))
+
+    def _directed_followup_item(
+        self,
+        snapshot: ScreeningSnapshot,
+        session: ChatSession,
+        target_topic: str,
+        held_back_items: list[str],
+    ) -> Optional[str]:
+        if not session.asked_items:
+            return None
+        last_item = session.asked_items[-1]
+        latest_user_text = self._latest_user_text(session)
+        held_back = set(held_back_items)
+        recent_signal_items = self._recent_signal_items(session)
+
+        def available(item_id: str) -> bool:
+            return (
+                item_id not in held_back
+                and item_id in snapshot.items
+                and snapshot.items[item_id].status != "resolved"
+            )
+
+        if last_item in {"phq_q1_anhedonia", "phq_q2_low_mood", "phq_q6_worthlessness"}:
+            if "phq_q7_concentration" in recent_signal_items and available("phq_q7_concentration"):
+                return "phq_q7_concentration"
+            if last_item != "phq_q1_anhedonia" and "phq_q1_anhedonia" in recent_signal_items and available("phq_q1_anhedonia"):
+                return "phq_q1_anhedonia"
+            if last_item != "phq_q2_low_mood" and "phq_q2_low_mood" in recent_signal_items and available("phq_q2_low_mood"):
+                return "phq_q2_low_mood"
+            if target_topic == "focus" and available("phq_q7_concentration"):
+                return "phq_q7_concentration"
+            if target_topic == "mood" and available("phq_q1_anhedonia"):
+                return "phq_q1_anhedonia"
+
+        if not self._has_timing_or_frequency_answer(latest_user_text):
+            return None
+
+        if last_item == "gad_q2_control_worry" and target_topic == "anxiety":
+            if "gad_q5_restlessness" in recent_signal_items and available("gad_q5_restlessness"):
+                return "gad_q5_restlessness"
+            if "gad_q4_trouble_relaxing" in recent_signal_items and available("gad_q4_trouble_relaxing"):
+                return "gad_q4_trouble_relaxing"
+            if available("gad_q4_trouble_relaxing"):
+                return "gad_q4_trouble_relaxing"
+            if available("gad_q5_restlessness"):
+                return "gad_q5_restlessness"
+
+        if last_item == "phq_q3_sleep":
+            if snapshot.items[last_item].status != "resolved":
+                return last_item
+            if target_topic == "focus" and available("phq_q7_concentration"):
+                return "phq_q7_concentration"
+            if "phq_q7_concentration" in recent_signal_items and available("phq_q7_concentration"):
+                return "phq_q7_concentration"
+            if available("phq_q4_fatigue"):
+                return "phq_q4_fatigue"
+
+        return None
 
     def _rank_next_items(
         self,
@@ -1083,6 +1300,8 @@ class DialoguePlanner:
         score = ITEM_INDEX[item_id].priority * 10
         score += UNDERCOVERED_ITEM_BOOSTS.get(item_id, 0) * 6
         score += int((1.0 - item.confidence) * 12)
+        latest_signal_items = self._latest_signal_items(session)
+        recent_signal_items = self._recent_signal_items(session)
 
         if item.status == "contradicted":
             score += 28
@@ -1115,6 +1334,18 @@ class DialoguePlanner:
             score += 10
         if user_style and user_style.steering_preference == "user_led" and target_topic and ITEM_TO_TOPIC.get(item_id) != target_topic:
             score -= 4
+        if item_id in latest_signal_items:
+            score += 18
+        elif item_id in recent_signal_items:
+            score += 8
+        if session.asked_items[-1:] == [item_id] and self._has_timing_or_frequency_answer(self._latest_user_text(session)):
+            prompt_bank = ITEM_FOLLOW_UPS.get(item_id, {})
+            has_distinct_variant = (
+                "frequency_known" in prompt_bank
+                or "timing_known" in prompt_bank
+            )
+            if not has_distinct_variant or item_id == "gad_q2_control_worry":
+                score -= 18
         return score
 
     def _held_back_items(self, snapshot: ScreeningSnapshot, session: ChatSession) -> list[str]:
@@ -1158,10 +1389,22 @@ class DialoguePlanner:
         )
         return any(marker in normalized for marker in direct_markers)
 
-    def _compose_prompt(self, language: str, base_prompt: str, plan: DialoguePlan) -> str:
+    def _compose_prompt(
+        self,
+        language: str,
+        base_prompt: str,
+        plan: DialoguePlan,
+        session: Optional[ChatSession] = None,
+    ) -> str:
         prefix = REFLECTION_PREFIXES[language][plan.user_style.empathy_level]
         suffix = self._style_suffix(language, plan)
-        parts = [prefix]
+        last_assistant_text = self._last_assistant_text(session)
+        repeated_topic_probe = (
+            plan.user_turns >= 2
+            and plan.stage in {"clarification", "exploration"}
+            and plan.current_topic == plan.target_topic
+        )
+        parts = []
         support_line = ""
         continuity_ready = bool(
             plan.continuity_note
@@ -1176,6 +1419,19 @@ class DialoguePlanner:
             support_line = plan.reflective_anchor
         elif continuity_ready:
             support_line = plan.continuity_note
+        latest_user_text = self._latest_user_text(session) if session else ""
+        if repeated_topic_probe and self._has_timing_or_frequency_answer(latest_user_text):
+            support_line = ""
+        if self._already_used_segment(last_assistant_text, support_line):
+            support_line = ""
+        use_prefix = (
+            prefix
+            and not repeated_topic_probe
+            and not self._already_used_segment(last_assistant_text, prefix)
+            and (not support_line or plan.stage == "rapport")
+        )
+        if use_prefix:
+            parts.append(prefix)
         if support_line:
             parts.append(support_line)
         parts.append(base_prompt)
@@ -1198,6 +1454,7 @@ class DialoguePlanner:
 
         latest_user_text = self._latest_user_text(session)
         recent_repeat = session.asked_items[-1:] == [plan.target_item]
+        recent_repeat_window = plan.target_item in session.asked_items[-3:]
         has_timing = self._has_timing_answer(latest_user_text)
         has_frequency = self._has_frequency_answer(latest_user_text)
 
@@ -1205,6 +1462,8 @@ class DialoguePlanner:
             return prompt_bank["frequency_known"][language]
         if recent_repeat and (has_timing or has_frequency) and "timing_known" in prompt_bank:
             return prompt_bank["timing_known"][language]
+        if recent_repeat_window and not (has_timing or has_frequency) and "repeat_probe" in prompt_bank:
+            return prompt_bank["repeat_probe"][language]
         return prompt_bank.get("default", {}).get(language)
 
     def _latest_user_text(self, session: ChatSession) -> str:
@@ -1212,6 +1471,65 @@ class DialoguePlanner:
             if turn.speaker == "user":
                 return self._normalize(turn.text)
         return ""
+
+    def _latest_signal_topics(self, session: ChatSession) -> set[str]:
+        latest_user_text = self._latest_user_text(session)
+        if not latest_user_text:
+            return set()
+        topics = {
+            topic_id
+            for topic_id, markers in TOPIC_SIGNAL_MARKERS.items()
+            if any(marker in latest_user_text for marker in markers)
+        }
+        return topics
+
+    def _recent_signal_topics(self, session: ChatSession, lookback: int = 3) -> set[str]:
+        user_turns = [self._normalize(turn.text) for turn in session.turns if turn.speaker == "user"][-lookback:]
+        if not user_turns:
+            return set()
+        joined = " ".join(user_turns)
+        return {
+            topic_id
+            for topic_id, markers in TOPIC_SIGNAL_MARKERS.items()
+            if any(marker in joined for marker in markers)
+        }
+
+    def _latest_signal_items(self, session: ChatSession) -> set[str]:
+        latest_user_text = self._latest_user_text(session)
+        if not latest_user_text:
+            return set()
+        return {
+            item_id
+            for item_id, markers in ITEM_SIGNAL_MARKERS.items()
+            if any(marker in latest_user_text for marker in markers)
+        }
+
+    def _recent_signal_items(self, session: ChatSession, lookback: int = 3) -> set[str]:
+        user_turns = [self._normalize(turn.text) for turn in session.turns if turn.speaker == "user"][-lookback:]
+        if not user_turns:
+            return set()
+        joined = " ".join(user_turns)
+        return {
+            item_id
+            for item_id, markers in ITEM_SIGNAL_MARKERS.items()
+            if any(marker in joined for marker in markers)
+        }
+
+    def _last_assistant_text(self, session: Optional[ChatSession]) -> str:
+        if session is None:
+            return ""
+        for turn in reversed(session.turns):
+            if turn.speaker == "assistant":
+                return self._normalize(turn.text)
+        return ""
+
+    def _already_used_segment(self, normalized_last_assistant: str, segment: str) -> bool:
+        if not normalized_last_assistant or not segment:
+            return False
+        normalized_segment = self._normalize(segment)
+        if not normalized_segment:
+            return False
+        return normalized_segment in normalized_last_assistant
 
     def _has_timing_or_frequency_answer(self, normalized_text: str) -> bool:
         if not normalized_text:
