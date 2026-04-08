@@ -576,3 +576,54 @@ def test_huggingface_responder_prefers_targeted_fallback_for_short_clarifier_ans
 
     assert reply == fallback
     assert source == "template"
+
+
+def test_huggingface_responder_prefers_template_for_local_hindi_reply():
+    class _Response:
+        def __init__(self, content):
+            self.choices = [type("Choice", (), {"message": type("Message", (), {"content": content})()})()]
+
+    class _FakeClient:
+        def chat_completion(self, *, messages, temperature, max_tokens):
+            return _Response("आपकी गर्म दिखाई जाती है, जब यह आपकी गर्म दिखाई जाती है।")
+
+    responder = HuggingFaceResponder(_local_config())
+    responder._client = _FakeClient()
+    session = ChatSession(
+        session_id="local-hindi-fallback",
+        language="hi",
+        turns=[
+            Turn(turn_id=1, speaker="assistant", text="जब नींद बिगड़ती है, क्या ज़्यादा दिक्कत सोने की शुरुआत में होती है, रात में बार-बार उठने में, या बहुत जल्दी उठ जाने में?", language_tag="hi"),
+            Turn(turn_id=2, speaker="user", text="रात में ज़्यादा होता है।", language_tag="hi"),
+        ],
+    )
+    snapshot = ScreeningSnapshot(
+        language="hi",
+        items={},
+        evidence_spans=[],
+        unresolved_items=["phq_q3_sleep"],
+        totals={"PHQ9": None, "GAD7": None},
+        safety=SafetyFlag(level="none"),
+        coverage=CoveragePlan(
+            total_items=16,
+            touched_items=1,
+            completion_ratio=0.1,
+            dialogue=DialoguePlan(
+                stage="clarification",
+                next_action="clarify",
+                current_topic="sleep",
+                target_topic="sleep",
+                target_item="phq_q3_sleep",
+                rationale="Hindi local generation should stay on the safe planner fallback.",
+                transition_hint="Keep the Hindi follow-up crisp and in script.",
+                user_style=UserStyleProfile(),
+                disclosure=DisclosureMetrics(),
+            ),
+        ),
+    )
+
+    fallback = "यह समय-सूचना मददगार है। जब ऐसा होता है, क्या ज़्यादा मुश्किल नींद आने में होती है, नींद बनाए रखने में, या बहुत जल्दी उठ जाने में?"
+    reply, source = responder.compose_reply(session, snapshot, "phq_q3_sleep", fallback)
+
+    assert reply == fallback
+    assert source == "template"
