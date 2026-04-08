@@ -18,6 +18,10 @@ OpennessBand = Literal["guarded", "cautious", "open"]
 DistressTrend = Literal["unclear", "steady", "rising", "easing"]
 CodeMixLevel = Literal["low", "medium", "high"]
 EmpathyLevel = Literal["moderate", "high"]
+SteeringPreference = Literal["guided", "balanced", "user_led"]
+ReadinessLevel = Literal["opening", "building", "steady", "ready_to_close"]
+FatigueLevel = Literal["low", "medium", "high"]
+NudgeOutcome = Literal["unknown", "helpful", "unhelpful"]
 
 
 class Turn(BaseModel):
@@ -80,6 +84,7 @@ class UserStyleProfile(BaseModel):
     code_mix: CodeMixLevel = "low"
     distress_trend: DistressTrend = "unclear"
     empathy_level: EmpathyLevel = "moderate"
+    steering_preference: SteeringPreference = "balanced"
 
 
 class DisclosureMetrics(BaseModel):
@@ -89,6 +94,7 @@ class DisclosureMetrics(BaseModel):
     stable_topics: int = 0
     items_per_user_turn: float = Field(default=0.0, ge=0.0)
     resolved_per_user_turn: float = Field(default=0.0, ge=0.0)
+    nudge_effectiveness: float = Field(default=0.0, ge=-1.0, le=1.0)
 
 
 class DialoguePlan(BaseModel):
@@ -105,6 +111,11 @@ class DialoguePlan(BaseModel):
     transition_hint: str = ""
     user_style: UserStyleProfile = Field(default_factory=UserStyleProfile)
     disclosure: DisclosureMetrics = Field(default_factory=DisclosureMetrics)
+    readiness: ReadinessLevel = "opening"
+    fatigue: FatigueLevel = "low"
+    reflective_anchor: str = ""
+    continuity_note: str = ""
+    recommended_nudges: List[str] = Field(default_factory=list)
 
 
 class CoveragePlan(BaseModel):
@@ -141,6 +152,18 @@ class UserProfileContext(BaseModel):
     living_situation: Optional[str] = None
     support_system: Optional[str] = None
     context_note: Optional[str] = None
+    recent_checkins: List[Dict[str, object]] = Field(default_factory=list)
+
+
+class NudgeEvent(BaseModel):
+    nudge_id: str
+    strategy: str
+    title: Optional[str] = None
+    turn_id: Optional[int] = None
+    words_added: int = 0
+    evidence_gain: int = 0
+    resolved_gain: int = 0
+    outcome: NudgeOutcome = "unknown"
 
 
 class ChatSession(BaseModel):
@@ -149,6 +172,7 @@ class ChatSession(BaseModel):
     profile: UserProfileContext = Field(default_factory=UserProfileContext)
     turns: List[Turn] = Field(default_factory=list)
     asked_items: List[str] = Field(default_factory=list)
+    nudge_events: List[NudgeEvent] = Field(default_factory=list)
     created_at: datetime = Field(default_factory=datetime.utcnow)
 
 
@@ -165,6 +189,10 @@ class StartSessionResponse(BaseModel):
 
 class ChatTurnRequest(BaseModel):
     text: str = Field(min_length=1)
+    nudge_id: Optional[str] = None
+    nudge_strategy: Optional[str] = None
+    nudge_title: Optional[str] = None
+    from_voice: bool = False
 
 
 class ChatTurnResponse(BaseModel):
