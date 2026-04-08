@@ -1,12 +1,14 @@
 from __future__ import annotations
 
 import json
+import re
 import time
 from functools import lru_cache
 from threading import Lock
 from typing import Any, Optional, Tuple
 
 from manovarta_core.config import RuntimeConfig
+from manovarta_core.dialogue import FREQUENCY_MARKERS, TIME_MARKERS
 from manovarta_core.knowledge import knowledge_summary_for_topic, profile_summary
 from manovarta_core.json_utils import normalize_extractor_payload, normalize_safety_level, parse_extractor_payload, parse_json_object
 from manovarta_core.questionnaires import ITEM_INDEX
@@ -202,6 +204,8 @@ class HuggingFaceResponder:
     ) -> Tuple[str, str]:
         if not self.enabled or snapshot.safety.level == "urgent":
             return fallback_text, "template"
+        if self._should_prefer_fallback(session, target_item):
+            return fallback_text, "template"
 
         try:
             messages = self._build_messages(session, snapshot, target_item, fallback_text)
@@ -217,6 +221,12 @@ class HuggingFaceResponder:
         cleaned = self._clean_content(content, fallback_text)
         if not cleaned:
             return fallback_text, "template"
+        if (
+            self._sounds_invalid_empathy(cleaned)
+            or self._repeats_last_question(cleaned, session)
+            or self._looks_like_meta_or_draft(cleaned)
+        ):
+            return fallback_text, "template"
         return cleaned, self.config.model_provider
 
     def _build_messages(
@@ -228,10 +238,8 @@ class HuggingFaceResponder:
     ):
         dialogue = snapshot.coverage.dialogue
         focus_label = ITEM_INDEX[target_item].label if target_item else "general follow-up"
-        transcript = "\n".join(
-            f"{turn.speaker}: {turn.text}"
-            for turn in session.turns[-6:]
-        )
+        transcript = self._build_reply_transcript(session.turns)
+        earlier_context = self._build_earlier_context(session.turns)
         unresolved = ", ".join(snapshot.unresolved_items[:6]) or "none"
         safety = snapshot.safety.level
         profile_context = profile_summary(session.profile)
@@ -243,9 +251,12 @@ class HuggingFaceResponder:
             "Write one concise follow-up question or one brief closing message. "
             "Stay in the user's language. Use at most two sentences and prefer one focused question. "
             "Mirror the user's pacing and level of detail without sounding scripted. "
+            "Never say 'great to hear', 'good to hear', or 'glad to hear' when the user is describing distress, symptoms, or impairment. "
             "If the user is guarded or brief, ask one smaller concrete follow-up and make it clear that a short answer is okay. "
             "If the user is detailed, let them continue in their own words instead of forcing a checklist. "
             "If the user's code-mix is medium or high, mirror it lightly and naturally without caricature or slang overload. "
+            "Do not repeat the previous assistant question in the same wording. "
+            "If the user already answered timing or frequency, move to what the symptom feels like, how strong it is, or how it affects the day. "
             "Sound warm, calm, and respectful. "
             "Do not mention PHQ-9 or GAD-7. "
             "If safety is urgent, do not continue screening."
@@ -259,13 +270,19 @@ class HuggingFaceResponder:
             f"Target topic: {dialogue.target_topic}\n"
             f"Target focus: {focus_label}\n"
             f"Transition hint: {dialogue.transition_hint}\n"
+            f"Reflective anchor: {dialogue.reflective_anchor}\n"
+            f"Continuity note: {dialogue.continuity_note}\n"
             f"User profile context: {profile_context}\n"
-            f"User style: verbosity={dialogue.user_style.verbosity}, openness={dialogue.user_style.openness}, code_mix={dialogue.user_style.code_mix}, distress_trend={dialogue.user_style.distress_trend}, empathy_level={dialogue.user_style.empathy_level}\n"
-            f"Disclosure efficiency: items_per_turn={dialogue.disclosure.items_per_user_turn}, resolved_per_turn={dialogue.disclosure.resolved_per_user_turn}\n"
+            f"User style: verbosity={dialogue.user_style.verbosity}, openness={dialogue.user_style.openness}, code_mix={dialogue.user_style.code_mix}, distress_trend={dialogue.user_style.distress_trend}, empathy_level={dialogue.user_style.empathy_level}, steering_preference={dialogue.user_style.steering_preference}\n"
+            f"Disclosure efficiency: items_per_turn={dialogue.disclosure.items_per_user_turn}, resolved_per_turn={dialogue.disclosure.resolved_per_user_turn}, nudge_effectiveness={dialogue.disclosure.nudge_effectiveness}\n"
+            f"Readiness: {dialogue.readiness}\n"
+            f"Fatigue: {dialogue.fatigue}\n"
+            f"Recommended nudge families: {', '.join(dialogue.recommended_nudges) or 'none'}\n"
             f"Unresolved items: {unresolved}\n"
             f"Knowledge guidance: {topic_knowledge}\n"
             f"Planner rationale: {dialogue.rationale}\n"
             f"Fallback text: {fallback_text}\n"
+            f"Earlier context: {earlier_context}\n"
             f"Recent transcript:\n{transcript}\n\n"
             "Draft the next assistant turn so it feels natural, empathetic, and aligned with the user's style."
         )
@@ -274,13 +291,118 @@ class HuggingFaceResponder:
             {"role": "user", "content": user_prompt},
         ]
 
+    def _build_reply_transcript(self, turns: list[Turn]) -> str:
+        window = turns[-10:] if len(turns) > 10 else turns
+        return "\n".join(f"{turn.speaker}: {turn.text}" for turn in window)
+
+    def _build_earlier_context(self, turns: list[Turn]) -> str:
+        if len(turns) <= 10:
+            return "No earlier context."
+        older_user_turns = [turn.text.strip() for turn in turns[:-10] if turn.speaker == "user"][-3:]
+        if not older_user_turns:
+            return "No earlier context."
+        snippets = []
+        for turn in older_user_turns:
+            words = turn.split()
+            snippets.append(" ".join(words[:14]))
+        return " | ".join(snippets)
+
     def _clean_content(self, content: str, fallback_text: str) -> Optional[str]:
         cleaned = content.strip().strip('"')
         if not cleaned:
             return None
+        fragments = []
+        for line in cleaned.splitlines():
+            stripped = line.strip()
+            if not stripped:
+                continue
+            normalized = normalize_text(stripped)
+            if normalized.startswith("note:") or normalized.startswith("draft") or normalized in {"---", "***"}:
+                break
+            fragments.append(stripped)
+        cleaned = " ".join(fragments).strip()
+        cleaned = re.sub(r"\*\*(.*?)\*\*", r"\1", cleaned)
+        cleaned = re.sub(r"\s{2,}", " ", cleaned).strip()
+        if not cleaned:
+            return fallback_text
         if "diagnos" in cleaned.lower() or "therap" in cleaned.lower():
             return fallback_text
         return cleaned
+
+    def _sounds_invalid_empathy(self, content: str) -> bool:
+        normalized = normalize_text(content)
+        banned_phrases = ("great to hear", "good to hear", "glad to hear")
+        return any(phrase in normalized for phrase in banned_phrases)
+
+    def _repeats_last_question(self, content: str, session: ChatSession) -> bool:
+        last_assistant = next((turn.text for turn in reversed(session.turns) if turn.speaker == "assistant"), "")
+        if not last_assistant:
+            return False
+
+        current_tokens = self._question_signature(content)
+        previous_tokens = self._question_signature(last_assistant)
+        if not current_tokens or not previous_tokens:
+            return False
+        overlap = len(current_tokens & previous_tokens) / max(len(current_tokens | previous_tokens), 1)
+        return overlap >= 0.72
+
+    def _looks_like_meta_or_draft(self, content: str) -> bool:
+        normalized = normalize_text(content)
+        meta_markers = (
+            "note:",
+            "this draft",
+            "draft maintains",
+            "the following",
+            "assistant turn",
+        )
+        return any(marker in normalized for marker in meta_markers)
+
+    def _should_prefer_fallback(self, session: ChatSession, target_item: Optional[str]) -> bool:
+        if not target_item or target_item not in ITEM_INDEX:
+            return False
+        last_user = next((turn.text for turn in reversed(session.turns) if turn.speaker == "user"), "")
+        if not last_user:
+            return False
+        normalized = normalize_text(last_user)
+        words = len(last_user.split())
+        short_answer = words <= 7
+        timing_or_frequency = any(marker in normalized for marker in TIME_MARKERS + FREQUENCY_MARKERS)
+        return short_answer or timing_or_frequency
+
+    def _question_signature(self, text: str) -> set[str]:
+        if "?" not in text:
+            return set()
+        tokens = re.findall(r"[a-zA-Z']+", normalize_text(text))
+        stopwords = {
+            "the",
+            "a",
+            "an",
+            "is",
+            "it",
+            "this",
+            "that",
+            "do",
+            "does",
+            "did",
+            "you",
+            "your",
+            "when",
+            "what",
+            "how",
+            "at",
+            "in",
+            "on",
+            "to",
+            "of",
+            "and",
+            "or",
+            "be",
+            "are",
+            "feel",
+            "feels",
+            "felt",
+        }
+        return {token for token in tokens if token not in stopwords}
 
 
 class HuggingFaceExtractor:
@@ -296,35 +418,20 @@ class HuggingFaceExtractor:
         if not self.enabled:
             return None
 
-        if self.config.local_inference_enabled:
-            transcript = self._build_extraction_transcript(turns)
-            full_transcript = self._build_extraction_transcript(turns, include_assistant=True)
-            item_lines = self._item_lines(include_hints=False)
-            payload = self._run_attempt_sequence(
-                language,
-                transcript,
-                full_transcript,
-                item_lines,
-                prefer_compact=True,
-            )
-            if language.lower() == "en":
-                return self._refine_english_anxiety_payload(full_transcript, payload)
-            return payload
-
-        if language.lower() == "en":
-            return self._extract_with_english_windows(turns)
+        if language.lower() in {"en", "hi", "hinglish"}:
+            return self._extract_with_window_verifier(turns, language.lower())
 
         transcript = self._build_extraction_transcript(turns)
         full_transcript = self._build_extraction_transcript(turns, include_assistant=True)
         item_lines = self._item_lines(include_hints=False)
         return self._run_attempt_sequence(language, transcript, full_transcript, item_lines)
 
-    def _extract_with_english_windows(self, turns: list[Turn]) -> Optional[dict]:
+    def _extract_with_window_verifier(self, turns: list[Turn], language: str) -> Optional[dict]:
         item_lines = self._item_lines(include_hints=False)
         merged_payload = None
-        for transcript in self._build_english_window_transcripts(turns):
+        for transcript in self._build_window_transcripts(turns):
             payload = self._run_attempt_sequence(
-                "en",
+                language,
                 transcript,
                 transcript,
                 item_lines,
@@ -333,21 +440,23 @@ class HuggingFaceExtractor:
             merged_payload = self._merge_payloads(merged_payload, payload)
 
         full_transcript = self._build_extraction_transcript(turns, include_assistant=True)
-        verifier_payload = self._run_english_verifier(full_transcript, item_lines, merged_payload)
+        verifier_payload = self._run_final_pass(language, full_transcript, item_lines, merged_payload)
         merged_payload = self._merge_payloads(merged_payload, verifier_payload)
-        if merged_payload and merged_payload.get("items"):
-            return self._refine_english_anxiety_payload(full_transcript, merged_payload)
+        if language == "en":
+            english_verifier_payload = self._run_english_verifier(full_transcript, item_lines, merged_payload)
+            merged_payload = self._merge_payloads(merged_payload, english_verifier_payload)
 
         fallback_payload = self._run_attempt_sequence(
-            "en",
+            language,
             self._build_extraction_transcript(turns),
             full_transcript,
             item_lines,
             prefer_compact=True,
         )
-        if fallback_payload:
-            return self._refine_english_anxiety_payload(full_transcript, fallback_payload)
-        return fallback_payload
+        merged_payload = self._merge_payloads(merged_payload, fallback_payload)
+        if language == "en":
+            return self._refine_english_anxiety_payload(full_transcript, merged_payload or fallback_payload)
+        return merged_payload or fallback_payload
 
     def _run_attempt_sequence(
         self,
@@ -365,8 +474,6 @@ class HuggingFaceExtractor:
             item_lines,
             prefer_compact=prefer_compact,
         )
-        if self.config.local_inference_enabled:
-            attempts = attempts[:1]
 
         last_payload = None
         for index, (messages, max_tokens) in enumerate(attempts):
@@ -403,6 +510,10 @@ class HuggingFaceExtractor:
                 (
                     self._build_compact_extraction_messages(language, primary_transcript),
                     min(self.config.extraction_max_tokens, 96),
+                ),
+                (
+                    self._build_compact_extraction_messages(language, fallback_transcript),
+                    min(self.config.extraction_max_tokens, 128),
                 ),
             ]
 
@@ -442,12 +553,12 @@ class HuggingFaceExtractor:
 
     def _build_extraction_transcript(self, turns: list[Turn], *, include_assistant: bool = False) -> str:
         if self.config.local_inference_enabled:
-            selected_turns = turns[-8:] if include_assistant else [turn for turn in turns if turn.speaker == "user"][-4:]
+            selected_turns = turns[-10:] if include_assistant else [turn for turn in turns if turn.speaker == "user"][-6:]
         else:
             selected_turns = turns[-12:] if include_assistant else [turn for turn in turns if turn.speaker == "user"][-6:]
         return "\n".join(f"{turn.speaker}: {turn.text}" for turn in selected_turns)
 
-    def _build_english_window_transcripts(self, turns: list[Turn]) -> list[str]:
+    def _build_window_transcripts(self, turns: list[Turn]) -> list[str]:
         user_indices = [index for index, turn in enumerate(turns) if turn.speaker == "user"]
         if not user_indices:
             return []
@@ -470,6 +581,9 @@ class HuggingFaceExtractor:
         if full_transcript and full_transcript not in seen:
             windows.append(full_transcript)
         return windows
+
+    def _build_english_window_transcripts(self, turns: list[Turn]) -> list[str]:
+        return self._build_window_transcripts(turns)
 
     def _build_window_transcript(self, turns: list[Turn], start_idx: int, end_idx: int) -> str:
         return "\n".join(
