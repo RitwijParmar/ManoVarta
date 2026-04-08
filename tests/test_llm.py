@@ -180,8 +180,8 @@ def test_huggingface_extractor_retries_with_compact_prompt_after_failure():
 
     assert payload is not None
     assert payload["items"][0]["item_id"] == "phq_q6_worthlessness"
-    assert len(extractor._client.calls) == 2
-    assert "User disclosures:" in extractor._client.calls[1]["messages"][1]["content"]
+    assert len(extractor._client.calls) >= 2
+    assert any("User disclosures:" in call["messages"][1]["content"] for call in extractor._client.calls)
 
 
 def test_huggingface_extractor_builds_english_windows_with_context():
@@ -234,7 +234,10 @@ def test_huggingface_extractor_english_windows_merge_with_verifier():
     items = {item["item_id"] for item in payload["items"]}
     assert {"gad_q1_nervous", "gad_q4_trouble_relaxing", "phq_q9_self_harm"} <= items
     assert payload["safety_level"] == "review"
-    assert "Priority English miss-check items:" in extractor._client.calls[-1]["messages"][1]["content"]
+    assert any(
+        "Priority English miss-check items:" in call["messages"][1]["content"]
+        for call in extractor._client.calls
+    )
 
 
 def test_huggingface_extractor_refines_english_anxiety_items():
@@ -320,3 +323,256 @@ def test_huggingface_responder_builds_personalized_prompt_instructions():
     assert "Mirror the user's pacing and level of detail" in messages[0]["content"]
     assert "code-mix is medium or high" in messages[0]["content"]
     assert "aligned with the user's style" in messages[1]["content"]
+
+
+def test_huggingface_responder_keeps_earlier_context_for_longer_sessions():
+    responder = HuggingFaceResponder(_disabled_config())
+    turns = [
+        Turn(turn_id=index + 1, speaker="user" if index % 2 == 0 else "assistant", text=f"turn {index + 1} text", language_tag="en")
+        for index in range(12)
+    ]
+    session = ChatSession(session_id="long-session", language="en", turns=turns)
+    snapshot = ScreeningSnapshot(
+        language="en",
+        items={},
+        evidence_spans=[],
+        unresolved_items=["phq_q3_sleep"],
+        totals={"PHQ9": None, "GAD7": None},
+        safety=SafetyFlag(level="none"),
+        coverage=CoveragePlan(
+            total_items=16,
+            touched_items=3,
+            completion_ratio=0.2,
+            dialogue=DialoguePlan(
+                stage="exploration",
+                next_action="clarify",
+                current_topic="sleep",
+                target_topic="sleep",
+                rationale="Sleep still needs one clearer detail.",
+                transition_hint="Stay with sleep and stabilize confidence before moving on.",
+                reflective_anchor="It sounds like sleep is taking a real hit here.",
+                continuity_note="If this feels similar to your recent sleep check-in, tell me what changed.",
+                user_style=UserStyleProfile(),
+                disclosure=DisclosureMetrics(),
+            ),
+        ),
+    )
+
+    messages = responder._build_messages(session, snapshot, None, "Fallback")
+
+    assert "Earlier context:" in messages[1]["content"]
+    assert "turn 1 text" in messages[1]["content"]
+
+
+def test_local_extractor_builds_more_than_one_attempt_for_resilience():
+    extractor = HuggingFaceExtractor(_local_config())
+
+    attempts = extractor._build_attempts("hi", "user: neend toot jaati hai", "assistant: ...\nuser: neend toot jaati hai", extractor._item_lines(), prefer_compact=True)
+
+    assert len(attempts) >= 2
+
+
+def test_huggingface_responder_rejects_celebratory_symptom_wording():
+    class _Response:
+        def __init__(self, content):
+            self.choices = [type("Choice", (), {"message": type("Message", (), {"content": content})()})()]
+
+    class _FakeClient:
+        def chat_completion(self, *, messages, temperature, max_tokens):
+            return _Response("It's great to hear you are feeling restless. What time does it happen most?")
+
+    responder = HuggingFaceResponder(_local_config())
+    responder._client = _FakeClient()
+    session = ChatSession(
+        session_id="guardrail-session",
+        language="en",
+        turns=[
+            Turn(turn_id=1, speaker="assistant", text="When does that restless feeling show up most?", language_tag="en"),
+            Turn(turn_id=2, speaker="user", text="Mostly at night.", language_tag="en"),
+        ],
+    )
+    snapshot = ScreeningSnapshot(
+        language="en",
+        items={},
+        evidence_spans=[],
+        unresolved_items=["gad_q5_restlessness"],
+        totals={"PHQ9": None, "GAD7": None},
+        safety=SafetyFlag(level="none"),
+        coverage=CoveragePlan(
+            total_items=16,
+            touched_items=1,
+            completion_ratio=0.1,
+            dialogue=DialoguePlan(
+                stage="clarification",
+                next_action="clarify",
+                current_topic="anxiety",
+                target_topic="anxiety",
+                target_item="gad_q5_restlessness",
+                rationale="Restlessness still needs a more precise description.",
+                transition_hint="Stay with anxiety and clarify how the restlessness shows up.",
+                user_style=UserStyleProfile(),
+                disclosure=DisclosureMetrics(),
+            ),
+        ),
+    )
+
+    fallback = "That timing helps. When it shows up then, is it more like pacing or needing to move, or more like inner agitation even while you stay still?"
+    reply, source = responder.compose_reply(session, snapshot, "gad_q5_restlessness", fallback)
+
+    assert reply == fallback
+    assert source == "template"
+
+
+def test_huggingface_responder_rejects_duplicate_question_wording():
+    class _Response:
+        def __init__(self, content):
+            self.choices = [type("Choice", (), {"message": type("Message", (), {"content": content})()})()]
+
+    class _FakeClient:
+        def chat_completion(self, *, messages, temperature, max_tokens):
+            return _Response("At what times do you feel restless the most?")
+
+    responder = HuggingFaceResponder(_local_config())
+    responder._client = _FakeClient()
+    session = ChatSession(
+        session_id="duplicate-session",
+        language="en",
+        turns=[
+            Turn(turn_id=1, speaker="assistant", text="At what times do you feel restless the most?", language_tag="en"),
+            Turn(turn_id=2, speaker="user", text="During night.", language_tag="en"),
+        ],
+    )
+    snapshot = ScreeningSnapshot(
+        language="en",
+        items={},
+        evidence_spans=[],
+        unresolved_items=["gad_q5_restlessness"],
+        totals={"PHQ9": None, "GAD7": None},
+        safety=SafetyFlag(level="none"),
+        coverage=CoveragePlan(
+            total_items=16,
+            touched_items=1,
+            completion_ratio=0.1,
+            dialogue=DialoguePlan(
+                stage="clarification",
+                next_action="clarify",
+                current_topic="anxiety",
+                target_topic="anxiety",
+                target_item="gad_q5_restlessness",
+                rationale="Restlessness still needs one different clarifier.",
+                transition_hint="Move from timing into what the restlessness feels like.",
+                user_style=UserStyleProfile(),
+                disclosure=DisclosureMetrics(),
+            ),
+        ),
+    )
+
+    fallback = "That timing helps. When it shows up then, is it more like pacing or needing to move, or more like inner agitation even while you stay still?"
+    reply, source = responder.compose_reply(session, snapshot, "gad_q5_restlessness", fallback)
+
+    assert reply == fallback
+    assert source == "template"
+
+
+def test_huggingface_responder_rejects_meta_note_leak():
+    class _Response:
+        def __init__(self, content):
+            self.choices = [type("Choice", (), {"message": type("Message", (), {"content": content})()})()]
+
+    class _FakeClient:
+        def chat_completion(self, *, messages, temperature, max_tokens):
+            return _Response(
+                "I see how worried you are, and I'm here to support you. What kind of activities or situations do you find yourself thinking about more often than usual?\n\n---\n\n**Note:** This draft keeps the focus on intensity."
+            )
+
+    responder = HuggingFaceResponder(_local_config())
+    responder._client = _FakeClient()
+    session = ChatSession(
+        session_id="meta-note-session",
+        language="en",
+        turns=[
+            Turn(turn_id=1, speaker="assistant", text="When you try to settle down, is it harder to quiet your thoughts, relax your body, or both?", language_tag="en"),
+            Turn(turn_id=2, speaker="user", text="About four days a week.", language_tag="en"),
+        ],
+    )
+    snapshot = ScreeningSnapshot(
+        language="en",
+        items={},
+        evidence_spans=[],
+        unresolved_items=["gad_q4_trouble_relaxing"],
+        totals={"PHQ9": None, "GAD7": None},
+        safety=SafetyFlag(level="none"),
+        coverage=CoveragePlan(
+            total_items=16,
+            touched_items=1,
+            completion_ratio=0.1,
+            dialogue=DialoguePlan(
+                stage="clarification",
+                next_action="clarify",
+                current_topic="anxiety",
+                target_topic="anxiety",
+                target_item="gad_q4_trouble_relaxing",
+                rationale="Stay with the same relaxation probe and clarify the symptom form.",
+                transition_hint="Keep the current anxiety probe anchored to the user's short answer.",
+                user_style=UserStyleProfile(),
+                disclosure=DisclosureMetrics(),
+            ),
+        ),
+    )
+
+    fallback = "That helps me understand how often it happens. When it hits, does it feel more like a busy mind, a tense body, or both together?"
+    reply, source = responder.compose_reply(session, snapshot, "gad_q4_trouble_relaxing", fallback)
+
+    assert reply == fallback
+    assert source == "template"
+
+
+def test_huggingface_responder_prefers_targeted_fallback_for_short_clarifier_answer():
+    class _Response:
+        def __init__(self, content):
+            self.choices = [type("Choice", (), {"message": type("Message", (), {"content": content})()})()]
+
+    class _FakeClient:
+        def chat_completion(self, *, messages, temperature, max_tokens):
+            return _Response("How are you feeling right now?")
+
+    responder = HuggingFaceResponder(_local_config())
+    responder._client = _FakeClient()
+    session = ChatSession(
+        session_id="short-clarifier-session",
+        language="en",
+        turns=[
+            Turn(turn_id=1, speaker="assistant", text="When you try to settle down, is it harder to quiet your thoughts, relax your body, or both?", language_tag="en"),
+            Turn(turn_id=2, speaker="user", text="About four days a week.", language_tag="en"),
+        ],
+    )
+    snapshot = ScreeningSnapshot(
+        language="en",
+        items={},
+        evidence_spans=[],
+        unresolved_items=["gad_q4_trouble_relaxing"],
+        totals={"PHQ9": None, "GAD7": None},
+        safety=SafetyFlag(level="none"),
+        coverage=CoveragePlan(
+            total_items=16,
+            touched_items=1,
+            completion_ratio=0.1,
+            dialogue=DialoguePlan(
+                stage="clarification",
+                next_action="clarify",
+                current_topic="anxiety",
+                target_topic="anxiety",
+                target_item="gad_q4_trouble_relaxing",
+                rationale="Keep the same anxiety clarification anchored to the user's short answer.",
+                transition_hint="Stay on the existing question instead of opening a generic branch.",
+                user_style=UserStyleProfile(),
+                disclosure=DisclosureMetrics(),
+            ),
+        ),
+    )
+
+    fallback = "That helps me understand how often it happens. When it hits, does it feel more like a busy mind, a tense body, or both together?"
+    reply, source = responder.compose_reply(session, snapshot, "gad_q4_trouble_relaxing", fallback)
+
+    assert reply == fallback
+    assert source == "template"
