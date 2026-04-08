@@ -28,10 +28,11 @@ def test_detect_deployment_assets_finds_new_configs():
     assert deployment["present"]["render_blueprint"] is True
 
 
-def test_detect_bonus_features_reports_linguistic_personalization():
+def test_detect_bonus_features_reports_both_bonus_features():
     bonus = detect_bonus_features(PROJECT_ROOT)
 
     assert "linguistic_personalization" in bonus["implemented"]
+    assert "gamification" in bonus["implemented"]
 
 
 def test_render_markdown_mentions_required_metric_names():
@@ -85,6 +86,17 @@ def test_render_markdown_mentions_required_metric_names():
                 "warm_median_ms": 70.0,
                 "warm_p95_ms": 110.0,
             },
+            "bonus_validation": {
+                "nudge_feedback_loop_present": True,
+                "nudge_queue_after_brief_turn": ["example", "timing"],
+                "nudged_touched_delta": 3,
+                "nudge_words_added": 19,
+                "nudge_evidence_gain": 2,
+                "nudge_resolved_gain": 1,
+                "nudge_outcome": "helpful",
+                "style_adaptation_checks": {"brief_guarded_guided": True},
+                "note": "bonus validation note",
+            },
             "discourse_effectiveness": {
                 "coverage_completeness": 0.8,
                 "exact_match_rate": 0.7,
@@ -100,4 +112,6 @@ def test_render_markdown_mentions_required_metric_names():
     assert "Disclosure Efficiency" in markdown
     assert "Safety Accuracy" in markdown
     assert "Latency" in markdown
+    assert "Bonus Validation" in markdown
+    assert "Nudge outcome" in markdown
     assert "Discourse Effectiveness" in markdown
