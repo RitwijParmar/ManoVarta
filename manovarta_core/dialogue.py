@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+import re
 from statistics import mean
 from typing import Dict, Iterable, Optional, Tuple
 
@@ -10,7 +11,11 @@ from manovarta_core.schemas import (
     CoveragePlan,
     DialoguePlan,
     DisclosureMetrics,
+    FatigueLevel,
+    NudgeEvent,
+    ReadinessLevel,
     ScreeningSnapshot,
+    SteeringPreference,
     TopicState,
     UserStyleProfile,
 )
@@ -18,25 +23,25 @@ from manovarta_core.schemas import (
 
 OPENING_PROMPTS = {
     "en": "Thanks for being here. Over the last couple of weeks, what has felt the heaviest lately?",
-    "hi": "Shukriya, aap yahan aaye. Pichhle do hafton mein sabse zyada kya bhaari laga?",
+    "hi": "शुक्रिया, आप यहाँ आए। पिछले दो हफ़्तों में सबसे ज़्यादा क्या भारी लगा?",
     "hinglish": "Thanks for joining. Pichhle do hafton mein sabse zyada kya heavy laga?",
 }
 
 SAFETY_MESSAGES = {
     "en": "I’m concerned by what you just shared. I’m pausing the screening flow and marking this for urgent human review.",
-    "hi": "Aapne jo share kiya usse turant chinta ho rahi hai. Main normal screening rok kar isse urgent human review ke liye mark kar raha hoon.",
+    "hi": "आपने जो बताया उससे तुरंत चिंता हो रही है। मैं सामान्य जाँच-प्रवाह रोककर इसे तत्काल मानवीय समीक्षा के लिए चिह्नित कर रहा हूँ।",
     "hinglish": "Jo aapne share kiya usse concern ho raha hai. Main normal screening pause karke ise urgent human review ke liye mark kar raha hoon.",
 }
 
 CLOSING_MESSAGES = {
     "en": "I have enough detail for a structured summary now. I can still ask one more follow-up if you want to clarify anything.",
-    "hi": "Mere paas ab structured summary ke liye kaafi detail hai. Agar aap chahein to ek aur follow-up le sakte hain.",
+    "hi": "मेरे पास अब एक संरचित सार के लिए काफ़ी जानकारी है। अगर आप चाहें तो मैं एक और पूरक सवाल पूछ सकता हूँ।",
     "hinglish": "Ab mere paas structured summary ke liye enough detail hai. Agar aap chaho to ek aur follow-up le sakte hain.",
 }
 
 RAPPORT_PROMPTS = {
     "en": "Thanks for sharing that. Has it been feeling more like low mood, constant worry, poor sleep, or a mix of those?",
-    "hi": "Yeh share karne ke liye shukriya. Kya yeh zyada udaasi, lagataar chinta, neend ki dikkat, ya inka mix lag raha hai?",
+    "hi": "यह साझा करने के लिए शुक्रिया। क्या यह ज़्यादा उदासी, लगातार चिंता, नींद की दिक्कत, या इनका मिश्रण लग रहा है?",
     "hinglish": "Yeh share karne ke liye thanks. Kya yeh zyada low mood, constant worry, sleep issue, ya in sab ka mix lag raha hai?",
 }
 
@@ -46,8 +51,8 @@ REFLECTION_PREFIXES = {
         "high": "That sounds really hard, and I appreciate you saying it clearly.",
     },
     "hi": {
-        "moderate": "Yeh batane ke liye shukriya.",
-        "high": "Yeh kaafi mushkil lag raha hai, aur aapne ise itni saaf tarah bataya uske liye shukriya.",
+        "moderate": "यह बताने के लिए शुक्रिया।",
+        "high": "यह काफ़ी मुश्किल लग रहा है, और आपने इसे इतनी साफ़ तरह बताया, उसके लिए शुक्रिया।",
     },
     "hinglish": {
         "moderate": "Yeh share karne ke liye thanks.",
@@ -57,62 +62,62 @@ REFLECTION_PREFIXES = {
 
 SOFTENING_SUFFIXES = {
     "en": "Whichever part feels easier to answer is okay.",
-    "hi": "Jo hissa answer karna aasaan lage, usse shuru karna theek hai.",
+    "hi": "जो हिस्सा जवाब देना आसान लगे, उसी से शुरू करना ठीक है।",
     "hinglish": "Jo part answer karna easier lage, usse start karna bilkul fine hai.",
 }
 
 BRIEF_DETAIL_SUFFIXES = {
     "en": "One recent example or one timing detail is enough.",
-    "hi": "Ek recent example ya ek timing detail bhi kaafi hai.",
+    "hi": "एक हाल का उदाहरण या समय का एक संकेत भी काफ़ी है।",
     "hinglish": "Ek recent example ya ek timing detail bhi enough hai.",
 }
 
 OPEN_STORY_SUFFIXES = {
     "en": "You can answer in your own words and stay with the part that feels most important.",
-    "hi": "Aap apne shabdon mein jawab de sakte hain aur jo hissa sabse important lage us par tik sakte hain.",
+    "hi": "आप अपने शब्दों में जवाब दे सकते हैं और जो हिस्सा सबसे महत्वपूर्ण लगे, उसी पर टिक सकते हैं।",
     "hinglish": "Aap apne words mein jawab de sakte ho aur jo part sabse important lage us par reh sakte ho.",
 }
 
 SAFETY_SHORT_ANSWER_SUFFIXES = {
     "en": "A short direct answer is okay here.",
-    "hi": "Yahan ek chhota seedha jawab bhi theek hai.",
+    "hi": "यहाँ एक छोटा और सीधा जवाब भी ठीक है।",
     "hinglish": "Yahan short direct answer bhi bilkul theek hai.",
 }
 
 TOPIC_PROMPTS: Dict[str, Dict[str, str]] = {
     "mood": {
         "en": "That sounds heavy. On most days, has it felt more like low mood itself, or more like losing interest in things you usually enjoy?",
-        "hi": "Yeh kaafi bhaari lag raha hai. Zyada dinon mein yeh zyada neecha mood jaisa lagta hai, ya pehle jo cheezein achhi lagti thi unmein dil kam lagta hai?",
+        "hi": "यह काफ़ी भारी लग रहा है। ज़्यादातर दिनों में यह ज़्यादा उदास मन जैसा लगता है, या पहले जो चीज़ें अच्छी लगती थीं उनमें दिल कम लगता है?",
         "hinglish": "Yeh kaafi heavy lag raha hai. Most days yeh zyada low mood jaisa lagta hai, ya pehle jo cheezein achhi lagti thi unmein mann kam lagta hai?",
     },
     "sleep": {
         "en": "That sounds draining. Has sleep mostly been hard to start, hard to stay asleep, or are you sleeping more than usual?",
-        "hi": "Yeh thaka dene wala lag raha hai. Neend mein zyada dikkat sone ki shuruat mein hai, beech beech mein uthne mein, ya zarurat se zyada neend aa rahi hai?",
+        "hi": "यह थका देने वाला लग रहा है। नींद में ज़्यादा दिक्कत सोने की शुरुआत में है, बीच-बीच में उठने में, या ज़रूरत से ज़्यादा नींद आ रही है?",
         "hinglish": "Yeh kaafi draining lag raha hai. Sleep issue zyada sone ki shuruat mein hai, beech beech mein uthne mein, ya usual se zyada sleep ho rahi hai?",
     },
     "energy": {
         "en": "I want to understand the day-to-day impact a bit better. Is it more like low energy through the day, changes in appetite, or both?",
-        "hi": "Main roz ke impact ko thoda better samajhna chahta hoon. Kya baat zyada din bhar ki thakan ki hai, bhook ke badlav ki, ya dono ki?",
+        "hi": "मैं रोज़मर्रा के असर को थोड़ा बेहतर समझना चाहता हूँ। क्या बात ज़्यादा दिन भर की थकान की है, भूख के बदलाव की, या दोनों की?",
         "hinglish": "Main day-to-day impact thoda better samajhna chahta hoon. Kya issue zyada low energy ka hai, appetite change ka, ya dono ka?",
     },
     "self_view": {
         "en": "When things feel this heavy, do you also end up blaming yourself or feeling like a burden?",
-        "hi": "Jab cheezein itni bhaari lagti hain, kya aap khud ko zyada blame karne lagte hain ya bojh jaisa mehsoos hota hai?",
+        "hi": "जब चीज़ें इतनी भारी लगती हैं, क्या आप खुद को ज़्यादा दोष देने लगते हैं या बोझ जैसा महसूस होता है?",
         "hinglish": "Jab cheezein itni heavy lagti hain, kya aap khud ko zyada blame karte ho ya burden jaisa feel hota hai?",
     },
     "focus": {
         "en": "When you try to study or work, is it more that your focus keeps breaking, or that your body feels slowed down or restless?",
-        "hi": "Jab aap padhne ya kaam karne baithte hain, kya zyada dikkat dhyan tootne ki hoti hai, ya sharir dheema ya bechain lagta hai?",
+        "hi": "जब आप पढ़ने या काम करने बैठते हैं, क्या ज़्यादा दिक्कत ध्यान टूटने की होती है, या शरीर धीमा या बेचैन लगता है?",
         "hinglish": "Jab aap study ya work karte ho, kya zyada issue focus break hone ka hota hai, ya body slow ya restless lagti hai?",
     },
     "anxiety": {
         "en": "Does this feel more like constant worry in your mind, tension in your body, or both at the same time?",
-        "hi": "Kya yeh zyada dimaag ki lagataar chinta jaisa lagta hai, sharir ke tanav jaisa, ya dono saath mein?",
+        "hi": "क्या यह ज़्यादा दिमाग की लगातार चिंता जैसा लगता है, शरीर के तनाव जैसा, या दोनों साथ में?",
         "hinglish": "Kya yeh zyada constant worry in the mind jaisa lagta hai, body tension jaisa, ya dono ek saath?",
     },
     "safety": {
         "en": "I want to check carefully because your safety matters. Have thoughts of hurting yourself or not wanting to be alive shown up at all?",
-        "hi": "Main dhyan se poochna chahta hoon kyunki aapki safety zaruri hai. Kya khud ko nuksan pahunchane ya zinda na rehne ke khayal aaye hain?",
+        "hi": "मैं ध्यान से पूछना चाहता हूँ क्योंकि आपकी सुरक्षा ज़रूरी है। क्या खुद को नुकसान पहुँचाने या ज़िंदा न रहने के ख़याल आए हैं?",
         "hinglish": "Main carefully poochna chahta hoon kyunki aapki safety matter karti hai. Kya khud ko hurt karne ya zinda na rehne wale thoughts aaye hain?",
     },
 }
@@ -126,6 +131,272 @@ UNDERCOVERED_ITEM_BOOSTS: Dict[str, int] = {
     "gad_q4_trouble_relaxing": 3,
     "gad_q6_irritability": 2,
     "gad_q7_fear_awful": 3,
+}
+
+TOPIC_LABELS = {
+    "mood": {"en": "mood", "hi": "मनोदशा", "hinglish": "mood"},
+    "sleep": {"en": "sleep", "hi": "नींद", "hinglish": "sleep"},
+    "energy": {"en": "energy", "hi": "ऊर्जा", "hinglish": "energy"},
+    "self_view": {"en": "self-view", "hi": "अपने बारे में सोच", "hinglish": "self-view"},
+    "focus": {"en": "focus", "hi": "ध्यान", "hinglish": "focus"},
+    "anxiety": {"en": "anxiety", "hi": "चिंता", "hinglish": "anxiety"},
+    "safety": {"en": "safety", "hi": "सुरक्षा", "hinglish": "safety"},
+    "summary": {"en": "summary", "hi": "सार", "hinglish": "summary"},
+    "check_in": {"en": "check-in", "hi": "बातचीत", "hinglish": "check-in"},
+}
+
+DEVANAGARI_RE = re.compile(r"[\u0900-\u097F]")
+LATIN_TOKEN_RE = re.compile(r"[A-Za-z]+")
+
+TRANSLITERATED_HINDI_MARKERS = (
+    "nahi",
+    "haan",
+    "bahut",
+    "mann",
+    "mujhe",
+    "mera",
+    "meri",
+    "kya",
+    "kyun",
+    "kaafi",
+    "thoda",
+    "lagta",
+    "ho raha",
+    "rehi",
+    "raha",
+    "dimag",
+)
+ENGLISH_CONTEXT_MARKERS = (
+    "sleep",
+    "work",
+    "college",
+    "class",
+    "mind",
+    "focus",
+    "job",
+    "future",
+    "stress",
+    "routine",
+    "anxiety",
+    "mood",
+)
+HEDGE_MARKERS = (
+    "not sure",
+    "don't know",
+    "do not know",
+    "idk",
+    "maybe",
+    "i guess",
+    "kind of",
+    "sort of",
+    "pata nahi",
+    "shayad",
+)
+DETAIL_MARKERS = (
+    "because",
+    "for example",
+    "for instance",
+    "usually",
+    "mostly",
+    "lately",
+    "when",
+    "since",
+    "after",
+    "jab",
+    "kyunki",
+    "subah",
+    "raat",
+)
+IMPACT_MARKERS = (
+    "work",
+    "study",
+    "routine",
+    "day",
+    "appetite",
+    "sleep",
+    "focus",
+    "kaam",
+    "padhai",
+    "routine",
+    "din",
+    "neend",
+    "bhook",
+)
+CLOSURE_MARKERS = (
+    "that's mostly it",
+    "that is mostly it",
+    "that's the main thing",
+    "that is the main thing",
+    "i think that's it",
+    "i think that is it",
+    "bas itna hi",
+    "yehi main baat hai",
+    "aur kuch khaas nahi",
+)
+FATIGUE_MARKERS = (
+    "not sure what else",
+    "i don't know what else",
+    "that is all",
+    "that's all",
+    "too tired",
+    "hard to explain",
+    "bas",
+    "aur nahi",
+    "samjhana mushkil",
+)
+TIME_MARKERS = (
+    "night",
+    "nights",
+    "morning",
+    "mornings",
+    "evening",
+    "evenings",
+    "afternoon",
+    "late night",
+    "subah",
+    "raat",
+    "shaam",
+    "din mein",
+)
+FREQUENCY_MARKERS = (
+    "every day",
+    "daily",
+    "days a week",
+    "times a week",
+    "week",
+    "weeks",
+    "most days",
+    "usually",
+    "often",
+    "4 days",
+    "3 days",
+    "roz",
+    "har din",
+    "hafte",
+    "baar",
+)
+SHORT_FOLLOWUP_MARKERS = (
+    "yes",
+    "yeah",
+    "yep",
+    "no",
+    "nah",
+    "nope",
+    "both",
+    "mostly",
+    "body",
+    "mind",
+    "thoughts",
+    "physical",
+    "night",
+    "morning",
+    "evening",
+    "sometimes",
+    "usually",
+)
+SENSITIVE_ITEM_IDS = (
+    "phq_q6_worthlessness",
+    "phq_q9_self_harm",
+    "gad_q7_fear_awful",
+)
+
+TOPIC_REFLECTIONS = {
+    "mood": {
+        "en": "It sounds like the emotional weight itself has been hard to carry.",
+        "hi": "लगता है भावनात्मक बोझ अपने-आप में ही काफ़ी भारी हो गया है।",
+        "hinglish": "Lag raha hai emotional weight khud hi kaafi heavy ho gaya hai.",
+    },
+    "sleep": {
+        "en": "It sounds like sleep is taking a real hit here.",
+        "hi": "लगता है इसका असर नींद पर काफ़ी सीधा पड़ रहा है।",
+        "hinglish": "Lag raha hai sleep par iska kaafi direct impact aa raha hai.",
+    },
+    "energy": {
+        "en": "It sounds like the day is taking more effort than it used to.",
+        "hi": "लगता है रोज़ का दिन पहले से ज़्यादा मेहनत माँग रहा है।",
+        "hinglish": "Lag raha hai normal day pehle se zyada effort le raha hai.",
+    },
+    "self_view": {
+        "en": "It sounds like this is affecting how you are talking to yourself too.",
+        "hi": "लगता है इसका असर इस बात पर भी पड़ रहा है कि आप अपने-आप से कैसे बात कर रहे हैं।",
+        "hinglish": "Lag raha hai iska effect aap apne aap se kaise baat karte ho us par bhi aa raha hai.",
+    },
+    "focus": {
+        "en": "It sounds like this is getting in the way of staying with tasks.",
+        "hi": "लगता है इसकी वजह से काम पर टिके रहना मुश्किल हो रहा है।",
+        "hinglish": "Lag raha hai tasks par tikna is wajah se mushkil ho raha hai.",
+    },
+    "anxiety": {
+        "en": "It sounds like the worry is staying active even when things are quiet.",
+        "hi": "लगता है चिंता तब भी सक्रिय रहती है जब बाहर सब शांत हो।",
+        "hinglish": "Lag raha hai worry tab bhi active rehti hai jab bahar sab quiet ho.",
+    },
+    "safety": {
+        "en": "I want to slow this down and stay very clear for a moment.",
+        "hi": "मैं एक पल के लिए गति धीमी करके इसे बहुत साफ़ तौर पर समझना चाहता हूँ।",
+        "hinglish": "Main ek moment ke liye pace slow karke bahut clearly samajhna chahta hoon.",
+    },
+}
+
+ITEM_FOLLOW_UPS: Dict[str, Dict[str, Dict[str, str]]] = {
+    "phq_q3_sleep": {
+        "default": {
+            "en": "When sleep gets disrupted, is it mostly hard to fall asleep, waking during the night, or waking too early?",
+            "hi": "जब नींद बिगड़ती है, क्या ज़्यादा दिक्कत सोने की शुरुआत में होती है, रात में बार-बार उठने में, या बहुत जल्दी उठ जाने में?",
+            "hinglish": "Jab sleep disturb hoti hai, kya zyada issue sone ki shuruat mein hota hai, raat mein baar baar uthne mein, ya bahut jaldi uth jaane mein?",
+        },
+        "timing_known": {
+            "en": "That timing helps. When it happens, is it more trouble falling asleep, staying asleep, or waking up too early?",
+            "hi": "यह समय-सूचना मददगार है। जब ऐसा होता है, क्या ज़्यादा मुश्किल नींद आने में होती है, नींद बनाए रखने में, या बहुत जल्दी उठ जाने में?",
+            "hinglish": "Yeh timing helpful hai. Jab yeh hota hai, kya zyada issue sleep start hone mein hota hai, sleep banaye rakhne mein, ya bahut jaldi uth jaane mein?",
+        },
+    },
+    "gad_q2_control_worry": {
+        "default": {
+            "en": "When the worry starts, can you pull your mind away from it, or does it keep looping even when you try to stop it?",
+            "hi": "जब चिंता शुरू होती है, क्या आप दिमाग को उससे हटा पाते हैं, या रोकने की कोशिश के बाद भी वह चलती रहती है?",
+            "hinglish": "Jab worry start hoti hai, kya aap mind ko usse hata paate ho, ya rokne ki koshish ke baad bhi woh loop hoti rehti hai?",
+        },
+        "frequency_known": {
+            "en": "That helps me understand how often it shows up. When it does, can you pull your mind away from it, or does it keep looping even when you try to stop it?",
+            "hi": "इससे मुझे समझ आ रहा है कि यह कितनी बार होता है। जब यह होता है, क्या आप दिमाग को उससे हटा पाते हैं, या रोकने की कोशिश के बाद भी वह चलता रहता है?",
+            "hinglish": "Isse samajh aa raha hai ki yeh kitni baar hota hai. Jab yeh hota hai, kya aap mind ko usse hata paate ho, ya rokne ki koshish ke baad bhi woh loop hoti rehti hai?",
+        },
+    },
+    "gad_q4_trouble_relaxing": {
+        "default": {
+            "en": "When you try to settle down, is it harder to quiet your thoughts, relax your body, or both?",
+            "hi": "जब आप खुद को शांत करने की कोशिश करते हैं, क्या ज़्यादा मुश्किल दिमाग को शांत करना होता है, शरीर को ढीला करना, या दोनों?",
+            "hinglish": "Jab aap settle hone ki koshish karte ho, kya zyada mushkil thoughts ko quiet karna hota hai, body relax karna, ya dono?",
+        },
+        "timing_known": {
+            "en": "That timing helps. When it hits, is it more like a busy mind, a tense body, or both together?",
+            "hi": "यह समय-सूचना मददगार है। जब ऐसा होता है, क्या यह ज़्यादा व्यस्त दिमाग जैसा लगता है, तना हुआ शरीर जैसा, या दोनों साथ में?",
+            "hinglish": "Yeh timing helpful hai. Jab yeh hit karta hai, kya yeh zyada busy mind jaisa lagta hai, tense body jaisa, ya dono saath mein?",
+        },
+        "frequency_known": {
+            "en": "That helps me understand how often it happens. When it hits, does it feel more like a busy mind, a tense body, or both together?",
+            "hi": "इससे मुझे समझ आ रहा है कि यह कितनी बार होता है। जब यह होता है, क्या यह ज़्यादा व्यस्त दिमाग जैसा लगता है, तना हुआ शरीर जैसा, या दोनों साथ में?",
+            "hinglish": "Isse samajh aa raha hai ki yeh kitni baar hota hai. Jab yeh hit karta hai, kya yeh zyada busy mind jaisa lagta hai, tense body jaisa, ya dono saath mein?",
+        },
+    },
+    "gad_q5_restlessness": {
+        "default": {
+            "en": "When that restless feeling shows up, is it more that your body cannot sit still, or that your mind feels agitated even if you stay still?",
+            "hi": "जब यह बेचैनी आती है, क्या ज़्यादा ऐसा लगता है कि शरीर चैन से बैठ नहीं पा रहा, या दिमाग बेचैन रहता है चाहे आप शांत बैठे हों?",
+            "hinglish": "Jab yeh restlessness aati hai, kya zyada body chain se baith nahi paati, ya mind agitated rehta hai chahe aap still baithe ho?",
+        },
+        "timing_known": {
+            "en": "That timing helps. When it shows up then, is it more like pacing or needing to move, or more like inner agitation even while you stay still?",
+            "hi": "यह समय-सूचना मददगार है। जब उस समय यह होता है, क्या ज़्यादा इधर-उधर चलने या हिलने की ज़रूरत लगती है, या अंदर की बेचैनी होती है चाहे आप शांत बैठे हों?",
+            "hinglish": "Yeh timing helpful hai. Jab us waqt yeh hota hai, kya zyada pacing ya move karne ki need lagti hai, ya inner agitation hoti hai chahe aap still baithe ho?",
+        },
+        "frequency_known": {
+            "en": "That helps me understand how often it happens. When it does, do you mostly feel the urge to move around, or more like inner agitation even if you stay still?",
+            "hi": "इससे मुझे समझ आ रहा है कि यह कितनी बार होता है। जब यह होता है, क्या ज़्यादा इधर-उधर चलने की इच्छा होती है, या अंदर की बेचैनी होती है चाहे आप शांत बैठे हों?",
+            "hinglish": "Isse samajh aa raha hai ki yeh kitni baar hota hai. Jab yeh hota hai, kya zyada move karne ki urge hoti hai, ya inner agitation hoti hai chahe aap still baithe ho?",
+        },
+    },
 }
 
 
@@ -206,6 +477,10 @@ ITEM_TO_TOPIC = {
 
 
 class DialoguePlanner:
+    def _topic_label(self, topic: Optional[str], language: str) -> str:
+        normalized = str(topic or "check_in").replace(" ", "_").lower()
+        return TOPIC_LABELS.get(normalized, {}).get(language, str(topic or "check-in").replace("_", " "))
+
     def opening_prompt(self, language: str, profile=None) -> str:
         base = OPENING_PROMPTS[language]
         if profile is None:
@@ -214,21 +489,31 @@ class DialoguePlanner:
         preferred_name = getattr(profile, "preferred_name", None)
         occupation = getattr(profile, "occupation", None)
         context_note = getattr(profile, "context_note", None)
+        recent_checkins = getattr(profile, "recent_checkins", None) or []
+        recent_topic = None
+        if recent_checkins and isinstance(recent_checkins[0], dict):
+            recent_topic = self._topic_label(recent_checkins[0].get("topic") or "check_in", language)
         if language == "en":
             if preferred_name and occupation:
                 return f"Hi {preferred_name}. Thanks for being here. Before we go deeper, how have things been feeling lately in day-to-day life as a {occupation}?"
             if context_note:
                 return f"Thanks for being here. Keeping {context_note} in mind, what has felt the heaviest over the last couple of weeks?"
+            if recent_topic:
+                return f"Welcome back. If this connects to your recent {recent_topic} check-in, tell me what feels similar or different today."
         if language == "hi":
             if preferred_name and occupation:
-                return f"Namaste {preferred_name}. Aapka shukriya. {occupation} ke roop mein rozmarra zindagi mein pichhle do hafton mein sabse zyada kya bhaari laga?"
+                return f"नमस्ते {preferred_name}। शुक्रिया। {occupation} के रूप में रोज़मर्रा की ज़िंदगी में पिछले दो हफ़्तों में सबसे ज़्यादा क्या भारी लगा?"
             if context_note:
-                return f"Shukriya, aap yahan aaye. {context_note} ko dhyan mein rakhte hue pichhle do hafton mein sabse zyada kya bhaari laga?"
+                return f"शुक्रिया, आप यहाँ आए। {context_note} को ध्यान में रखते हुए पिछले दो हफ़्तों में सबसे ज़्यादा क्या भारी लगा?"
+            if recent_topic:
+                return f"फिर से स्वागत है। अगर यह आपकी हाल की {recent_topic} बातचीत से जुड़ा लग रहा है, तो बताइए आज क्या वैसा है और क्या अलग है।"
         if language == "hinglish":
             if preferred_name and occupation:
                 return f"Hi {preferred_name}. Thanks for being here. {occupation} wali day-to-day life mein pichhle do hafton mein sabse zyada kya heavy laga?"
             if context_note:
                 return f"Thanks for joining. {context_note} ko dhyan mein rakhte hue pichhle do hafton mein sabse zyada kya heavy laga?"
+            if recent_topic:
+                return f"Welcome back. Agar yeh recent {recent_topic} check-in se connected lag raha hai, to batao aaj kya same hai aur kya different."
         return base
 
     def next_reply(self, snapshot: ScreeningSnapshot, session: ChatSession) -> Tuple[str, Optional[str]]:
@@ -243,7 +528,7 @@ class DialoguePlanner:
         if plan.stage == "rapport":
             return self._compose_prompt(language, RAPPORT_PROMPTS[language], plan), plan.target_item
 
-        prompt = TOPIC_PROMPTS.get(plan.target_topic, {}).get(language)
+        prompt = self._build_prompt_for_target(language, plan, session)
         if prompt:
             return self._compose_prompt(language, prompt, plan), plan.target_item
         return CLOSING_MESSAGES[language], None
@@ -262,18 +547,33 @@ class DialoguePlanner:
         covered_topics = [topic.topic_id for topic in topic_states if topic.touched or topic.status == "stable"]
         user_style = self._infer_user_style(snapshot, session, topic_states)
         disclosure = self._build_disclosure_metrics(snapshot, session, topic_states)
-        stage = self._select_stage(snapshot, topic_states, len(user_turns), held_back_items)
-        target_topic = self._select_target_topic(snapshot, topic_states, current_topic, stage, held_back_items)
-        target_item = self._select_target_item(snapshot, session, target_topic, held_back_items)
-        next_items = self._rank_next_items(snapshot, session, target_topic, held_back_items)
+        readiness = self._infer_readiness(snapshot, session, topic_states, user_style)
+        fatigue = self._infer_fatigue(snapshot, session)
+        stage = self._select_stage(snapshot, topic_states, len(user_turns), held_back_items, readiness, fatigue)
+        target_topic = self._select_target_topic(
+            snapshot,
+            session,
+            topic_states,
+            current_topic,
+            stage,
+            held_back_items,
+            user_style,
+            readiness,
+            fatigue,
+        )
+        target_item = self._select_target_item(snapshot, session, target_topic, held_back_items, fatigue, user_style)
+        next_items = self._rank_next_items(snapshot, session, target_topic, held_back_items, fatigue, user_style)
         review_items = [
             item_id
             for item_id, item in snapshot.items.items()
             if item.review_recommended or item.status in {"contradicted", "abstained"}
         ]
+        reflective_anchor = self._build_reflective_anchor(session.language, target_topic, user_style, fatigue)
+        continuity_note = self._build_continuity_note(session.language, session, target_topic)
+        recommended_nudges = self._recommend_nudges(session, target_topic, user_style, stage, fatigue)
         dialogue = DialoguePlan(
             stage=stage,
-            next_action=self._select_action(stage, target_topic),
+            next_action=self._select_action(stage, target_topic, user_style, fatigue, readiness),
             current_topic=current_topic,
             target_topic=target_topic,
             target_item=target_item,
@@ -282,9 +582,14 @@ class DialoguePlanner:
             low_confidence_topics=low_confidence_topics,
             covered_topics=covered_topics,
             held_back_items=held_back_items,
-            transition_hint=self._build_transition_hint(current_topic, target_topic, stage, user_style),
+            transition_hint=self._build_transition_hint(current_topic, target_topic, stage, user_style, fatigue, readiness),
             user_style=user_style,
             disclosure=disclosure,
+            readiness=readiness,
+            fatigue=fatigue,
+            reflective_anchor=reflective_anchor,
+            continuity_note=continuity_note,
+            recommended_nudges=recommended_nudges,
         )
         return snapshot.coverage.model_copy(
             update={
@@ -309,31 +614,45 @@ class DialoguePlanner:
                 openness="cautious",
             )
 
+        normalized_turns = [self._normalize(turn.text) for turn in user_turns]
         word_counts = [len(turn.text.split()) for turn in user_turns]
         avg_words = round(mean(word_counts), 1) if word_counts else 0.0
-        if avg_words < 9:
+        detail_hits = sum(any(marker in text for marker in DETAIL_MARKERS) for text in normalized_turns)
+        impact_hits = sum(any(marker in text for marker in IMPACT_MARKERS) for text in normalized_turns)
+        hedge_hits = sum(any(marker in text for marker in HEDGE_MARKERS) for text in normalized_turns)
+        explicit_feeling_hits = sum(
+            any(token in text for token in ("i feel", "it feels", "mujhe", "lagta hai", "feel hota", "feel ho raha"))
+            for text in normalized_turns
+        )
+
+        if avg_words < 8 and detail_hits == 0:
             verbosity = "brief"
-        elif avg_words < 20:
+        elif avg_words < 18 or detail_hits <= 1:
             verbosity = "balanced"
         else:
             verbosity = "detailed"
 
-        if session.language == "hinglish":
-            code_mix = "high"
-        elif any(any(marker in turn.text.lower() for marker in ("yaar", "nahi", "haan", "bahut", "mann")) for turn in user_turns):
-            code_mix = "medium"
-        else:
-            code_mix = "low"
+        code_mix = self._infer_code_mix(session.language, user_turns)
 
         touched_ratio = snapshot.coverage.touched_items / max(len(user_turns), 1)
-        if avg_words < 8 and touched_ratio < 1.0:
+        detail_ratio = (detail_hits + impact_hits + explicit_feeling_hits) / max(len(user_turns), 1)
+        if hedge_hits >= max(1, len(user_turns) // 2) and detail_ratio < 1.2 and avg_words < 12:
             openness = "guarded"
-        elif avg_words < 14 or any(topic.status == "review" for topic in topic_states):
+        elif detail_ratio >= 1.5 or (avg_words >= 14 and explicit_feeling_hits >= 1):
+            openness = "open"
+        elif avg_words < 12 and touched_ratio < 1.1:
             openness = "cautious"
         else:
-            openness = "open"
+            openness = "cautious"
 
         distress_trend = self._distress_trend(snapshot, session)
+        steering_preference = self._infer_steering_preference(
+            avg_words=avg_words,
+            openness=openness,
+            touched_ratio=touched_ratio,
+            detail_hits=detail_hits + impact_hits,
+            user_turn_count=len(user_turns),
+        )
         empathy_level = "high" if openness != "open" or distress_trend == "rising" or snapshot.safety.level != "none" else "moderate"
         return UserStyleProfile(
             avg_words_per_turn=avg_words,
@@ -342,6 +661,7 @@ class DialoguePlanner:
             code_mix=code_mix,
             distress_trend=distress_trend,
             empathy_level=empathy_level,
+            steering_preference=steering_preference,
         )
 
     def _build_disclosure_metrics(
@@ -359,7 +679,105 @@ class DialoguePlanner:
             stable_topics=stable_topics,
             items_per_user_turn=round(snapshot.coverage.touched_items / max(user_turns, 1), 2),
             resolved_per_user_turn=round(len(snapshot.coverage.resolved_items) / max(user_turns, 1), 2),
+            nudge_effectiveness=round(self._recent_nudge_effectiveness(session), 2),
         )
+
+    def _normalize(self, text: str) -> str:
+        return " ".join(text.lower().split())
+
+    def _infer_code_mix(self, language: str, user_turns: list) -> str:
+        if language == "hinglish":
+            return "high"
+
+        mixed_script_turns = 0
+        translit_turns = 0
+        for turn in user_turns:
+            text = turn.text
+            normalized = self._normalize(text)
+            has_devanagari = bool(DEVANAGARI_RE.search(text))
+            latin_tokens = LATIN_TOKEN_RE.findall(text)
+            has_english_context = any(token.lower() in ENGLISH_CONTEXT_MARKERS for token in latin_tokens)
+            has_transliterated_hindi = any(marker in normalized for marker in TRANSLITERATED_HINDI_MARKERS)
+
+            if has_devanagari and latin_tokens:
+                mixed_script_turns += 1
+            elif has_transliterated_hindi and has_english_context:
+                translit_turns += 1
+
+        if mixed_script_turns >= max(1, len(user_turns) // 2) or translit_turns >= max(1, len(user_turns) // 2):
+            return "high"
+        if mixed_script_turns or translit_turns:
+            return "medium"
+        return "low"
+
+    def _infer_steering_preference(
+        self,
+        *,
+        avg_words: float,
+        openness: str,
+        touched_ratio: float,
+        detail_hits: int,
+        user_turn_count: int,
+    ) -> SteeringPreference:
+        if openness == "guarded" or avg_words < 8:
+            return "guided"
+        if detail_hits >= 2 or (user_turn_count >= 2 and touched_ratio >= 1.4):
+            return "user_led"
+        return "balanced"
+
+    def _infer_readiness(
+        self,
+        snapshot: ScreeningSnapshot,
+        session: ChatSession,
+        topic_states: list[TopicState],
+        user_style: UserStyleProfile,
+    ) -> ReadinessLevel:
+        user_turns = [turn for turn in session.turns if turn.speaker == "user"]
+        if len(user_turns) <= 1:
+            return "opening"
+
+        stable_topics = len([topic for topic in topic_states if topic.status == "stable" and topic.topic_id != "safety"])
+        recent_text = " ".join(self._normalize(turn.text) for turn in user_turns[-2:])
+        closure_signal = any(marker in recent_text for marker in CLOSURE_MARKERS)
+        completion = snapshot.coverage.completion_ratio
+
+        if completion >= 0.62 and (closure_signal or stable_topics >= 3 or user_style.steering_preference == "guided"):
+            return "ready_to_close"
+        if completion >= 0.42 or stable_topics >= 2:
+            return "steady"
+        return "building"
+
+    def _infer_fatigue(self, snapshot: ScreeningSnapshot, session: ChatSession) -> FatigueLevel:
+        user_turns = [turn for turn in session.turns if turn.speaker == "user"]
+        if len(user_turns) < 2:
+            return "low"
+
+        normalized_recent = [self._normalize(turn.text) for turn in user_turns[-3:]]
+        recent_word_counts = [len(turn.text.split()) for turn in user_turns[-3:]]
+        shrinking = len(recent_word_counts) >= 2 and recent_word_counts[-1] <= max(4, int(recent_word_counts[0] * 0.6))
+        fatigue_signal = any(any(marker in text for marker in FATIGUE_MARKERS) for text in normalized_recent)
+        repeated_items = len(session.asked_items[-3:]) != len(set(session.asked_items[-3:]))
+        unhelpful_nudges = len([event for event in session.nudge_events[-2:] if event.outcome == "unhelpful"])
+
+        if fatigue_signal or (shrinking and repeated_items) or unhelpful_nudges >= 2:
+            return "high"
+        if shrinking or len(user_turns) >= 4 or snapshot.coverage.completion_ratio >= 0.45:
+            return "medium"
+        return "low"
+
+    def _recent_nudge_effectiveness(self, session: ChatSession) -> float:
+        if not session.nudge_events:
+            return 0.0
+        window = session.nudge_events[-3:]
+        if not window:
+            return 0.0
+        score = 0.0
+        for event in window:
+            if event.outcome == "helpful":
+                score += 1.0
+            elif event.outcome == "unhelpful":
+                score -= 1.0
+        return score / len(window)
 
     def _build_topic_states(self, snapshot: ScreeningSnapshot, held_back_items: Iterable[str]) -> list[TopicState]:
         held_back = set(held_back_items)
@@ -417,6 +835,8 @@ class DialoguePlanner:
         topic_states: list[TopicState],
         user_turn_count: int,
         held_back_items: list[str],
+        readiness: ReadinessLevel,
+        fatigue: FatigueLevel,
     ) -> str:
         if snapshot.safety.level == "urgent":
             return "safety"
@@ -427,18 +847,29 @@ class DialoguePlanner:
         if any(topic.status in {"review", "probing"} for topic in topic_states if topic.topic_id != "safety"):
             return "clarification"
         stable_topics = [topic for topic in topic_states if topic.status == "stable" and topic.topic_id != "safety"]
-        if snapshot.coverage.completion_ratio >= 0.65 or len(stable_topics) >= 4:
+        if readiness == "ready_to_close":
+            return "summary"
+        if fatigue == "high" and snapshot.coverage.completion_ratio >= 0.45:
+            return "clarification"
+        if snapshot.coverage.completion_ratio >= 0.72 or len(stable_topics) >= 4:
             return "summary"
         return "exploration"
 
     def _select_target_topic(
         self,
         snapshot: ScreeningSnapshot,
+        session: ChatSession,
         topic_states: list[TopicState],
         current_topic: str,
         stage: str,
         held_back_items: list[str],
+        user_style: UserStyleProfile,
+        readiness: ReadinessLevel,
+        fatigue: FatigueLevel,
     ) -> str:
+        continuity_item = self._continuity_item(snapshot, session, held_back_items, fatigue)
+        if continuity_item:
+            return ITEM_TO_TOPIC.get(continuity_item, current_topic)
         if stage == "safety":
             return "safety"
         if stage == "summary":
@@ -470,6 +901,8 @@ class DialoguePlanner:
         if not candidates:
             return current_topic if current_topic in TOPIC_GRAPH else "mood"
 
+        recent_topics = [ITEM_TO_TOPIC.get(item_id) for item_id in session.asked_items[-3:] if ITEM_TO_TOPIC.get(item_id)]
+
         def rank(topic: TopicState) -> tuple[int, float]:
             score = topic.priority * 10
             score += int((len(topic.unresolved_items) / max(len(topic.item_ids), 1)) * 10)
@@ -488,6 +921,16 @@ class DialoguePlanner:
                 score += 4
             if current_topic in TOPIC_GRAPH and topic.topic_id in TOPIC_GRAPH[current_topic].transitions:
                 score += 3
+            if recent_topics.count(topic.topic_id) >= 2:
+                score -= 10 if fatigue != "low" else 4
+            if fatigue == "high" and topic.topic_id == current_topic:
+                score -= 8
+            if readiness == "ready_to_close" and topic.topic_id != current_topic:
+                score -= 10
+            if user_style.steering_preference == "user_led" and topic.topic_id == current_topic and topic.touched:
+                score += 8
+            if user_style.steering_preference == "guided" and not topic.touched:
+                score += 4
             if topic.topic_id == "safety" and "phq_q9_self_harm" in held_back:
                 score -= 40
             if topic.topic_id == "safety" and snapshot.safety.level == "none":
@@ -502,7 +945,12 @@ class DialoguePlanner:
         session: ChatSession,
         target_topic: str,
         held_back_items: list[str],
+        fatigue: FatigueLevel,
+        user_style: UserStyleProfile,
     ) -> Optional[str]:
+        continuity_item = self._continuity_item(snapshot, session, held_back_items, fatigue)
+        if continuity_item and ITEM_TO_TOPIC.get(continuity_item) == target_topic:
+            return continuity_item
         if target_topic not in TOPIC_GRAPH:
             return None
 
@@ -514,7 +962,7 @@ class DialoguePlanner:
         ]
         if not candidates:
             return None
-        return max(candidates, key=lambda item_id: self._item_priority_score(snapshot, session, item_id, target_topic))
+        return max(candidates, key=lambda item_id: self._item_priority_score(snapshot, session, item_id, target_topic, fatigue, user_style))
 
     def _rank_next_items(
         self,
@@ -522,6 +970,8 @@ class DialoguePlanner:
         session: ChatSession,
         target_topic: str,
         held_back_items: list[str],
+        fatigue: FatigueLevel,
+        user_style: UserStyleProfile,
     ) -> list[str]:
         held_back = set(held_back_items)
         unresolved = [
@@ -532,7 +982,7 @@ class DialoguePlanner:
         unresolved.sort(
             key=lambda item_id: (
                 ITEM_TO_TOPIC.get(item_id) != target_topic,
-                -self._item_priority_score(snapshot, session, item_id, target_topic),
+                -self._item_priority_score(snapshot, session, item_id, target_topic, fatigue, user_style),
             )
         )
         return unresolved[:5]
@@ -547,12 +997,25 @@ class DialoguePlanner:
             return ITEM_TO_TOPIC.get(last_span.item_id, "rapport")
         return "rapport"
 
-    def _select_action(self, stage: str, target_topic: str) -> str:
+    def _select_action(
+        self,
+        stage: str,
+        target_topic: str,
+        user_style: UserStyleProfile,
+        fatigue: FatigueLevel,
+        readiness: ReadinessLevel,
+    ) -> str:
         if stage == "safety":
             return "risk_check" if target_topic == "safety" else "handoff"
         if stage == "summary":
             return "summarize"
         if stage == "rapport":
+            return "open_question"
+        if fatigue == "high" or readiness == "ready_to_close":
+            return "clarify"
+        if target_topic in {"self_view", "safety"}:
+            return "reflect"
+        if user_style.steering_preference == "user_led" and target_topic in {"mood", "anxiety", "sleep"}:
             return "open_question"
         return "clarify" if target_topic in {"mood", "anxiety", "sleep"} else "symptom_probe"
 
@@ -585,15 +1048,23 @@ class DialoguePlanner:
         target_topic: str,
         stage: str,
         user_style: UserStyleProfile,
+        fatigue: FatigueLevel,
+        readiness: ReadinessLevel,
     ) -> str:
         if stage == "rapport":
             return "Acknowledge the opening concern, then narrow gently into the first likely symptom area."
         if stage == "summary":
             return "Reflect briefly, then summarize instead of opening a new branch."
+        if readiness == "ready_to_close":
+            return "Check whether one last clarification is needed, then start closing the loop."
+        if fatigue == "high":
+            return "Keep the bridge short and lower the burden with one concrete choice."
         if current_topic == target_topic:
             return f"Stay with {target_topic} and stabilize confidence before moving on."
         if user_style.openness == "guarded":
             return f"Use a gentle bridge from {current_topic} to {target_topic} and offer an easier choice-based answer."
+        if user_style.steering_preference == "user_led":
+            return f"Bridge from {current_topic} to {target_topic} by following the user's own wording before tightening the question."
         return f"Bridge naturally from {current_topic} to {target_topic} by connecting the last symptom to its daily impact."
 
     def _topic_coverage_boost(self, snapshot: ScreeningSnapshot, topic_id: str) -> int:
@@ -605,6 +1076,8 @@ class DialoguePlanner:
         session: ChatSession,
         item_id: str,
         target_topic: Optional[str] = None,
+        fatigue: FatigueLevel = "low",
+        user_style: Optional[UserStyleProfile] = None,
     ) -> int:
         item = snapshot.items[item_id]
         score = ITEM_INDEX[item_id].priority * 10
@@ -623,33 +1096,51 @@ class DialoguePlanner:
         if item.evidence_span_ids and item.status != "resolved":
             score += 6
         if item_id in session.asked_items:
-            score += 7 if item.status in {"partial", "contradicted", "abstained"} else -6
+            if item.status in {"contradicted", "abstained"}:
+                score += 6
+            elif item.status == "partial":
+                score += 2
+            else:
+                score -= 8
+        recent_repeat_count = session.asked_items[-3:].count(item_id)
+        if recent_repeat_count:
+            score -= 10 if fatigue == "low" else 16
+        if recent_repeat_count >= 2:
+            score -= 12
+        if session.asked_items[-1:] == [item_id]:
+            score -= 8 if item.status in {"partial", "contradicted", "abstained"} else 16
         if target_topic and ITEM_TO_TOPIC.get(item_id) == target_topic:
             score += 12
         if item.review_recommended:
             score += 10
+        if user_style and user_style.steering_preference == "user_led" and target_topic and ITEM_TO_TOPIC.get(item_id) != target_topic:
+            score -= 4
         return score
 
     def _held_back_items(self, snapshot: ScreeningSnapshot, session: ChatSession) -> list[str]:
         held_back: list[str] = []
-        if self._hold_back_sensitive_item("phq_q9_self_harm", snapshot, session):
-            held_back.append("phq_q9_self_harm")
+        for item_id in SENSITIVE_ITEM_IDS:
+            if self._hold_back_sensitive_item(item_id, snapshot, session):
+                held_back.append(item_id)
         return held_back
 
     def _hold_back_sensitive_item(self, item_id: str, snapshot: ScreeningSnapshot, session: ChatSession) -> bool:
-        if item_id != "phq_q9_self_harm":
-            return False
-
         user_turns = [turn for turn in session.turns if turn.speaker == "user"]
         if snapshot.safety.level == "urgent":
             return False
-        if snapshot.safety.level == "review" and self._has_explicit_safety_signal(snapshot):
+        if item_id == "phq_q9_self_harm" and snapshot.safety.level == "review" and self._has_explicit_safety_signal(snapshot):
             return False
         mood_signal = any(
             snapshot.items[key].value is not None and snapshot.items[key].value >= 2
             for key in ("phq_q1_anhedonia", "phq_q2_low_mood", "phq_q6_worthlessness")
         )
-        return len(user_turns) < 3 and not mood_signal
+        if item_id == "phq_q9_self_harm":
+            return len(user_turns) < 3 and not mood_signal
+        if item_id == "phq_q6_worthlessness":
+            return len(user_turns) < 2 and not mood_signal
+        if item_id == "gad_q7_fear_awful":
+            return len(user_turns) < 2 and snapshot.coverage.touched_items < 3
+        return False
 
     def _has_explicit_safety_signal(self, snapshot: ScreeningSnapshot) -> bool:
         safety_text = " ".join(snapshot.safety.cues + ([snapshot.safety.rationale] if snapshot.safety.rationale else []))
@@ -670,13 +1161,97 @@ class DialoguePlanner:
     def _compose_prompt(self, language: str, base_prompt: str, plan: DialoguePlan) -> str:
         prefix = REFLECTION_PREFIXES[language][plan.user_style.empathy_level]
         suffix = self._style_suffix(language, plan)
+        parts = [prefix]
+        if plan.continuity_note:
+            parts.append(plan.continuity_note)
+        if plan.reflective_anchor:
+            parts.append(plan.reflective_anchor)
+        parts.append(base_prompt)
         if suffix:
-            return f"{prefix} {base_prompt} {suffix}"
-        return f"{prefix} {base_prompt}"
+            parts.append(suffix)
+        return " ".join(part.strip() for part in parts if part and part.strip())
+
+    def _build_prompt_for_target(self, language: str, plan: DialoguePlan, session: ChatSession) -> Optional[str]:
+        item_prompt = self._build_item_prompt(language, plan, session)
+        if item_prompt:
+            return item_prompt
+        return TOPIC_PROMPTS.get(plan.target_topic, {}).get(language)
+
+    def _build_item_prompt(self, language: str, plan: DialoguePlan, session: ChatSession) -> Optional[str]:
+        if not plan.target_item:
+            return None
+        prompt_bank = ITEM_FOLLOW_UPS.get(plan.target_item)
+        if not prompt_bank:
+            return None
+
+        latest_user_text = self._latest_user_text(session)
+        recent_repeat = session.asked_items[-1:] == [plan.target_item]
+        has_timing = self._has_timing_answer(latest_user_text)
+        has_frequency = self._has_frequency_answer(latest_user_text)
+
+        if recent_repeat and has_frequency and "frequency_known" in prompt_bank:
+            return prompt_bank["frequency_known"][language]
+        if recent_repeat and (has_timing or has_frequency) and "timing_known" in prompt_bank:
+            return prompt_bank["timing_known"][language]
+        return prompt_bank.get("default", {}).get(language)
+
+    def _latest_user_text(self, session: ChatSession) -> str:
+        for turn in reversed(session.turns):
+            if turn.speaker == "user":
+                return self._normalize(turn.text)
+        return ""
+
+    def _has_timing_or_frequency_answer(self, normalized_text: str) -> bool:
+        if not normalized_text:
+            return False
+        return any(marker in normalized_text for marker in TIME_MARKERS + FREQUENCY_MARKERS)
+
+    def _has_timing_answer(self, normalized_text: str) -> bool:
+        if not normalized_text:
+            return False
+        return any(marker in normalized_text for marker in TIME_MARKERS)
+
+    def _has_frequency_answer(self, normalized_text: str) -> bool:
+        if not normalized_text:
+            return False
+        return any(marker in normalized_text for marker in FREQUENCY_MARKERS)
+
+    def _continuity_item(
+        self,
+        snapshot: ScreeningSnapshot,
+        session: ChatSession,
+        held_back_items: list[str],
+        fatigue: FatigueLevel,
+    ) -> Optional[str]:
+        if not session.asked_items:
+            return None
+        last_item = session.asked_items[-1]
+        if last_item in held_back_items or last_item not in snapshot.items:
+            return None
+        if snapshot.items[last_item].status == "resolved":
+            return None
+        if fatigue == "high" and snapshot.items[last_item].status not in {"contradicted", "abstained"}:
+            return None
+
+        last_user_turn = next((turn for turn in reversed(session.turns) if turn.speaker == "user"), None)
+        last_assistant_turn = next((turn for turn in reversed(session.turns) if turn.speaker == "assistant"), None)
+        if last_user_turn is None or last_assistant_turn is None or "?" not in last_assistant_turn.text:
+            return None
+
+        normalized_text = self._normalize(last_user_turn.text)
+        words = len(last_user_turn.text.split())
+        short_followup = words <= 6 or any(marker == normalized_text for marker in SHORT_FOLLOWUP_MARKERS)
+        if self._has_timing_or_frequency_answer(normalized_text):
+            return last_item
+        if short_followup:
+            return last_item
+        return None
 
     def _style_suffix(self, language: str, plan: DialoguePlan) -> str:
         if plan.next_action == "risk_check" or plan.target_topic == "safety":
             return SAFETY_SHORT_ANSWER_SUFFIXES[language]
+        if plan.fatigue == "high":
+            return BRIEF_DETAIL_SUFFIXES[language]
         if plan.user_style.openness == "guarded":
             return SOFTENING_SUFFIXES[language]
         if plan.user_style.verbosity == "brief":
@@ -684,6 +1259,84 @@ class DialoguePlanner:
         if plan.user_style.verbosity == "detailed":
             return OPEN_STORY_SUFFIXES[language]
         return ""
+
+    def _build_reflective_anchor(
+        self,
+        language: str,
+        target_topic: str,
+        user_style: UserStyleProfile,
+        fatigue: FatigueLevel,
+    ) -> str:
+        anchor = TOPIC_REFLECTIONS.get(target_topic, {}).get(language, "")
+        if fatigue == "high":
+            return anchor
+        if user_style.steering_preference == "user_led" and anchor:
+            return anchor
+        if user_style.openness == "guarded" and anchor:
+            return anchor
+        return anchor if target_topic in {"self_view", "safety"} else ""
+
+    def _build_continuity_note(self, language: str, session: ChatSession, target_topic: str) -> str:
+        recent = getattr(session.profile, "recent_checkins", None) or []
+        if not recent:
+            return ""
+        latest = recent[0] if isinstance(recent[0], dict) else None
+        if not latest:
+            return ""
+        recent_topic_key = str(latest.get("topic") or "check_in").replace(" ", "_").lower()
+        recent_topic = self._topic_label(recent_topic_key, language).lower()
+        if recent_topic_key == target_topic:
+            continuity = {
+                "en": f"If this feels similar to your recent {recent_topic} check-in, tell me what has stayed the same or changed.",
+                "hi": f"अगर यह आपकी हाल की {recent_topic} बातचीत से मिलता-जुलता लग रहा है, तो बताइए क्या वैसा रहा और क्या बदला।",
+                "hinglish": f"Agar yeh recent {recent_topic} check-in jaisa lag raha hai, to batao kya same raha aur kya change hua.",
+            }
+            return continuity[language]
+        continuity = {
+            "en": f"If this feels different from your recent {recent_topic} check-in, you can tell me what changed this time.",
+            "hi": f"अगर यह हाल की {recent_topic} बातचीत से अलग लग रहा है, तो बताइए इस बार क्या बदला।",
+            "hinglish": f"Agar yeh recent {recent_topic} check-in se different lag raha hai, to batao is baar kya change hua.",
+        }
+        return continuity[language]
+
+    def _recommend_nudges(
+        self,
+        session: ChatSession,
+        target_topic: str,
+        user_style: UserStyleProfile,
+        stage: str,
+        fatigue: FatigueLevel,
+    ) -> list[str]:
+        order: list[str] = []
+        if stage == "safety" or target_topic == "safety":
+            order.append("safety")
+        if target_topic in {"mood", "sleep", "anxiety"}:
+            order.append(target_topic)
+
+        if fatigue == "high":
+            order.extend(["impact", "example"])
+        elif user_style.openness == "guarded":
+            order.extend(["example", "impact", "timing"])
+        elif user_style.verbosity == "brief":
+            order.extend(["example", "timing", "impact"])
+        elif user_style.steering_preference == "user_led":
+            order.extend(["impact", "example", "timing"])
+        else:
+            order.extend(["example", "impact", "timing"])
+
+        helpful = [event.strategy for event in session.nudge_events[-2:] if event.outcome == "helpful"]
+        unhelpful = [event.strategy for event in session.nudge_events[-2:] if event.outcome == "unhelpful"]
+        promoted = [strategy for strategy in helpful if strategy in order]
+        demoted = [strategy for strategy in unhelpful if strategy in order]
+
+        deduped: list[str] = []
+        for key in promoted + order:
+            if key not in deduped and key not in demoted:
+                deduped.append(key)
+        for key in demoted:
+            if key not in deduped:
+                deduped.append(key)
+        return deduped[:3]
 
     def _distress_trend(self, snapshot: ScreeningSnapshot, session: ChatSession) -> str:
         user_turn_ids = [turn.turn_id for turn in session.turns if turn.speaker == "user"]
