@@ -358,6 +358,8 @@ class HuggingFaceResponder:
         return any(marker in normalized for marker in meta_markers)
 
     def _should_prefer_fallback(self, session: ChatSession, target_item: Optional[str]) -> bool:
+        if self.config.model_provider == "local" and session.language in {"hi", "hinglish"}:
+            return True
         if not target_item or target_item not in ITEM_INDEX:
             return False
         last_user = next((turn.text for turn in reversed(session.turns) if turn.speaker == "user"), "")
