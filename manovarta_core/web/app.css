@@ -558,6 +558,68 @@ textarea {
   padding: 16px 18px;
 }
 
+.profile-summary-strip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px 18px;
+  border-radius: 24px;
+  border: 1px solid rgba(53, 90, 95, 0.18);
+  background:
+    linear-gradient(180deg, rgba(238, 228, 214, 0.96), rgba(233, 222, 205, 0.92));
+  box-shadow: 0 10px 24px rgba(20, 27, 32, 0.08);
+}
+
+.profile-summary-strip.is-empty {
+  border-style: dashed;
+  background: rgba(238, 228, 214, 0.52);
+}
+
+.profile-summary-copy {
+  display: grid;
+  gap: 4px;
+}
+
+.profile-sheet-trigger {
+  white-space: nowrap;
+}
+
+.profile-sheet-backdrop {
+  align-items: end;
+  padding: 20px;
+  background: rgba(12, 16, 19, 0.52);
+}
+
+.profile-sheet-card {
+  width: min(760px, 100%);
+  max-height: min(82vh, 760px);
+  overflow: auto;
+  padding-top: 20px;
+  border-radius: 30px 30px 22px 22px;
+  background:
+    linear-gradient(180deg, rgba(238, 228, 214, 0.98), rgba(231, 219, 203, 0.98));
+  box-shadow: 0 28px 70px rgba(8, 12, 14, 0.28);
+}
+
+.sheet-handle {
+  inline-size: 58px;
+  block-size: 6px;
+  border-radius: 999px;
+  margin: 0 auto 8px;
+  background: rgba(20, 27, 32, 0.18);
+}
+
+.profile-sheet-grid {
+  margin-top: 4px;
+}
+
+.profile-sheet-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
 .profile-details summary {
   cursor: pointer;
   font-weight: 700;
@@ -729,6 +791,12 @@ body:not(.session-live) .sanctuary-column {
 body:not(.session-live) .nudge-panel,
 body:not(.session-live) .aftercare-panel {
   display: none;
+}
+
+body:not(.session-live) .composer-panel {
+  position: static;
+  bottom: auto;
+  box-shadow: none;
 }
 
 body:not(.session-live) .storyboard-grid,
@@ -1052,6 +1120,12 @@ body.session-live .welcome-stage {
   bottom: 18px;
   z-index: 5;
   box-shadow: 0 22px 44px rgba(29, 32, 35, 0.12);
+}
+
+body.session-live .composer-panel {
+  position: sticky;
+  bottom: 18px;
+  z-index: 5;
 }
 
 .conversation-mode {
@@ -1599,6 +1673,21 @@ th {
     flex-direction: column;
     align-items: stretch;
   }
+
+  .profile-summary-strip,
+  .profile-sheet-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .profile-sheet-backdrop {
+    padding: 12px;
+  }
+
+  .profile-sheet-card {
+    max-height: 88vh;
+    border-radius: 28px 28px 20px 20px;
+  }
 }
 
 /* Premium product reset: quieter hierarchy, matte surfaces, stronger ritual/voice states */
@@ -2138,6 +2227,10 @@ body.session-live.has-snapshot .product-grid {
   position: sticky;
   bottom: 18px;
   z-index: 5;
+  box-shadow: var(--shadow-lg);
+}
+
+body.session-live .composer-panel {
   box-shadow: var(--shadow-lg);
 }
 

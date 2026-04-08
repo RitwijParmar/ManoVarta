@@ -126,6 +126,96 @@ const LANGUAGE_UI = {
   },
 };
 
+const PROFILE_UI_COPY = {
+  en: {
+    addButton: "Add optional context",
+    editButton: "Edit context",
+    summaryLabelEmpty: "Optional context",
+    summaryLabelFilled: "Context for this check-in",
+    summaryEmpty: "Add age, role, or background only if it will help ManoVarta ask more relevant follow-ups.",
+    sheetEyebrow: "Optional context",
+    sheetTitle: "Add only what helps the conversation feel more relevant.",
+    sheetSubtitle: "This stays lightweight. Share as much or as little as you want so ManoVarta can ask more grounded follow-ups.",
+    saveButton: "Keep this context",
+    clearButton: "Clear",
+    closeButton: "Close",
+    labels: {
+      name: "Name",
+      age: "Age",
+      occupation: "Occupation",
+      living: "Living situation",
+      support: "Support system",
+      context: "Anything important to keep in mind?",
+    },
+    placeholders: {
+      name: "What should ManoVarta call you?",
+      age: "Optional",
+      occupation: "Student, engineer, homemaker...",
+      living: "With family, alone, hostel...",
+      support: "Friend, sibling, partner...",
+      context: "Exams, caregiving, breakup, work stress...",
+    },
+  },
+  hi: {
+    addButton: "वैकल्पिक संदर्भ जोड़ें",
+    editButton: "संदर्भ बदलें",
+    summaryLabelEmpty: "वैकल्पिक संदर्भ",
+    summaryLabelFilled: "इस चेक-इन का संदर्भ",
+    summaryEmpty: "उम्र, भूमिका या पृष्ठभूमि सिर्फ़ तभी जोड़िए जब उससे अगला सवाल ज़्यादा प्रासंगिक लगे।",
+    sheetEyebrow: "वैकल्पिक संदर्भ",
+    sheetTitle: "सिर्फ़ वही जोड़िए जिससे बातचीत थोड़ा ज़्यादा प्रासंगिक लगे।",
+    sheetSubtitle: "इसे हल्का ही रखिए। जितना मन हो उतना ही साझा कीजिए, ताकि मनोवार्ता अगला सवाल ज़मीन से जुड़ा हुआ पूछ सके।",
+    saveButton: "इसी संदर्भ के साथ रखें",
+    clearButton: "साफ़ करें",
+    closeButton: "बंद करें",
+    labels: {
+      name: "नाम",
+      age: "उम्र",
+      occupation: "काम या भूमिका",
+      living: "रहने की स्थिति",
+      support: "सहारा देने वाला कौन है",
+      context: "कोई और बात जो ध्यान में रखनी चाहिए?",
+    },
+    placeholders: {
+      name: "मनोवार्ता आपको किस नाम से पुकारे?",
+      age: "वैकल्पिक",
+      occupation: "छात्र, इंजीनियर, गृहिणी...",
+      living: "परिवार के साथ, अकेले, हॉस्टल...",
+      support: "मित्र, बहन, साथी...",
+      context: "परीक्षा, देखभाल की ज़िम्मेदारी, ब्रेकअप, काम का तनाव...",
+    },
+  },
+  hinglish: {
+    addButton: "Optional context add karo",
+    editButton: "Context edit karo",
+    summaryLabelEmpty: "Optional context",
+    summaryLabelFilled: "Is check-in ka context",
+    summaryEmpty: "Age, role, ya background tabhi add karo jab usse next question zyada relevant lage.",
+    sheetEyebrow: "Optional context",
+    sheetTitle: "Sirf wohi add karo jo conversation ko thoda zyada relevant bana de.",
+    sheetSubtitle: "Yeh lightweight hai. Jitna useful lage utna hi share karo, taaki ManoVarta ke follow-up zyada grounded lagein.",
+    saveButton: "Yeh context rakho",
+    clearButton: "Clear",
+    closeButton: "Close",
+    labels: {
+      name: "Name",
+      age: "Age",
+      occupation: "Role ya kaam",
+      living: "Living situation",
+      support: "Support system",
+      context: "Koi aur context jo yaad rakhna chahiye?",
+    },
+    placeholders: {
+      name: "ManoVarta tumhe kis naam se bulaye?",
+      age: "Optional",
+      occupation: "Student, engineer, homemaker...",
+      living: "Family ke saath, alone, hostel...",
+      support: "Friend, sibling, partner...",
+      context: "Exams, caregiving, breakup, work stress...",
+    },
+  },
+};
+
 const STARTER_LIBRARY = {
   en: [
     {
@@ -673,6 +763,24 @@ const patientSummary = document.getElementById("patientSummary");
 const whyThisQuestion = document.getElementById("whyThisQuestion");
 const safetyNarrative = document.getElementById("safetyNarrative");
 const starterDeck = document.getElementById("starterDeck");
+const profileSheetButton = document.getElementById("profileSheetButton");
+const profileSummaryStrip = document.getElementById("profileSummaryStrip");
+const profileSummaryLabel = document.getElementById("profileSummaryLabel");
+const profileSummaryText = document.getElementById("profileSummaryText");
+const profileSummaryEditButton = document.getElementById("profileSummaryEditButton");
+const profileSheet = document.getElementById("profileSheet");
+const profileSheetEyebrow = document.getElementById("profileSheetEyebrow");
+const profileSheetTitle = document.getElementById("profileSheetTitle");
+const profileSheetSubtitle = document.getElementById("profileSheetSubtitle");
+const profileSheetClose = document.getElementById("profileSheetClose");
+const profileSheetSave = document.getElementById("profileSheetSave");
+const profileSheetClear = document.getElementById("profileSheetClear");
+const profileNameLabel = document.getElementById("profileNameLabel");
+const profileAgeLabel = document.getElementById("profileAgeLabel");
+const profileOccupationLabel = document.getElementById("profileOccupationLabel");
+const profileLivingLabel = document.getElementById("profileLivingLabel");
+const profileSupportLabel = document.getElementById("profileSupportLabel");
+const profileContextLabel = document.getElementById("profileContextLabel");
 const profileNameInput = document.getElementById("profileNameInput");
 const profileAgeInput = document.getElementById("profileAgeInput");
 const profileOccupationInput = document.getElementById("profileOccupationInput");
@@ -1114,8 +1222,15 @@ function setTextIfPresent(node, text) {
   }
 }
 
+function setPlaceholderIfPresent(node, text) {
+  if (node && typeof text === "string") {
+    node.setAttribute("placeholder", text);
+  }
+}
+
 function applySurfaceCopy(language) {
   const copy = (LANGUAGE_UI[language] || LANGUAGE_UI.en).surface || LANGUAGE_UI.en.surface;
+  const profileCopy = PROFILE_UI_COPY[language] || PROFILE_UI_COPY.en;
   const trustItems = copy.trustItems || [];
   setTextIfPresent(brandTagline, copy.brandTagline);
   setTextIfPresent(welcomeEyebrow, copy.welcomeEyebrow);
@@ -1131,6 +1246,25 @@ function applySurfaceCopy(language) {
   setTextIfPresent(nudgeEyebrow, copy.nudgeEyebrow);
   setTextIfPresent(nudgeTitle, copy.nudgeTitle);
   setTextIfPresent(nudgeQuestLabel, copy.nudgeQuestLabel);
+  setTextIfPresent(profileSheetEyebrow, profileCopy.sheetEyebrow);
+  setTextIfPresent(profileSheetTitle, profileCopy.sheetTitle);
+  setTextIfPresent(profileSheetSubtitle, profileCopy.sheetSubtitle);
+  setTextIfPresent(profileSheetClose, profileCopy.closeButton);
+  setTextIfPresent(profileSheetSave, profileCopy.saveButton);
+  setTextIfPresent(profileSheetClear, profileCopy.clearButton);
+  setTextIfPresent(profileNameLabel, profileCopy.labels.name);
+  setTextIfPresent(profileAgeLabel, profileCopy.labels.age);
+  setTextIfPresent(profileOccupationLabel, profileCopy.labels.occupation);
+  setTextIfPresent(profileLivingLabel, profileCopy.labels.living);
+  setTextIfPresent(profileSupportLabel, profileCopy.labels.support);
+  setTextIfPresent(profileContextLabel, profileCopy.labels.context);
+  setPlaceholderIfPresent(profileNameInput, profileCopy.placeholders.name);
+  setPlaceholderIfPresent(profileAgeInput, profileCopy.placeholders.age);
+  setPlaceholderIfPresent(profileOccupationInput, profileCopy.placeholders.occupation);
+  setPlaceholderIfPresent(profileLivingInput, profileCopy.placeholders.living);
+  setPlaceholderIfPresent(profileSupportInput, profileCopy.placeholders.support);
+  setPlaceholderIfPresent(profileContextInput, profileCopy.placeholders.context);
+  updateProfileSummarySurface(language);
 }
 
 function updateSessionBadge() {
@@ -1143,7 +1277,7 @@ function updateSessionBadge() {
   sessionBadge.className = "chip";
 }
 
-function collectProfileContext() {
+function getProfileFields() {
   const ageValue = Number(profileAgeInput?.value || "");
   return {
     preferred_name: profileNameInput?.value.trim() || null,
@@ -1152,6 +1286,101 @@ function collectProfileContext() {
     living_situation: profileLivingInput?.value.trim() || null,
     support_system: profileSupportInput?.value.trim() || null,
     context_note: profileContextInput?.value.trim() || null,
+  };
+}
+
+function hasProfileContext(profile) {
+  return Boolean(
+    profile.preferred_name ||
+    profile.age ||
+    profile.occupation ||
+    profile.living_situation ||
+    profile.support_system ||
+    profile.context_note
+  );
+}
+
+function buildProfileSummaryText(language = state.language) {
+  const copy = PROFILE_UI_COPY[language] || PROFILE_UI_COPY.en;
+  const profile = getProfileFields();
+  if (!hasProfileContext(profile)) {
+    return copy.summaryEmpty;
+  }
+
+  const parts = [];
+  if (profile.preferred_name) {
+    parts.push(
+      language === "hi"
+        ? `नाम: ${profile.preferred_name}`
+        : `name: ${profile.preferred_name}`
+    );
+  }
+  if (profile.age) {
+    parts.push(language === "hi" ? `${profile.age} वर्ष` : `${profile.age} yrs`);
+  }
+  if (profile.occupation) {
+    parts.push(profile.occupation);
+  }
+  if (profile.living_situation) {
+    parts.push(profile.living_situation);
+  }
+  if (profile.support_system) {
+    parts.push(language === "hi" ? `सहारा: ${profile.support_system}` : `support: ${profile.support_system}`);
+  }
+  if (profile.context_note) {
+    parts.push(profile.context_note);
+  }
+
+  const compact = parts.slice(0, 4).join(" • ");
+  if (language === "hi") {
+    return `इस चेक-इन के लिए: ${compact}.`;
+  }
+  if (language === "hinglish") {
+    return `Is check-in ke liye: ${compact}.`;
+  }
+  return `For this check-in: ${compact}.`;
+}
+
+function updateProfileSummarySurface(language = state.language) {
+  const copy = PROFILE_UI_COPY[language] || PROFILE_UI_COPY.en;
+  const profile = getProfileFields();
+  const filled = hasProfileContext(profile);
+  if (profileSummaryStrip) {
+    profileSummaryStrip.classList.toggle("is-empty", !filled);
+  }
+  setTextIfPresent(profileSummaryLabel, filled ? copy.summaryLabelFilled : copy.summaryLabelEmpty);
+  setTextIfPresent(profileSummaryText, buildProfileSummaryText(language));
+  setTextIfPresent(profileSheetButton, filled ? copy.editButton : copy.addButton);
+  setTextIfPresent(profileSummaryEditButton, filled ? copy.editButton : copy.addButton);
+}
+
+function setProfileSheetOpen(open) {
+  if (!profileSheet) {
+    return;
+  }
+  profileSheet.classList.toggle("is-hidden", !open);
+  profileSheet.setAttribute("aria-hidden", String(!open));
+  if (open) {
+    profileNameInput?.focus();
+  } else {
+    profileSheetButton?.focus();
+  }
+}
+
+function clearProfileFields() {
+  [profileNameInput, profileAgeInput, profileOccupationInput, profileLivingInput, profileSupportInput, profileContextInput]
+    .forEach((input) => {
+      if (input) {
+        input.value = "";
+      }
+    });
+  updateProfileSummarySurface(state.language);
+}
+
+function collectProfileContext() {
+  const profile = getProfileFields();
+  return {
+    ...profile,
     recent_checkins: (state.recentCheckins || []).slice(0, 3).map((entry) => ({
       topic: entry.topic || "check_in",
       language: entry.language || state.language,
@@ -1567,6 +1796,7 @@ async function requestSessionStart(options = {}) {
 
   state.language = languageSelect.value;
   applyLanguageDefaults(state.language);
+  setProfileSheetOpen(false);
   if (stopVoiceCapture) {
     stopListening();
   }
@@ -2981,6 +3211,22 @@ function escapeHtml(text) {
 }
 
 startButton.addEventListener("click", startSession);
+profileSheetButton?.addEventListener("click", () => setProfileSheetOpen(true));
+profileSummaryEditButton?.addEventListener("click", () => setProfileSheetOpen(true));
+profileSheetClose?.addEventListener("click", () => setProfileSheetOpen(false));
+profileSheetSave?.addEventListener("click", () => {
+  updateProfileSummarySurface(state.language);
+  setProfileSheetOpen(false);
+});
+profileSheetClear?.addEventListener("click", () => {
+  clearProfileFields();
+  profileNameInput?.focus();
+});
+profileSheet?.addEventListener("click", (event) => {
+  if (event.target === profileSheet) {
+    setProfileSheetOpen(false);
+  }
+});
 chatForm.addEventListener("submit", sendTurn);
 downloadButton?.addEventListener("click", downloadExport);
 backstageToggle?.addEventListener("click", () => {
@@ -3050,7 +3296,13 @@ document.addEventListener("keydown", (event) => {
   if (architectureModal && event.key === "Escape" && !architectureModal.classList.contains("is-hidden")) {
     closeArchitectureModal();
   }
+  if (profileSheet && event.key === "Escape" && !profileSheet.classList.contains("is-hidden")) {
+    setProfileSheetOpen(false);
+  }
 });
+
+[profileNameInput, profileAgeInput, profileOccupationInput, profileLivingInput, profileSupportInput, profileContextInput]
+  .forEach((input) => input?.addEventListener("input", () => updateProfileSummarySurface(state.language)));
 
 if (demoPanel && demoToggle) {
   setDisclosureState(demoPanel, demoToggle, false, {
@@ -3073,6 +3325,7 @@ if (backstagePanel && backstageToggle) {
 
 setupVoice();
 applyLanguageDefaults(state.language);
+updateProfileSummarySurface(state.language);
 updateSessionBadge();
 resetInsightPanel();
 state.recentCheckins = loadRecentCheckins();
