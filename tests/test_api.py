@@ -553,6 +553,93 @@ def test_hindi_sleep_followup_acknowledges_frequency_answer():
     assert "नींद बनाए रखने" in reply or "नींद शुरू" in reply
 
 
+def test_english_sleep_pattern_then_frequency_pivots_to_fatigue():
+    start = client.post("/chat/sessions", json={"language": "en"})
+    session_id = start.json()["session_id"]
+
+    first_turn = client.post(
+        f"/chat/sessions/{session_id}/turns",
+        json={"text": "My sleep has been broken this week."},
+    )
+    assert first_turn.status_code == 200
+
+    second_turn = client.post(
+        f"/chat/sessions/{session_id}/turns",
+        json={"text": "Mostly I wake up around 3 or 4 am."},
+    )
+    assert second_turn.status_code == 200
+    assert "how many nights a week" in second_turn.json()["assistant_turn"]["text"].lower()
+
+    third_turn = client.post(
+        f"/chat/sessions/{session_id}/turns",
+        json={"text": "About five nights a week."},
+    )
+
+    assert third_turn.status_code == 200
+    reply = third_turn.json()["assistant_turn"]["text"].lower()
+    dialogue = third_turn.json()["snapshot"]["coverage"]["dialogue"]
+    assert dialogue["target_item"] == "phq_q4_fatigue"
+    assert "energy drops" in reply or "body feels heavy" in reply or "slow to get going" in reply
+
+
+def test_hindi_sleep_pattern_then_frequency_pivots_to_fatigue():
+    start = client.post("/chat/sessions", json={"language": "hi"})
+    session_id = start.json()["session_id"]
+
+    first_turn = client.post(
+        f"/chat/sessions/{session_id}/turns",
+        json={"text": "कुछ दिनों से नींद बहुत टूट रही है"},
+    )
+    assert first_turn.status_code == 200
+
+    second_turn = client.post(
+        f"/chat/sessions/{session_id}/turns",
+        json={"text": "ज्यादातर रात में बीच में जाग जाता हूँ"},
+    )
+    assert second_turn.status_code == 200
+    assert "कितनी रातों" in second_turn.json()["assistant_turn"]["text"]
+
+    third_turn = client.post(
+        f"/chat/sessions/{session_id}/turns",
+        json={"text": "लगभग पांच दिन हफ्ते में"},
+    )
+
+    assert third_turn.status_code == 200
+    reply = third_turn.json()["assistant_turn"]["text"]
+    dialogue = third_turn.json()["snapshot"]["coverage"]["dialogue"]
+    assert dialogue["target_item"] == "phq_q4_fatigue"
+    assert "ऊर्जा की कमी" in reply or "शरीर भारी" in reply or "दिमाग शुरू होने में धीमा" in reply
+
+
+def test_hinglish_sleep_pattern_then_frequency_pivots_to_fatigue():
+    start = client.post("/chat/sessions", json={"language": "hinglish"})
+    session_id = start.json()["session_id"]
+
+    first_turn = client.post(
+        f"/chat/sessions/{session_id}/turns",
+        json={"text": "Sleep ka pattern kaafi kharab ho gaya hai."},
+    )
+    assert first_turn.status_code == 200
+
+    second_turn = client.post(
+        f"/chat/sessions/{session_id}/turns",
+        json={"text": "Raat ko 3 baje ke around aankh khul jaati hai."},
+    )
+    assert second_turn.status_code == 200
+    assert "roughly week mein kitni raaton" in second_turn.json()["assistant_turn"]["text"].lower()
+
+    third_turn = client.post(
+        f"/chat/sessions/{session_id}/turns",
+        json={"text": "Week mein 4-5 din aisa ho raha hai."},
+    )
+
+    assert third_turn.status_code == 200
+    reply = third_turn.json()["assistant_turn"]["text"].lower()
+    dialogue = third_turn.json()["snapshot"]["coverage"]["dialogue"]
+    assert dialogue["target_item"] == "phq_q4_fatigue"
+    assert "low energy" in reply or "body heavy" in reply or "mind ko start hone" in reply
+
+
 def test_english_energy_followup_acknowledges_frequency_answer():
     start = client.post("/chat/sessions", json={"language": "en"})
     session_id = start.json()["session_id"]
@@ -615,6 +702,29 @@ def test_hindi_mood_followup_pivots_to_focus_or_interest_not_anxiety():
     assert dialogue["target_topic"] in {"mood", "focus"}
     assert dialogue["target_item"] in {"phq_q1_anhedonia", "phq_q7_concentration"}
     assert "चिंता शुरू" not in reply
+
+
+def test_hindi_energy_answer_after_focus_pivots_to_fatigue():
+    start = client.post("/chat/sessions", json={"language": "hi"})
+    session_id = start.json()["session_id"]
+
+    script = [
+        "मन बहुत भारी लग रहा है",
+        "सुबह में उठने का मन नहीं करता",
+        "ध्यान भी ठीक से नहीं लगता",
+        "ऊर्जा बहुत कम रहती है",
+    ]
+
+    last = None
+    for text in script:
+        last = client.post(f"/chat/sessions/{session_id}/turns", json={"text": text})
+        assert last.status_code == 200
+
+    body = last.json()
+    dialogue = body["snapshot"]["coverage"]["dialogue"]
+    reply = body["assistant_turn"]["text"]
+    assert dialogue["target_item"] == "phq_q4_fatigue"
+    assert "शरीर भारी" in reply or "ऊर्जा की कमी" in reply
 
 
 def test_english_low_energy_followup_stays_on_focus_or_energy_live_flow():
@@ -911,6 +1021,27 @@ def test_hinglish_scope_answer_closes_instead_of_reopening_old_loop():
 
     reply = last.json()["assistant_turn"]["text"]
     assert reply.startswith("Ab mere paas main pattern hold karne ke liye enough detail hai")
+
+
+def test_english_scope_answer_closes_instead_of_reopening_old_loop():
+    start = client.post("/chat/sessions", json={"language": "en"})
+    session_id = start.json()["session_id"]
+
+    script = [
+        "I have been feeling restless and my mind will not switch off at night.",
+        "Mostly at night, and it happens about four days a week.",
+        "It feels like both my body is tense and my thoughts keep going.",
+        "Mostly work and future stuff.",
+        "It spreads to other things too.",
+    ]
+
+    last = None
+    for text in script:
+        last = client.post(f"/chat/sessions/{session_id}/turns", json={"text": text})
+        assert last.status_code == 200
+
+    reply = last.json()["assistant_turn"]["text"]
+    assert reply.startswith("I have enough to hold onto the main pattern now")
 
 
 def test_hindi_anxiety_loop_break_closes_after_repeated_generic_rotation():

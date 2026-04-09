@@ -258,6 +258,7 @@ FATIGUE_MARKERS = (
 )
 ACTIVATION_MARKERS = (
     "low energy",
+    "energy down",
     "heavy in the morning",
     "hard to get started",
     "harder to get started",
@@ -274,9 +275,54 @@ ACTIVATION_MARKERS = (
     "mind ko start hone me time lagta",
     "start hone mein time lagta",
     "start hone me time lagta",
+    "ऊर्जा",
+    "ऊर्जा कम",
     "सुबह भारी",
     "दिमाग धीमा",
     "धीमा लग",
+)
+SLEEP_PATTERN_MARKERS = (
+    "hard to fall asleep",
+    "cannot fall asleep",
+    "can't fall asleep",
+    "trouble falling asleep",
+    "wake up around",
+    "wake up at",
+    "wake around",
+    "waking during the night",
+    "wake during the night",
+    "middle of the night",
+    "wake too early",
+    "waking too early",
+    "waking up too early",
+    "3 am",
+    "4 am",
+    "3 or 4 am",
+    "stay asleep",
+    "staying asleep",
+    "नींद आने में",
+    "सोने में",
+    "बीच में जाग",
+    "बार-बार उठ",
+    "बहुत जल्दी उठ",
+    "3 बजे",
+    "4 बजे",
+    "raat ko 3 baje",
+    "raat ko 4 baje",
+    "aankh khul",
+)
+SLEEP_IMPACT_MARKERS = (
+    "tired the next morning",
+    "tired next morning",
+    "next morning",
+    "morning tired",
+    "not fresh",
+    "not rested",
+    "सुबह थक",
+    "सुबह थकान",
+    "थकान रहती",
+    "fresh feel nahi",
+    "fresh नहीं",
 )
 TIME_MARKERS = (
     "night",
@@ -302,6 +348,7 @@ FREQUENCY_MARKERS = (
     "every day",
     "daily",
     "days a week",
+    "nights a week",
     "times a week",
     "most days",
     "usually",
@@ -569,6 +616,11 @@ ITEM_FOLLOW_UPS: Dict[str, Dict[str, Dict[str, str]]] = {
             "hi": "जब नींद बिगड़ती है, क्या ज़्यादा दिक्कत सोने की शुरुआत में होती है, रात में बार-बार उठने में, या बहुत जल्दी उठ जाने में?",
             "hinglish": "Jab sleep disturb hoti hai, kya zyada issue sone ki shuruat mein hota hai, raat mein baar baar uthne mein, ya bahut jaldi uth jaane mein?",
         },
+        "pattern_known": {
+            "en": "That helps place the sleep pattern. Roughly how many nights a week has it been happening like that?",
+            "hi": "इससे नींद का पैटर्न थोड़ा साफ़ हो रहा है। लगभग हफ्ते में कितनी रातों में ऐसा होता है?",
+            "hinglish": "Isse sleep pattern thoda clearer ho raha hai. Roughly week mein kitni raaton mein aisa hota hai?",
+        },
         "timing_known": {
             "en": "That timing helps. When it happens, is it more trouble falling asleep, staying asleep, or waking up too early?",
             "hi": "यह समय-सूचना मददगार है। जब ऐसा होता है, क्या ज़्यादा मुश्किल नींद आने में होती है, नींद बनाए रखने में, या बहुत जल्दी उठ जाने में?",
@@ -578,6 +630,11 @@ ITEM_FOLLOW_UPS: Dict[str, Dict[str, Dict[str, str]]] = {
             "en": "That helps me understand how often it happens. On those nights, is it more that sleep is hard to start, hard to stay in, or that you wake up too early?",
             "hi": "इससे मुझे समझ आ रहा है कि यह कितनी बार होता है। उन रातों में, क्या ज़्यादा दिक्कत नींद शुरू होने में होती है, नींद बनाए रखने में, या बहुत जल्दी उठ जाने में?",
             "hinglish": "Isse samajh aa raha hai ki yeh kitni baar hota hai. Un raaton mein, kya zyada issue sleep start hone mein hota hai, sleep banaye rakhne mein, ya bahut jaldi uth jaane mein?",
+        },
+        "pattern_and_frequency_known": {
+            "en": "That gives me a clearer picture. The next morning, does it mostly leave you tired, foggy, or not properly rested?",
+            "hi": "इससे तस्वीर थोड़ी साफ़ हो रही है। अगली सुबह क्या ज़्यादा थकान, दिमागी धुंधलापन, या ठीक से आराम न मिलने जैसा लगता है?",
+            "hinglish": "Isse picture thodi clearer ho rahi hai. Agli subah zyada tired, foggy, ya properly rested na lagne jaisa hota hai?",
         },
     },
     "phq_q4_fatigue": {
@@ -704,7 +761,7 @@ ITEM_FOLLOW_UPS: Dict[str, Dict[str, Dict[str, str]]] = {
 ITEM_SIGNAL_MARKERS: Dict[str, Tuple[str, ...]] = {
     "phq_q1_anhedonia": ("not interested", "no interest", "disconnected", "nothing feels good", "usually enjoy", "used to enjoy", "mann nahi lagta", "मन नहीं लगता", "दिल नहीं करता"),
     "phq_q2_low_mood": ("low mood", "sad", "down", "empty", "heavy", "heaviness", "मन भारी", "भारी", "उदास"),
-    "phq_q4_fatigue": ("tired", "drained", "fatigue", "low energy", "wiped", "heavy in the morning", "slow to start", "slow to get started", "mind feels slow", "brain fog", "subah heavy", "थक", "थकान", "सुबह भारी", "दिमाग धीमा"),
+    "phq_q4_fatigue": ("tired", "drained", "fatigue", "low energy", "energy down", "wiped", "heavy in the morning", "slow to start", "slow to get started", "mind feels slow", "brain fog", "subah heavy", "थक", "थकान", "ऊर्जा", "ऊर्जा कम", "सुबह भारी", "दिमाग धीमा"),
     "phq_q6_worthlessness": ("burden", "worthless", "useless", "बोझ", "बेकार", "मेरी वजह से"),
     "phq_q3_sleep": ("sleep", "asleep", "wake", "waking", "sleep disturb", "neend disturb", "नींद", "रात", "रात में", "उठ जाती", "switch off"),
     "phq_q7_concentration": ("focus", "concentrat", "attention", "cannot focus", "can't focus", "harder to focus", "hard to focus", "taking longer to get started", "takes longer to get started", "mind taking longer", "mind feels slow", "brain fog", "ध्यान", "focus nahi", "ध्यान नहीं टिक", "mind blanks", "screen", "start hone mein time lagta", "start hone me time lagta", "mind ko start hone mein time lagta", "mind ko start hone me time lagta", "दिमाग धीमा"),
@@ -913,7 +970,7 @@ class DialoguePlanner:
         return False
 
     def _should_close_anxiety_after_scope_answer(self, plan: DialoguePlan, session: ChatSession) -> bool:
-        if plan.target_topic != "anxiety" or not session.asked_items:
+        if not session.asked_items:
             return False
         if session.asked_items[-1] != "gad_q3_excessive_worry":
             return False
@@ -1461,11 +1518,13 @@ class DialoguePlanner:
         latest_signal_topics = self._latest_signal_topics(session)
 
         if last_item == "phq_q7_concentration":
+            if self._has_activation_signal(latest_user_text) and available("phq_q4_fatigue"):
+                return "phq_q4_fatigue"
             if "phq_q4_fatigue" in recent_signal_items and available("phq_q4_fatigue"):
                 return "phq_q4_fatigue"
             if "phq_q7_concentration" in recent_signal_items and available("phq_q7_concentration"):
                 return "phq_q7_concentration"
-            if self._has_activation_signal(latest_user_text) and available("phq_q4_fatigue"):
+            if "energy" in latest_signal_topics and available("phq_q4_fatigue"):
                 return "phq_q4_fatigue"
             if "focus" in latest_signal_topics and available("phq_q7_concentration"):
                 return "phq_q7_concentration"
@@ -1527,6 +1586,13 @@ class DialoguePlanner:
                 return "gad_q5_restlessness"
 
         if last_item == "phq_q3_sleep":
+            if self._has_sleep_impact_signal(latest_user_text) and available("phq_q4_fatigue"):
+                return "phq_q4_fatigue"
+            if self._has_frequency_answer(latest_user_text) and self._recent_sleep_pattern_known(session):
+                if available("phq_q4_fatigue"):
+                    return "phq_q4_fatigue"
+            if self._has_sleep_pattern_answer(latest_user_text):
+                return last_item
             if snapshot.items[last_item].status != "resolved":
                 return last_item
             if target_topic == "focus" and available("phq_q7_concentration"):
@@ -1847,6 +1913,11 @@ class DialoguePlanner:
         recent_repeat_window = plan.target_item in session.asked_items[-3:]
         has_timing = self._has_timing_answer(latest_user_text)
         has_frequency = self._has_frequency_answer(latest_user_text)
+        if plan.target_item == "phq_q3_sleep":
+            if recent_repeat_window and self._has_sleep_pattern_answer(latest_user_text) and "pattern_known" in prompt_bank:
+                return prompt_bank["pattern_known"][language]
+            if recent_repeat_window and has_frequency and self._recent_sleep_pattern_known(session) and "pattern_and_frequency_known" in prompt_bank:
+                return prompt_bank["pattern_and_frequency_known"][language]
 
         if recent_repeat and has_timing and "timing_known" in prompt_bank:
             return prompt_bank["timing_known"][language]
@@ -1960,6 +2031,16 @@ class DialoguePlanner:
             return False
         return any(marker in normalized_text for marker in ACTIVATION_MARKERS)
 
+    def _has_sleep_pattern_answer(self, normalized_text: str) -> bool:
+        if not normalized_text:
+            return False
+        return any(marker in normalized_text for marker in SLEEP_PATTERN_MARKERS)
+
+    def _has_sleep_impact_signal(self, normalized_text: str) -> bool:
+        if not normalized_text:
+            return False
+        return any(marker in normalized_text for marker in SLEEP_IMPACT_MARKERS)
+
     def _has_timing_answer(self, normalized_text: str) -> bool:
         if not normalized_text:
             return False
@@ -1993,6 +2074,10 @@ class DialoguePlanner:
         return any(marker in normalized_text for marker in WORRY_SCOPE_SPREAD_MARKERS) or any(
             marker in normalized_text for marker in WORRY_SCOPE_SINGLE_MARKERS
         )
+
+    def _recent_sleep_pattern_known(self, session: ChatSession, lookback: int = 3) -> bool:
+        user_turns = [self._normalize(turn.text) for turn in session.turns if turn.speaker == "user"][-lookback:]
+        return any(self._has_sleep_pattern_answer(text) for text in user_turns)
 
     def _has_new_anxiety_branch_detail(self, normalized_text: str) -> bool:
         if not normalized_text:
