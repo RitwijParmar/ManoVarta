@@ -2040,6 +2040,29 @@ body.session-live.has-snapshot .product-grid {
   color: var(--surface-soft);
 }
 
+.conversation-panel .conversation-topbar h2,
+.welcome-copy h2,
+.starter-section .section-head h3 {
+  color: #162229;
+}
+
+.conversation-panel .conversation-topbar .eyebrow,
+.welcome-copy .eyebrow,
+.starter-section .eyebrow {
+  color: #6d6256;
+}
+
+.welcome-copy .subtitle,
+.starter-section .panel-subtitle,
+.starter-section .summary-text {
+  color: #46535a;
+}
+
+.welcome-note {
+  color: #5c544c;
+  font-weight: 600;
+}
+
 .trust-strip {
   display: flex;
   flex-wrap: wrap;
@@ -2054,10 +2077,10 @@ body.session-live.has-snapshot .product-grid {
   padding: 0 14px;
   border-radius: 999px;
   background: rgba(27, 35, 40, 0.045);
-  color: #4f5859;
+  color: #3d494d;
   border: 1px solid rgba(27, 35, 40, 0.09);
   font-size: 0.9rem;
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .trust-icon {
