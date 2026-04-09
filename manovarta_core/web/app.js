@@ -1669,6 +1669,9 @@ function rememberCheckin(payload) {
 }
 
 function setLink(anchor, href) {
+  if (!anchor) {
+    return;
+  }
   if (!href) {
     anchor.href = "#";
     anchor.classList.add("disabled-link");
@@ -1952,7 +1955,9 @@ async function requestSessionStart(options = {}) {
   sessionMeta.textContent = "Your private check-in is open. Start with whatever feels most real right now.";
   updateSessionBadge();
   setSessionLiveState(true);
-  downloadButton.disabled = false;
+  if (downloadButton) {
+    downloadButton.disabled = false;
+  }
   setLink(summaryLink, `/chat/sessions/${payload.session_id}/summary`);
   setLink(exportLink, `/chat/sessions/${payload.session_id}/export`);
 
@@ -2496,9 +2501,6 @@ function renderSnapshot(payload) {
     bonusSignals.appendChild(chip);
   });
 
-  personalizationBlend.textContent = `${dialogue.user_style.code_mix} code-mix`;
-  personalizationPacing.textContent = buildResponsePosture(dialogue.user_style);
-  personalizationSummary.textContent = buildPersonalizationSummary(dialogue, snapshot.language);
   composerHelper.textContent = buildComposerHelper(dialogue, snapshot.language);
   nudgeSubtitle.textContent = buildNudgeSubtitle(dialogue, snapshot.language);
   if (nudgeCoach) {
@@ -2716,7 +2718,9 @@ async function refreshExport() {
     throw new Error(`Export refresh failed (${response.status})`);
   }
   state.exportPayload = await response.json();
-  downloadButton.disabled = false;
+  if (downloadButton) {
+    downloadButton.disabled = false;
+  }
   renderSnapshot(state.exportPayload);
   rememberCheckin(state.exportPayload);
   setLink(summaryLink, `/chat/sessions/${state.sessionId}/summary`);

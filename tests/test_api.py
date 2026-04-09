@@ -27,6 +27,8 @@ def test_root_serves_browser_demo():
     assert 'id="composerDropbar"' in response.text
     assert 'id="composerQuickOpen"' in response.text
     assert 'id="composerQuickMic"' in response.text
+    assert 'id="downloadButton"' not in response.text
+    assert 'id="personalizationBlend"' not in response.text
     assert "/app-assets/app.js?v=" in response.text
     assert "/app-assets/app.css?v=" in response.text
     assert "Presenter tools" not in response.text
