@@ -790,6 +790,56 @@ def test_hindi_sleep_followup_relax_answer_bridges_back_to_anxiety():
     assert "दिमाग और शरीर" in reply or "तनाव" in reply or "शांत" in reply
 
 
+def test_english_sleep_followup_relax_answer_bridges_back_to_anxiety():
+    start = client.post("/chat/sessions", json={"language": "en"})
+    session_id = start.json()["session_id"]
+
+    for text in [
+        "I feel a little anxious.",
+        "Yeah, it feels more like a sleep problem.",
+    ]:
+        turn = client.post(f"/chat/sessions/{session_id}/turns", json={"text": text})
+        assert turn.status_code == 200
+
+    third_turn = client.post(
+        f"/chat/sessions/{session_id}/turns",
+        json={"text": "Quieting my mind."},
+    )
+
+    assert third_turn.status_code == 200
+    reply = third_turn.json()["assistant_turn"]["text"].lower()
+    dialogue = third_turn.json()["snapshot"]["coverage"]["dialogue"]
+    assert dialogue["target_topic"] == "anxiety"
+    assert dialogue["target_item"] == "gad_q4_trouble_relaxing"
+    assert "quiet your thoughts" in reply or "relax your body" in reply or "both" in reply
+    assert "fall asleep" not in reply
+
+
+def test_hinglish_sleep_followup_relax_answer_bridges_back_to_anxiety():
+    start = client.post("/chat/sessions", json={"language": "hinglish"})
+    session_id = start.json()["session_id"]
+
+    for text in [
+        "Thodi anxiety lag rahi hai.",
+        "Haan yeh sleep issue jaisa lag raha hai.",
+    ]:
+        turn = client.post(f"/chat/sessions/{session_id}/turns", json={"text": text})
+        assert turn.status_code == 200
+
+    third_turn = client.post(
+        f"/chat/sessions/{session_id}/turns",
+        json={"text": "Mind ko quiet karna."},
+    )
+
+    assert third_turn.status_code == 200
+    reply = third_turn.json()["assistant_turn"]["text"].lower()
+    dialogue = third_turn.json()["snapshot"]["coverage"]["dialogue"]
+    assert dialogue["target_topic"] == "anxiety"
+    assert dialogue["target_item"] == "gad_q4_trouble_relaxing"
+    assert "thoughts ko quiet" in reply or "body relax" in reply or "dono" in reply
+    assert "sleep disturb" not in reply
+
+
 def test_hinglish_worry_domain_detail_advances_to_scope_question():
     start = client.post("/chat/sessions", json={"language": "hinglish"})
     session_id = start.json()["session_id"]
