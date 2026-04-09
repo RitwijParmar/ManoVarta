@@ -23,6 +23,9 @@ def test_root_serves_browser_demo():
     assert "Start talking" in response.text
     assert 'id="profileSheet"' in response.text
     assert 'id="composerToggle"' in response.text
+    assert 'id="composerDropbar"' in response.text
+    assert 'id="composerQuickOpen"' in response.text
+    assert 'id="composerQuickMic"' in response.text
     assert "Presenter tools" not in response.text
     assert 'id="backstagePanel"' not in response.text
 

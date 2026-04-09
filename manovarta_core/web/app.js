@@ -222,18 +222,24 @@ const COMPOSER_UI_COPY = {
     expand: "Open text box",
     emptyHint: "Text box is folded away. Open it when you want to type, or use the mic below.",
     draftPrefix: "Draft saved:",
+    quickOpen: "Open text box",
+    quickMic: "Speak instead",
   },
   hi: {
     collapse: "टेक्स्ट बॉक्स समेटें",
     expand: "टेक्स्ट बॉक्स खोलें",
     emptyHint: "टेक्स्ट बॉक्स अभी समेटा गया है। जब लिखना हो तब खोलिए, या नीचे माइक्रोफ़ोन इस्तेमाल कीजिए।",
     draftPrefix: "सहेजा गया मसौदा:",
+    quickOpen: "टेक्स्ट बॉक्स खोलें",
+    quickMic: "माइक से बोलें",
   },
   hinglish: {
     collapse: "Text box fold karo",
     expand: "Text box kholo",
     emptyHint: "Text box fold hai. Jab type karna ho tab kholo, ya neeche mic use karo.",
     draftPrefix: "Draft saved:",
+    quickOpen: "Text box kholo",
+    quickMic: "Mic se bolo",
   },
 };
 
@@ -757,9 +763,13 @@ const sessionGoal = document.getElementById("sessionGoal");
 const composerPanel = document.getElementById("composerPanel");
 const composerToggle = document.getElementById("composerToggle");
 const composerToggleLabel = document.getElementById("composerToggleLabel");
+const composerDropbar = document.getElementById("composerDropbar");
 const composerDraftArea = document.getElementById("composerDraftArea");
 const composerCollapsedHint = document.getElementById("composerCollapsedHint");
 const composerCollapsedText = document.getElementById("composerCollapsedText");
+const composerCollapsedActions = document.getElementById("composerCollapsedActions");
+const composerQuickOpen = document.getElementById("composerQuickOpen");
+const composerQuickMic = document.getElementById("composerQuickMic");
 const messageInput = document.getElementById("messageInput");
 const languageSelect = document.getElementById("languageSelect");
 const startButton = document.getElementById("startButton");
@@ -1263,6 +1273,12 @@ function updateComposerToggleCopy(language = state.language) {
     composerToggle.setAttribute("aria-expanded", String(!collapsed));
     composerToggle.setAttribute("aria-label", collapsed ? copy.expand : copy.collapse);
   }
+  if (composerDropbar) {
+    composerDropbar.setAttribute("aria-label", copy.collapse);
+    composerDropbar.setAttribute("title", copy.collapse);
+  }
+  setTextIfPresent(composerQuickOpen, copy.quickOpen);
+  setTextIfPresent(composerQuickMic, copy.quickMic);
 }
 
 function updateComposerCollapsedHint(language = state.language) {
@@ -1285,6 +1301,9 @@ function setComposerCollapsed(collapsed, { focusInput = false } = {}) {
   }
   composerPanel.classList.toggle("is-collapsed", Boolean(collapsed));
   composerCollapsedHint.classList.toggle("is-hidden", !collapsed);
+  if (composerCollapsedActions) {
+    composerCollapsedActions.classList.toggle("is-hidden", !collapsed);
+  }
   updateComposerToggleCopy(state.language);
   updateComposerCollapsedHint(state.language);
   if (!collapsed && focusInput) {
@@ -3347,6 +3366,16 @@ profileSheet?.addEventListener("click", (event) => {
 composerToggle?.addEventListener("click", () => {
   const collapsed = composerPanel?.classList.contains("is-collapsed");
   setComposerCollapsed(!collapsed, { focusInput: Boolean(collapsed) });
+});
+composerDropbar?.addEventListener("click", () => {
+  setComposerCollapsed(true);
+});
+composerQuickOpen?.addEventListener("click", () => {
+  setComposerCollapsed(false, { focusInput: true });
+});
+composerQuickMic?.addEventListener("click", () => {
+  setComposerCollapsed(false);
+  micButton?.click();
 });
 chatForm.addEventListener("submit", sendTurn);
 downloadButton?.addEventListener("click", downloadExport);

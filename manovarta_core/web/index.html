@@ -328,7 +328,7 @@
 
               <form id="chatForm" class="composer">
                 <div id="composerDraftArea" class="composer-draft-area">
-                  <div class="composer-dropbar" aria-hidden="true"></div>
+                  <button id="composerDropbar" type="button" class="composer-dropbar" aria-label="Fold text box"></button>
                   <textarea
                     id="messageInput"
                     rows="3"
@@ -351,6 +351,14 @@
                   <p id="composerCollapsedText" class="summary-text">
                     Text box is folded away. Open it when you want to type, or use the mic below.
                   </p>
+                  <div id="composerCollapsedActions" class="composer-collapsed-actions is-hidden">
+                    <button id="composerQuickOpen" type="button" class="button secondary compact-action">
+                      Open text box
+                    </button>
+                    <button id="composerQuickMic" type="button" class="button ghost compact-action">
+                      Speak instead
+                    </button>
+                  </div>
                 </div>
 
                 <div class="composer-toolbar">

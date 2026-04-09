@@ -1154,16 +1154,24 @@ body.session-live .composer-panel {
 }
 
 .composer-dropbar {
+  appearance: none;
+  border: 0;
   inline-size: 54px;
   block-size: 5px;
   border-radius: 999px;
   margin: 0 auto;
   background: rgba(20, 27, 32, 0.12);
+  display: block;
+  cursor: pointer;
+  transition: background 180ms ease, transform 180ms ease;
+  padding: 0;
 }
 
 .composer-collapsed-hint {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
   gap: 10px;
   padding: 14px 16px;
   border-radius: 18px;
@@ -1175,13 +1183,42 @@ body.session-live .composer-panel {
   display: none;
 }
 
-.composer-panel.is-collapsed .conversation-mode,
-.composer-panel.is-collapsed .composer-draft-area {
+.composer-collapsed-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.composer-collapsed-actions.is-hidden {
   display: none;
 }
 
-.composer-panel.is-collapsed .call-state-card {
-  margin-top: 2px;
+.compact-action {
+  min-height: 40px;
+}
+
+.composer-panel.is-collapsed .conversation-mode,
+.composer-panel.is-collapsed .composer-draft-area,
+.composer-panel.is-collapsed .call-state-card,
+.composer-panel.is-collapsed .composer-toolbar {
+  display: none;
+}
+
+.composer-panel.is-collapsed {
+  padding-bottom: 16px;
+  box-shadow: 0 16px 30px rgba(29, 32, 35, 0.12);
+}
+
+.composer-panel.is-collapsed .composer-panel-head {
+  margin-bottom: 10px;
+}
+
+.composer-dropbar:hover,
+.composer-dropbar:focus-visible {
+  background: rgba(53, 90, 95, 0.34);
+  transform: scaleX(1.06);
+  outline: none;
 }
 
 .conversation-mode {
