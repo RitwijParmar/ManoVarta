@@ -807,6 +807,7 @@ def test_anhedonia_followup_does_not_bounce_back_after_low_mood_probe():
     dialogue = third_turn.json()["snapshot"]["coverage"]["dialogue"]
     assert dialogue["target_item"] == "phq_q2_low_mood"
     assert "interest drop before you start" not in reply
+    assert "steady heavy mood" in reply.lower() or "emotional numbness" in reply.lower()
 
 
 def test_split_turn_anhedonia_detail_still_stays_off_the_old_repeat_probe():

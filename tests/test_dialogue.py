@@ -667,6 +667,7 @@ def test_anhedonia_detail_after_low_mood_does_not_bounce_back_to_same_probe():
     assert coverage.dialogue.target_item == "phq_q2_low_mood"
     assert asked_item == "phq_q2_low_mood"
     assert "interest drop before you start" not in reply
+    assert "steady heavy mood" in reply.lower() or "emotional numbness" in reply.lower()
 
 
 def test_english_low_energy_slow_start_stays_on_focus_or_energy_branch():

@@ -599,6 +599,11 @@ ITEM_FOLLOW_UPS: Dict[str, Dict[str, Dict[str, str]]] = {
             "hi": "जब यह महसूस होता है, क्या यह ज़्यादा दिन भर की उदासी या भारीपन जैसा रहता है, या कुछ खास समय पर लहरों में आता है?",
             "hinglish": "Jab yeh feel hota hai, kya yeh zyada poore din ki sadness ya heaviness jaisa rehta hai, ya kuch specific times par waves mein aata hai?",
         },
+        "repeat_probe": {
+            "en": "When that feeling is there, is it more like a steady heavy mood through the day, or more like emotional numbness that comes and goes?",
+            "hi": "जब यह बना रहता है, क्या यह ज़्यादा दिन भर का लगातार भारी मन लगता है, या भावनात्मक सुन्नपन जैसा जो आता-जाता रहता है?",
+            "hinglish": "Jab yeh bana rehta hai, kya yeh zyada poore din ka steady heavy mood lagta hai, ya emotional numbness jaisa jo aata-jaata rehta hai?",
+        },
         "timing_known": {
             "en": "That timing helps. Around that part of the day, does it feel more like a steady heaviness, or more like a wave that rises and then passes?",
             "hi": "यह समय-सूचना मददगार है। उस समय के आसपास, क्या यह ज़्यादा लगातार भारीपन जैसा लगता है, या लहर की तरह आता-जाता है?",
