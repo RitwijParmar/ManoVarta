@@ -842,7 +842,7 @@ def test_split_turn_anhedonia_detail_still_stays_off_the_old_repeat_probe():
     dialogue = fourth_turn.json()["snapshot"]["coverage"]["dialogue"]
     assert dialogue["target_item"] == "phq_q2_low_mood"
     assert "steady heavy mood" not in reply.lower()
-    assert "small moments still cut through" in reply.lower() or "go through the motions" in reply.lower()
+    assert "small moments still cut through" in reply.lower() or "going through the motions" in reply.lower()
 
 
 def test_hindi_energy_answer_after_focus_pivots_to_fatigue():
@@ -923,6 +923,28 @@ def test_english_anxiety_body_tension_pivots_to_relaxation_live_flow():
     assert "relax your body" in reply or "quiet your thoughts" in reply or "tense body" in reply
 
 
+def test_english_anxiety_work_future_detail_gets_contextual_relaxation_bridge():
+    start = client.post("/chat/sessions", json={"language": "en"})
+    session_id = start.json()["session_id"]
+
+    for text in [
+        "I do not know what exactly is wrong.",
+        "It keeps going even when I try hard to stop it.",
+    ]:
+        turn = client.post(f"/chat/sessions/{session_id}/turns", json={"text": text})
+        assert turn.status_code == 200
+
+    third_turn = client.post(
+        f"/chat/sessions/{session_id}/turns",
+        json={"text": "Lately when I start any work I get more anxious about the future."},
+    )
+
+    assert third_turn.status_code == 200
+    reply = third_turn.json()["assistant_turn"]["text"].lower()
+    assert "work or future worry gets going" in reply
+    assert "whichever part feels easier to answer is okay" not in reply
+
+
 def test_english_long_anxiety_flow_breaks_earlier_and_holds_after_close():
     start = client.post("/chat/sessions", json={"language": "en"})
     session_id = start.json()["session_id"]
@@ -971,6 +993,50 @@ def test_hinglish_long_anxiety_flow_breaks_earlier_and_holds_after_close():
     assert responses[5]["assistant_turn"]["text"] == POST_CLOSE_CHOOSER_MESSAGES["hinglish"]
 
 
+def test_hinglish_anxiety_work_future_detail_gets_contextual_relaxation_bridge():
+    start = client.post("/chat/sessions", json={"language": "hinglish"})
+    session_id = start.json()["session_id"]
+
+    for text in [
+        "Pata nahi exactly kya wrong hai.",
+        "Woh chalta rehta hai chahe kitni koshish karun.",
+    ]:
+        turn = client.post(f"/chat/sessions/{session_id}/turns", json={"text": text})
+        assert turn.status_code == 200
+
+    third_turn = client.post(
+        f"/chat/sessions/{session_id}/turns",
+        json={"text": "Kaam start karte hi future ko lekar anxiety badh jaati hai."},
+    )
+
+    assert third_turn.status_code == 200
+    reply = third_turn.json()["assistant_turn"]["text"].lower()
+    assert "work ya future wali worry pakad leti hai" in reply
+    assert "jo part answer karna easier lage" not in reply
+
+
+def test_hindi_anxiety_work_future_detail_gets_contextual_relaxation_bridge():
+    start = client.post("/chat/sessions", json={"language": "hi"})
+    session_id = start.json()["session_id"]
+
+    for text in [
+        "पता नहीं क्या असर पड़ता है।",
+        "वह चलती रहती है कितना भी प्रयास करो।",
+    ]:
+        turn = client.post(f"/chat/sessions/{session_id}/turns", json={"text": text})
+        assert turn.status_code == 200
+
+    third_turn = client.post(
+        f"/chat/sessions/{session_id}/turns",
+        json={"text": "फिलहाल जब मैं किसी काम को करने जाता हूं तब मुझे ज्यादा चिंता होती है भविष्य को लेकर।"},
+    )
+
+    assert third_turn.status_code == 200
+    reply = third_turn.json()["assistant_turn"]["text"]
+    assert "काम या भविष्य की चिंता पकड़ लेती है" in reply
+    assert "एक हाल का उदाहरण" not in reply
+
+
 def test_post_close_vague_followup_uses_chooser_in_api_flow():
     start = client.post("/chat/sessions", json={"language": "en"})
     session_id = start.json()["session_id"]
@@ -992,6 +1058,32 @@ def test_post_close_vague_followup_uses_chooser_in_api_flow():
 
     assert followup.status_code == 200
     assert followup.json()["assistant_turn"]["text"] == POST_CLOSE_CHOOSER_MESSAGES["en"]
+
+
+def test_low_mood_functional_impact_detail_advances_to_focus_instead_of_repeating():
+    start = client.post("/chat/sessions", json={"language": "en"})
+    session_id = start.json()["session_id"]
+
+    for text in [
+        "I have been feeling low and disconnected lately.",
+        "Things I used to enjoy feel flat.",
+        "Even when I do them, I do not get much from them.",
+        "I mostly go through the motions now.",
+    ]:
+        turn = client.post(f"/chat/sessions/{session_id}/turns", json={"text": text})
+        assert turn.status_code == 200
+
+    fifth_turn = client.post(
+        f"/chat/sessions/{session_id}/turns",
+        json={"text": "It is worse on work days and I still get through things but it feels flat."},
+    )
+
+    assert fifth_turn.status_code == 200
+    reply = fifth_turn.json()["assistant_turn"]["text"].lower()
+    dialogue = fifth_turn.json()["snapshot"]["coverage"]["dialogue"]
+    assert dialogue["target_item"] == "phq_q7_concentration"
+    assert "attention slips away" in reply or "coming back to the same line" in reply
+    assert "small moments still cut through" not in reply
 
 
 def test_hinglish_tense_body_followup_does_not_jump_to_generic_fear_item():

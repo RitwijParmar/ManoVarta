@@ -678,6 +678,24 @@ ITEM_REFLECTIONS = {
     },
 }
 
+CONTEXTUAL_REFLECTIONS = {
+    "worry_domain_focus": {
+        "en": "It sounds like work or future thoughts are what the worry keeps locking onto.",
+        "hi": "लगता है चिंता बार-बार काम या भविष्य की तरफ़ ही अटक जाती है।",
+        "hinglish": "Lag raha hai worry baar baar work ya future wali line par hi atak jaati hai.",
+    },
+    "worry_single_issue": {
+        "en": "It sounds like this keeps circling one same issue more than everything at once.",
+        "hi": "लगता है यह एक ही बात के इर्द-गिर्द ज़्यादा घूमती रहती है, सब तरफ़ नहीं फैलती।",
+        "hinglish": "Lag raha hai yeh sab taraf spread hone se zyada ek hi baat ke around ghoomti rehti hai.",
+    },
+    "flat_while_functioning": {
+        "en": "It sounds like you are still getting through the day, but it feels flat underneath.",
+        "hi": "लगता है आप दिन तो निकाल रहे हैं, लेकिन अंदर से सब कुछ सपाट-सा लग रहा है।",
+        "hinglish": "Lag raha hai aap din nikaal rahe ho, lekin andar se sab flat sa lag raha hai.",
+    },
+}
+
 ITEM_FOLLOW_UPS: Dict[str, Dict[str, Dict[str, str]]] = {
     "phq_q1_anhedonia": {
         "default": {
@@ -711,6 +729,11 @@ ITEM_FOLLOW_UPS: Dict[str, Dict[str, Dict[str, str]]] = {
             "en": "When that flat or heavy feeling is there, can small moments still cut through it if something needs your attention, or does it stay with you even while you keep going through the motions?",
             "hi": "जब यह सपाट या भारी एहसास रहता है, क्या किसी ज़रूरी चीज़ पर ध्यान देने पर थोड़ा सा हल्का होता है, या काम करते रहने पर भी वैसा ही बना रहता है?",
             "hinglish": "Jab yeh flat ya heavy feeling rehti hai, kya kisi zaroori cheez par dhyaan dene se thoda cut through hota hai, ya aap kaam karte rehte ho phir bhi yeh saath bana rehta hai?",
+        },
+        "functional_impact": {
+            "en": "On days when you keep going through the motions, does it mostly slow you down and make basic things feel heavier, or can you function on the outside while still feeling emotionally flat underneath?",
+            "hi": "जिन दिनों आप किसी तरह काम करते रहते हैं, क्या ज़्यादा ऐसा होता है कि साधारण काम भी भारी पड़ने लगते हैं, या आप बाहर से काम करते रहते हैं लेकिन अंदर से सब सपाट-सा लगता है?",
+            "hinglish": "Jin dinon aap bas motions mein chalte rehte ho, kya zyada aisa hota hai ki basic cheezein bhi heavy lagne lagti hain, ya bahar se aap function kar lete ho lekin andar se sab flat lagta hai?",
         },
         "timing_known": {
             "en": "That timing helps. Around that part of the day, does it feel more like a steady heaviness, or more like a wave that rises and then passes?",
@@ -818,6 +841,16 @@ ITEM_FOLLOW_UPS: Dict[str, Dict[str, Dict[str, str]]] = {
             "en": "When you try to settle down, is it harder to quiet your thoughts, relax your body, or both?",
             "hi": "जब आप खुद को शांत करने की कोशिश करते हैं, क्या ज़्यादा मुश्किल दिमाग को शांत करना होता है, शरीर को ढीला करना, या दोनों?",
             "hinglish": "Jab aap settle hone ki koshish karte ho, kya zyada mushkil thoughts ko quiet karna hota hai, body relax karna, ya dono?",
+        },
+        "domain_known": {
+            "en": "So once work or future worry gets going, what is harder then: quieting your thoughts, easing the body tension, or both together?",
+            "hi": "तो जब काम या भविष्य की चिंता पकड़ लेती है, उस समय ज़्यादा मुश्किल क्या होता है: दिमाग को शांत करना, शरीर का तनाव ढीला करना, या दोनों साथ में?",
+            "hinglish": "To jab work ya future wali worry pakad leti hai, us waqt zyada mushkil kya hota hai: thoughts ko quiet karna, body tension ko ease karna, ya dono saath mein?",
+        },
+        "single_issue_known": {
+            "en": "So when it gets stuck on that one same issue, is the harder part quieting your thoughts, easing the body tension, or both together?",
+            "hi": "तो जब यह उसी एक बात पर अटक जाती है, उस समय ज़्यादा मुश्किल क्या होता है: दिमाग को शांत करना, शरीर का तनाव ढीला करना, या दोनों साथ में?",
+            "hinglish": "To jab yeh usi ek baat par atak jaati hai, us waqt zyada mushkil kya hota hai: thoughts ko quiet karna, body tension ko ease karna, ya dono saath mein?",
         },
         "repeat_probe": {
             "en": "It sounds like both mind and body can get pulled in here. When this builds up, does it settle once the moment passes, or does the tension stay stuck for a long time afterward?",
@@ -1721,6 +1754,13 @@ class DialoguePlanner:
             )
 
         if last_item in {"phq_q1_anhedonia", "phq_q2_low_mood", "phq_q6_worthlessness"}:
+            if (
+                last_item == "phq_q2_low_mood"
+                and session.asked_items[-4:].count("phq_q2_low_mood") >= 3
+                and self._has_flat_functioning_signal(latest_user_text)
+                and available("phq_q7_concentration")
+            ):
+                return "phq_q7_concentration"
             if self._has_self_view_signal(latest_user_text) and available("phq_q6_worthlessness"):
                 return "phq_q6_worthlessness"
             if "phq_q7_concentration" in recent_signal_items and available("phq_q7_concentration"):
@@ -2094,6 +2134,7 @@ class DialoguePlanner:
         specific_reflection = self._build_specific_reflection(language, plan, session)
         suffix = self._style_suffix(language, plan)
         last_assistant_text = self._last_assistant_text(session)
+        contextual_bridge = self._is_contextual_bridge_prompt(base_prompt)
         repeated_topic_probe = (
             plan.user_turns >= 2
             and plan.stage in {"clarification", "exploration"}
@@ -2119,6 +2160,8 @@ class DialoguePlanner:
         latest_user_text = self._latest_user_text(session) if session else ""
         if repeated_topic_probe and self._has_timing_or_frequency_answer(latest_user_text):
             support_line = ""
+        if contextual_bridge:
+            support_line = ""
         if self._already_used_segment(last_assistant_text, support_line):
             support_line = ""
         if (
@@ -2126,6 +2169,7 @@ class DialoguePlanner:
             and not repeated_topic_probe
             and not self._already_used_segment(last_assistant_text, specific_reflection)
             and (plan.stage == "rapport" or not support_line)
+            and not contextual_bridge
         ):
             prefix = specific_reflection
         use_prefix = (
@@ -2133,7 +2177,12 @@ class DialoguePlanner:
             and not repeated_topic_probe
             and not self._already_used_segment(last_assistant_text, prefix)
             and (not support_line or plan.stage == "rapport")
+            and not contextual_bridge
         )
+        if contextual_bridge or repeated_topic_probe:
+            suffix = ""
+        if self._already_used_segment(last_assistant_text, suffix):
+            suffix = ""
         if use_prefix:
             parts.append(prefix)
         if support_line:
@@ -2151,6 +2200,10 @@ class DialoguePlanner:
     ) -> str:
         if session is None:
             return ""
+        latest_user_text = self._latest_user_text(session)
+        contextual_reflection = self._build_contextual_reflection(language, plan.target_item, latest_user_text)
+        if contextual_reflection:
+            return contextual_reflection
         latest_signal_items = self._latest_signal_items(session)
         if plan.target_item in ITEM_REFLECTIONS:
             return ITEM_REFLECTIONS[plan.target_item][language]
@@ -2180,6 +2233,15 @@ class DialoguePlanner:
         repeat_count = session.asked_items[-4:].count(plan.target_item)
         has_timing = self._has_timing_answer(latest_user_text)
         has_frequency = self._has_frequency_answer(latest_user_text)
+        last_item = session.asked_items[-1] if session.asked_items else None
+        if plan.target_item == "gad_q4_trouble_relaxing" and last_item in {"gad_q2_control_worry", "gad_q3_excessive_worry"}:
+            if self._has_single_issue_scope_answer(latest_user_text) and "single_issue_known" in prompt_bank:
+                return prompt_bank["single_issue_known"][language]
+            if self._has_worry_domain_signal(latest_user_text) and "domain_known" in prompt_bank:
+                return prompt_bank["domain_known"][language]
+        if plan.target_item == "phq_q2_low_mood":
+            if repeat_count >= 2 and self._has_flat_functioning_signal(latest_user_text) and "functional_impact" in prompt_bank:
+                return prompt_bank["functional_impact"][language]
         if plan.target_item == "phq_q3_sleep":
             if recent_repeat_window and self._has_sleep_pattern_answer(latest_user_text) and "pattern_known" in prompt_bank:
                 return prompt_bank["pattern_known"][language]
@@ -2277,6 +2339,22 @@ class DialoguePlanner:
         if not normalized_segment:
             return False
         return normalized_segment in normalized_last_assistant
+
+    def _is_contextual_bridge_prompt(self, prompt: str) -> bool:
+        normalized = self._normalize(prompt)
+        return normalized.startswith(("so ", "on days when", "to ", "तो ", "जिन दिनों"))
+
+    def _build_contextual_reflection(self, language: str, target_item: Optional[str], normalized_text: str) -> str:
+        if not normalized_text or not target_item:
+            return ""
+        if target_item in {"gad_q3_excessive_worry", "gad_q4_trouble_relaxing"}:
+            if self._has_single_issue_scope_answer(normalized_text):
+                return CONTEXTUAL_REFLECTIONS["worry_single_issue"][language]
+            if self._has_worry_domain_signal(normalized_text):
+                return CONTEXTUAL_REFLECTIONS["worry_domain_focus"][language]
+        if target_item == "phq_q2_low_mood" and self._has_flat_functioning_signal(normalized_text):
+            return CONTEXTUAL_REFLECTIONS["flat_while_functioning"][language]
+        return ""
 
     def _matches_any_segment(self, normalized_text: str, segments: Iterable[str]) -> bool:
         return any(self._already_used_segment(normalized_text, segment) for segment in segments)
@@ -2427,6 +2505,33 @@ class DialoguePlanner:
         return any(marker in normalized_text for marker in WORRY_SCOPE_SPREAD_MARKERS) or any(
             marker in normalized_text for marker in WORRY_SCOPE_SINGLE_MARKERS
         )
+
+    def _has_single_issue_scope_answer(self, normalized_text: str) -> bool:
+        if not normalized_text:
+            return False
+        return any(marker in normalized_text for marker in WORRY_SCOPE_SINGLE_MARKERS)
+
+    def _has_flat_functioning_signal(self, normalized_text: str) -> bool:
+        if not normalized_text:
+            return False
+        flat_markers = (
+            "go through the motions",
+            "going through the motions",
+            "still get through",
+            "still getting through",
+            "work days",
+            "on work days",
+            "flat underneath",
+            "motions",
+            "दिन निकाल",
+            "काम करते रहते",
+            "बस करते रहते",
+            "go through motions",
+            "andar se sab flat",
+            "function kar leta",
+            "function kar leti",
+        )
+        return any(marker in normalized_text for marker in flat_markers)
 
     def _recent_sleep_pattern_known(self, session: ChatSession, lookback: int = 3) -> bool:
         user_turns = [self._normalize(turn.text) for turn in session.turns if turn.speaker == "user"][-lookback:]

@@ -907,7 +907,7 @@ def test_low_mood_repeat_probe_deepens_on_next_turn():
     assert plan.target_item == "phq_q2_low_mood"
     assert asked_item == "phq_q2_low_mood"
     assert "steady heavy mood" not in reply.lower()
-    assert "small moments still cut through" in reply.lower() or "go through the motions" in reply.lower()
+    assert "small moments still cut through" in reply.lower() or "going through the motions" in reply.lower()
 
 
 def test_english_low_energy_slow_start_stays_on_focus_or_energy_branch():
