@@ -39,6 +39,18 @@ CLOSING_MESSAGES = {
     "hinglish": "Ab mere paas structured summary ke liye enough detail hai. Agar aap chaho to ek aur follow-up le sakte hain.",
 }
 
+ANXIETY_LOOP_BREAK_PROMPTS = {
+    "en": "Let me pause and reflect what I’m hearing: this anxiety seems to build at certain times, affect both mind and body, and feel heavier on stressful days. If that fits, tell me just one last thing: does it mostly stay around work or responsibilities, or does it spread into other parts of life too?",
+    "hi": "मैं थोड़ा रुककर जो समझ आ रहा है उसे पकड़ना चाहता हूँ: यह चिंता कुछ खास समय पर बढ़ती है, दिमाग और शरीर दोनों पर असर डालती है, और तनाव वाले दिनों में ज्यादा लग सकती है। अगर यह सही लग रहा है, तो बस एक आख़िरी बात बताइए: यह ज़्यादा काम या जिम्मेदारियों तक रहती है, या दूसरी बातों में भी फैल जाती है?",
+    "hinglish": "Main thoda ruk kar jo samajh aa raha hai use hold karna chahta hoon: yeh anxiety kuch specific times par build hoti hai, mind aur body dono par effect karti hai, aur stressful days mein heavier lag sakti hai. Agar yeh sahi lag raha hai, to bas ek last cheez batao: yeh zyada work ya responsibilities tak rehti hai, ya life ke aur parts mein bhi spread ho jaati hai?",
+}
+
+ANXIETY_LOOP_CLOSE_PROMPTS = {
+    "en": "I have enough to hold onto the main pattern now: this anxiety builds more at certain times, affects both mind and body, and can feel heavier on stressful days. I can treat that as the working summary unless there is one important detail you still want to add.",
+    "hi": "अब मेरे पास मुख्य पैटर्न पकड़ने लायक काफ़ी जानकारी है: यह चिंता कुछ खास समय पर बढ़ती है, दिमाग और शरीर दोनों पर असर डालती है, और तनाव वाले दिनों में ज्यादा लग सकती है। अगर कोई बहुत ज़रूरी बात बाकी न हो, तो मैं इसे अभी कामचलाऊ सार मान सकता हूँ।",
+    "hinglish": "Ab mere paas main pattern hold karne ke liye enough detail hai: yeh anxiety kuch specific times par build hoti hai, mind aur body dono par effect karti hai, aur stressful days mein heavier lag sakti hai. Agar koi bahut important detail baaki nahi hai, to main ise abhi working summary maan sakta hoon.",
+}
+
 RAPPORT_PROMPTS = {
     "en": "Has it been feeling more like low mood, constant worry, poor sleep, or a mix of those?",
     "hi": "क्या यह ज़्यादा उदासी, लगातार चिंता, नींद की दिक्कत, या इनका मिश्रण लग रहा है?",
@@ -291,50 +303,79 @@ FREQUENCY_MARKERS = (
     "daily",
     "days a week",
     "times a week",
-    "week",
-    "weeks",
     "most days",
     "usually",
     "often",
-    "4 days",
-    "3 days",
     "roz",
     "har din",
-    "hafte",
-    "baar",
-    "दिन",
-    "दिनों",
-    "हफ़्ते",
-    "हफ्ते",
-    "बार",
+    "hafte mein",
+    "week mein",
+    "हफ़्ते में",
+    "हफ्ते में",
     "रोज़",
     "रोज",
     "हर दिन",
     "अक्सर",
-    "ज़्यादातर",
 )
-EXPLICIT_FREQUENCY_MARKERS = (
-    "every day",
-    "daily",
-    "days a week",
-    "times a week",
-    "week",
-    "weeks",
-    "most days",
-    "4 days",
-    "3 days",
-    "roz",
-    "har din",
-    "hafte",
-    "दिन",
-    "दिनों",
-    "हफ़्ते",
-    "हफ्ते",
-    "बार",
-    "रोज़",
-    "रोज",
-    "हर दिन",
-    "अक्सर",
+FREQUENCY_PATTERNS = (
+    re.compile(r"\b(?:every day|daily|most days|often|usually)\b"),
+    re.compile(r"\b(?:once|twice)\s+a\s+(?:day|week)\b"),
+    re.compile(r"\b(?:\d+|one|two|three|four|five|six|seven)\s*(?:-|to)?\s*(?:\d+|one|two|three|four|five|six|seven)?\s*(?:day|days|time|times)\s+a\s+week\b"),
+    re.compile(r"\b(?:hafte|week)\s+mein\b"),
+    re.compile(r"(?:हफ़्ते|हफ्ते)\s*में"),
+    re.compile(r"(?:कई|एक|दो|तीन|चार|पांच|पाँच|छह|सात|\d+)\s*बार"),
+    re.compile(r"(?:कई|चार|पांच|पाँच|\d+)\s*(?:-|–|—)?\s*(?:चार|पांच|पाँच|\d+)?\s*दिन"),
+)
+WORRY_DOMAIN_MARKERS = (
+    "work",
+    "job",
+    "money",
+    "family",
+    "future",
+    "rent",
+    "exam",
+    "office",
+    "studies",
+    "काम",
+    "काम को लेकर",
+    "नौकरी",
+    "पैसे",
+    "परिवार",
+    "भविष्य",
+    "पढ़ाई",
+    "इम्तहान",
+)
+AWFUL_OUTCOME_MARKERS = (
+    "something bad",
+    "bad news",
+    "worst",
+    "out of control",
+    "spiral",
+    "awful",
+    "terrible",
+    "कुछ बुरा",
+    "कुछ गलत",
+    "बुरी खबर",
+    "हाथ से निकल",
+    "सब बिगड़",
+    "गड़बड़ हो",
+    "गलत हो जाएगा",
+)
+PERSISTENT_WORRY_MARKERS = (
+    "keep running",
+    "keeps running",
+    "kept running",
+    "won't stop",
+    "wont stop",
+    "loop",
+    "looping",
+    "चलती रहती",
+    "चलता रहता",
+    "चलते रहता",
+    "रुकती नहीं",
+    "रुकता नहीं",
+    "बंद नहीं",
+    "काफी ज्यादा चले",
 )
 SHORT_FOLLOWUP_MARKERS = (
     "yes",
@@ -354,6 +395,12 @@ SHORT_FOLLOWUP_MARKERS = (
     "evening",
     "sometimes",
     "usually",
+    "dono",
+    "dono saath mein",
+    "saath mein",
+    "दोनों",
+    "दोनों साथ में",
+    "साथ में",
 )
 SENSITIVE_ITEM_IDS = (
     "phq_q6_worthlessness",
@@ -439,6 +486,16 @@ ITEM_REFLECTIONS = {
         "en": "It sounds like your mind or body is staying keyed up for longer than you want.",
         "hi": "लगता है दिमाग या शरीर उम्मीद से ज़्यादा देर तक बेचैन बना रहता है।",
         "hinglish": "Lag raha hai mind ya body expected se zyada der tak keyed up rehte hain.",
+    },
+    "gad_q3_excessive_worry": {
+        "en": "It sounds like the worry may be spreading across more than one part of life.",
+        "hi": "लगता है चिंता एक बात तक सीमित न रहकर दूसरी बातों में भी फैल सकती है।",
+        "hinglish": "Lag raha hai worry ek hi cheez tak limited nahi rehkar life ke aur parts mein bhi spread ho sakti hai.",
+    },
+    "gad_q7_fear_awful": {
+        "en": "It sounds like the anxiety can start pointing toward what might go wrong next.",
+        "hi": "लगता है चिंता आगे क्या गलत हो सकता है, उस तरफ़ भी खिंचने लगती है।",
+        "hinglish": "Lag raha hai anxiety agla kya galat ho sakta hai us direction mein bhi kheenchne lagti hai.",
     },
 }
 
@@ -535,6 +592,28 @@ ITEM_FOLLOW_UPS: Dict[str, Dict[str, Dict[str, str]]] = {
             "hinglish": "Isse samajh aa raha hai ki yeh kitni baar hota hai. Jab yeh hota hai, kya aap mind ko usse hata paate ho, ya rokne ki koshish ke baad bhi woh loop hoti rehti hai?",
         },
     },
+    "gad_q3_excessive_worry": {
+        "default": {
+            "en": "When the worry keeps running, does it spread across things like work, family, money, or the future, or does it usually get stuck on one main issue?",
+            "hi": "जब चिंता चलती रहती है, क्या यह ज़्यादा काम, परिवार, पैसों या भविष्य जैसी कई बातों में फैल जाती है, या आम तौर पर किसी एक मुख्य बात पर अटकती है?",
+            "hinglish": "Jab worry chalti rehti hai, kya yeh zyada work, family, money ya future jaise kai issues mein spread ho jaati hai, ya usually kisi ek main baat par atak jaati hai?",
+        },
+        "repeat_probe": {
+            "en": "When it keeps running, does the worry jump between several things, or does it stay locked onto one main issue most of the time?",
+            "hi": "जब यह चलती रहती है, क्या चिंता कई बातों के बीच घूमती रहती है, या ज़्यादातर समय एक ही मुख्य बात पर अटकी रहती है?",
+            "hinglish": "Jab yeh chalti rehti hai, kya worry kai issues ke beech jump karti rehti hai, ya zyada waqt ek hi main baat par atki rehti hai?",
+        },
+        "timing_known": {
+            "en": "That timing helps. Around that point, does the worry spread across several things, or does it stay locked onto one main issue?",
+            "hi": "यह समय-सूचना मददगार है। उस समय के आसपास, क्या चिंता कई बातों में फैल जाती है, या एक मुख्य बात पर अटकी रहती है?",
+            "hinglish": "Yeh timing helpful hai. Us waqt ke around, kya worry kai cheezon mein spread ho jaati hai, ya ek main issue par atki rehti hai?",
+        },
+        "frequency_known": {
+            "en": "That helps me understand how often it happens. When it does, does the worry spread across several things, or stay stuck on one main issue?",
+            "hi": "इससे मुझे समझ आ रहा है कि यह कितनी बार होता है। जब ऐसा होता है, क्या चिंता कई बातों में फैल जाती है, या एक मुख्य बात पर अटकी रहती है?",
+            "hinglish": "Isse samajh aa raha hai ki yeh kitni baar hota hai. Jab yeh hota hai, kya worry kai cheezon mein spread ho jaati hai, ya ek main issue par atki rehti hai?",
+        },
+    },
     "gad_q4_trouble_relaxing": {
         "default": {
             "en": "When you try to settle down, is it harder to quiet your thoughts, relax your body, or both?",
@@ -555,6 +634,23 @@ ITEM_FOLLOW_UPS: Dict[str, Dict[str, Dict[str, str]]] = {
             "en": "That helps me understand how often it happens. When it hits, does it feel more like a busy mind, a tense body, or both together?",
             "hi": "इससे मुझे समझ आ रहा है कि यह कितनी बार होता है। जब यह होता है, क्या यह ज़्यादा व्यस्त दिमाग जैसा लगता है, तना हुआ शरीर जैसा, या दोनों साथ में?",
             "hinglish": "Isse samajh aa raha hai ki yeh kitni baar hota hai. Jab yeh hit karta hai, kya yeh zyada busy mind jaisa lagta hai, tense body jaisa, ya dono saath mein?",
+        },
+    },
+    "gad_q7_fear_awful": {
+        "default": {
+            "en": "When the anxiety peaks, does it feel more like something specific might go wrong, that you may get bad news, or that things could spiral out of control?",
+            "hi": "जब चिंता सबसे तेज़ होती है, क्या ज़्यादा लगता है कि कुछ खास गलत हो सकता है, कोई बुरी खबर मिल सकती है, या चीज़ें हाथ से निकल सकती हैं?",
+            "hinglish": "Jab anxiety peak karti hai, kya zyada lagta hai ki kuch specific galat ho sakta hai, koi bad news mil sakti hai, ya cheezein control se bahar ja sakti hain?",
+        },
+        "timing_known": {
+            "en": "That timing helps. At that point, is the fear more about something specific going wrong, bad news, or things spiraling out of control?",
+            "hi": "यह समय-सूचना मददगार है। उस समय, क्या डर ज़्यादा किसी खास गड़बड़ी का होता है, बुरी खबर का, या चीज़ों के हाथ से निकल जाने का?",
+            "hinglish": "Yeh timing helpful hai. Us waqt, kya fear zyada kisi specific problem ka hota hai, bad news ka, ya cheezon ke control se bahar jaane ka?",
+        },
+        "frequency_known": {
+            "en": "That helps me understand how often it happens. When it does, is the fear more about something specific going wrong, bad news, or things spiraling out of control?",
+            "hi": "इससे मुझे समझ आ रहा है कि यह कितनी बार होता है। जब ऐसा होता है, क्या डर ज़्यादा किसी खास गड़बड़ी का होता है, बुरी खबर का, या चीज़ों के हाथ से निकल जाने का?",
+            "hinglish": "Isse samajh aa raha hai ki yeh kitni baar hota hai. Jab yeh hota hai, kya fear zyada kisi specific problem ka hota hai, bad news ka, ya cheezon ke control se bahar jaane ka?",
         },
     },
     "gad_q5_restlessness": {
@@ -584,7 +680,7 @@ ITEM_SIGNAL_MARKERS: Dict[str, Tuple[str, ...]] = {
     "phq_q3_sleep": ("sleep", "asleep", "wake", "waking", "sleep disturb", "neend disturb", "नींद", "रात", "रात में", "उठ जाती", "switch off"),
     "phq_q7_concentration": ("focus", "concentrat", "attention", "cannot focus", "can't focus", "harder to focus", "hard to focus", "taking longer to get started", "takes longer to get started", "mind taking longer", "mind feels slow", "brain fog", "ध्यान", "focus nahi", "ध्यान नहीं टिक", "mind blanks", "screen", "start hone mein time lagta", "start hone me time lagta", "mind ko start hone mein time lagta", "mind ko start hone me time lagta", "दिमाग धीमा"),
     "gad_q2_control_worry": ("worry", "loop", "looping", "replay", "mind won't stop", "mind wont stop", "चिंता", "सोच बंद"),
-    "gad_q3_excessive_worry": ("future", "rent", "family", "money", "what if", "awful", "सब कुछ", "हर बात"),
+    "gad_q3_excessive_worry": ("future", "rent", "family", "money", "what if", "work", "job", "exam", "काम", "काम को लेकर", "परिवार", "पैसे", "भविष्य", "हर बात"),
     "gad_q4_trouble_relaxing": ("switch off", "settle down", "quiet your thoughts", "तनाव", "शांत", "relax", "off karna", "busy mind", "tense body", "body tense", "tense in my body", "body stays tense", "stay tense in my body", "tense lagti"),
     "gad_q5_restlessness": ("restless", "restlessness", "sit still", "pacing", "बेचैनी", "chain se baith", "move around"),
 }
@@ -722,9 +818,18 @@ class DialoguePlanner:
         snapshot.coverage = self.build_plan(snapshot, session)
         plan = snapshot.coverage.dialogue
         language = session.language
+        latest_user_text = self._latest_user_text(session)
+        last_assistant_text = self._last_assistant_text(session)
 
         if snapshot.safety.level == "urgent" or plan.next_action == "handoff":
             return SAFETY_MESSAGES[language], plan.target_item
+        if self._already_used_segment(last_assistant_text, ANXIETY_LOOP_CLOSE_PROMPTS[language]):
+            if self._is_nonexpansive_followup(latest_user_text) or not self._has_new_anxiety_branch_detail(latest_user_text):
+                return CLOSING_MESSAGES[language], None
+        if self._should_use_anxiety_loop_break(plan, session):
+            if self._already_used_segment(last_assistant_text, ANXIETY_LOOP_BREAK_PROMPTS[language]) or self._should_close_anxiety_loop(plan, session):
+                return ANXIETY_LOOP_CLOSE_PROMPTS[language], None
+            return ANXIETY_LOOP_BREAK_PROMPTS[language], None
         if plan.next_action == "summarize":
             return CLOSING_MESSAGES[language], None
         if plan.stage == "rapport":
@@ -746,6 +851,35 @@ class DialoguePlanner:
             return False
         words = len(latest_user_text.split())
         return words >= 6 or self._has_timing_or_frequency_answer(latest_user_text)
+
+    def _should_use_anxiety_loop_break(self, plan: DialoguePlan, session: ChatSession) -> bool:
+        if plan.target_topic != "anxiety":
+            return False
+        loop_items = {"gad_q2_control_worry", "gad_q3_excessive_worry", "gad_q4_trouble_relaxing"}
+        recent = session.asked_items[-5:]
+        if len(recent) < 4:
+            return False
+        if sum(item in loop_items for item in recent) < 4:
+            return False
+        latest_user_text = self._latest_user_text(session)
+        if self._has_new_anxiety_branch_detail(latest_user_text):
+            return False
+        repeated_target = recent.count(plan.target_item) >= 2 if plan.target_item else False
+        short_latest = self._is_nonexpansive_followup(latest_user_text)
+        repeated_timing = self._has_timing_or_frequency_answer(latest_user_text) and recent.count("gad_q3_excessive_worry") >= 2
+        return repeated_target and (short_latest or repeated_timing)
+
+    def _should_close_anxiety_loop(self, plan: DialoguePlan, session: ChatSession) -> bool:
+        if plan.target_topic != "anxiety":
+            return False
+        latest_user_text = self._latest_user_text(session)
+        if self._has_new_anxiety_branch_detail(latest_user_text):
+            return False
+        recent = session.asked_items[-5:]
+        repeated_worry_probe = recent.count("gad_q3_excessive_worry") >= 2
+        if plan.target_item == "gad_q3_excessive_worry" and repeated_worry_probe and self._is_nonexpansive_followup(latest_user_text):
+            return True
+        return False
 
     def build_plan(self, snapshot: ScreeningSnapshot, session: ChatSession) -> CoveragePlan:
         user_turns = [turn for turn in session.turns if turn.speaker == "user"]
@@ -1295,16 +1429,43 @@ class DialoguePlanner:
                 return "phq_q4_fatigue"
 
         if last_item == "gad_q2_control_worry" and target_topic == "anxiety":
+            if "phq_q3_sleep" in recent_signal_items and available("gad_q4_trouble_relaxing"):
+                return "gad_q4_trouble_relaxing"
             if "gad_q4_trouble_relaxing" in recent_signal_items and available("gad_q4_trouble_relaxing"):
                 return "gad_q4_trouble_relaxing"
             if "gad_q5_restlessness" in recent_signal_items and available("gad_q5_restlessness"):
                 return "gad_q5_restlessness"
+            if self._has_worry_domain_signal(latest_user_text) and available("gad_q3_excessive_worry"):
+                return "gad_q3_excessive_worry"
+            if self._has_awful_outcome_signal(latest_user_text) and available("gad_q7_fear_awful"):
+                return "gad_q7_fear_awful"
+            if self._has_persistent_worry_signal(latest_user_text) and available("gad_q3_excessive_worry"):
+                return "gad_q3_excessive_worry"
+            if available("gad_q3_excessive_worry"):
+                return "gad_q3_excessive_worry"
 
         if last_item == "gad_q5_restlessness":
             if self._has_timing_or_frequency_answer(latest_user_text):
                 return last_item
             if "gad_q4_trouble_relaxing" in recent_signal_items and available("gad_q4_trouble_relaxing"):
                 return "gad_q4_trouble_relaxing"
+
+        if last_item == "gad_q4_trouble_relaxing":
+            recent_relax_count = session.asked_items[-3:].count("gad_q4_trouble_relaxing")
+            if self._has_worry_domain_signal(latest_user_text) and available("gad_q3_excessive_worry"):
+                return "gad_q3_excessive_worry"
+            if recent_relax_count >= 2 and self._has_persistent_worry_signal(latest_user_text) and available("gad_q3_excessive_worry"):
+                return "gad_q3_excessive_worry"
+            if recent_relax_count >= 3 and self._has_timing_or_frequency_answer(latest_user_text) and available("gad_q3_excessive_worry"):
+                return "gad_q3_excessive_worry"
+            if recent_relax_count >= 2 and not self._has_timing_or_frequency_answer(latest_user_text) and available("gad_q2_control_worry"):
+                return "gad_q2_control_worry"
+
+        if last_item == "gad_q7_fear_awful":
+            if self._has_worry_domain_signal(latest_user_text) and available("gad_q3_excessive_worry"):
+                return "gad_q3_excessive_worry"
+            if session.asked_items[-2:].count("gad_q7_fear_awful") >= 1 and available("gad_q3_excessive_worry"):
+                return "gad_q3_excessive_worry"
 
         if not self._has_timing_or_frequency_answer(latest_user_text):
             return None
@@ -1488,6 +1649,11 @@ class DialoguePlanner:
             score += 18
         elif item_id in recent_signal_items:
             score += 8
+        latest_user_text = self._latest_user_text(session)
+        if item_id == "gad_q3_excessive_worry" and self._has_worry_domain_signal(latest_user_text):
+            score += 14
+        if item_id == "gad_q7_fear_awful" and not self._has_awful_outcome_signal(latest_user_text):
+            score -= 14
         if session.asked_items[-1:] == [item_id] and self._has_timing_or_frequency_answer(self._latest_user_text(session)):
             prompt_bank = ITEM_FOLLOW_UPS.get(item_id, {})
             has_distinct_variant = (
@@ -1570,6 +1736,8 @@ class DialoguePlanner:
             support_line = plan.reflective_anchor
         elif continuity_ready:
             support_line = plan.continuity_note
+        if support_line == plan.continuity_note and self._assistant_history_contains(session, plan.continuity_note):
+            support_line = ""
         latest_user_text = self._latest_user_text(session) if session else ""
         if repeated_topic_probe and self._has_timing_or_frequency_answer(latest_user_text):
             support_line = ""
@@ -1699,6 +1867,23 @@ class DialoguePlanner:
                 return self._normalize(turn.text)
         return ""
 
+    def _assistant_history_contains(
+        self,
+        session: Optional[ChatSession],
+        segment: str,
+        *,
+        exclude_latest: bool = False,
+    ) -> bool:
+        if session is None or not segment:
+            return False
+        normalized_segment = self._normalize(segment)
+        if not normalized_segment:
+            return False
+        assistant_turns = [self._normalize(turn.text) for turn in session.turns if turn.speaker == "assistant"]
+        if exclude_latest and assistant_turns:
+            assistant_turns = assistant_turns[:-1]
+        return any(normalized_segment in turn for turn in assistant_turns)
+
     def _already_used_segment(self, normalized_last_assistant: str, segment: str) -> bool:
         if not normalized_last_assistant or not segment:
             return False
@@ -1710,7 +1895,19 @@ class DialoguePlanner:
     def _has_timing_or_frequency_answer(self, normalized_text: str) -> bool:
         if not normalized_text:
             return False
-        return any(marker in normalized_text for marker in TIME_MARKERS + FREQUENCY_MARKERS)
+        return self._has_timing_answer(normalized_text) or self._has_frequency_answer(normalized_text)
+
+    def _is_nonexpansive_followup(self, normalized_text: str) -> bool:
+        if not normalized_text:
+            return True
+        words = normalized_text.split()
+        if len(words) <= 4:
+            return True
+        if normalized_text in SHORT_FOLLOWUP_MARKERS:
+            return True
+        if self._has_timing_or_frequency_answer(normalized_text) and len(words) <= 7:
+            return True
+        return False
 
     def _has_activation_signal(self, normalized_text: str) -> bool:
         if not normalized_text:
@@ -1725,11 +1922,37 @@ class DialoguePlanner:
     def _has_frequency_answer(self, normalized_text: str) -> bool:
         if not normalized_text:
             return False
-        if any(marker in normalized_text for marker in EXPLICIT_FREQUENCY_MARKERS):
-            return True
-        if self._has_timing_answer(normalized_text):
+        return any(marker in normalized_text for marker in FREQUENCY_MARKERS) or any(
+            pattern.search(normalized_text) for pattern in FREQUENCY_PATTERNS
+        )
+
+    def _has_worry_domain_signal(self, normalized_text: str) -> bool:
+        if not normalized_text:
             return False
-        return any(marker in normalized_text for marker in FREQUENCY_MARKERS)
+        return any(marker in normalized_text for marker in WORRY_DOMAIN_MARKERS)
+
+    def _has_awful_outcome_signal(self, normalized_text: str) -> bool:
+        if not normalized_text:
+            return False
+        return any(marker in normalized_text for marker in AWFUL_OUTCOME_MARKERS)
+
+    def _has_persistent_worry_signal(self, normalized_text: str) -> bool:
+        if not normalized_text:
+            return False
+        return any(marker in normalized_text for marker in PERSISTENT_WORRY_MARKERS)
+
+    def _has_new_anxiety_branch_detail(self, normalized_text: str) -> bool:
+        if not normalized_text:
+            return False
+        if self._has_worry_domain_signal(normalized_text):
+            return True
+        if self._has_awful_outcome_signal(normalized_text):
+            return True
+        if self._has_persistent_worry_signal(normalized_text) and not self._is_nonexpansive_followup(normalized_text):
+            return True
+        if len(normalized_text.split()) >= 7 and not self._has_timing_or_frequency_answer(normalized_text):
+            return True
+        return False
 
     def _continuity_item(
         self,

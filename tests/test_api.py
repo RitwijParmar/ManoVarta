@@ -779,3 +779,122 @@ def test_hinglish_recent_relaxation_branch_uses_fresh_followup_wording():
     assert dialogue["target_item"] == "gad_q4_trouble_relaxing"
     assert "body relax karna, ya dono?" not in reply
     assert "tension" in reply.lower()
+
+
+def test_hindi_anxiety_flow_does_not_loop_generic_question_after_worry_confirmation():
+    start = client.post("/chat/sessions", json={"language": "hi"})
+    session_id = start.json()["session_id"]
+
+    script = [
+        "काफी चिंता का माहौल है",
+        "हां लग रहा है खास करके नींद ना आना",
+        "दोनों दोनों समस्याएं हैं",
+        "सुबह में तो नहीं रहता पर रात में काफी ज्यादा",
+        "आप जैसे मेरा दिन अच्छा नहीं रहा तो आज मुझे यह सब काफी ज्यादा लग रहा था",
+        "साथ में",
+        "करती है आज तो काफी ज्यादा चले",
+    ]
+
+    last = None
+    for text in script:
+        last = client.post(f"/chat/sessions/{session_id}/turns", json={"text": text})
+        assert last.status_code == 200
+
+    body = last.json()
+    reply = body["assistant_turn"]["text"]
+    dialogue = body["snapshot"]["coverage"]["dialogue"]
+
+    assert dialogue["target_item"] == "gad_q3_excessive_worry"
+    assert "क्या यह ज़्यादा दिमाग की लगातार चिंता जैसा लगता है" not in reply
+    assert "काम" in reply or "परिवार" in reply or "भविष्य" in reply
+
+
+def test_hindi_anxiety_narrative_day_reply_is_not_misread_as_frequency():
+    start = client.post("/chat/sessions", json={"language": "hi"})
+    session_id = start.json()["session_id"]
+
+    script = [
+        "काफी चिंता का माहौल है",
+        "हां लग रहा है खास करके नींद ना आना",
+        "दोनों दोनों समस्याएं हैं",
+        "सुबह में तो नहीं रहता पर रात में काफी ज्यादा",
+        "आप जैसे मेरा दिन अच्छा नहीं रहा तो आज मुझे यह सब काफी ज्यादा लग रहा था",
+    ]
+
+    last = None
+    for text in script:
+        last = client.post(f"/chat/sessions/{session_id}/turns", json={"text": text})
+        assert last.status_code == 200
+
+    reply = last.json()["assistant_turn"]["text"]
+    assert "यह कितनी बार होता है" not in reply
+
+
+def test_hindi_recent_anxiety_flow_stops_reopening_after_close_point():
+    start = client.post(
+        "/chat/sessions",
+        json={
+            "language": "hi",
+            "profile": {
+                "recent_checkins": [
+                    {"topic": "anxiety", "language": "hi", "safety": "none", "completion": 0.6, "summary": "पिछली बार चिंता पर बात हुई थी।"}
+                ]
+            },
+        },
+    )
+    session_id = start.json()["session_id"]
+    turns = [
+        "काफी चिंता का माहौल है",
+        "हां लग रहा है खास करके नींद ना आना",
+        "दोनों दोनों समस्याएं हैं",
+        "सुबह में तो नहीं रहता पर रात में काफी ज्यादा",
+        "आप जैसे मेरा दिन अच्छा नहीं रहा तो आज मुझे यह सब काफी ज्यादा लग रहा था",
+        "साथ में",
+        "करती है आज तो काफी ज्यादा चले",
+        "साथ में चलते रहता है",
+        "दोनों साथ में लगता है",
+        "मैं जैसे यह कल रात में मुझे काफी ज्यादा लग रहा था जब मैं परेशान था काम को लेकर के",
+        "रात में लगता है",
+        "दोनों साथ में",
+    ]
+
+    replies = []
+    for text in turns:
+        turn = client.post(f"/chat/sessions/{session_id}/turns", json={"text": text})
+        assert turn.status_code == 200
+        replies.append(turn.json()["assistant_turn"]["text"])
+
+    continuity_phrase = "अगर यह आपकी हाल की चिंता बातचीत से मिलता-जुलता लग रहा है"
+    assert sum(continuity_phrase in reply for reply in replies) <= 1
+    assert replies[-2].startswith("अब मेरे पास मुख्य पैटर्न पकड़ने लायक") or replies[-2].startswith("मेरे पास अब एक संरचित सार")
+    assert replies[-1].startswith("मेरे पास अब एक संरचित सार")
+    assert "जब चिंता शुरू होती है" not in replies[-1]
+
+
+def test_hindi_anxiety_loop_break_closes_after_repeated_generic_rotation():
+    start = client.post("/chat/sessions", json={"language": "hi"})
+    session_id = start.json()["session_id"]
+
+    script = [
+        "काफी चिंता का माहौल है",
+        "हां लग रहा है खास करके नींद ना आना",
+        "दोनों दोनों समस्याएं हैं",
+        "सुबह में तो नहीं रहता पर रात में काफी ज्यादा",
+        "आप जैसे मेरा दिन अच्छा नहीं रहा तो आज मुझे यह सब काफी ज्यादा लग रहा था",
+        "साथ में",
+        "करती है आज तो काफी ज्यादा चले",
+        "साथ में चलते रहता है",
+        "दोनों साथ में लगता है",
+        "मैं जैसे यह कल रात में मुझे काफी ज्यादा लग रहा था जब मैं परेशान था काम को लेकर के",
+        "रात में लगता है",
+    ]
+
+    last = None
+    for text in script:
+        last = client.post(f"/chat/sessions/{session_id}/turns", json={"text": text})
+        assert last.status_code == 200
+
+    body = last.json()
+    reply = body["assistant_turn"]["text"]
+
+    assert reply.startswith("अब मेरे पास मुख्य पैटर्न पकड़ने लायक")

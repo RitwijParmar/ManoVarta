@@ -1,4 +1,4 @@
-from manovarta_core.dialogue import DialoguePlanner
+from manovarta_core.dialogue import ANXIETY_LOOP_BREAK_PROMPTS, ANXIETY_LOOP_CLOSE_PROMPTS, DialoguePlanner
 from manovarta_core.scoring import ConversationScorer
 from manovarta_core.schemas import ChatSession, DialoguePlan, DisclosureMetrics, SafetyFlag, Turn, UserStyleProfile
 
@@ -348,6 +348,14 @@ def test_hindi_frequency_answer_uses_sleep_frequency_variant():
     assert "नींद बनाए रखने" in prompt or "नींद शुरू" in prompt
 
 
+def test_single_bad_day_hindi_statement_is_not_mistaken_for_frequency():
+    planner = DialoguePlanner()
+    normalized = planner._normalize("आप जैसे मेरा दिन अच्छा नहीं रहा तो आज मुझे यह सब काफी ज्यादा लग रहा था")
+
+    assert planner._has_frequency_answer(normalized) is False
+    assert planner._has_timing_or_frequency_answer(normalized) is False
+
+
 def test_energy_frequency_answer_uses_fatigue_frequency_variant():
     planner = DialoguePlanner()
     session = ChatSession(
@@ -373,6 +381,161 @@ def test_energy_frequency_answer_uses_fatigue_frequency_variant():
     assert prompt is not None
     assert "how often it happens" in prompt
     assert "body heaviness" in prompt or "slow-starting mind" in prompt
+
+
+def test_hindi_anxiety_progression_moves_from_control_to_worry_content():
+    planner = DialoguePlanner()
+    session = ChatSession(
+        session_id="hindi-anxiety-content-progression",
+        language="hi",
+        turns=[
+            Turn(turn_id=1, speaker="assistant", text="जब चिंता शुरू होती है, क्या आप दिमाग को उससे हटा पाते हैं, या रोकने की कोशिश के बाद भी वह चलती रहती है?", language_tag="hi"),
+            Turn(turn_id=2, speaker="user", text="करती है आज तो काफी ज्यादा चले", language_tag="hi"),
+        ],
+        asked_items=["gad_q2_control_worry"],
+    )
+
+    snapshot = ConversationScorer().analyze(session.turns, "hi", SafetyFlag(level="none"))
+    coverage = planner.build_plan(snapshot, session)
+    reply, asked_item = planner.next_reply(snapshot, session)
+
+    assert coverage.dialogue.target_item == "gad_q3_excessive_worry"
+    assert asked_item == "gad_q3_excessive_worry"
+    assert "काम" in reply or "परिवार" in reply or "भविष्य" in reply
+
+
+def test_hindi_sleep_flavored_anxiety_reply_prefers_relaxation_branch():
+    planner = DialoguePlanner()
+    session = ChatSession(
+        session_id="hindi-anxiety-sleep-branch",
+        language="hi",
+        turns=[
+            Turn(turn_id=1, speaker="assistant", text="जब चिंता शुरू होती है, क्या आप दिमाग को उससे हटा पाते हैं, या रोकने की कोशिश के बाद भी वह चलती रहती है?", language_tag="hi"),
+            Turn(turn_id=2, speaker="user", text="हां लग रहा है खास करके नींद ना आना", language_tag="hi"),
+        ],
+        asked_items=["gad_q2_control_worry"],
+    )
+
+    snapshot = ConversationScorer().analyze(session.turns, "hi", SafetyFlag(level="none"))
+    coverage = planner.build_plan(snapshot, session)
+    reply, asked_item = planner.next_reply(snapshot, session)
+
+    assert coverage.dialogue.target_item in {"gad_q4_trouble_relaxing", "phq_q3_sleep"}
+    assert asked_item in {"gad_q4_trouble_relaxing", "phq_q3_sleep"}
+    assert (
+        "दिमाग को शांत" in reply
+        or "शरीर को ढीला" in reply
+        or "नींद" in reply
+    )
+
+
+def test_repeated_anxiety_loop_break_closes_instead_of_repeating():
+    planner = DialoguePlanner()
+    session = ChatSession(
+        session_id="hindi-anxiety-loop-close",
+        language="hi",
+        turns=[
+            Turn(turn_id=1, speaker="assistant", text=ANXIETY_LOOP_BREAK_PROMPTS["hi"], language_tag="hi"),
+            Turn(turn_id=2, speaker="user", text="रात में लगता है", language_tag="hi"),
+        ],
+        asked_items=[
+            "gad_q4_trouble_relaxing",
+            "gad_q2_control_worry",
+            "gad_q4_trouble_relaxing",
+            "gad_q3_excessive_worry",
+            "gad_q3_excessive_worry",
+        ],
+    )
+
+    snapshot = ConversationScorer().analyze(session.turns, "hi", SafetyFlag(level="none"))
+    reply, asked_item = planner.next_reply(snapshot, session)
+
+    assert asked_item is None
+    assert reply.startswith("अब मेरे पास मुख्य पैटर्न पकड़ने लायक")
+
+
+def test_continuity_note_is_not_reused_after_it_already_appeared():
+    planner = DialoguePlanner()
+    continuity = "अगर यह आपकी हाल की चिंता बातचीत से मिलता-जुलता लग रहा है, तो बताइए क्या वैसा रहा और क्या बदला।"
+    session = ChatSession(
+        session_id="continuity-once",
+        language="hi",
+        turns=[
+            Turn(turn_id=1, speaker="assistant", text=continuity, language_tag="hi"),
+            Turn(turn_id=2, speaker="user", text="दोनों दोनों समस्याएं हैं", language_tag="hi"),
+        ],
+    )
+    plan = DialoguePlan(
+        stage="exploration",
+        current_topic="anxiety",
+        target_topic="anxiety",
+        target_item="gad_q4_trouble_relaxing",
+        user_turns=3,
+        continuity_note=continuity,
+        user_style=UserStyleProfile(empathy_level="high", steering_preference="balanced"),
+        disclosure=DisclosureMetrics(),
+    )
+
+    prompt = planner._compose_prompt(
+        "hi",
+        "जब आप खुद को शांत करने की कोशिश करते हैं, क्या ज़्यादा मुश्किल दिमाग को शांत करना होता है, शरीर को ढीला करना, या दोनों?",
+        plan,
+        session,
+    )
+
+    assert continuity not in prompt
+
+
+def test_close_prompt_followed_by_short_reply_does_not_reopen_anxiety_branch():
+    planner = DialoguePlanner()
+    session = ChatSession(
+        session_id="close-does-not-reopen",
+        language="hi",
+        turns=[
+            Turn(turn_id=1, speaker="assistant", text=ANXIETY_LOOP_CLOSE_PROMPTS["hi"], language_tag="hi"),
+            Turn(turn_id=2, speaker="user", text="दोनों साथ में", language_tag="hi"),
+        ],
+        asked_items=[
+            "gad_q4_trouble_relaxing",
+            "gad_q2_control_worry",
+            "gad_q4_trouble_relaxing",
+            "gad_q3_excessive_worry",
+            "gad_q3_excessive_worry",
+        ],
+    )
+
+    snapshot = ConversationScorer().analyze(session.turns, "hi", SafetyFlag(level="none"))
+    reply, asked_item = planner.next_reply(snapshot, session)
+
+    assert asked_item is None
+    assert reply.startswith("मेरे पास अब एक संरचित सार")
+
+
+def test_loop_break_is_skipped_when_user_adds_specific_worry_domain_detail():
+    planner = DialoguePlanner()
+    session = ChatSession(
+        session_id="break-skipped-on-domain-detail",
+        language="hi",
+        turns=[
+            Turn(turn_id=1, speaker="assistant", text="जब यह चलती रहती है, क्या चिंता कई बातों के बीच घूमती रहती है, या ज़्यादातर समय एक ही मुख्य बात पर अटकी रहती है?", language_tag="hi"),
+            Turn(turn_id=2, speaker="user", text="मैं जैसे यह कल रात में मुझे काफी ज्यादा लग रहा था जब मैं परेशान था काम को लेकर के", language_tag="hi"),
+        ],
+        asked_items=[
+            "gad_q4_trouble_relaxing",
+            "gad_q2_control_worry",
+            "gad_q4_trouble_relaxing",
+            "gad_q3_excessive_worry",
+            "gad_q3_excessive_worry",
+        ],
+    )
+
+    snapshot = ConversationScorer().analyze(session.turns, "hi", SafetyFlag(level="none"))
+    coverage = planner.build_plan(snapshot, session)
+    reply, asked_item = planner.next_reply(snapshot, session)
+
+    assert coverage.dialogue.target_item == "gad_q3_excessive_worry"
+    assert asked_item == "gad_q3_excessive_worry"
+    assert "कई बातों" in reply or "एक मुख्य बात" in reply
 
 
 def test_target_topic_aligns_with_directed_followup_item():
