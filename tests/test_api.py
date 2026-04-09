@@ -3,7 +3,7 @@ import io
 from fastapi.testclient import TestClient
 
 import manovarta_core.api as api_module
-from manovarta_core.dialogue import ANXIETY_LOOP_BREAK_PROMPTS, ANXIETY_LOOP_CLOSE_PROMPTS, FINAL_HOLD_MESSAGES, FINAL_HOLD_VARIANTS, POST_CLOSE_CHOOSER_MESSAGES, DialoguePlanner
+from manovarta_core.dialogue import ANXIETY_LOOP_BREAK_PROMPTS, ANXIETY_LOOP_CLOSE_PROMPTS, FINAL_HOLD_MESSAGES, FINAL_HOLD_VARIANTS, FINAL_REST_MESSAGES, POST_CLOSE_CHOOSER_MESSAGES, DialoguePlanner
 from manovarta_core.engine import RuntimeEngine
 from manovarta_core.schemas import ChatSession, DialoguePlan, Turn
 
@@ -740,6 +740,54 @@ def test_hindi_mood_followup_pivots_to_focus_or_interest_not_anxiety():
     assert dialogue["target_topic"] in {"mood", "focus"}
     assert dialogue["target_item"] in {"phq_q1_anhedonia", "phq_q7_concentration"}
     assert "चिंता शुरू" not in reply
+
+
+def test_hindi_sleep_choice_after_anxiety_chooser_pivots_to_sleep():
+    start = client.post("/chat/sessions", json={"language": "hi"})
+    session_id = start.json()["session_id"]
+
+    first_turn = client.post(
+        f"/chat/sessions/{session_id}/turns",
+        json={"text": "थोड़ी चिंता लग रही है"},
+    )
+    assert first_turn.status_code == 200
+
+    second_turn = client.post(
+        f"/chat/sessions/{session_id}/turns",
+        json={"text": "हां यह नींद की दिक्कत लग रही है"},
+    )
+
+    assert second_turn.status_code == 200
+    reply = second_turn.json()["assistant_turn"]["text"]
+    dialogue = second_turn.json()["snapshot"]["coverage"]["dialogue"]
+    assert dialogue["target_topic"] == "sleep"
+    assert dialogue["target_item"] == "phq_q3_sleep"
+    assert "नींद" in reply
+    assert "दिमाग को शांत" not in reply
+
+
+def test_hindi_sleep_followup_relax_answer_bridges_back_to_anxiety():
+    start = client.post("/chat/sessions", json={"language": "hi"})
+    session_id = start.json()["session_id"]
+
+    for text in [
+        "थोड़ी चिंता लग रही है",
+        "हां यह नींद की दिक्कत लग रही है",
+    ]:
+        turn = client.post(f"/chat/sessions/{session_id}/turns", json={"text": text})
+        assert turn.status_code == 200
+
+    third_turn = client.post(
+        f"/chat/sessions/{session_id}/turns",
+        json={"text": "दिमाग को शांत करना"},
+    )
+
+    assert third_turn.status_code == 200
+    reply = third_turn.json()["assistant_turn"]["text"]
+    dialogue = third_turn.json()["snapshot"]["coverage"]["dialogue"]
+    assert dialogue["target_topic"] == "anxiety"
+    assert dialogue["target_item"] == "gad_q4_trouble_relaxing"
+    assert "दिमाग और शरीर" in reply or "तनाव" in reply or "शांत" in reply
 
 
 def test_hinglish_worry_domain_detail_advances_to_scope_question():
@@ -1605,6 +1653,35 @@ def test_hindi_relax_duration_answer_uses_break_prompt_before_old_loop_reopens()
     reply = last.json()["assistant_turn"]["text"]
     assert reply in FINAL_HOLD_VARIANTS["hi"]
     assert "जब चिंता शुरू होती है" not in reply
+
+
+def test_hindi_post_close_echo_does_not_cycle_hold_variants():
+    start = client.post("/chat/sessions", json={"language": "hi"})
+    session_id = start.json()["session_id"]
+
+    for text in [
+        "पता नहीं क्या असर पड़ता है",
+        "वह चलती रहती है कितना भी प्रयास करो",
+        "फिलहाल जब मैं किसी काम को करने जाता हूं तब मुझे ज्यादा चिंता होती है भविष्य को लेकर",
+        "चलती रहती है कितना भी कोशिश करो",
+        "नहीं ज्यादातर यह एक ही बात पर अटकी रहती है",
+    ]:
+        turn = client.post(f"/chat/sessions/{session_id}/turns", json={"text": text})
+        assert turn.status_code == 200
+
+    echoed_summary = client.post(
+        f"/chat/sessions/{session_id}/turns",
+        json={"text": "अब मेरे पास मुख्य पैटर्न पकड़ने लायक काफी जानकारी है यह चिंता कुछ खास समय पर बढ़ती है दिमाग और शरीर दोनों पर असर डालती है और तनाव वाले दिनों में ज्यादा लग सकती है अगर कोई बहुत जरूरी बात बाकी ना हो तो मैं इसे अभी कामचलाऊ सार मान सकता हूं"},
+    )
+    assert echoed_summary.status_code == 200
+    assert echoed_summary.json()["assistant_turn"]["text"] == FINAL_REST_MESSAGES["hi"]
+
+    echoed_hold = client.post(
+        f"/chat/sessions/{session_id}/turns",
+        json={"text": "ठीक है अभी के लिए मैं इसे वर्तमान सार मानकर रखता हूं अगर बाद में कोई एक जरूरी बात छूटी लगे तो आप उसे सीधे बता सकते हैं"},
+    )
+    assert echoed_hold.status_code == 200
+    assert echoed_hold.json()["assistant_turn"]["text"] == FINAL_REST_MESSAGES["hi"]
 
 
 def test_hindi_break_prompt_family_scoped_answer_closes_instead_of_reopening():

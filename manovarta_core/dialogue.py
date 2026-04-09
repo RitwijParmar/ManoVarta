@@ -63,6 +63,12 @@ FINAL_HOLD_VARIANTS = {
     ),
 }
 
+FINAL_REST_MESSAGES = {
+    "en": "Okay. We can leave it here for now.",
+    "hi": "ठीक है, अभी यहीं रोकते हैं।",
+    "hinglish": "Theek hai, abhi yahin rok dete hain.",
+}
+
 POST_CLOSE_CHOOSER_MESSAGES = {
     "en": "If you want, you can add the one missing detail that matters most, or we can leave this as the current summary.",
     "hi": "अगर आप चाहें, तो सबसे ज़्यादा महत्वपूर्ण एक छूटी हुई बात जोड़ सकते हैं, या हम इसे अभी का सार मानकर यहीं छोड़ सकते हैं।",
@@ -1581,7 +1587,14 @@ class DialoguePlanner:
         if stage == "summary":
             return current_topic if current_topic in TOPIC_GRAPH else "mood"
         latest_signal_topics = self._latest_signal_topics(session)
+        latest_signal_items = self._latest_signal_items(session)
         recent_signal_topics = self._recent_signal_topics(session)
+
+        latest_user_text = self._latest_user_text(session)
+        if current_topic == "anxiety" and self._has_sleep_choice_signal(latest_user_text):
+            return "sleep"
+        if current_topic == "sleep" and "gad_q4_trouble_relaxing" in latest_signal_items:
+            return "anxiety"
 
         if stage == "rapport":
             touched_candidates = [
@@ -1913,6 +1926,13 @@ class DialoguePlanner:
                 return "gad_q5_restlessness"
 
         if last_item == "phq_q3_sleep":
+            if (
+                "gad_q4_trouble_relaxing" in latest_signal_items
+                and not self._has_sleep_pattern_answer(latest_user_text)
+                and not self._has_timing_or_frequency_answer(latest_user_text)
+                and available("gad_q4_trouble_relaxing")
+            ):
+                return "gad_q4_trouble_relaxing"
             if self._has_sleep_impact_signal(latest_user_text) and available("phq_q4_fatigue"):
                 return "phq_q4_fatigue"
             if self._has_frequency_answer(latest_user_text) and self._recent_sleep_pattern_known(session):
@@ -2400,6 +2420,7 @@ class DialoguePlanner:
             ANXIETY_LOOP_CLOSE_PROMPTS[language],
             CLOSING_MESSAGES[language],
             POST_CLOSE_CHOOSER_MESSAGES[language],
+            FINAL_REST_MESSAGES[language],
             *FINAL_HOLD_VARIANTS[language],
         )
 
@@ -2416,9 +2437,15 @@ class DialoguePlanner:
             return None
         if self._should_reopen_after_close(session, latest_user_text):
             return None
+        if self._is_post_close_echo(session, latest_user_text, language):
+            return FINAL_REST_MESSAGES[language]
         if self._is_close_acknowledgement(latest_user_text):
+            if self._already_used_segment(last_assistant_text, FINAL_REST_MESSAGES[language]):
+                return FINAL_REST_MESSAGES[language]
             return self._select_post_close_hold_message(session, language)
         if self._is_nonexpansive_followup(latest_user_text):
+            if self._already_used_segment(last_assistant_text, FINAL_REST_MESSAGES[language]):
+                return FINAL_REST_MESSAGES[language]
             if self._already_used_segment(last_assistant_text, POST_CLOSE_CHOOSER_MESSAGES[language]):
                 return self._select_post_close_hold_message(session, language)
             return POST_CLOSE_CHOOSER_MESSAGES[language]
@@ -2470,6 +2497,8 @@ class DialoguePlanner:
     def _should_reopen_after_close(self, session: ChatSession, normalized_text: str) -> bool:
         if not normalized_text:
             return False
+        if self._is_post_close_echo(session, normalized_text, session.language):
+            return False
         if self._is_close_acknowledgement(normalized_text) or self._is_nonexpansive_followup(normalized_text):
             return False
         latest_signal_topics = self._latest_signal_topics(session)
@@ -2477,6 +2506,44 @@ class DialoguePlanner:
             return False
         reopenable_topics = (AFFECTIVE_TOPIC_FAMILY | {"sleep"}) - {"anxiety"}
         return bool(latest_signal_topics & reopenable_topics)
+
+    def _is_post_close_echo(self, session: ChatSession, normalized_text: str, language: str) -> bool:
+        if not normalized_text:
+            return False
+        assistant_turns = [
+            self._normalize(turn.text)
+            for turn in session.turns
+            if turn.speaker == "assistant"
+        ][-2:]
+        if not assistant_turns:
+            return False
+        post_close_segments = tuple(self._normalize(segment) for segment in self._post_close_segments(language))
+        user_tokens = self._meaningful_tokens(normalized_text)
+        if len(user_tokens) < 6:
+            return False
+        for assistant_text in assistant_turns:
+            if not assistant_text:
+                continue
+            if not any(segment in assistant_text for segment in post_close_segments):
+                continue
+            assistant_tokens = self._meaningful_tokens(assistant_text)
+            if len(assistant_tokens) < 6:
+                continue
+            overlap = user_tokens & assistant_tokens
+            shared = len(overlap)
+            ratio = shared / max(min(len(user_tokens), len(assistant_tokens)), 1)
+            if shared >= 6 and ratio >= 0.45:
+                return True
+        return False
+
+    def _meaningful_tokens(self, normalized_text: str) -> set[str]:
+        if not normalized_text:
+            return set()
+        return {
+            token
+            for token in re.findall(r"[\w\u0900-\u097F]+", normalized_text)
+            if len(token) >= 3
+        }
 
     def _has_activation_signal(self, normalized_text: str) -> bool:
         if not normalized_text:
@@ -2502,6 +2569,22 @@ class DialoguePlanner:
         if not normalized_text:
             return False
         return any(marker in normalized_text for marker in SLEEP_IMPACT_MARKERS)
+
+    def _has_sleep_choice_signal(self, normalized_text: str) -> bool:
+        if not normalized_text:
+            return False
+        markers = (
+            "sleep issue",
+            "sleep problem",
+            "sleep ki dikkat",
+            "sleep ki problem",
+            "neend ki dikkat",
+            "neend ki problem",
+            "नींद की दिक्कत",
+            "नींद की समस्या",
+            "नींद नहीं आना",
+        )
+        return any(marker in normalized_text for marker in markers)
 
     def _has_timing_answer(self, normalized_text: str) -> bool:
         if not normalized_text:
@@ -2663,6 +2746,14 @@ class DialoguePlanner:
         normalized_text = self._normalize(last_user_turn.text)
         words = len(last_user_turn.text.split())
         short_followup = words <= 6 or any(marker == normalized_text for marker in SHORT_FOLLOWUP_MARKERS)
+        latest_signal_items = self._latest_signal_items(session)
+        if (
+            last_item == "phq_q3_sleep"
+            and "gad_q4_trouble_relaxing" in latest_signal_items
+            and not self._has_sleep_pattern_answer(normalized_text)
+            and not self._has_timing_or_frequency_answer(normalized_text)
+        ):
+            return None
         if snapshot.items[last_item].status == "resolved":
             prompt_bank = ITEM_FOLLOW_UPS.get(last_item, {})
             has_variant = (
