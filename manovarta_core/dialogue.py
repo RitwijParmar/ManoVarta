@@ -604,6 +604,11 @@ ITEM_FOLLOW_UPS: Dict[str, Dict[str, Dict[str, str]]] = {
             "hi": "जब यह बना रहता है, क्या यह ज़्यादा दिन भर का लगातार भारी मन लगता है, या भावनात्मक सुन्नपन जैसा जो आता-जाता रहता है?",
             "hinglish": "Jab yeh bana rehta hai, kya yeh zyada poore din ka steady heavy mood lagta hai, ya emotional numbness jaisa jo aata-jaata rehta hai?",
         },
+        "deepening_probe": {
+            "en": "When that flat or heavy feeling is there, can small moments still cut through it if something needs your attention, or does it stay with you even while you keep going through the motions?",
+            "hi": "जब यह सपाट या भारी एहसास रहता है, क्या किसी ज़रूरी चीज़ पर ध्यान देने पर थोड़ा सा हल्का होता है, या काम करते रहने पर भी वैसा ही बना रहता है?",
+            "hinglish": "Jab yeh flat ya heavy feeling rehti hai, kya kisi zaroori cheez par dhyaan dene se thoda cut through hota hai, ya aap kaam karte rehte ho phir bhi yeh saath bana rehta hai?",
+        },
         "timing_known": {
             "en": "That timing helps. Around that part of the day, does it feel more like a steady heaviness, or more like a wave that rises and then passes?",
             "hi": "यह समय-सूचना मददगार है। उस समय के आसपास, क्या यह ज़्यादा लगातार भारीपन जैसा लगता है, या लहर की तरह आता-जाता है?",
@@ -1958,6 +1963,7 @@ class DialoguePlanner:
         latest_user_text = self._latest_user_text(session)
         recent_repeat = session.asked_items[-1:] == [plan.target_item]
         recent_repeat_window = plan.target_item in session.asked_items[-3:]
+        repeat_count = session.asked_items[-4:].count(plan.target_item)
         has_timing = self._has_timing_answer(latest_user_text)
         has_frequency = self._has_frequency_answer(latest_user_text)
         if plan.target_item == "phq_q3_sleep":
@@ -1970,6 +1976,8 @@ class DialoguePlanner:
             return prompt_bank["timing_known"][language]
         if recent_repeat and has_frequency and "frequency_known" in prompt_bank:
             return prompt_bank["frequency_known"][language]
+        if repeat_count >= 2 and not (has_timing or has_frequency) and "deepening_probe" in prompt_bank:
+            return prompt_bank["deepening_probe"][language]
         if recent_repeat_window and not (has_timing or has_frequency) and "repeat_probe" in prompt_bank:
             return prompt_bank["repeat_probe"][language]
         return prompt_bank.get("default", {}).get(language)

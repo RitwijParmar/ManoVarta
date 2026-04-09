@@ -832,6 +832,18 @@ def test_split_turn_anhedonia_detail_still_stays_off_the_old_repeat_probe():
     assert dialogue["target_item"] == "phq_q2_low_mood"
     assert "interest drop before you start" not in reply
 
+    fourth_turn = client.post(
+        f"/chat/sessions/{session_id}/turns",
+        json={"text": "I mostly go through the motions now."},
+    )
+
+    assert fourth_turn.status_code == 200
+    reply = fourth_turn.json()["assistant_turn"]["text"]
+    dialogue = fourth_turn.json()["snapshot"]["coverage"]["dialogue"]
+    assert dialogue["target_item"] == "phq_q2_low_mood"
+    assert "steady heavy mood" not in reply.lower()
+    assert "small moments still cut through" in reply.lower() or "go through the motions" in reply.lower()
+
 
 def test_hindi_energy_answer_after_focus_pivots_to_fatigue():
     start = client.post("/chat/sessions", json={"language": "hi"})

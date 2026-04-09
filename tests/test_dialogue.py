@@ -670,6 +670,47 @@ def test_anhedonia_detail_after_low_mood_does_not_bounce_back_to_same_probe():
     assert "steady heavy mood" in reply.lower() or "emotional numbness" in reply.lower()
 
 
+def test_low_mood_repeat_probe_deepens_on_next_turn():
+    session = ChatSession(session_id="session-low-mood-repeat", language="en")
+    planner = DialoguePlanner()
+    scorer = ConversationScorer()
+
+    for text in [
+        "I have been feeling numb and disconnected lately.",
+        "Things I used to enjoy feel flat.",
+        "Even when I do them, I do not get much from them.",
+    ]:
+        user_turn = Turn(turn_id=len(session.turns) + 1, speaker="user", text=text, language_tag="en")
+        session.turns.append(user_turn)
+        snapshot = scorer.analyze(session.turns, "en", SafetyFlag(level="none"))
+        reply, asked_item = planner.next_reply(snapshot, session)
+        assistant_turn = Turn(
+            turn_id=len(session.turns) + 1,
+            speaker="assistant",
+            text=reply,
+            language_tag="en",
+        )
+        session.turns.append(assistant_turn)
+        if asked_item:
+            session.asked_items.append(asked_item)
+
+    user_turn = Turn(
+        turn_id=len(session.turns) + 1,
+        speaker="user",
+        text="I mostly go through the motions now.",
+        language_tag="en",
+    )
+    session.turns.append(user_turn)
+    snapshot = scorer.analyze(session.turns, "en", SafetyFlag(level="none"))
+    reply, asked_item = planner.next_reply(snapshot, session)
+    plan = snapshot.coverage.dialogue
+
+    assert plan.target_item == "phq_q2_low_mood"
+    assert asked_item == "phq_q2_low_mood"
+    assert "steady heavy mood" not in reply.lower()
+    assert "small moments still cut through" in reply.lower() or "go through the motions" in reply.lower()
+
+
 def test_english_low_energy_slow_start_stays_on_focus_or_energy_branch():
     planner = DialoguePlanner()
     session = ChatSession(
