@@ -429,13 +429,22 @@ AWFUL_OUTCOME_MARKERS = (
     "गलत हो जाएगा",
 )
 PERSISTENT_WORRY_MARKERS = (
+    "keep going",
+    "keeps going",
+    "kept going",
     "keep running",
     "keeps running",
     "kept running",
+    "going no matter",
+    "no matter how much i try",
     "won't stop",
     "wont stop",
     "loop",
     "looping",
+    "chalta rehta",
+    "chalta rehti",
+    "chalte rehta",
+    "chalte rehti",
     "चलती रहती",
     "चलता रहता",
     "चलते रहता",
@@ -484,18 +493,22 @@ WORRY_SCOPE_SPREAD_MARKERS = (
 WORRY_SCOPE_SINGLE_MARKERS = (
     "one main issue",
     "one thing",
+    "one same thing",
     "single issue",
     "same issue",
+    "same thing",
     "only one thing",
     "only around",
     "mostly one thing",
     "ek main baat",
     "ek hi baat",
+    "ek hi cheez",
     "ek issue",
     "sirf ek",
     "keval ek",
     "एक मुख्य बात",
     "एक ही बात",
+    "एक ही चीज",
     "एक मुद्दे",
     "सिर्फ",
     "केवल",
@@ -838,7 +851,7 @@ ITEM_SIGNAL_MARKERS: Dict[str, Tuple[str, ...]] = {
     "phq_q1_anhedonia": ("not interested", "no interest", "disconnected", "nothing feels good", "used to enjoy", "feel flat", "feels flat", "flat now", "numb", "feel very little from them", "get much from them", "do not get much from them", "don't get much from them", "go through the motions", "go through motions", "mann nahi lagta", "मन नहीं लगता", "दिल नहीं करता", "फीका लगता", "बहुत कम महसूस"),
     "phq_q2_low_mood": ("low mood", "sad", "down", "empty", "heavy", "heaviness", "मन भारी", "भारी", "उदास"),
     "phq_q4_fatigue": ("tired", "drained", "fatigue", "low energy", "energy down", "wiped", "heavy in the morning", "slow to start", "slow to get started", "mind feels slow", "brain fog", "subah heavy", "थक", "थकान", "ऊर्जा", "ऊर्जा कम", "सुबह भारी", "दिमाग धीमा"),
-    "phq_q6_worthlessness": ("burden", "extra burden", "burden hoon", "worthless", "useless", "make things heavier", "making things heavier", "बोझ", "बोझ हूँ", "सबके लिए बोझ", "बेकार", "मेरी वजह से"),
+    "phq_q6_worthlessness": ("burden", "extra burden", "burden hoon", "worthless", "useless", "make things heavier", "making things heavier", "ashamed", "shame", "बोझ", "बोझ हूँ", "सबके लिए बोझ", "बेकार", "मेरी वजह से", "शर्म"),
     "phq_q3_sleep": ("sleep", "asleep", "wake", "waking", "sleep disturb", "neend disturb", "नींद", "रात", "रात में", "उठ जाती", "switch off"),
     "phq_q7_concentration": ("focus", "concentrat", "attention", "cannot focus", "can't focus", "harder to focus", "hard to focus", "taking longer to get started", "takes longer to get started", "mind taking longer", "mind feels slow", "brain fog", "ध्यान", "focus nahi", "ध्यान नहीं टिक", "mind blanks", "screen", "start hone mein time lagta", "start hone me time lagta", "mind ko start hone mein time lagta", "mind ko start hone me time lagta", "दिमाग धीमा"),
     "gad_q2_control_worry": ("worry", "loop", "looping", "replay", "mind won't stop", "mind wont stop", "चिंता", "सोच बंद"),
@@ -851,13 +864,14 @@ TOPIC_SIGNAL_MARKERS: Dict[str, Tuple[str, ...]] = {
     "mood": ("low mood", "sad", "down", "empty", "heavy", "heaviness", "disconnected", "usually enjoy", "used to enjoy", "उदासी", "उदास", "खाली", "low feel", "भारी", "मन भारी", "मन नहीं लगता"),
     "sleep": ("sleep", "asleep", "wake up", "waking", "neend", "नींद", "सोने", "उठ जाती", "night", "रात"),
     "energy": ("tired", "drained", "fatigue", "wiped", "low energy", "heavy in the morning", "slow to start", "slow to get started", "mind feels slow", "brain fog", "subah heavy", "thak", "थक", "थका", "थकान", "ऊर्जा", "सुबह भारी", "दिमाग धीमा", "धीमा लग"),
-    "self_view": ("burden", "extra burden", "burden hoon", "worthless", "useless", "guilt", "make things heavier", "making things heavier", "बोझ", "बोझ हूँ", "सबके लिए बोझ", "बेकार", "गलती मेरी", "worthless"),
+    "self_view": ("burden", "extra burden", "burden hoon", "worthless", "useless", "guilt", "make things heavier", "making things heavier", "ashamed", "shame", "बोझ", "बोझ हूँ", "सबके लिए बोझ", "बेकार", "गलती मेरी", "शर्म", "worthless"),
     "focus": ("focus", "concentrat", "attention", "mind blanks", "cannot focus", "can't focus", "harder to focus", "hard to focus", "get started", "taking longer to get started", "takes longer to get started", "mind taking longer", "mind feels slow", "screen", "ध्यान", "focus nahi", "ध्यान नहीं", "ध्यान नहीं टिक", "start hone mein time lagta", "start hone me time lagta", "mind ko start hone mein time lagta", "mind ko start hone me time lagta", "दिमाग धीमा"),
     "anxiety": ("worry", "restless", "tense", "panic", "loop", "बेचैनी", "चिंता", "घबराहट", "mind won't stop"),
     "safety": ("hurt myself", "not wake up", "suicide", "मर", "खुद को नुकसान", "zinda na"),
 }
 
 AFFECTIVE_TOPIC_FAMILY = {"mood", "sleep", "energy", "self_view", "focus"}
+ANXIETY_CORE_ITEMS = {"gad_q1_nervous", "gad_q2_control_worry", "gad_q3_excessive_worry", "gad_q4_trouble_relaxing"}
 
 
 @dataclass(frozen=True)
@@ -987,21 +1001,22 @@ class DialoguePlanner:
             return SAFETY_MESSAGES[language], plan.target_item
         if self._should_close_after_break_answer(session):
             return ANXIETY_LOOP_CLOSE_PROMPTS[language], None
-        if self._should_break_after_relax_duration_answer(session):
-            return ANXIETY_LOOP_BREAK_PROMPTS[language], None
         if (
             self._already_used_segment(last_assistant_text, ANXIETY_LOOP_CLOSE_PROMPTS[language])
             or self._already_used_segment(last_assistant_text, CLOSING_MESSAGES[language])
             or self._already_used_segment(last_assistant_text, FINAL_HOLD_MESSAGES[language])
-        ) and self._is_close_acknowledgement(latest_user_text):
+        ) and not self._has_high_priority_post_close_signal(latest_user_text):
             return FINAL_HOLD_MESSAGES[language], None
-        if self._should_close_after_relax_duration_answer(session):
-            return ANXIETY_LOOP_CLOSE_PROMPTS[language], None
+        if self._should_break_after_relax_duration_answer(session):
+            return ANXIETY_LOOP_BREAK_PROMPTS[language], None
         if self._should_close_anxiety_after_scope_answer(plan, session):
             return ANXIETY_LOOP_CLOSE_PROMPTS[language], None
-        if self._already_used_segment(last_assistant_text, ANXIETY_LOOP_CLOSE_PROMPTS[language]) or self._already_used_segment(last_assistant_text, FINAL_HOLD_MESSAGES[language]):
-            if not self._has_high_priority_post_close_signal(latest_user_text):
-                return FINAL_HOLD_MESSAGES[language], None
+        if self._should_break_after_anxiety_core_rotation(session):
+            if self._already_used_segment(last_assistant_text, ANXIETY_LOOP_BREAK_PROMPTS[language]):
+                return ANXIETY_LOOP_CLOSE_PROMPTS[language], None
+            return ANXIETY_LOOP_BREAK_PROMPTS[language], None
+        if self._should_close_after_relax_duration_answer(session):
+            return ANXIETY_LOOP_CLOSE_PROMPTS[language], None
         if self._should_use_anxiety_loop_break(plan, session):
             if self._already_used_segment(last_assistant_text, ANXIETY_LOOP_BREAK_PROMPTS[language]) or self._should_close_anxiety_loop(plan, session):
                 return ANXIETY_LOOP_CLOSE_PROMPTS[language], None
@@ -1121,6 +1136,38 @@ class DialoguePlanner:
         if self._has_worry_domain_signal(latest_user_text):
             return True
         if self._is_nonexpansive_followup(latest_user_text):
+            return True
+        return False
+
+    def _recent_anxiety_core_items(self, session: ChatSession, lookback: int = 8) -> list[str]:
+        return [item_id for item_id in session.asked_items[-lookback:] if item_id in ANXIETY_CORE_ITEMS]
+
+    def _has_recent_anxiety_core_coverage(self, session: ChatSession) -> bool:
+        recent_core = set(self._recent_anxiety_core_items(session))
+        return {"gad_q2_control_worry", "gad_q3_excessive_worry", "gad_q4_trouble_relaxing"}.issubset(recent_core)
+
+    def _should_break_after_anxiety_core_rotation(self, session: ChatSession) -> bool:
+        if not session.asked_items:
+            return False
+        if not self._has_recent_anxiety_core_coverage(session):
+            return False
+        latest_user_text = self._latest_user_text(session)
+        if not latest_user_text:
+            return False
+        last_item = session.asked_items[-1]
+        if last_item not in ANXIETY_CORE_ITEMS:
+            return False
+        if self._has_high_priority_post_close_signal(latest_user_text):
+            return False
+        if self._has_timing_or_frequency_answer(latest_user_text):
+            return False
+        if self._has_worry_scope_answer(latest_user_text):
+            return True
+        if self._has_worry_domain_signal(latest_user_text) and last_item in {"gad_q1_nervous", "gad_q4_trouble_relaxing"}:
+            return True
+        if self._is_nonexpansive_followup(latest_user_text):
+            return True
+        if self._has_persistent_worry_signal(latest_user_text) and not self._has_worry_domain_signal(latest_user_text):
             return True
         return False
 

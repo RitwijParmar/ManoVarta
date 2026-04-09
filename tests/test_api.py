@@ -3,7 +3,7 @@ import io
 from fastapi.testclient import TestClient
 
 import manovarta_core.api as api_module
-from manovarta_core.dialogue import DialoguePlanner
+from manovarta_core.dialogue import ANXIETY_LOOP_BREAK_PROMPTS, ANXIETY_LOOP_CLOSE_PROMPTS, FINAL_HOLD_MESSAGES, DialoguePlanner
 from manovarta_core.engine import RuntimeEngine
 from manovarta_core.schemas import ChatSession, DialoguePlan, Turn
 
@@ -923,6 +923,54 @@ def test_english_anxiety_body_tension_pivots_to_relaxation_live_flow():
     assert "relax your body" in reply or "quiet your thoughts" in reply or "tense body" in reply
 
 
+def test_english_long_anxiety_flow_breaks_earlier_and_holds_after_close():
+    start = client.post("/chat/sessions", json={"language": "en"})
+    session_id = start.json()["session_id"]
+
+    scripted_turns = [
+        "I do not know what exactly is wrong.",
+        "It keeps going even when I try hard to stop it.",
+        "Lately when I start any work I get more anxious about the future.",
+        "It keeps going no matter how much I try.",
+        "Mostly it keeps flipping around one same thing and other things disappear.",
+        "No not like that.",
+    ]
+
+    responses = []
+    for text in scripted_turns:
+        turn = client.post(f"/chat/sessions/{session_id}/turns", json={"text": text})
+        assert turn.status_code == 200
+        responses.append(turn.json())
+
+    assert responses[3]["assistant_turn"]["text"] == ANXIETY_LOOP_BREAK_PROMPTS["en"]
+    assert responses[4]["assistant_turn"]["text"] == ANXIETY_LOOP_CLOSE_PROMPTS["en"]
+    assert responses[5]["assistant_turn"]["text"] == FINAL_HOLD_MESSAGES["en"]
+
+
+def test_hinglish_long_anxiety_flow_breaks_earlier_and_holds_after_close():
+    start = client.post("/chat/sessions", json={"language": "hinglish"})
+    session_id = start.json()["session_id"]
+
+    scripted_turns = [
+        "Pata nahi kya ho raha hai exactly.",
+        "Woh chalta rehta hai chahe kitni bhi koshish karu.",
+        "Jab main kaam start karta hoon tab future ko lekar zyada tension hoti hai.",
+        "Chalta rehta hai kitni bhi koshish kar lo.",
+        "Mostly ek hi baat repeat hoti rehti hai aur baaki sab side ho jata hai.",
+        "Nahi aisa kuch nahi.",
+    ]
+
+    responses = []
+    for text in scripted_turns:
+        turn = client.post(f"/chat/sessions/{session_id}/turns", json={"text": text})
+        assert turn.status_code == 200
+        responses.append(turn.json())
+
+    assert responses[3]["assistant_turn"]["text"] == ANXIETY_LOOP_BREAK_PROMPTS["hinglish"]
+    assert responses[4]["assistant_turn"]["text"] == ANXIETY_LOOP_CLOSE_PROMPTS["hinglish"]
+    assert responses[5]["assistant_turn"]["text"] == FINAL_HOLD_MESSAGES["hinglish"]
+
+
 def test_hinglish_tense_body_followup_does_not_jump_to_generic_fear_item():
     start = client.post("/chat/sessions", json={"language": "hinglish"})
     session_id = start.json()["session_id"]
@@ -1224,7 +1272,7 @@ def test_hindi_relax_duration_answer_closes_instead_of_reopening_old_anxiety_ite
     body = last.json()
     reply = body["assistant_turn"]["text"]
 
-    assert reply.startswith("मैं थोड़ा रुककर जो समझ आ रहा है")
+    assert reply.startswith("ठीक है। अभी के लिए मैं इसे वर्तमान सार मानकर रखता हूँ।")
     assert "जब चिंता शुरू होती है" not in reply
 
 
@@ -1249,7 +1297,7 @@ def test_hindi_relax_duration_answer_uses_break_prompt_before_old_loop_reopens()
         assert last.status_code == 200
 
     reply = last.json()["assistant_turn"]["text"]
-    assert reply.startswith("मैं थोड़ा रुककर जो समझ आ रहा है")
+    assert reply.startswith("ठीक है। अभी के लिए मैं इसे वर्तमान सार मानकर रखता हूँ।")
     assert "जब चिंता शुरू होती है" not in reply
 
 

@@ -475,6 +475,68 @@ def test_repeated_anxiety_loop_break_closes_instead_of_repeating():
     assert reply.startswith("अब मेरे पास मुख्य पैटर्न पकड़ने लायक")
 
 
+def test_english_persistent_worry_after_core_rotation_uses_break_prompt():
+    planner = DialoguePlanner()
+    session = ChatSession(
+        session_id="english-anxiety-core-break",
+        language="en",
+        turns=[
+            Turn(
+                turn_id=1,
+                speaker="assistant",
+                text="When you try to settle down, is it harder to quiet your thoughts, relax your body, or both?",
+                language_tag="en",
+            ),
+            Turn(turn_id=2, speaker="user", text="It keeps going no matter how much I try.", language_tag="en"),
+        ],
+        asked_items=["gad_q2_control_worry", "gad_q3_excessive_worry", "gad_q4_trouble_relaxing"],
+    )
+
+    snapshot = ConversationScorer().analyze(session.turns, "en", SafetyFlag(level="none"))
+    reply, asked_item = planner.next_reply(snapshot, session)
+
+    assert asked_item is None
+    assert reply == ANXIETY_LOOP_BREAK_PROMPTS["en"]
+
+
+def test_english_close_prompt_followed_by_nonpriority_reply_stays_on_final_hold():
+    planner = DialoguePlanner()
+    session = ChatSession(
+        session_id="english-close-holds",
+        language="en",
+        turns=[
+            Turn(turn_id=1, speaker="assistant", text=ANXIETY_LOOP_CLOSE_PROMPTS["en"], language_tag="en"),
+            Turn(turn_id=2, speaker="user", text="No not like that.", language_tag="en"),
+        ],
+        asked_items=["gad_q2_control_worry", "gad_q3_excessive_worry", "gad_q4_trouble_relaxing"],
+    )
+
+    snapshot = ConversationScorer().analyze(session.turns, "en", SafetyFlag(level="none"))
+    reply, asked_item = planner.next_reply(snapshot, session)
+
+    assert asked_item is None
+    assert reply == FINAL_HOLD_MESSAGES["en"]
+
+
+def test_hinglish_close_prompt_followed_by_nonpriority_reply_stays_on_final_hold():
+    planner = DialoguePlanner()
+    session = ChatSession(
+        session_id="hinglish-close-holds",
+        language="hinglish",
+        turns=[
+            Turn(turn_id=1, speaker="assistant", text=ANXIETY_LOOP_CLOSE_PROMPTS["hinglish"], language_tag="hinglish"),
+            Turn(turn_id=2, speaker="user", text="Nahi aisa kuch nahi.", language_tag="hinglish"),
+        ],
+        asked_items=["gad_q2_control_worry", "gad_q3_excessive_worry", "gad_q4_trouble_relaxing"],
+    )
+
+    snapshot = ConversationScorer().analyze(session.turns, "hinglish", SafetyFlag(level="none"))
+    reply, asked_item = planner.next_reply(snapshot, session)
+
+    assert asked_item is None
+    assert reply == FINAL_HOLD_MESSAGES["hinglish"]
+
+
 def test_continuity_note_is_not_reused_after_it_already_appeared():
     planner = DialoguePlanner()
     continuity = "अगर यह आपकी हाल की चिंता बातचीत से मिलता-जुलता लग रहा है, तो बताइए क्या वैसा रहा और क्या बदला।"
