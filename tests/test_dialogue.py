@@ -269,6 +269,27 @@ def test_hinglish_tense_body_signal_stays_on_relaxation_branch():
     assert coverage.dialogue.target_item in {"gad_q4_trouble_relaxing", "phq_q3_sleep"}
 
 
+def test_hinglish_worry_domain_detail_beats_old_relaxation_branch():
+    planner = DialoguePlanner()
+    session = ChatSession(
+        session_id="hinglish-domain-over-relaxation",
+        language="hinglish",
+        turns=[
+            Turn(turn_id=1, speaker="assistant", text="Jab worry start hoti hai, kya aap mind ko usse hata paate ho, ya rokne ki koshish ke baad bhi woh loop hoti rehti hai?", language_tag="hinglish"),
+            Turn(turn_id=2, speaker="user", text="Mostly work aur future ko lekar hota hai.", language_tag="hinglish"),
+        ],
+        asked_items=["gad_q4_trouble_relaxing", "gad_q2_control_worry"],
+    )
+
+    snapshot = ConversationScorer().analyze(session.turns, "hinglish", SafetyFlag(level="none"))
+    coverage = planner.build_plan(snapshot, session)
+    reply, asked_item = planner.next_reply(snapshot, session)
+
+    assert coverage.dialogue.target_item == "gad_q3_excessive_worry"
+    assert asked_item == "gad_q3_excessive_worry"
+    assert "spread" in reply.lower() or "one main" in reply.lower()
+
+
 def test_repeat_relaxation_probe_uses_fresh_variant_for_recent_repeat():
     planner = DialoguePlanner()
     session = ChatSession(
@@ -582,7 +603,7 @@ def test_target_topic_aligns_with_directed_followup_item():
     assert coverage.dialogue.target_topic == "sleep"
 
 
-def test_hindi_heavy_burden_opening_prefers_mood_branch():
+def test_hindi_heavy_burden_opening_prefers_self_view_branch():
     planner = DialoguePlanner()
     session = ChatSession(
         session_id="hindi-mood-open",
@@ -601,9 +622,51 @@ def test_hindi_heavy_burden_opening_prefers_mood_branch():
     coverage = planner.build_plan(snapshot, session)
     reply, asked_item = planner.next_reply(snapshot, session)
 
-    assert coverage.dialogue.target_topic == "mood"
-    assert asked_item in {"phq_q1_anhedonia", "phq_q2_low_mood"}
+    assert coverage.dialogue.target_topic == "self_view"
+    assert asked_item == "phq_q6_worthlessness"
     assert "चिंता शुरू होती है" not in reply
+
+
+def test_anhedonia_semantic_answer_advances_past_repeat_probe():
+    planner = DialoguePlanner()
+    session = ChatSession(
+        session_id="anhedonia-advance",
+        language="en",
+        turns=[
+            Turn(turn_id=1, speaker="assistant", text="When you try to do things you usually care about, does the interest drop before you start, or do you go through with them but feel very little from them?", language_tag="en"),
+            Turn(turn_id=2, speaker="user", text="Things I used to enjoy feel flat, and even when I do them I mostly go through the motions now.", language_tag="en"),
+        ],
+        asked_items=["phq_q1_anhedonia"],
+    )
+
+    snapshot = ConversationScorer().analyze(session.turns, "en", SafetyFlag(level="none"))
+    coverage = planner.build_plan(snapshot, session)
+    reply, asked_item = planner.next_reply(snapshot, session)
+
+    assert coverage.dialogue.target_item == "phq_q2_low_mood"
+    assert asked_item == "phq_q2_low_mood"
+    assert "interest drop before you start" not in reply
+
+
+def test_anhedonia_detail_after_low_mood_does_not_bounce_back_to_same_probe():
+    planner = DialoguePlanner()
+    session = ChatSession(
+        session_id="anhedonia-no-bounce-back",
+        language="en",
+        turns=[
+            Turn(turn_id=1, speaker="assistant", text="When this hits, does it sit more like sadness or heaviness through the day, or does it come in waves around certain times?", language_tag="en"),
+            Turn(turn_id=2, speaker="user", text="Even when I do them, I do not get much from them and I mostly go through the motions now.", language_tag="en"),
+        ],
+        asked_items=["phq_q1_anhedonia", "phq_q2_low_mood"],
+    )
+
+    snapshot = ConversationScorer().analyze(session.turns, "en", SafetyFlag(level="none"))
+    coverage = planner.build_plan(snapshot, session)
+    reply, asked_item = planner.next_reply(snapshot, session)
+
+    assert coverage.dialogue.target_item == "phq_q2_low_mood"
+    assert asked_item == "phq_q2_low_mood"
+    assert "interest drop before you start" not in reply
 
 
 def test_english_low_energy_slow_start_stays_on_focus_or_energy_branch():

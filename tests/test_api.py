@@ -664,7 +664,45 @@ def test_english_energy_followup_acknowledges_frequency_answer():
     assert "body heaviness" in reply or "slow-starting mind" in reply
 
 
-def test_hindi_heavy_burden_opening_stays_on_mood_not_generic_anxiety():
+def test_soft_disappearance_language_triggers_first_turn_safety_check_in_english():
+    start = client.post("/chat/sessions", json={"language": "en"})
+    session_id = start.json()["session_id"]
+
+    turn = client.post(
+        f"/chat/sessions/{session_id}/turns",
+        json={"text": "I have been feeling low and sometimes I wish I could disappear for a while."},
+    )
+
+    assert turn.status_code == 200
+    reply = turn.json()["assistant_turn"]["text"]
+    snapshot = turn.json()["snapshot"]
+    dialogue = snapshot["coverage"]["dialogue"]
+    assert snapshot["safety"]["level"] == "review"
+    assert dialogue["target_topic"] == "safety"
+    assert dialogue["target_item"] == "phq_q9_self_harm"
+    assert "safety matters" in reply
+
+
+def test_soft_disappearance_language_triggers_first_turn_safety_check_in_hindi():
+    start = client.post("/chat/sessions", json={"language": "hi"})
+    session_id = start.json()["session_id"]
+
+    turn = client.post(
+        f"/chat/sessions/{session_id}/turns",
+        json={"text": "कभी कभी लगता है काश मैं कुछ समय के लिए गायब हो जाऊँ।"},
+    )
+
+    assert turn.status_code == 200
+    reply = turn.json()["assistant_turn"]["text"]
+    snapshot = turn.json()["snapshot"]
+    dialogue = snapshot["coverage"]["dialogue"]
+    assert snapshot["safety"]["level"] == "review"
+    assert dialogue["target_topic"] == "safety"
+    assert dialogue["target_item"] == "phq_q9_self_harm"
+    assert "सुरक्षा" in reply or "नुकसान" in reply
+
+
+def test_hindi_heavy_burden_opening_moves_to_self_view_not_generic_anxiety():
     start = client.post("/chat/sessions", json={"language": "hi"})
     session_id = start.json()["session_id"]
 
@@ -676,8 +714,8 @@ def test_hindi_heavy_burden_opening_stays_on_mood_not_generic_anxiety():
     assert turn.status_code == 200
     reply = turn.json()["assistant_turn"]["text"]
     dialogue = turn.json()["snapshot"]["coverage"]["dialogue"]
-    assert dialogue["target_topic"] == "mood"
-    assert dialogue["target_item"] in {"phq_q1_anhedonia", "phq_q2_low_mood"}
+    assert dialogue["target_topic"] == "self_view"
+    assert dialogue["target_item"] == "phq_q6_worthlessness"
     assert "चिंता शुरू" not in reply
 
 
@@ -702,6 +740,96 @@ def test_hindi_mood_followup_pivots_to_focus_or_interest_not_anxiety():
     assert dialogue["target_topic"] in {"mood", "focus"}
     assert dialogue["target_item"] in {"phq_q1_anhedonia", "phq_q7_concentration"}
     assert "चिंता शुरू" not in reply
+
+
+def test_hinglish_worry_domain_detail_advances_to_scope_question():
+    start = client.post("/chat/sessions", json={"language": "hinglish"})
+    session_id = start.json()["session_id"]
+
+    script = [
+        "Mind overloaded rehta hai aur raat ko switch off nahi hota.",
+        "Week mein 4-5 din zyada hota hai.",
+        "Body tense bhi rehti hai aur thoughts bhi chalte rehte hain.",
+        "Mostly work aur future ko lekar hota hai.",
+    ]
+
+    last = None
+    for text in script:
+        last = client.post(f"/chat/sessions/{session_id}/turns", json={"text": text})
+
+    assert last is not None and last.status_code == 200
+    reply = last.json()["assistant_turn"]["text"]
+    dialogue = last.json()["snapshot"]["coverage"]["dialogue"]
+    assert dialogue["target_item"] == "gad_q3_excessive_worry"
+    assert "spread" in reply.lower() or "main baat" in reply.lower()
+
+
+def test_anhedonia_semantic_answer_advances_to_low_mood_instead_of_repeating():
+    start = client.post("/chat/sessions", json={"language": "en"})
+    session_id = start.json()["session_id"]
+
+    first_turn = client.post(
+        f"/chat/sessions/{session_id}/turns",
+        json={"text": "I have been feeling numb and disconnected lately."},
+    )
+    assert first_turn.status_code == 200
+
+    second_turn = client.post(
+        f"/chat/sessions/{session_id}/turns",
+        json={"text": "Things I used to enjoy feel flat, and even when I do them I mostly go through the motions now."},
+    )
+
+    assert second_turn.status_code == 200
+    reply = second_turn.json()["assistant_turn"]["text"]
+    dialogue = second_turn.json()["snapshot"]["coverage"]["dialogue"]
+    assert dialogue["target_item"] == "phq_q2_low_mood"
+    assert "interest drop before you start" not in reply
+
+
+def test_anhedonia_followup_does_not_bounce_back_after_low_mood_probe():
+    start = client.post("/chat/sessions", json={"language": "en"})
+    session_id = start.json()["session_id"]
+
+    for text in [
+        "I have been feeling numb and disconnected lately.",
+        "Things I used to enjoy feel flat.",
+    ]:
+        turn = client.post(f"/chat/sessions/{session_id}/turns", json={"text": text})
+        assert turn.status_code == 200
+
+    third_turn = client.post(
+        f"/chat/sessions/{session_id}/turns",
+        json={"text": "Even when I do them, I do not get much from them and I mostly go through the motions now."},
+    )
+
+    assert third_turn.status_code == 200
+    reply = third_turn.json()["assistant_turn"]["text"]
+    dialogue = third_turn.json()["snapshot"]["coverage"]["dialogue"]
+    assert dialogue["target_item"] == "phq_q2_low_mood"
+    assert "interest drop before you start" not in reply
+
+
+def test_split_turn_anhedonia_detail_still_stays_off_the_old_repeat_probe():
+    start = client.post("/chat/sessions", json={"language": "en"})
+    session_id = start.json()["session_id"]
+
+    for text in [
+        "I have been feeling numb and disconnected lately.",
+        "Things I used to enjoy feel flat.",
+    ]:
+        turn = client.post(f"/chat/sessions/{session_id}/turns", json={"text": text})
+        assert turn.status_code == 200
+
+    third_turn = client.post(
+        f"/chat/sessions/{session_id}/turns",
+        json={"text": "Even when I do them, I do not get much from them."},
+    )
+
+    assert third_turn.status_code == 200
+    reply = third_turn.json()["assistant_turn"]["text"]
+    dialogue = third_turn.json()["snapshot"]["coverage"]["dialogue"]
+    assert dialogue["target_item"] == "phq_q2_low_mood"
+    assert "interest drop before you start" not in reply
 
 
 def test_hindi_energy_answer_after_focus_pivots_to_fatigue():

@@ -13,6 +13,54 @@ def test_review_level_safety_handles_indirect_disappearance_language():
     assert flag.needs_human_review is True
 
 
+def test_review_level_safety_handles_english_disappear_for_a_while_language():
+    turns = [
+        Turn(
+            turn_id=1,
+            speaker="user",
+            text="I have been feeling low and sometimes I wish I could disappear for a while.",
+            language_tag="en",
+        ),
+    ]
+
+    flag = SafetyMonitor().assess(turns)
+
+    assert flag.level == "review"
+    assert flag.needs_human_review is True
+
+
+def test_review_level_safety_handles_english_not_being_here_language():
+    turns = [
+        Turn(
+            turn_id=1,
+            speaker="user",
+            text="Sometimes I feel like not being here would be easier.",
+            language_tag="en",
+        ),
+    ]
+
+    flag = SafetyMonitor().assess(turns)
+
+    assert flag.level == "review"
+    assert flag.needs_human_review is True
+
+
+def test_review_level_safety_handles_hindi_disappearance_language():
+    turns = [
+        Turn(
+            turn_id=1,
+            speaker="user",
+            text="कभी कभी लगता है काश मैं कुछ समय के लिए गायब हो जाऊँ।",
+            language_tag="hi",
+        ),
+    ]
+
+    flag = SafetyMonitor().assess(turns)
+
+    assert flag.level == "review"
+    assert flag.needs_human_review is True
+
+
 def test_urgent_safety_handles_direct_self_harm_language():
     turns = [
         Turn(turn_id=1, speaker="user", text="Some nights I don't want to live like this.", language_tag="en"),

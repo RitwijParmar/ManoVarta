@@ -104,6 +104,19 @@ REVIEW_CUES = (
     "kahin nikal jaun",
     "जहाँ कोई मुझे जानता ही न हो",
     "jeene ka mann nahi",
+    "कुछ समय के लिए गायब हो जाऊँ",
+    "काश मैं कुछ समय के लिए गायब हो जाऊँ",
+    "बोझ हूँ",
+)
+
+REVIEW_PATTERNS = (
+    r"\bi\s+wish\s+i\s+could\s+disappear(?:\s+for\s+a\s+while)?\b",
+    r"\bi\s+want\s+to\s+disappear(?:\s+for\s+a\s+while)?\b",
+    r"\b(?:sometimes\s+)?i\s+(?:feel|think)\s+like\s+not\s+being\s+here\s+would\s+be\s+easier\b",
+    r"\bnot\s+being\s+here\s+would\s+be\s+easier\b",
+    r"\bi\s+feel\s+like\s+i\s+am\s+(?:such\s+an?\s+|an?\s+extra\s+)?burden\b",
+    r"\bthodi\s+der\s+ke\s+liye\s+gayab\s+ho\s+ja(?:u|un|oon)\b",
+    r"\bextra\s+burden\s+hoon\b",
 )
 
 PROTECTIVE_CUES = (
@@ -140,7 +153,10 @@ class SafetyMonitor:
         )
         method_hits = self._collect_hits(all_text, recent_text, URGENT_METHOD_CUES)
         time_hits = self._collect_hits(all_text, recent_text, URGENT_TIME_CUES)
-        review_hits = self._collect_hits(all_text, recent_text, REVIEW_CUES)
+        review_hits = self._dedupe_hits(
+            self._collect_hits(all_text, recent_text, REVIEW_CUES)
+            + self._collect_pattern_hits(all_text, recent_text, REVIEW_PATTERNS)
+        )
         protective_hits = self._collect_hits(all_text, recent_text, PROTECTIVE_CUES)
 
         if urgent_hits:

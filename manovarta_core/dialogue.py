@@ -759,10 +759,10 @@ ITEM_FOLLOW_UPS: Dict[str, Dict[str, Dict[str, str]]] = {
 }
 
 ITEM_SIGNAL_MARKERS: Dict[str, Tuple[str, ...]] = {
-    "phq_q1_anhedonia": ("not interested", "no interest", "disconnected", "nothing feels good", "usually enjoy", "used to enjoy", "mann nahi lagta", "मन नहीं लगता", "दिल नहीं करता"),
+    "phq_q1_anhedonia": ("not interested", "no interest", "disconnected", "nothing feels good", "used to enjoy", "feel flat", "feels flat", "flat now", "numb", "feel very little from them", "get much from them", "do not get much from them", "don't get much from them", "go through the motions", "go through motions", "mann nahi lagta", "मन नहीं लगता", "दिल नहीं करता", "फीका लगता", "बहुत कम महसूस"),
     "phq_q2_low_mood": ("low mood", "sad", "down", "empty", "heavy", "heaviness", "मन भारी", "भारी", "उदास"),
     "phq_q4_fatigue": ("tired", "drained", "fatigue", "low energy", "energy down", "wiped", "heavy in the morning", "slow to start", "slow to get started", "mind feels slow", "brain fog", "subah heavy", "थक", "थकान", "ऊर्जा", "ऊर्जा कम", "सुबह भारी", "दिमाग धीमा"),
-    "phq_q6_worthlessness": ("burden", "worthless", "useless", "बोझ", "बेकार", "मेरी वजह से"),
+    "phq_q6_worthlessness": ("burden", "extra burden", "burden hoon", "worthless", "useless", "make things heavier", "making things heavier", "बोझ", "बोझ हूँ", "सबके लिए बोझ", "बेकार", "मेरी वजह से"),
     "phq_q3_sleep": ("sleep", "asleep", "wake", "waking", "sleep disturb", "neend disturb", "नींद", "रात", "रात में", "उठ जाती", "switch off"),
     "phq_q7_concentration": ("focus", "concentrat", "attention", "cannot focus", "can't focus", "harder to focus", "hard to focus", "taking longer to get started", "takes longer to get started", "mind taking longer", "mind feels slow", "brain fog", "ध्यान", "focus nahi", "ध्यान नहीं टिक", "mind blanks", "screen", "start hone mein time lagta", "start hone me time lagta", "mind ko start hone mein time lagta", "mind ko start hone me time lagta", "दिमाग धीमा"),
     "gad_q2_control_worry": ("worry", "loop", "looping", "replay", "mind won't stop", "mind wont stop", "चिंता", "सोच बंद"),
@@ -775,7 +775,7 @@ TOPIC_SIGNAL_MARKERS: Dict[str, Tuple[str, ...]] = {
     "mood": ("low mood", "sad", "down", "empty", "heavy", "heaviness", "disconnected", "usually enjoy", "used to enjoy", "उदासी", "उदास", "खाली", "low feel", "भारी", "मन भारी", "मन नहीं लगता"),
     "sleep": ("sleep", "asleep", "wake up", "waking", "neend", "नींद", "सोने", "उठ जाती", "night", "रात"),
     "energy": ("tired", "drained", "fatigue", "wiped", "low energy", "heavy in the morning", "slow to start", "slow to get started", "mind feels slow", "brain fog", "subah heavy", "thak", "थक", "थका", "थकान", "ऊर्जा", "सुबह भारी", "दिमाग धीमा", "धीमा लग"),
-    "self_view": ("burden", "worthless", "useless", "guilt", "बोझ", "बेकार", "गलती मेरी", "worthless"),
+    "self_view": ("burden", "extra burden", "burden hoon", "worthless", "useless", "guilt", "make things heavier", "making things heavier", "बोझ", "बोझ हूँ", "सबके लिए बोझ", "बेकार", "गलती मेरी", "worthless"),
     "focus": ("focus", "concentrat", "attention", "mind blanks", "cannot focus", "can't focus", "harder to focus", "hard to focus", "get started", "taking longer to get started", "takes longer to get started", "mind taking longer", "mind feels slow", "screen", "ध्यान", "focus nahi", "ध्यान नहीं", "ध्यान नहीं टिक", "start hone mein time lagta", "start hone me time lagta", "mind ko start hone mein time lagta", "mind ko start hone me time lagta", "दिमाग धीमा"),
     "anxiety": ("worry", "restless", "tense", "panic", "loop", "बेचैनी", "चिंता", "घबराहट", "mind won't stop"),
     "safety": ("hurt myself", "not wake up", "suicide", "मर", "खुद को नुकसान", "zinda na"),
@@ -1462,6 +1462,13 @@ class DialoguePlanner:
             return None
 
         held_back = set(held_back_items)
+        latest_user_text = self._latest_user_text(session)
+        if (
+            self._has_self_view_signal(latest_user_text)
+            and "phq_q6_worthlessness" not in held_back
+            and snapshot.items["phq_q6_worthlessness"].status != "resolved"
+        ):
+            return "phq_q6_worthlessness"
         candidates = [
             item_id
             for item_id in TOPIC_GRAPH[target_topic].item_ids
@@ -1495,6 +1502,7 @@ class DialoguePlanner:
         latest_user_text = self._latest_user_text(session)
         held_back = set(held_back_items)
         recent_signal_items = self._recent_signal_items(session)
+        latest_signal_topics = self._latest_signal_topics(session)
 
         def available(item_id: str) -> bool:
             return (
@@ -1504,8 +1512,27 @@ class DialoguePlanner:
             )
 
         if last_item in {"phq_q1_anhedonia", "phq_q2_low_mood", "phq_q6_worthlessness"}:
+            if self._has_self_view_signal(latest_user_text) and available("phq_q6_worthlessness"):
+                return "phq_q6_worthlessness"
             if "phq_q7_concentration" in recent_signal_items and available("phq_q7_concentration"):
                 return "phq_q7_concentration"
+            if (
+                last_item == "phq_q1_anhedonia"
+                and not self._has_timing_or_frequency_answer(latest_user_text)
+                and self._has_anhedonia_signal(latest_user_text)
+                and available("phq_q2_low_mood")
+            ):
+                return "phq_q2_low_mood"
+            if session.asked_items[-3:].count("phq_q1_anhedonia") >= 2 and available("phq_q2_low_mood"):
+                return "phq_q2_low_mood"
+            if (
+                last_item == "phq_q2_low_mood"
+                and session.asked_items.count("phq_q1_anhedonia") >= 1
+                and not self._has_timing_or_frequency_answer(latest_user_text)
+                and self._has_anhedonia_signal(latest_user_text)
+                and available("phq_q2_low_mood")
+            ):
+                return "phq_q2_low_mood"
             if last_item != "phq_q1_anhedonia" and "phq_q1_anhedonia" in recent_signal_items and available("phq_q1_anhedonia"):
                 return "phq_q1_anhedonia"
             if last_item != "phq_q2_low_mood" and "phq_q2_low_mood" in recent_signal_items and available("phq_q2_low_mood"):
@@ -1514,8 +1541,6 @@ class DialoguePlanner:
                 return "phq_q7_concentration"
             if target_topic == "mood" and available("phq_q1_anhedonia"):
                 return "phq_q1_anhedonia"
-
-        latest_signal_topics = self._latest_signal_topics(session)
 
         if last_item == "phq_q7_concentration":
             if self._has_activation_signal(latest_user_text) and available("phq_q4_fatigue"):
@@ -1534,14 +1559,14 @@ class DialoguePlanner:
                 return "phq_q4_fatigue"
 
         if last_item == "gad_q2_control_worry" and target_topic == "anxiety":
+            if self._has_worry_domain_signal(latest_user_text) and available("gad_q3_excessive_worry"):
+                return "gad_q3_excessive_worry"
             if "phq_q3_sleep" in recent_signal_items and available("gad_q4_trouble_relaxing"):
                 return "gad_q4_trouble_relaxing"
             if "gad_q4_trouble_relaxing" in recent_signal_items and available("gad_q4_trouble_relaxing"):
                 return "gad_q4_trouble_relaxing"
             if "gad_q5_restlessness" in recent_signal_items and available("gad_q5_restlessness"):
                 return "gad_q5_restlessness"
-            if self._has_worry_domain_signal(latest_user_text) and available("gad_q3_excessive_worry"):
-                return "gad_q3_excessive_worry"
             if self._has_awful_outcome_signal(latest_user_text) and available("gad_q7_fear_awful"):
                 return "gad_q7_fear_awful"
             if self._has_persistent_worry_signal(latest_user_text) and available("gad_q3_excessive_worry"):
@@ -1557,6 +1582,8 @@ class DialoguePlanner:
 
         if last_item == "gad_q4_trouble_relaxing":
             recent_relax_count = session.asked_items[-3:].count("gad_q4_trouble_relaxing")
+            if self._has_worry_scope_answer(latest_user_text) and available("gad_q3_excessive_worry"):
+                return "gad_q3_excessive_worry"
             if self._has_worry_domain_signal(latest_user_text) and available("gad_q3_excessive_worry"):
                 return "gad_q3_excessive_worry"
             if recent_relax_count >= 2 and self._has_persistent_worry_signal(latest_user_text) and available("gad_q3_excessive_worry"):
@@ -1785,18 +1812,22 @@ class DialoguePlanner:
 
     def _hold_back_sensitive_item(self, item_id: str, snapshot: ScreeningSnapshot, session: ChatSession) -> bool:
         user_turns = [turn for turn in session.turns if turn.speaker == "user"]
+        latest_user_text = self._latest_user_text(session)
         if snapshot.safety.level == "urgent":
             return False
-        if item_id == "phq_q9_self_harm" and snapshot.safety.level == "review" and self._has_explicit_safety_signal(snapshot):
+        if item_id == "phq_q9_self_harm" and snapshot.safety.level == "review" and (
+            self._has_explicit_safety_signal(snapshot) or self._has_disappearance_safety_signal(snapshot)
+        ):
             return False
         mood_signal = any(
             snapshot.items[key].value is not None and snapshot.items[key].value >= 2
             for key in ("phq_q1_anhedonia", "phq_q2_low_mood", "phq_q6_worthlessness")
         )
+        self_view_signal = self._has_self_view_signal(latest_user_text)
         if item_id == "phq_q9_self_harm":
             return len(user_turns) < 3 and not mood_signal
         if item_id == "phq_q6_worthlessness":
-            return len(user_turns) < 2 and not mood_signal
+            return len(user_turns) < 2 and not (mood_signal or self_view_signal or snapshot.safety.level == "review")
         if item_id == "gad_q7_fear_awful":
             return len(user_turns) < 2 and snapshot.coverage.touched_items < 3
         return False
@@ -1816,6 +1847,17 @@ class DialoguePlanner:
             "end it all",
         )
         return any(marker in normalized for marker in direct_markers)
+
+    def _has_disappearance_safety_signal(self, snapshot: ScreeningSnapshot) -> bool:
+        normalized = " ".join(snapshot.safety.cues).lower()
+        markers = (
+            "disappear",
+            "vanish",
+            "not being here",
+            "gayab",
+            "गायब",
+        )
+        return any(marker in normalized for marker in markers)
 
     def _compose_prompt(
         self,
@@ -2030,6 +2072,16 @@ class DialoguePlanner:
         if not normalized_text:
             return False
         return any(marker in normalized_text for marker in ACTIVATION_MARKERS)
+
+    def _has_anhedonia_signal(self, normalized_text: str) -> bool:
+        if not normalized_text:
+            return False
+        return any(marker in normalized_text for marker in ITEM_SIGNAL_MARKERS["phq_q1_anhedonia"])
+
+    def _has_self_view_signal(self, normalized_text: str) -> bool:
+        if not normalized_text:
+            return False
+        return any(marker in normalized_text for marker in ITEM_SIGNAL_MARKERS["phq_q6_worthlessness"])
 
     def _has_sleep_pattern_answer(self, normalized_text: str) -> bool:
         if not normalized_text:
