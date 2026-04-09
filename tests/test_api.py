@@ -18,6 +18,7 @@ def test_root_serves_browser_demo():
     response = client.get("/")
 
     assert response.status_code == 200
+    assert response.headers["cache-control"] == "no-store, max-age=0"
     assert "ManoVarta | Multilingual mental health check-in" in response.text
     assert "Begin private check-in" in response.text
     assert "Start talking" in response.text
@@ -26,6 +27,8 @@ def test_root_serves_browser_demo():
     assert 'id="composerDropbar"' in response.text
     assert 'id="composerQuickOpen"' in response.text
     assert 'id="composerQuickMic"' in response.text
+    assert "/app-assets/app.js?v=" in response.text
+    assert "/app-assets/app.css?v=" in response.text
     assert "Presenter tools" not in response.text
     assert 'id="backstagePanel"' not in response.text
 
@@ -34,7 +37,9 @@ def test_review_route_serves_hidden_presenter_surface():
     response = client.get("/review")
 
     assert response.status_code == 200
+    assert response.headers["cache-control"] == "no-store, max-age=0"
     assert 'id="phqTotal"' in response.text
+    assert "/app-assets/app.js?v=" in response.text
     assert "Presenter tools" in response.text
     assert "Hidden details for demos, evaluation, and care-team review" in response.text
 

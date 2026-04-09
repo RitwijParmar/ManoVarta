@@ -79,17 +79,46 @@ if WEB_DIR.exists():
 REVIEW_BUTTON_RE = re.compile(r"\s*<button id=\"architectureButton\".*?</button>", re.DOTALL)
 
 
+def _asset_version() -> str:
+    tracked = ["app.css", "app.js", "brand-mark.svg", "favicon.svg", "index.html"]
+    stamp = 0
+    for name in tracked:
+        path = WEB_DIR / name
+        if path.exists():
+            stamp = max(stamp, path.stat().st_mtime_ns)
+    return str(stamp or 1)
+
+
+def _inject_asset_version(html: str) -> str:
+    version = _asset_version()
+    replacements = {
+        "/app-assets/favicon.svg": f"/app-assets/favicon.svg?v={version}",
+        "/app-assets/app.css": f"/app-assets/app.css?v={version}",
+        "/app-assets/brand-mark.svg": f"/app-assets/brand-mark.svg?v={version}",
+        "/app-assets/app.js": f"/app-assets/app.js?v={version}",
+    }
+    for source, target in replacements.items():
+        html = html.replace(source, target)
+    return html
+
+
 def _render_shell(include_review: bool) -> HTMLResponse:
     html = (WEB_DIR / "index.html").read_text(encoding="utf-8")
     if include_review:
-        return HTMLResponse(html)
+        return HTMLResponse(
+            _inject_asset_version(html),
+            headers={"Cache-Control": "no-store, max-age=0", "Pragma": "no-cache"},
+        )
 
     html = REVIEW_BUTTON_RE.sub("", html, count=1)
     backstage_start = html.find('<section id="backstagePanel"')
     script_start = html.find('<script src="/app-assets/app.js" defer></script>')
     if backstage_start != -1 and script_start != -1:
         html = f"{html[:backstage_start]}    </div>\n\n    {html[script_start:]}"
-    return HTMLResponse(html)
+    return HTMLResponse(
+        _inject_asset_version(html),
+        headers={"Cache-Control": "no-store, max-age=0", "Pragma": "no-cache"},
+    )
 
 
 def _should_use_live_llm(session: ChatSession) -> bool:
