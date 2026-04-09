@@ -313,6 +313,29 @@ FREQUENCY_MARKERS = (
     "अक्सर",
     "ज़्यादातर",
 )
+EXPLICIT_FREQUENCY_MARKERS = (
+    "every day",
+    "daily",
+    "days a week",
+    "times a week",
+    "week",
+    "weeks",
+    "most days",
+    "4 days",
+    "3 days",
+    "roz",
+    "har din",
+    "hafte",
+    "दिन",
+    "दिनों",
+    "हफ़्ते",
+    "हफ्ते",
+    "बार",
+    "रोज़",
+    "रोज",
+    "हर दिन",
+    "अक्सर",
+)
 SHORT_FOLLOWUP_MARKERS = (
     "yes",
     "yeah",
@@ -464,6 +487,28 @@ ITEM_FOLLOW_UPS: Dict[str, Dict[str, Dict[str, str]]] = {
             "en": "That timing helps. When it happens, is it more trouble falling asleep, staying asleep, or waking up too early?",
             "hi": "यह समय-सूचना मददगार है। जब ऐसा होता है, क्या ज़्यादा मुश्किल नींद आने में होती है, नींद बनाए रखने में, या बहुत जल्दी उठ जाने में?",
             "hinglish": "Yeh timing helpful hai. Jab yeh hota hai, kya zyada issue sleep start hone mein hota hai, sleep banaye rakhne mein, ya bahut jaldi uth jaane mein?",
+        },
+        "frequency_known": {
+            "en": "That helps me understand how often it happens. On those nights, is it more that sleep is hard to start, hard to stay in, or that you wake up too early?",
+            "hi": "इससे मुझे समझ आ रहा है कि यह कितनी बार होता है। उन रातों में, क्या ज़्यादा दिक्कत नींद शुरू होने में होती है, नींद बनाए रखने में, या बहुत जल्दी उठ जाने में?",
+            "hinglish": "Isse samajh aa raha hai ki yeh kitni baar hota hai. Un raaton mein, kya zyada issue sleep start hone mein hota hai, sleep banaye rakhne mein, ya bahut jaldi uth jaane mein?",
+        },
+    },
+    "phq_q4_fatigue": {
+        "default": {
+            "en": "When the energy drops, is it more like your body feels heavy, your mind feels slow to get going, or both?",
+            "hi": "जब थकान या ऊर्जा की कमी बढ़ती है, क्या ज़्यादा ऐसा लगता है कि शरीर भारी पड़ रहा है, दिमाग शुरू होने में धीमा है, या दोनों?",
+            "hinglish": "Jab low energy build hoti hai, kya zyada body heavy lagti hai, mind ko start hone mein time lagta hai, ya dono?",
+        },
+        "timing_known": {
+            "en": "That timing helps. Around that part of the day, is it more like body heaviness, a slow-starting mind, or both together?",
+            "hi": "यह समय-सूचना मददगार है। उस समय के आसपास, क्या ज़्यादा शरीर भारी लगता है, दिमाग शुरू होने में धीमा पड़ता है, या दोनों साथ में?",
+            "hinglish": "Yeh timing helpful hai. Us waqt ke around, kya zyada body heavy lagti hai, mind slow start hota hai, ya dono saath mein?",
+        },
+        "frequency_known": {
+            "en": "That helps me understand how often it happens. When it hits, is it more like body heaviness, a slow-starting mind, or both together?",
+            "hi": "इससे मुझे समझ आ रहा है कि यह कितनी बार होता है। जब ऐसा होता है, क्या ज़्यादा शरीर भारी लगता है, दिमाग शुरू होने में धीमा पड़ता है, या दोनों साथ में?",
+            "hinglish": "Isse samajh aa raha hai ki yeh kitni baar hota hai. Jab yeh hota hai, kya zyada body heavy lagti hai, mind slow start hota hai, ya dono saath mein?",
         },
     },
     "phq_q7_concentration": {
@@ -1589,10 +1634,10 @@ class DialoguePlanner:
         has_timing = self._has_timing_answer(latest_user_text)
         has_frequency = self._has_frequency_answer(latest_user_text)
 
+        if recent_repeat and has_timing and "timing_known" in prompt_bank:
+            return prompt_bank["timing_known"][language]
         if recent_repeat and has_frequency and "frequency_known" in prompt_bank:
             return prompt_bank["frequency_known"][language]
-        if recent_repeat and (has_timing or has_frequency) and "timing_known" in prompt_bank:
-            return prompt_bank["timing_known"][language]
         if recent_repeat_window and not (has_timing or has_frequency) and "repeat_probe" in prompt_bank:
             return prompt_bank["repeat_probe"][language]
         return prompt_bank.get("default", {}).get(language)
@@ -1680,6 +1725,10 @@ class DialoguePlanner:
     def _has_frequency_answer(self, normalized_text: str) -> bool:
         if not normalized_text:
             return False
+        if any(marker in normalized_text for marker in EXPLICIT_FREQUENCY_MARKERS):
+            return True
+        if self._has_timing_answer(normalized_text):
+            return False
         return any(marker in normalized_text for marker in FREQUENCY_MARKERS)
 
     def _continuity_item(
@@ -1694,10 +1743,6 @@ class DialoguePlanner:
         last_item = session.asked_items[-1]
         if last_item in held_back_items or last_item not in snapshot.items:
             return None
-        if snapshot.items[last_item].status == "resolved":
-            return None
-        if fatigue == "high" and snapshot.items[last_item].status not in {"contradicted", "abstained"}:
-            return None
 
         last_user_turn = next((turn for turn in reversed(session.turns) if turn.speaker == "user"), None)
         last_assistant_turn = next((turn for turn in reversed(session.turns) if turn.speaker == "assistant"), None)
@@ -1707,8 +1752,18 @@ class DialoguePlanner:
         normalized_text = self._normalize(last_user_turn.text)
         words = len(last_user_turn.text.split())
         short_followup = words <= 6 or any(marker == normalized_text for marker in SHORT_FOLLOWUP_MARKERS)
+        if snapshot.items[last_item].status == "resolved":
+            prompt_bank = ITEM_FOLLOW_UPS.get(last_item, {})
+            has_variant = (
+                ("timing_known" in prompt_bank and self._has_timing_answer(normalized_text))
+                or ("frequency_known" in prompt_bank and self._has_frequency_answer(normalized_text))
+            )
+            if not has_variant:
+                return None
         if self._has_timing_or_frequency_answer(normalized_text):
             return last_item
+        if fatigue == "high" and snapshot.items[last_item].status not in {"contradicted", "abstained"}:
+            return None
         if short_followup:
             return last_item
         return None

@@ -320,6 +320,61 @@ def test_hindi_timing_answer_uses_sleep_specific_variant():
     assert "नींद बनाए रखने" in prompt or "नींद आने" in prompt
 
 
+def test_hindi_frequency_answer_uses_sleep_frequency_variant():
+    planner = DialoguePlanner()
+    session = ChatSession(
+        session_id="hindi-sleep-frequency-followup",
+        language="hi",
+        turns=[
+            Turn(
+                turn_id=1,
+                speaker="assistant",
+                text="जब नींद बिगड़ती है, क्या ज़्यादा दिक्कत सोने की शुरुआत में होती है, रात में बार-बार उठने में, या बहुत जल्दी उठ जाने में?",
+                language_tag="hi",
+            ),
+            Turn(turn_id=2, speaker="user", text="हफ़्ते में चार-पाँच दिन हो जाता है।", language_tag="hi"),
+        ],
+        asked_items=["phq_q3_sleep"],
+    )
+
+    snapshot = ConversationScorer().analyze(session.turns, "hi", SafetyFlag(level="none"))
+    snapshot.coverage = planner.build_plan(snapshot, session)
+    prompt = planner._build_prompt_for_target("hi", snapshot.coverage.dialogue, session)
+
+    assert snapshot.coverage.dialogue.target_item == "phq_q3_sleep"
+    assert prompt is not None
+    assert "यह कितनी बार होता है" in prompt
+    assert "उन रातों में" in prompt
+    assert "नींद बनाए रखने" in prompt or "नींद शुरू" in prompt
+
+
+def test_energy_frequency_answer_uses_fatigue_frequency_variant():
+    planner = DialoguePlanner()
+    session = ChatSession(
+        session_id="energy-frequency-followup",
+        language="en",
+        turns=[
+            Turn(
+                turn_id=1,
+                speaker="assistant",
+                text="When the energy drops, is it more like your body feels heavy, your mind feels slow to get going, or both?",
+                language_tag="en",
+            ),
+            Turn(turn_id=2, speaker="user", text="About four days a week.", language_tag="en"),
+        ],
+        asked_items=["phq_q4_fatigue"],
+    )
+
+    snapshot = ConversationScorer().analyze(session.turns, "en", SafetyFlag(level="none"))
+    snapshot.coverage = planner.build_plan(snapshot, session)
+    prompt = planner._build_prompt_for_target("en", snapshot.coverage.dialogue, session)
+
+    assert snapshot.coverage.dialogue.target_item == "phq_q4_fatigue"
+    assert prompt is not None
+    assert "how often it happens" in prompt
+    assert "body heaviness" in prompt or "slow-starting mind" in prompt
+
+
 def test_target_topic_aligns_with_directed_followup_item():
     planner = DialoguePlanner()
     session = ChatSession(
