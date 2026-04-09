@@ -34,9 +34,15 @@ SAFETY_MESSAGES = {
 }
 
 CLOSING_MESSAGES = {
-    "en": "I have enough detail for a structured summary now. I can still ask one more follow-up if you want to clarify anything.",
-    "hi": "मेरे पास अब एक संरचित सार के लिए काफ़ी जानकारी है। अगर आप चाहें तो मैं एक और पूरक सवाल पूछ सकता हूँ।",
-    "hinglish": "Ab mere paas structured summary ke liye enough detail hai. Agar aap chaho to ek aur follow-up le sakte hain.",
+    "en": "I have enough detail for a structured summary now. If one important detail still feels missing, you can say it directly.",
+    "hi": "मेरे पास अब एक संरचित सार के लिए काफ़ी जानकारी है। अगर कोई एक ज़रूरी बात अभी भी छूटी लग रही हो, तो आप उसे सीधे बता सकते हैं।",
+    "hinglish": "Ab mere paas structured summary ke liye enough detail hai. Agar ek important detail abhi bhi missing lag rahi ho, to aap use seedha bol sakte ho.",
+}
+
+FINAL_HOLD_MESSAGES = {
+    "en": "Okay. I’ll hold that as the current summary for now. If one important detail still feels missing later, you can say it directly.",
+    "hi": "ठीक है। अभी के लिए मैं इसे वर्तमान सार मानकर रखता हूँ। अगर बाद में कोई एक ज़रूरी बात छूटी लगे, तो आप उसे सीधे बता सकते हैं।",
+    "hinglish": "Theek hai. Abhi ke liye main ise current summary maan kar hold kar raha hoon. Agar baad mein koi ek zaroori detail missing lage, to aap use seedha bol sakte ho.",
 }
 
 ANXIETY_LOOP_BREAK_PROMPTS = {
@@ -244,6 +250,9 @@ CLOSURE_MARKERS = (
     "bas itna hi",
     "yehi main baat hai",
     "aur kuch khaas nahi",
+    "haan aap maan lo",
+    "हाँ आप मान लो",
+    "मान लो",
 )
 FATIGUE_MARKERS = (
     "not sure what else",
@@ -378,16 +387,27 @@ WORRY_DOMAIN_MARKERS = (
     "job",
     "money",
     "family",
+    "mother",
+    "mom",
+    "father",
+    "dad",
     "future",
     "rent",
     "exam",
     "office",
     "studies",
+    "maa",
+    "mummy",
+    "papa",
     "काम",
     "काम को लेकर",
     "नौकरी",
     "पैसे",
     "परिवार",
+    "मां",
+    "मम्मी",
+    "पापा",
+    "पिता",
     "भविष्य",
     "पढ़ाई",
     "इम्तहान",
@@ -423,6 +443,26 @@ PERSISTENT_WORRY_MARKERS = (
     "रुकता नहीं",
     "बंद नहीं",
     "काफी ज्यादा चले",
+    "लंबे समय तक",
+    "देर तक",
+    "अटका रहता",
+    "अटकी रहती",
+)
+LINGERING_TENSION_MARKERS = (
+    "long time",
+    "for a long time",
+    "stays stuck",
+    "stuck for a long time",
+    "long after",
+    "lambe samay tak",
+    "lambe waqt tak",
+    "der tak",
+    "lamba time",
+    "लंबे समय तक",
+    "लंबे वक्त तक",
+    "देर तक",
+    "अटका रहता",
+    "अटकी रहती",
 )
 WORRY_SCOPE_SPREAD_MARKERS = (
     "spreads to other things",
@@ -446,12 +486,20 @@ WORRY_SCOPE_SINGLE_MARKERS = (
     "one thing",
     "single issue",
     "same issue",
+    "only one thing",
+    "only around",
+    "mostly one thing",
     "ek main baat",
     "ek hi baat",
     "ek issue",
+    "sirf ek",
+    "keval ek",
     "एक मुख्य बात",
     "एक ही बात",
     "एक मुद्दे",
+    "सिर्फ",
+    "केवल",
+    "इसी तक",
 )
 SHORT_FOLLOWUP_MARKERS = (
     "yes",
@@ -477,6 +525,24 @@ SHORT_FOLLOWUP_MARKERS = (
     "दोनों",
     "दोनों साथ में",
     "साथ में",
+)
+CLOSE_ACK_MARKERS = (
+    "ok",
+    "okay",
+    "theek hai",
+    "ठीक है",
+    "haan theek hai",
+    "हाँ ठीक है",
+    "haan aap maan lo",
+    "हाँ आप मान लो",
+    "maan lo",
+    "मान लो",
+    "haan puch lo",
+    "haan pooch lo",
+    "हाँ पूछ लो",
+    "पूछ लो",
+    "haan aap maan lo",
+    "yes use that",
 )
 SENSITIVE_ITEM_IDS = (
     "phq_q6_worthlessness",
@@ -919,11 +985,23 @@ class DialoguePlanner:
 
         if snapshot.safety.level == "urgent" or plan.next_action == "handoff":
             return SAFETY_MESSAGES[language], plan.target_item
+        if self._should_close_after_break_answer(session):
+            return ANXIETY_LOOP_CLOSE_PROMPTS[language], None
+        if self._should_break_after_relax_duration_answer(session):
+            return ANXIETY_LOOP_BREAK_PROMPTS[language], None
+        if (
+            self._already_used_segment(last_assistant_text, ANXIETY_LOOP_CLOSE_PROMPTS[language])
+            or self._already_used_segment(last_assistant_text, CLOSING_MESSAGES[language])
+            or self._already_used_segment(last_assistant_text, FINAL_HOLD_MESSAGES[language])
+        ) and self._is_close_acknowledgement(latest_user_text):
+            return FINAL_HOLD_MESSAGES[language], None
+        if self._should_close_after_relax_duration_answer(session):
+            return ANXIETY_LOOP_CLOSE_PROMPTS[language], None
         if self._should_close_anxiety_after_scope_answer(plan, session):
             return ANXIETY_LOOP_CLOSE_PROMPTS[language], None
-        if self._already_used_segment(last_assistant_text, ANXIETY_LOOP_CLOSE_PROMPTS[language]):
-            if self._is_nonexpansive_followup(latest_user_text) or not self._has_new_anxiety_branch_detail(latest_user_text):
-                return CLOSING_MESSAGES[language], None
+        if self._already_used_segment(last_assistant_text, ANXIETY_LOOP_CLOSE_PROMPTS[language]) or self._already_used_segment(last_assistant_text, FINAL_HOLD_MESSAGES[language]):
+            if not self._has_high_priority_post_close_signal(latest_user_text):
+                return FINAL_HOLD_MESSAGES[language], None
         if self._should_use_anxiety_loop_break(plan, session):
             if self._already_used_segment(last_assistant_text, ANXIETY_LOOP_BREAK_PROMPTS[language]) or self._should_close_anxiety_loop(plan, session):
                 return ANXIETY_LOOP_CLOSE_PROMPTS[language], None
@@ -993,6 +1071,58 @@ class DialoguePlanner:
             if ITEM_TO_TOPIC.get(item_id) == "anxiety"
         ]
         return len(set(recent_anxiety_items)) >= 2
+
+    def _should_close_after_relax_duration_answer(self, session: ChatSession) -> bool:
+        if not session.asked_items:
+            return False
+        if session.asked_items[-1] != "gad_q4_trouble_relaxing":
+            return False
+        if session.asked_items[-4:].count("gad_q4_trouble_relaxing") < 2:
+            return False
+        latest_user_text = self._latest_user_text(session)
+        if not self._has_lingering_tension_signal(latest_user_text):
+            return False
+        recent_anxiety_items = {
+            item_id
+            for item_id in session.asked_items[-6:]
+            if ITEM_TO_TOPIC.get(item_id) == "anxiety"
+        }
+        return "gad_q2_control_worry" in recent_anxiety_items and "gad_q3_excessive_worry" in recent_anxiety_items
+
+    def _should_break_after_relax_duration_answer(self, session: ChatSession) -> bool:
+        if not session.asked_items:
+            return False
+        if session.asked_items[-1] != "gad_q4_trouble_relaxing":
+            return False
+        last_assistant_text = self._last_assistant_text(session)
+        if self._already_used_segment(last_assistant_text, ANXIETY_LOOP_BREAK_PROMPTS[session.language]):
+            return False
+        latest_user_text = self._latest_user_text(session)
+        if not self._has_lingering_tension_signal(latest_user_text):
+            return False
+        recent_anxiety_items = {
+            item_id
+            for item_id in session.asked_items[-6:]
+            if ITEM_TO_TOPIC.get(item_id) == "anxiety"
+        }
+        return "gad_q2_control_worry" in recent_anxiety_items and "gad_q3_excessive_worry" in recent_anxiety_items
+
+    def _should_close_after_break_answer(self, session: ChatSession) -> bool:
+        last_assistant_text = self._last_assistant_text(session)
+        if not self._already_used_segment(last_assistant_text, ANXIETY_LOOP_BREAK_PROMPTS[session.language]):
+            return False
+        latest_user_text = self._latest_user_text(session)
+        if not latest_user_text:
+            return False
+        if self._is_close_acknowledgement(latest_user_text):
+            return True
+        if self._has_worry_scope_answer(latest_user_text):
+            return True
+        if self._has_worry_domain_signal(latest_user_text):
+            return True
+        if self._is_nonexpansive_followup(latest_user_text):
+            return True
+        return False
 
     def build_plan(self, snapshot: ScreeningSnapshot, session: ChatSession) -> CoveragePlan:
         user_turns = [turn for turn in session.turns if turn.speaker == "user"]
@@ -1382,6 +1512,7 @@ class DialoguePlanner:
             topic
             for topic in topic_states
             if topic.unresolved_items or topic.review_items
+            if not (topic.topic_id == "safety" and snapshot.safety.level == "none")
         ]
         if not candidates:
             return current_topic if current_topic in TOPIC_GRAPH else "mood"
@@ -1584,6 +1715,14 @@ class DialoguePlanner:
             if available("gad_q3_excessive_worry"):
                 return "gad_q3_excessive_worry"
 
+        if last_item == "gad_q3_excessive_worry":
+            if self._has_worry_domain_signal(latest_user_text) and session.asked_items.count("gad_q2_control_worry") >= 1:
+                if available("gad_q4_trouble_relaxing"):
+                    return "gad_q4_trouble_relaxing"
+            if self._has_worry_scope_answer(latest_user_text) and session.asked_items.count("gad_q2_control_worry") >= 1:
+                if available("gad_q4_trouble_relaxing"):
+                    return "gad_q4_trouble_relaxing"
+
         if last_item == "gad_q5_restlessness":
             if self._has_timing_or_frequency_answer(latest_user_text):
                 return last_item
@@ -1592,6 +1731,13 @@ class DialoguePlanner:
 
         if last_item == "gad_q4_trouble_relaxing":
             recent_relax_count = session.asked_items[-3:].count("gad_q4_trouble_relaxing")
+            if (
+                recent_relax_count >= 2
+                and self._has_lingering_tension_signal(latest_user_text)
+                and session.asked_items.count("gad_q2_control_worry") >= 1
+                and session.asked_items.count("gad_q3_excessive_worry") >= 1
+            ):
+                return None
             if self._has_worry_scope_answer(latest_user_text) and available("gad_q3_excessive_worry"):
                 return "gad_q3_excessive_worry"
             if self._has_worry_domain_signal(latest_user_text) and available("gad_q3_excessive_worry"):
@@ -2077,7 +2223,25 @@ class DialoguePlanner:
             return True
         if normalized_text in SHORT_FOLLOWUP_MARKERS:
             return True
+        if len(words) <= 6 and any(marker in normalized_text for marker in SHORT_FOLLOWUP_MARKERS if len(marker) > 3):
+            return True
         if self._has_timing_or_frequency_answer(normalized_text) and len(words) <= 7:
+            return True
+        return False
+
+    def _is_close_acknowledgement(self, normalized_text: str) -> bool:
+        if not normalized_text:
+            return False
+        if normalized_text in CLOSE_ACK_MARKERS:
+            return True
+        return any(marker in normalized_text for marker in CLOSE_ACK_MARKERS if len(marker.split()) > 1)
+
+    def _has_high_priority_post_close_signal(self, normalized_text: str) -> bool:
+        if not normalized_text:
+            return False
+        if self._has_self_view_signal(normalized_text):
+            return True
+        if self._has_awful_outcome_signal(normalized_text):
             return True
         return False
 
@@ -2133,6 +2297,11 @@ class DialoguePlanner:
             return False
         return any(marker in normalized_text for marker in PERSISTENT_WORRY_MARKERS)
 
+    def _has_lingering_tension_signal(self, normalized_text: str) -> bool:
+        if not normalized_text:
+            return False
+        return any(marker in normalized_text for marker in LINGERING_TENSION_MARKERS)
+
     def _has_worry_scope_answer(self, normalized_text: str) -> bool:
         if not normalized_text:
             return False
@@ -2151,6 +2320,10 @@ class DialoguePlanner:
             return True
         if self._has_awful_outcome_signal(normalized_text):
             return True
+        if self._has_worry_scope_answer(normalized_text):
+            return False
+        if self._has_lingering_tension_signal(normalized_text):
+            return False
         if self._has_persistent_worry_signal(normalized_text) and not self._is_nonexpansive_followup(normalized_text):
             return True
         if len(normalized_text.split()) >= 7 and not self._has_timing_or_frequency_answer(normalized_text):

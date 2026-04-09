@@ -1117,8 +1117,8 @@ def test_hindi_recent_anxiety_flow_stops_reopening_after_close_point():
 
     continuity_phrase = "अगर यह आपकी हाल की चिंता बातचीत से मिलता-जुलता लग रहा है"
     assert sum(continuity_phrase in reply for reply in replies) <= 1
-    assert replies[-2].startswith("अब मेरे पास मुख्य पैटर्न पकड़ने लायक") or replies[-2].startswith("मेरे पास अब एक संरचित सार")
-    assert replies[-1].startswith("मेरे पास अब एक संरचित सार")
+    assert replies[-2].startswith("अब मेरे पास मुख्य पैटर्न पकड़ने लायक") or replies[-2].startswith("ठीक है। अभी")
+    assert replies[-1].startswith("ठीक है। अभी") or replies[-1].startswith("अब मेरे पास मुख्य पैटर्न पकड़ने लायक")
     assert "जब चिंता शुरू होती है" not in replies[-1]
 
 
@@ -1142,6 +1142,173 @@ def test_short_hindi_anxiety_scope_answer_closes_instead_of_reopening_old_loop()
 
     reply = last.json()["assistant_turn"]["text"]
     assert reply.startswith("अब मेरे पास मुख्य पैटर्न पकड़ने लायक")
+
+
+def test_hindi_anxiety_domain_detail_does_not_reopen_control_worry_immediately():
+    start = client.post("/chat/sessions", json={"language": "hi"})
+    session_id = start.json()["session_id"]
+
+    script = [
+        "पता नहीं क्या असर पड़ता है",
+        "वह चलाते रहती है कितना भी प्रयास करो",
+        "हम फिलहाल में जब मैं किसी काम को करने जाता हूं तब मुझे ज्यादा चिंता होती है भविष्य को लेकर",
+    ]
+
+    last = None
+    for text in script:
+        last = client.post(f"/chat/sessions/{session_id}/turns", json={"text": text})
+        assert last.status_code == 200
+
+    body = last.json()
+    reply = body["assistant_turn"]["text"]
+    dialogue = body["snapshot"]["coverage"]["dialogue"]
+
+    assert dialogue["target_item"] == "gad_q4_trouble_relaxing"
+    assert "जब चिंता शुरू होती है" not in reply
+    assert "दिमाग को शांत" in reply or "शरीर को ढीला" in reply or "दोनों" in reply
+
+
+def test_hindi_garbled_scope_reply_does_not_false_trigger_safety_question():
+    start = client.post("/chat/sessions", json={"language": "hi"})
+    session_id = start.json()["session_id"]
+
+    script = [
+        "पता नहीं क्या असर पड़ता है",
+        "वह चलाते रहती है कितना भी प्रयास करो",
+        "हम फिलहाल में जब मैं किसी काम को करने जाता हूं तब मुझे ज्यादा चिंता होती है भविष्य को लेकर",
+        "चलती रहती है कितना भी कोशिश करो",
+        "नहीं ज्यादातर यह एक ही बात पलट की रहती है बाकी चीजों का ध्यान नहीं आता",
+        "हां अपमान को यही चल रहा है",
+        "नहीं दिमाग को शांत करना शरीर को ढीला करना कोई बड़ी बात नहीं है",
+        "लंबे समय तक 18 रहता है",
+        "चलती रहती है",
+        "कमर्शियल मिल जा रही हो तक रहती है",
+    ]
+
+    last = None
+    for text in script:
+        last = client.post(f"/chat/sessions/{session_id}/turns", json={"text": text})
+        assert last.status_code == 200
+
+    body = last.json()
+    reply = body["assistant_turn"]["text"]
+    dialogue = body["snapshot"]["coverage"]["dialogue"]
+    safety = body["snapshot"]["safety"]["level"]
+
+    assert safety == "none"
+    assert dialogue["target_topic"] != "safety"
+    assert "खुद को नुकसान" not in reply
+    assert "ज़िंदा न रहने" not in reply
+
+
+def test_hindi_relax_duration_answer_closes_instead_of_reopening_old_anxiety_items():
+    start = client.post("/chat/sessions", json={"language": "hi"})
+    session_id = start.json()["session_id"]
+
+    script = [
+        "पता नहीं क्या असर पड़ता है",
+        "वह चलाते रहती है कितना भी प्रयास करो",
+        "हम फिलहाल में जब मैं किसी काम को करने जाता हूं तब मुझे ज्यादा चिंता होती है भविष्य को लेकर",
+        "चलती रहती है कितना भी कोशिश करो",
+        "नहीं ज्यादातर यह एक ही बात पलट की रहती है बाकी चीजों का ध्यान नहीं आता",
+        "हां अपमान को यही चल रहा है",
+        "नहीं दिमाग को शांत करना शरीर को ढीला करना कोई बड़ी बात नहीं है",
+        "लंबे समय तक 18 रहता है",
+    ]
+
+    last = None
+    for text in script:
+        last = client.post(f"/chat/sessions/{session_id}/turns", json={"text": text})
+        assert last.status_code == 200
+
+    body = last.json()
+    reply = body["assistant_turn"]["text"]
+
+    assert reply.startswith("मैं थोड़ा रुककर जो समझ आ रहा है")
+    assert "जब चिंता शुरू होती है" not in reply
+
+
+def test_hindi_relax_duration_answer_uses_break_prompt_before_old_loop_reopens():
+    start = client.post("/chat/sessions", json={"language": "hi"})
+    session_id = start.json()["session_id"]
+
+    script = [
+        "पता नहीं क्या असर पड़ता है",
+        "वह चलाते रहती है कितना भी प्रयास करो",
+        "हम फिलहाल में जब मैं किसी काम को करने जाता हूं तब मुझे ज्यादा चिंता होती है भविष्य को लेकर",
+        "चलती रहती है कितना भी कोशिश करो",
+        "नहीं ज्यादातर यह एक ही बात पलट की रहती है बाकी चीजों का ध्यान नहीं आता",
+        "हां अपमान को यही चल रहा है",
+        "नहीं दिमाग को शांत करना शरीर को ढीला करना कोई बड़ी बात नहीं है",
+        "लंबे समय तक 18 रहता है",
+    ]
+
+    last = None
+    for text in script:
+        last = client.post(f"/chat/sessions/{session_id}/turns", json={"text": text})
+        assert last.status_code == 200
+
+    reply = last.json()["assistant_turn"]["text"]
+    assert reply.startswith("मैं थोड़ा रुककर जो समझ आ रहा है")
+    assert "जब चिंता शुरू होती है" not in reply
+
+
+def test_hindi_break_prompt_family_scoped_answer_closes_instead_of_reopening():
+    start = client.post("/chat/sessions", json={"language": "hi"})
+    session_id = start.json()["session_id"]
+
+    script = [
+        "पता नहीं क्या असर पड़ता है",
+        "वह चलाते रहती है कितना भी प्रयास करो",
+        "हम फिलहाल में जब मैं किसी काम को करने जाता हूं तब मुझे ज्यादा चिंता होती है भविष्य को लेकर",
+        "चलती रहती है कितना भी कोशिश करो",
+        "नहीं ज्यादातर यह एक ही बात पलट की रहती है बाकी चीजों का ध्यान नहीं आता",
+        "हां अपमान को यही चल रहा है",
+        "नहीं दिमाग को शांत करना शरीर को ढीला करना कोई बड़ी बात नहीं है",
+        "लंबे समय तक 18 रहता है",
+        "चलती रहती है",
+        "कमर्शियल मिल जा रही हो तक रहती है",
+        "नहीं ऐसा कुछ नहीं आता है",
+        "कभी नहीं आते हैं",
+        "केवल मां की है शरीर से कोई लेना-देना नहीं",
+    ]
+
+    last = None
+    for text in script:
+        last = client.post(f"/chat/sessions/{session_id}/turns", json={"text": text})
+        assert last.status_code == 200
+
+    reply = last.json()["assistant_turn"]["text"]
+    assert reply.startswith("ठीक है। अभी के लिए मैं इसे वर्तमान सार मानकर रखता हूँ।")
+    assert "जब आप खुद को शांत" not in reply
+    assert "जब चिंता शुरू" not in reply
+
+
+def test_hindi_close_prompt_followed_by_garbled_detail_stays_on_hold():
+    start = client.post("/chat/sessions", json={"language": "hi"})
+    session_id = start.json()["session_id"]
+
+    script = [
+        "पता नहीं क्या असर पड़ता है",
+        "वह चलाते रहती है कितना भी प्रयास करो",
+        "हम फिलहाल में जब मैं किसी काम को करने जाता हूं तब मुझे ज्यादा चिंता होती है भविष्य को लेकर",
+        "चलती रहती है कितना भी कोशिश करो",
+        "नहीं ज्यादातर यह एक ही बात पलट की रहती है बाकी चीजों का ध्यान नहीं आता",
+        "हां अपमान को यही चल रहा है",
+        "नहीं दिमाग को शांत करना शरीर को ढीला करना कोई बड़ी बात नहीं है",
+        "लंबे समय तक 18 रहता है",
+        "चलती रहती है",
+        "कमर्शियल मिल जा रही हो तक रहती है",
+    ]
+
+    last = None
+    for text in script:
+        last = client.post(f"/chat/sessions/{session_id}/turns", json={"text": text})
+        assert last.status_code == 200
+
+    reply = last.json()["assistant_turn"]["text"]
+    assert reply.startswith("ठीक है। अभी के लिए मैं इसे वर्तमान सार मानकर रखता हूँ।")
+    assert "जब चिंता शुरू होती है" not in reply
 
 
 def test_hinglish_scope_answer_closes_instead_of_reopening_old_loop():
@@ -1211,4 +1378,4 @@ def test_hindi_anxiety_loop_break_closes_after_repeated_generic_rotation():
     body = last.json()
     reply = body["assistant_turn"]["text"]
 
-    assert reply.startswith("अब मेरे पास मुख्य पैटर्न पकड़ने लायक")
+    assert reply.startswith("अब मेरे पास मुख्य पैटर्न पकड़ने लायक") or reply.startswith("ठीक है। अभी")

@@ -1,4 +1,4 @@
-from manovarta_core.dialogue import ANXIETY_LOOP_BREAK_PROMPTS, ANXIETY_LOOP_CLOSE_PROMPTS, DialoguePlanner
+from manovarta_core.dialogue import ANXIETY_LOOP_BREAK_PROMPTS, ANXIETY_LOOP_CLOSE_PROMPTS, FINAL_HOLD_MESSAGES, DialoguePlanner
 from manovarta_core.scoring import ConversationScorer
 from manovarta_core.schemas import ChatSession, DialoguePlan, DisclosureMetrics, SafetyFlag, Turn, UserStyleProfile
 
@@ -529,7 +529,104 @@ def test_close_prompt_followed_by_short_reply_does_not_reopen_anxiety_branch():
     reply, asked_item = planner.next_reply(snapshot, session)
 
     assert asked_item is None
-    assert reply.startswith("मेरे पास अब एक संरचित सार")
+    assert reply == FINAL_HOLD_MESSAGES["hi"]
+
+
+def test_structured_summary_acknowledgement_does_not_reopen_with_new_question():
+    planner = DialoguePlanner()
+    session = ChatSession(
+        session_id="close-ack-does-not-reopen",
+        language="hi",
+        turns=[
+            Turn(turn_id=1, speaker="assistant", text=ANXIETY_LOOP_CLOSE_PROMPTS["hi"], language_tag="hi"),
+            Turn(turn_id=2, speaker="user", text="हां पूछ लो", language_tag="hi"),
+        ],
+        asked_items=[
+            "gad_q4_trouble_relaxing",
+            "gad_q2_control_worry",
+            "gad_q3_excessive_worry",
+        ],
+    )
+
+    snapshot = ConversationScorer().analyze(session.turns, "hi", SafetyFlag(level="none"))
+    reply, asked_item = planner.next_reply(snapshot, session)
+
+    assert asked_item is None
+    assert reply == FINAL_HOLD_MESSAGES["hi"]
+
+
+def test_break_prompt_followed_by_family_scoped_answer_closes_instead_of_reopening():
+    planner = DialoguePlanner()
+    session = ChatSession(
+        session_id="break-family-scope-closes",
+        language="hi",
+        turns=[
+            Turn(turn_id=1, speaker="assistant", text=ANXIETY_LOOP_BREAK_PROMPTS["hi"], language_tag="hi"),
+            Turn(turn_id=2, speaker="user", text="केवल मां की बात को लेकर", language_tag="hi"),
+        ],
+        asked_items=[
+            "gad_q2_control_worry",
+            "gad_q3_excessive_worry",
+            "gad_q4_trouble_relaxing",
+        ],
+    )
+
+    snapshot = ConversationScorer().analyze(session.turns, "hi", SafetyFlag(level="none"))
+    reply, asked_item = planner.next_reply(snapshot, session)
+
+    assert asked_item is None
+    assert reply == ANXIETY_LOOP_CLOSE_PROMPTS["hi"]
+
+
+def test_close_prompt_followed_by_long_garbled_followup_stays_on_final_hold():
+    planner = DialoguePlanner()
+    session = ChatSession(
+        session_id="close-garbled-followup-holds",
+        language="hi",
+        turns=[
+            Turn(turn_id=1, speaker="assistant", text=ANXIETY_LOOP_CLOSE_PROMPTS["hi"], language_tag="hi"),
+            Turn(turn_id=2, speaker="user", text="कमर्शियल मिल जा रही हो तक रहती है", language_tag="hi"),
+        ],
+        asked_items=[
+            "gad_q2_control_worry",
+            "gad_q3_excessive_worry",
+            "gad_q4_trouble_relaxing",
+        ],
+    )
+
+    snapshot = ConversationScorer().analyze(session.turns, "hi", SafetyFlag(level="none"))
+    reply, asked_item = planner.next_reply(snapshot, session)
+
+    assert asked_item is None
+    assert reply == FINAL_HOLD_MESSAGES["hi"]
+
+
+def test_relax_duration_answer_triggers_break_prompt_before_reopening():
+    planner = DialoguePlanner()
+    session = ChatSession(
+        session_id="relax-duration-break",
+        language="hi",
+        turns=[
+            Turn(
+                turn_id=1,
+                speaker="assistant",
+                text="जब आप खुद को शांत करने की कोशिश करते हैं, क्या ज़्यादा मुश्किल दिमाग को शांत करना होता है, शरीर को ढीला करना, या दोनों?",
+                language_tag="hi",
+            ),
+            Turn(turn_id=2, speaker="user", text="लंबे समय तक अटका रहता है", language_tag="hi"),
+        ],
+        asked_items=[
+            "gad_q2_control_worry",
+            "gad_q3_excessive_worry",
+            "gad_q4_trouble_relaxing",
+        ],
+    )
+
+    snapshot = ConversationScorer().analyze(session.turns, "hi", SafetyFlag(level="none"))
+    reply, asked_item = planner.next_reply(snapshot, session)
+
+    assert asked_item is None
+    assert reply == ANXIETY_LOOP_BREAK_PROMPTS["hi"]
 
 
 def test_loop_break_is_skipped_when_user_adds_specific_worry_domain_detail():
@@ -554,9 +651,9 @@ def test_loop_break_is_skipped_when_user_adds_specific_worry_domain_detail():
     coverage = planner.build_plan(snapshot, session)
     reply, asked_item = planner.next_reply(snapshot, session)
 
-    assert coverage.dialogue.target_item == "gad_q3_excessive_worry"
-    assert asked_item == "gad_q3_excessive_worry"
-    assert "कई बातों" in reply or "एक मुख्य बात" in reply
+    assert coverage.dialogue.target_item == "gad_q4_trouble_relaxing"
+    assert asked_item == "gad_q4_trouble_relaxing"
+    assert "दिमाग को शांत" in reply or "शरीर को ढीला" in reply or "दोनों" in reply
 
 
 def test_scope_answer_after_worry_spread_question_closes_anxiety_branch():
