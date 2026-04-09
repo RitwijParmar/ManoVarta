@@ -404,6 +404,33 @@ def test_energy_frequency_answer_uses_fatigue_frequency_variant():
     assert "body heaviness" in prompt or "slow-starting mind" in prompt
 
 
+def test_energy_timing_answer_uses_fatigue_timing_variant():
+    planner = DialoguePlanner()
+    session = ChatSession(
+        session_id="energy-timing-followup",
+        language="en",
+        turns=[
+            Turn(
+                turn_id=1,
+                speaker="assistant",
+                text="When the energy drops, is it more like your body feels heavy, your mind feels slow to get going, or both?",
+                language_tag="en",
+            ),
+            Turn(turn_id=2, speaker="user", text="By the end of the day I feel drained too.", language_tag="en"),
+        ],
+        asked_items=["phq_q4_fatigue"],
+    )
+
+    snapshot = ConversationScorer().analyze(session.turns, "en", SafetyFlag(level="none"))
+    snapshot.coverage = planner.build_plan(snapshot, session)
+    prompt = planner._build_prompt_for_target("en", snapshot.coverage.dialogue, session)
+
+    assert snapshot.coverage.dialogue.target_item == "phq_q4_fatigue"
+    assert prompt is not None
+    assert "that timing helps" in prompt.lower()
+    assert "body heaviness" in prompt or "slow-starting mind" in prompt
+
+
 def test_hindi_anxiety_progression_moves_from_control_to_worry_content():
     planner = DialoguePlanner()
     session = ChatSession(
@@ -866,7 +893,12 @@ def test_anhedonia_detail_after_low_mood_does_not_bounce_back_to_same_probe():
     assert coverage.dialogue.target_item == "phq_q2_low_mood"
     assert asked_item == "phq_q2_low_mood"
     assert "interest drop before you start" not in reply
-    assert "steady heavy mood" in reply.lower() or "emotional numbness" in reply.lower()
+    assert (
+        "steady heavy mood" in reply.lower()
+        or "emotional numbness" in reply.lower()
+        or "going through the motions" in reply.lower()
+        or "emotionally flat underneath" in reply.lower()
+    )
 
 
 def test_low_mood_repeat_probe_deepens_on_next_turn():

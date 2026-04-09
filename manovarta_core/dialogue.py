@@ -292,6 +292,10 @@ FATIGUE_MARKERS = (
 ACTIVATION_MARKERS = (
     "low energy",
     "energy down",
+    "energy low",
+    "energy bhi down",
+    "energy bhi low",
+    "energy down ho",
     "heavy in the morning",
     "hard to get started",
     "harder to get started",
@@ -376,6 +380,12 @@ TIME_MARKERS = (
     "सुबह में",
     "शाम",
     "देर रात",
+    "by the end of the day",
+    "end of the day",
+    "day ke end",
+    "din ke end",
+    "दिन के अंत",
+    "दिन के end",
 )
 FREQUENCY_MARKERS = (
     "every day",
@@ -905,7 +915,7 @@ ITEM_FOLLOW_UPS: Dict[str, Dict[str, Dict[str, str]]] = {
 }
 
 ITEM_SIGNAL_MARKERS: Dict[str, Tuple[str, ...]] = {
-    "phq_q1_anhedonia": ("not interested", "no interest", "disconnected", "nothing feels good", "used to enjoy", "feel flat", "feels flat", "flat now", "numb", "feel very little from them", "get much from them", "do not get much from them", "don't get much from them", "go through the motions", "go through motions", "mann nahi lagta", "मन नहीं लगता", "दिल नहीं करता", "फीका लगता", "बहुत कम महसूस"),
+    "phq_q1_anhedonia": ("not interested", "no interest", "disconnected", "nothing feels good", "used to enjoy", "feel flat", "feels flat", "flat now", "flat lagta", "flat lagti", "flat lagti hai", "flat lagti hain", "numb", "feel very little from them", "get much from them", "do not get much from them", "don't get much from them", "feel nahi hota", "kuch feel nahi hota", "go through the motions", "go through motions", "mann nahi lagta", "मन नहीं लगता", "दिल नहीं करता", "फीका लगता", "बहुत कम महसूस", "कटा-कटा", "कटा कटा"),
     "phq_q2_low_mood": ("low mood", "sad", "down", "empty", "heavy", "heaviness", "मन भारी", "भारी", "उदास"),
     "phq_q4_fatigue": ("tired", "drained", "fatigue", "low energy", "energy down", "wiped", "heavy in the morning", "slow to start", "slow to get started", "mind feels slow", "brain fog", "subah heavy", "थक", "थकान", "ऊर्जा", "ऊर्जा कम", "सुबह भारी", "दिमाग धीमा"),
     "phq_q6_worthlessness": ("burden", "extra burden", "burden hoon", "worthless", "useless", "make things heavier", "making things heavier", "ashamed", "shame", "बोझ", "बोझ हूँ", "सबके लिए बोझ", "बेकार", "मेरी वजह से", "शर्म"),
@@ -918,9 +928,9 @@ ITEM_SIGNAL_MARKERS: Dict[str, Tuple[str, ...]] = {
 }
 
 TOPIC_SIGNAL_MARKERS: Dict[str, Tuple[str, ...]] = {
-    "mood": ("low mood", "sad", "down", "empty", "heavy", "heaviness", "disconnected", "usually enjoy", "used to enjoy", "उदासी", "उदास", "खाली", "low feel", "भारी", "मन भारी", "मन नहीं लगता"),
+    "mood": ("low mood", "sad", "down", "empty", "heavy", "heaviness", "disconnected", "usually enjoy", "used to enjoy", "flat lagta", "flat lagti", "flat lagti hai", "flat lagti hain", "उदासी", "उदास", "खाली", "low feel", "भारी", "मन भारी", "मन नहीं लगता", "कटा-कटा", "कटा कटा"),
     "sleep": ("sleep", "asleep", "wake up", "waking", "neend", "नींद", "सोने", "उठ जाती", "night", "रात"),
-    "energy": ("tired", "drained", "fatigue", "wiped", "low energy", "heavy in the morning", "slow to start", "slow to get started", "mind feels slow", "brain fog", "subah heavy", "thak", "थक", "थका", "थकान", "ऊर्जा", "सुबह भारी", "दिमाग धीमा", "धीमा लग"),
+    "energy": ("tired", "drained", "fatigue", "wiped", "low energy", "energy down", "energy bhi down", "energy bhi low", "energy down ho", "heavy in the morning", "slow to start", "slow to get started", "mind feels slow", "brain fog", "subah heavy", "din ke end", "day ke end", "दिन के अंत", "thak", "थक", "थका", "थकान", "ऊर्जा", "सुबह भारी", "दिमाग धीमा", "धीमा लग"),
     "self_view": ("burden", "extra burden", "burden hoon", "worthless", "useless", "guilt", "make things heavier", "making things heavier", "ashamed", "shame", "बोझ", "बोझ हूँ", "सबके लिए बोझ", "बेकार", "गलती मेरी", "शर्म", "worthless"),
     "focus": ("focus", "concentrat", "attention", "mind blanks", "cannot focus", "can't focus", "harder to focus", "hard to focus", "get started", "taking longer to get started", "takes longer to get started", "mind taking longer", "mind feels slow", "screen", "ध्यान", "focus nahi", "ध्यान नहीं", "ध्यान नहीं टिक", "start hone mein time lagta", "start hone me time lagta", "mind ko start hone mein time lagta", "mind ko start hone me time lagta", "दिमाग धीमा"),
     "anxiety": ("worry", "restless", "tense", "panic", "loop", "बेचैनी", "चिंता", "घबराहट", "mind won't stop"),
@@ -1744,6 +1754,7 @@ class DialoguePlanner:
         latest_user_text = self._latest_user_text(session)
         held_back = set(held_back_items)
         recent_signal_items = self._recent_signal_items(session)
+        latest_signal_items = self._latest_signal_items(session)
         latest_signal_topics = self._latest_signal_topics(session)
 
         def available(item_id: str) -> bool:
@@ -1756,6 +1767,19 @@ class DialoguePlanner:
         if last_item in {"phq_q1_anhedonia", "phq_q2_low_mood", "phq_q6_worthlessness"}:
             if (
                 last_item == "phq_q2_low_mood"
+                and session.asked_items.count("phq_q2_low_mood") >= 2
+                and self._has_functional_impact_answer(latest_user_text)
+                and available("phq_q7_concentration")
+            ):
+                return "phq_q7_concentration"
+            if (
+                last_item == "phq_q2_low_mood"
+                and self._has_flat_functioning_signal(latest_user_text)
+                and available("phq_q2_low_mood")
+            ):
+                return "phq_q2_low_mood"
+            if (
+                last_item == "phq_q2_low_mood"
                 and session.asked_items[-4:].count("phq_q2_low_mood") >= 3
                 and self._has_flat_functioning_signal(latest_user_text)
                 and available("phq_q7_concentration")
@@ -1763,7 +1787,7 @@ class DialoguePlanner:
                 return "phq_q7_concentration"
             if self._has_self_view_signal(latest_user_text) and available("phq_q6_worthlessness"):
                 return "phq_q6_worthlessness"
-            if "phq_q7_concentration" in recent_signal_items and available("phq_q7_concentration"):
+            if "phq_q7_concentration" in latest_signal_items and available("phq_q7_concentration"):
                 return "phq_q7_concentration"
             if (
                 last_item == "phq_q1_anhedonia"
@@ -1782,9 +1806,9 @@ class DialoguePlanner:
                 and available("phq_q2_low_mood")
             ):
                 return "phq_q2_low_mood"
-            if last_item != "phq_q1_anhedonia" and "phq_q1_anhedonia" in recent_signal_items and available("phq_q1_anhedonia"):
+            if last_item != "phq_q1_anhedonia" and "phq_q1_anhedonia" in latest_signal_items and available("phq_q1_anhedonia"):
                 return "phq_q1_anhedonia"
-            if last_item != "phq_q2_low_mood" and "phq_q2_low_mood" in recent_signal_items and available("phq_q2_low_mood"):
+            if last_item != "phq_q2_low_mood" and "phq_q2_low_mood" in latest_signal_items and available("phq_q2_low_mood"):
                 return "phq_q2_low_mood"
             if target_topic == "focus" and available("phq_q7_concentration"):
                 return "phq_q7_concentration"
@@ -1792,19 +1816,31 @@ class DialoguePlanner:
                 return "phq_q1_anhedonia"
 
         if last_item == "phq_q7_concentration":
+            if self._has_concentration_answer(latest_user_text) and available("phq_q4_fatigue"):
+                return "phq_q4_fatigue"
             if self._has_activation_signal(latest_user_text) and available("phq_q4_fatigue"):
                 return "phq_q4_fatigue"
             if "phq_q4_fatigue" in recent_signal_items and available("phq_q4_fatigue"):
                 return "phq_q4_fatigue"
-            if "phq_q7_concentration" in recent_signal_items and available("phq_q7_concentration"):
+            if "phq_q7_concentration" in recent_signal_items and available("phq_q7_concentration") and not self._has_concentration_answer(latest_user_text):
                 return "phq_q7_concentration"
             if "energy" in latest_signal_topics and available("phq_q4_fatigue"):
                 return "phq_q4_fatigue"
-            if "focus" in latest_signal_topics and available("phq_q7_concentration"):
+            if "focus" in latest_signal_topics and available("phq_q7_concentration") and not self._has_concentration_answer(latest_user_text):
                 return "phq_q7_concentration"
-            if target_topic == "focus" and available("phq_q7_concentration"):
+            if target_topic == "focus" and available("phq_q7_concentration") and not self._has_concentration_answer(latest_user_text):
                 return "phq_q7_concentration"
             if target_topic == "energy" and available("phq_q4_fatigue"):
+                return "phq_q4_fatigue"
+
+        if last_item == "phq_q4_fatigue":
+            if self._has_timing_or_frequency_answer(latest_user_text) and available("phq_q4_fatigue"):
+                return "phq_q4_fatigue"
+            if self._has_activation_signal(latest_user_text) and available("phq_q4_fatigue"):
+                return "phq_q4_fatigue"
+            if "phq_q4_fatigue" in latest_signal_items and available("phq_q4_fatigue"):
+                return "phq_q4_fatigue"
+            if "energy" in latest_signal_topics and available("phq_q4_fatigue"):
                 return "phq_q4_fatigue"
 
         if last_item == "gad_q2_control_worry" and target_topic == "anxiety":
@@ -2240,7 +2276,7 @@ class DialoguePlanner:
             if self._has_worry_domain_signal(latest_user_text) and "domain_known" in prompt_bank:
                 return prompt_bank["domain_known"][language]
         if plan.target_item == "phq_q2_low_mood":
-            if repeat_count >= 2 and self._has_flat_functioning_signal(latest_user_text) and "functional_impact" in prompt_bank:
+            if repeat_count >= 1 and self._has_flat_functioning_signal(latest_user_text) and "functional_impact" in prompt_bank:
                 return prompt_bank["functional_impact"][language]
         if plan.target_item == "phq_q3_sleep":
             if recent_repeat_window and self._has_sleep_pattern_answer(latest_user_text) and "pattern_known" in prompt_bank:
@@ -2523,15 +2559,67 @@ class DialoguePlanner:
             "on work days",
             "flat underneath",
             "motions",
+            "motions mein",
             "दिन निकाल",
             "काम करते रहते",
             "बस करते रहते",
+            "काम निपटाता रहता",
+            "काम निपटाती रहती",
+            "काम निपटाते रहते",
+            "काम वाले दिनों",
+            "और सपाट",
             "go through motions",
             "andar se sab flat",
             "function kar leta",
             "function kar leti",
+            "flat lagta hai",
+            "flat lagti hai",
+            "flat lagti hain",
+            "work days par",
         )
         return any(marker in normalized_text for marker in flat_markers)
+
+    def _has_functional_impact_answer(self, normalized_text: str) -> bool:
+        if not normalized_text:
+            return False
+        markers = (
+            "work days",
+            "on work days",
+            "work days par",
+            "काम वाले दिनों",
+            "still get through",
+            "still getting through",
+            "function on the outside",
+            "bahar se",
+            "flat underneath",
+            "और सपाट",
+            "flat lagta hai",
+            "flat lagti hai",
+            "flat lagti hain",
+        )
+        return any(marker in normalized_text for marker in markers)
+
+    def _has_concentration_answer(self, normalized_text: str) -> bool:
+        if not normalized_text:
+            return False
+        markers = (
+            "focus slips",
+            "attention slips",
+            "rereading",
+            "rechecking",
+            "same line",
+            "same thing",
+            "focus toot",
+            "dobara padhna",
+            "bar-bar padhna",
+            "बार-बार टूट",
+            "बार बार टूट",
+            "बार-बार पढ़",
+            "ध्यान टूट",
+            "ध्यान भटक",
+            "वापस लौट",
+        )
+        return any(marker in normalized_text for marker in markers)
 
     def _recent_sleep_pattern_known(self, session: ChatSession, lookback: int = 3) -> bool:
         user_turns = [self._normalize(turn.text) for turn in session.turns if turn.speaker == "user"][-lookback:]

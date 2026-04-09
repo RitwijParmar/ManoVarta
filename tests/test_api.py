@@ -807,7 +807,34 @@ def test_anhedonia_followup_does_not_bounce_back_after_low_mood_probe():
     dialogue = third_turn.json()["snapshot"]["coverage"]["dialogue"]
     assert dialogue["target_item"] == "phq_q2_low_mood"
     assert "interest drop before you start" not in reply
-    assert "steady heavy mood" in reply.lower() or "emotional numbness" in reply.lower()
+    assert (
+        "steady heavy mood" in reply.lower()
+        or "emotional numbness" in reply.lower()
+        or "going through the motions" in reply.lower()
+        or "emotionally flat underneath" in reply.lower()
+    )
+
+
+def test_hinglish_flat_answer_advances_off_repeated_anhedonia_probe():
+    start = client.post("/chat/sessions", json={"language": "hinglish"})
+    session_id = start.json()["session_id"]
+
+    first_turn = client.post(
+        f"/chat/sessions/{session_id}/turns",
+        json={"text": "Kaafi time se low aur disconnected feel ho raha hai."},
+    )
+    assert first_turn.status_code == 200
+
+    second_turn = client.post(
+        f"/chat/sessions/{session_id}/turns",
+        json={"text": "Jo cheezein pehle achhi lagti thi ab flat lagti hain."},
+    )
+
+    assert second_turn.status_code == 200
+    reply = second_turn.json()["assistant_turn"]["text"].lower()
+    dialogue = second_turn.json()["snapshot"]["coverage"]["dialogue"]
+    assert dialogue["target_item"] == "phq_q2_low_mood"
+    assert "mann hat jata hai" not in reply
 
 
 def test_split_turn_anhedonia_detail_still_stays_off_the_old_repeat_probe():
@@ -843,6 +870,31 @@ def test_split_turn_anhedonia_detail_still_stays_off_the_old_repeat_probe():
     assert dialogue["target_item"] == "phq_q2_low_mood"
     assert "steady heavy mood" not in reply.lower()
     assert "small moments still cut through" in reply.lower() or "going through the motions" in reply.lower()
+
+
+def test_hindi_flat_functioning_answer_uses_functional_impact_prompt():
+    start = client.post("/chat/sessions", json={"language": "hi"})
+    session_id = start.json()["session_id"]
+
+    for text in [
+        "पिछले कुछ समय से मन बहुत भारी और कटा-कटा लगता है।",
+        "जो चीज़ें पहले अच्छी लगती थीं अब उनमें मन नहीं लगता।",
+        "कर भी लेता हूँ तो बहुत कम महसूस होता है।",
+    ]:
+        turn = client.post(f"/chat/sessions/{session_id}/turns", json={"text": text})
+        assert turn.status_code == 200
+
+    fourth_turn = client.post(
+        f"/chat/sessions/{session_id}/turns",
+        json={"text": "ज़्यादातर बस काम निपटाता रहता हूँ।"},
+    )
+
+    assert fourth_turn.status_code == 200
+    reply = fourth_turn.json()["assistant_turn"]["text"]
+    dialogue = fourth_turn.json()["snapshot"]["coverage"]["dialogue"]
+    assert dialogue["target_item"] == "phq_q2_low_mood"
+    assert "साधारण काम भी भारी" in reply or "बाहर से काम करते रहते हैं" in reply
+    assert "उन कामों की तरफ़ जाते हैं" not in reply
 
 
 def test_hindi_energy_answer_after_focus_pivots_to_fatigue():
@@ -1015,6 +1067,32 @@ def test_hinglish_anxiety_work_future_detail_gets_contextual_relaxation_bridge()
     assert "jo part answer karna easier lage" not in reply
 
 
+def test_hinglish_flat_workday_detail_stays_on_mood_or_focus_instead_of_drifting_to_anxiety():
+    start = client.post("/chat/sessions", json={"language": "hinglish"})
+    session_id = start.json()["session_id"]
+
+    for text in [
+        "Kaafi time se low aur disconnected feel ho raha hai.",
+        "Jo cheezein pehle achhi lagti thi ab flat lagti hain.",
+        "Kar bhi leta hoon but unse kuch feel nahi hota.",
+        "Mostly bas motions mein chalta rehta hoon.",
+    ]:
+        turn = client.post(f"/chat/sessions/{session_id}/turns", json={"text": text})
+        assert turn.status_code == 200
+
+    fifth_turn = client.post(
+        f"/chat/sessions/{session_id}/turns",
+        json={"text": "Work days par aur flat lagta hai."},
+    )
+
+    assert fifth_turn.status_code == 200
+    reply = fifth_turn.json()["assistant_turn"]["text"].lower()
+    dialogue = fifth_turn.json()["snapshot"]["coverage"]["dialogue"]
+    assert dialogue["target_topic"] in {"mood", "focus"}
+    assert dialogue["target_item"] in {"phq_q2_low_mood", "phq_q7_concentration"}
+    assert "worry" not in reply
+
+
 def test_hindi_anxiety_work_future_detail_gets_contextual_relaxation_bridge():
     start = client.post("/chat/sessions", json={"language": "hi"})
     session_id = start.json()["session_id"]
@@ -1084,6 +1162,119 @@ def test_low_mood_functional_impact_detail_advances_to_focus_instead_of_repeatin
     assert dialogue["target_item"] == "phq_q7_concentration"
     assert "attention slips away" in reply or "coming back to the same line" in reply
     assert "small moments still cut through" not in reply
+
+
+def test_direct_focus_answer_advances_to_energy_instead_of_repeating_concentration_probe():
+    start = client.post("/chat/sessions", json={"language": "en"})
+    session_id = start.json()["session_id"]
+
+    for text in [
+        "I have been feeling low and disconnected lately.",
+        "Things I used to enjoy feel flat.",
+        "Even when I do them, I do not get much from them.",
+        "I mostly go through the motions now.",
+        "It is worse on work days and I still get through things but it feels flat.",
+    ]:
+        turn = client.post(f"/chat/sessions/{session_id}/turns", json={"text": text})
+        assert turn.status_code == 200
+
+    sixth_turn = client.post(
+        f"/chat/sessions/{session_id}/turns",
+        json={"text": "Then my focus slips and I end up rereading things."},
+    )
+
+    assert sixth_turn.status_code == 200
+    reply = sixth_turn.json()["assistant_turn"]["text"].lower()
+    dialogue = sixth_turn.json()["snapshot"]["coverage"]["dialogue"]
+    assert dialogue["target_item"] == "phq_q4_fatigue"
+    assert "energy drops" in reply or "body feels heavy" in reply
+    assert "attention slips away" not in reply
+
+
+def test_english_day_end_energy_answer_stays_on_fatigue_with_timing_wording():
+    start = client.post("/chat/sessions", json={"language": "en"})
+    session_id = start.json()["session_id"]
+
+    for text in [
+        "I have been feeling low and disconnected lately.",
+        "Things I used to enjoy feel flat.",
+        "Even when I do them, I do not get much from them.",
+        "I mostly go through the motions now.",
+        "It is worse on work days and I still get through things but it feels flat.",
+        "Then my focus slips and I end up rereading things.",
+    ]:
+        turn = client.post(f"/chat/sessions/{session_id}/turns", json={"text": text})
+        assert turn.status_code == 200
+
+    seventh_turn = client.post(
+        f"/chat/sessions/{session_id}/turns",
+        json={"text": "By the end of the day I feel drained too."},
+    )
+
+    assert seventh_turn.status_code == 200
+    reply = seventh_turn.json()["assistant_turn"]["text"].lower()
+    dialogue = seventh_turn.json()["snapshot"]["coverage"]["dialogue"]
+    assert dialogue["target_topic"] == "energy"
+    assert dialogue["target_item"] == "phq_q4_fatigue"
+    assert "that timing helps" in reply
+    assert "slow-starting mind" in reply or "body heaviness" in reply
+
+
+def test_hindi_direct_focus_answer_advances_to_energy_instead_of_repeating_concentration_probe():
+    start = client.post("/chat/sessions", json={"language": "hi"})
+    session_id = start.json()["session_id"]
+
+    for text in [
+        "पिछले कुछ समय से मन बहुत भारी और कटा-कटा लगता है।",
+        "जो चीज़ें पहले अच्छी लगती थीं अब उनमें मन नहीं लगता।",
+        "कर भी लेता हूँ तो बहुत कम महसूस होता है।",
+        "ज़्यादातर बस काम निपटाता रहता हूँ।",
+        "काम वाले दिनों में यह और सपाट लगता है।",
+    ]:
+        turn = client.post(f"/chat/sessions/{session_id}/turns", json={"text": text})
+        assert turn.status_code == 200
+
+    sixth_turn = client.post(
+        f"/chat/sessions/{session_id}/turns",
+        json={"text": "फिर ध्यान भी बार-बार टूटता है।"},
+    )
+
+    assert sixth_turn.status_code == 200
+    reply = sixth_turn.json()["assistant_turn"]["text"]
+    dialogue = sixth_turn.json()["snapshot"]["coverage"]["dialogue"]
+    assert dialogue["target_topic"] == "energy"
+    assert dialogue["target_item"] == "phq_q4_fatigue"
+    assert "ऊर्जा" in reply or "थकान" in reply or "शरीर भारी" in reply
+    assert "ध्यान बार-बार भटक" not in reply
+
+
+def test_hinglish_day_end_energy_answer_stays_on_energy_in_long_mood_flow():
+    start = client.post("/chat/sessions", json={"language": "hinglish"})
+    session_id = start.json()["session_id"]
+
+    for text in [
+        "Kaafi time se low aur disconnected feel ho raha hai.",
+        "Jo cheezein pehle achhi lagti thi ab flat lagti hain.",
+        "Kar bhi leta hoon but unse kuch feel nahi hota.",
+        "Mostly bas motions mein chalta rehta hoon.",
+        "Work days par aur flat lagta hai.",
+        "Phir focus toot jata hai aur same cheez dobara padhna padta hai.",
+    ]:
+        turn = client.post(f"/chat/sessions/{session_id}/turns", json={"text": text})
+        assert turn.status_code == 200
+
+    seventh_turn = client.post(
+        f"/chat/sessions/{session_id}/turns",
+        json={"text": "Din ke end tak energy bhi down ho jaati hai."},
+    )
+
+    assert seventh_turn.status_code == 200
+    reply = seventh_turn.json()["assistant_turn"]["text"].lower()
+    dialogue = seventh_turn.json()["snapshot"]["coverage"]["dialogue"]
+    assert dialogue["target_topic"] == "energy"
+    assert dialogue["target_item"] == "phq_q4_fatigue"
+    assert "timing helpful" in reply or "us waqt ke around" in reply
+    assert "flat ya heavy feeling" not in reply
 
 
 def test_hinglish_tense_body_followup_does_not_jump_to_generic_fear_item():
