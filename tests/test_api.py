@@ -871,6 +871,48 @@ def test_hindi_recent_anxiety_flow_stops_reopening_after_close_point():
     assert "जब चिंता शुरू होती है" not in replies[-1]
 
 
+def test_short_hindi_anxiety_scope_answer_closes_instead_of_reopening_old_loop():
+    start = client.post("/chat/sessions", json={"language": "hi"})
+    session_id = start.json()["session_id"]
+
+    script = [
+        "काफी चिंता का माहौल है",
+        "हां लग रहा है खास करके नींद ना आना",
+        "दोनों दोनों समस्याएं हैं",
+        "सुबह में तो नहीं रहता पर रात में काफी ज्यादा",
+        "मैं काम को लेकर बहुत सोचता रहता हूँ",
+        "कई बातों में फैल जाती है",
+    ]
+
+    last = None
+    for text in script:
+        last = client.post(f"/chat/sessions/{session_id}/turns", json={"text": text})
+        assert last.status_code == 200
+
+    reply = last.json()["assistant_turn"]["text"]
+    assert reply.startswith("अब मेरे पास मुख्य पैटर्न पकड़ने लायक")
+
+
+def test_hinglish_scope_answer_closes_instead_of_reopening_old_loop():
+    start = client.post("/chat/sessions", json={"language": "hinglish"})
+    session_id = start.json()["session_id"]
+
+    script = [
+        "Mind bahut overloaded lag raha hai aur raat ko switch off nahi hota.",
+        "Body bhi tense lagti hai aur neend disturb ho jaati hai.",
+        "Kaam aur future dono ko lekar hota hai.",
+        "Kai cheezon mein spread ho jaata hai.",
+    ]
+
+    last = None
+    for text in script:
+        last = client.post(f"/chat/sessions/{session_id}/turns", json={"text": text})
+        assert last.status_code == 200
+
+    reply = last.json()["assistant_turn"]["text"]
+    assert reply.startswith("Ab mere paas main pattern hold karne ke liye enough detail hai")
+
+
 def test_hindi_anxiety_loop_break_closes_after_repeated_generic_rotation():
     start = client.post("/chat/sessions", json={"language": "hi"})
     session_id = start.json()["session_id"]

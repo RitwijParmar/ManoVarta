@@ -538,6 +538,30 @@ def test_loop_break_is_skipped_when_user_adds_specific_worry_domain_detail():
     assert "कई बातों" in reply or "एक मुख्य बात" in reply
 
 
+def test_scope_answer_after_worry_spread_question_closes_anxiety_branch():
+    planner = DialoguePlanner()
+    session = ChatSession(
+        session_id="scope-answer-closes-branch",
+        language="hi",
+        turns=[
+            Turn(
+                turn_id=1,
+                speaker="assistant",
+                text="जब चिंता चलती रहती है, क्या यह ज़्यादा काम, परिवार, पैसों या भविष्य जैसी कई बातों में फैल जाती है, या आम तौर पर किसी एक मुख्य बात पर अटकती है?",
+                language_tag="hi",
+            ),
+            Turn(turn_id=2, speaker="user", text="कई बातों में फैल जाती है", language_tag="hi"),
+        ],
+        asked_items=["gad_q4_trouble_relaxing", "gad_q2_control_worry", "gad_q3_excessive_worry"],
+    )
+
+    snapshot = ConversationScorer().analyze(session.turns, "hi", SafetyFlag(level="none"))
+    reply, asked_item = planner.next_reply(snapshot, session)
+
+    assert asked_item is None
+    assert reply.startswith("अब मेरे पास मुख्य पैटर्न पकड़ने लायक")
+
+
 def test_target_topic_aligns_with_directed_followup_item():
     planner = DialoguePlanner()
     session = ChatSession(

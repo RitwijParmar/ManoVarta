@@ -898,6 +898,7 @@ const languageTabs = Array.from(document.querySelectorAll(".language-tab"));
 
 const SpeechRecognitionCtor = window.SpeechRecognition || window.webkitSpeechRecognition || null;
 const speechSynthesisApi = window.speechSynthesis || null;
+const VOICE_AUTO_SEND_DELAY_MS = 1200;
 
 let recognition = null;
 let listening = false;
@@ -906,6 +907,8 @@ let mediaStream = null;
 let recordedChunks = [];
 let currentAudio = null;
 let pendingVoiceTranscript = "";
+let pendingVoiceAutoSendTimer = null;
+let pendingVoiceAutoSendSource = "voice";
 const reviewMode = window.location.pathname.startsWith("/review");
 
 function setBusy(isBusy) {
@@ -916,6 +919,39 @@ function setBusy(isBusy) {
 
 function handsFreeVoiceEnabled() {
   return Boolean(autoSendToggle?.checked && speakToggle?.checked);
+}
+
+function clearVoiceAutoSendTimer() {
+  if (pendingVoiceAutoSendTimer) {
+    window.clearTimeout(pendingVoiceAutoSendTimer);
+    pendingVoiceAutoSendTimer = null;
+  }
+}
+
+function configureRecognitionMode() {
+  if (!recognition) {
+    return;
+  }
+  recognition.continuous = Boolean(autoSendToggle?.checked);
+  recognition.interimResults = true;
+  recognition.maxAlternatives = 1;
+}
+
+function scheduleVoiceAutoSend(transcript, sourceLabel = "voice") {
+  const cleaned = (transcript || "").trim();
+  if (!cleaned) {
+    return;
+  }
+  clearVoiceAutoSendTimer();
+  pendingVoiceTranscript = cleaned;
+  pendingVoiceAutoSendSource = sourceLabel;
+  setVoicePreview(cleaned, { visible: true });
+  setVoiceState("listening");
+  updateVoiceStatus("Heard that. Waiting a moment to make sure you are done speaking...", false, true);
+  pendingVoiceAutoSendTimer = window.setTimeout(() => {
+    pendingVoiceAutoSendTimer = null;
+    void handleCapturedTranscript(cleaned, pendingVoiceAutoSendSource);
+  }, VOICE_AUTO_SEND_DELAY_MS);
 }
 
 function setStatusBanner(message, tone = "info") {
@@ -2932,6 +2968,7 @@ function cleanupMediaStream() {
 }
 
 function handleCapturedTranscript(transcript, sourceLabel = "voice") {
+  clearVoiceAutoSendTimer();
   const cleaned = (transcript || "").trim();
   if (!cleaned) {
     setVoiceState("error");
@@ -3019,13 +3056,12 @@ function stopBackendRecording() {
 function setupVoice() {
   if (SpeechRecognitionCtor) {
     recognition = new SpeechRecognitionCtor();
-    recognition.interimResults = true;
-    recognition.continuous = false;
-    recognition.maxAlternatives = 1;
+    configureRecognitionMode();
     recognition.lang = mapVoiceLanguage(languageSelect.value);
 
     recognition.onstart = () => {
       listening = true;
+      clearVoiceAutoSendTimer();
       setVoiceState("listening");
       updateMicButtonLabel();
       setVoicePreview("", { visible: false });
@@ -3033,6 +3069,7 @@ function setupVoice() {
     };
 
     recognition.onresult = (event) => {
+      clearVoiceAutoSendTimer();
       const transcript = Array.from(event.results)
         .map((result) => result[0].transcript)
         .join(" ")
@@ -3042,14 +3079,20 @@ function setupVoice() {
       }
       const finalResult = event.results[event.results.length - 1];
       if (finalResult?.isFinal) {
-        handleCapturedTranscript(transcript, "browser voice");
+        if (autoSendToggle?.checked) {
+          scheduleVoiceAutoSend(transcript, "browser voice");
+        } else {
+          handleCapturedTranscript(transcript, "browser voice");
+        }
       } else {
         setVoicePreview(transcript, { visible: true });
+        updateVoiceStatus("Still listening...", false, true);
       }
     };
 
     recognition.onerror = (event) => {
       listening = false;
+      clearVoiceAutoSendTimer();
       updateMicButtonLabel();
       if (event.error === "not-allowed" || event.error === "service-not-allowed") {
         state.voiceLoopArmed = false;
@@ -3101,6 +3144,7 @@ function setupVoice() {
     }
   });
   autoSendToggle?.addEventListener("change", () => {
+    clearVoiceAutoSendTimer();
     if (autoSendToggle.checked && speakToggle && !speakToggle.checked) {
       speakToggle.checked = true;
     }
@@ -3109,6 +3153,7 @@ function setupVoice() {
     } else if (state.sessionId) {
       state.voiceLoopArmed = true;
     }
+    configureRecognitionMode();
     updateMicButtonLabel();
     setVoicePreview(pendingVoiceTranscript, { visible: Boolean(pendingVoiceTranscript) });
     updateVoiceStatus(
@@ -3130,6 +3175,7 @@ function setupVoice() {
   });
   languageSelect.addEventListener("change", () => {
     if (recognition) {
+      configureRecognitionMode();
       recognition.lang = mapVoiceLanguage(languageSelect.value);
     }
     state.language = languageSelect.value;
@@ -3182,6 +3228,7 @@ function toggleListening() {
     updateVoiceStatus("Voice is not available in this browser.", true);
     return;
   }
+  configureRecognitionMode();
   recognition.lang = mapVoiceLanguage(languageSelect.value);
   updateVoiceStatus("Requesting microphone access...");
   recognition.start();
@@ -3189,6 +3236,7 @@ function toggleListening() {
 
 function stopListening() {
   state.voiceLoopArmed = false;
+  clearVoiceAutoSendTimer();
   setVoiceState("idle");
   if (recognition && listening) {
     recognition.stop();
@@ -3416,6 +3464,7 @@ architectureModal?.addEventListener("click", (event) => {
 });
 voiceInterruptButton?.addEventListener("click", () => {
   state.voiceLoopArmed = false;
+  clearVoiceAutoSendTimer();
   if (speechSynthesisApi) {
     speechSynthesisApi.cancel();
   }

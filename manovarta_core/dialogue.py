@@ -377,6 +377,35 @@ PERSISTENT_WORRY_MARKERS = (
     "बंद नहीं",
     "काफी ज्यादा चले",
 )
+WORRY_SCOPE_SPREAD_MARKERS = (
+    "spreads to other things",
+    "spread to other things",
+    "spreads to other areas",
+    "spreads into other parts",
+    "many things",
+    "several things",
+    "other things too",
+    "more than one thing",
+    "kai baat",
+    "kai cheez",
+    "कई बात",
+    "कई चीज",
+    "दूसरी बातों में",
+    "कई बातों में फैल",
+    "कई चीजों में फैल",
+)
+WORRY_SCOPE_SINGLE_MARKERS = (
+    "one main issue",
+    "one thing",
+    "single issue",
+    "same issue",
+    "ek main baat",
+    "ek hi baat",
+    "ek issue",
+    "एक मुख्य बात",
+    "एक ही बात",
+    "एक मुद्दे",
+)
 SHORT_FOLLOWUP_MARKERS = (
     "yes",
     "yeah",
@@ -823,6 +852,8 @@ class DialoguePlanner:
 
         if snapshot.safety.level == "urgent" or plan.next_action == "handoff":
             return SAFETY_MESSAGES[language], plan.target_item
+        if self._should_close_anxiety_after_scope_answer(plan, session):
+            return ANXIETY_LOOP_CLOSE_PROMPTS[language], None
         if self._already_used_segment(last_assistant_text, ANXIETY_LOOP_CLOSE_PROMPTS[language]):
             if self._is_nonexpansive_followup(latest_user_text) or not self._has_new_anxiety_branch_detail(latest_user_text):
                 return CLOSING_MESSAGES[language], None
@@ -880,6 +911,21 @@ class DialoguePlanner:
         if plan.target_item == "gad_q3_excessive_worry" and repeated_worry_probe and self._is_nonexpansive_followup(latest_user_text):
             return True
         return False
+
+    def _should_close_anxiety_after_scope_answer(self, plan: DialoguePlan, session: ChatSession) -> bool:
+        if plan.target_topic != "anxiety" or not session.asked_items:
+            return False
+        if session.asked_items[-1] != "gad_q3_excessive_worry":
+            return False
+        latest_user_text = self._latest_user_text(session)
+        if not self._has_worry_scope_answer(latest_user_text):
+            return False
+        recent_anxiety_items = [
+            item_id
+            for item_id in session.asked_items[-5:]
+            if ITEM_TO_TOPIC.get(item_id) == "anxiety"
+        ]
+        return len(set(recent_anxiety_items)) >= 2
 
     def build_plan(self, snapshot: ScreeningSnapshot, session: ChatSession) -> CoveragePlan:
         user_turns = [turn for turn in session.turns if turn.speaker == "user"]
@@ -1940,6 +1986,13 @@ class DialoguePlanner:
         if not normalized_text:
             return False
         return any(marker in normalized_text for marker in PERSISTENT_WORRY_MARKERS)
+
+    def _has_worry_scope_answer(self, normalized_text: str) -> bool:
+        if not normalized_text:
+            return False
+        return any(marker in normalized_text for marker in WORRY_SCOPE_SPREAD_MARKERS) or any(
+            marker in normalized_text for marker in WORRY_SCOPE_SINGLE_MARKERS
+        )
 
     def _has_new_anxiety_branch_detail(self, normalized_text: str) -> bool:
         if not normalized_text:
