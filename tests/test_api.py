@@ -3,7 +3,7 @@ import io
 from fastapi.testclient import TestClient
 
 import manovarta_core.api as api_module
-from manovarta_core.dialogue import ANXIETY_LOOP_BREAK_PROMPTS, ANXIETY_LOOP_CLOSE_PROMPTS, FINAL_HOLD_MESSAGES, DialoguePlanner
+from manovarta_core.dialogue import ANXIETY_LOOP_BREAK_PROMPTS, ANXIETY_LOOP_CLOSE_PROMPTS, FINAL_HOLD_MESSAGES, FINAL_HOLD_VARIANTS, POST_CLOSE_CHOOSER_MESSAGES, DialoguePlanner
 from manovarta_core.engine import RuntimeEngine
 from manovarta_core.schemas import ChatSession, DialoguePlan, Turn
 
@@ -944,7 +944,7 @@ def test_english_long_anxiety_flow_breaks_earlier_and_holds_after_close():
 
     assert responses[3]["assistant_turn"]["text"] == ANXIETY_LOOP_BREAK_PROMPTS["en"]
     assert responses[4]["assistant_turn"]["text"] == ANXIETY_LOOP_CLOSE_PROMPTS["en"]
-    assert responses[5]["assistant_turn"]["text"] == FINAL_HOLD_MESSAGES["en"]
+    assert responses[5]["assistant_turn"]["text"] == POST_CLOSE_CHOOSER_MESSAGES["en"]
 
 
 def test_hinglish_long_anxiety_flow_breaks_earlier_and_holds_after_close():
@@ -968,7 +968,30 @@ def test_hinglish_long_anxiety_flow_breaks_earlier_and_holds_after_close():
 
     assert responses[3]["assistant_turn"]["text"] == ANXIETY_LOOP_BREAK_PROMPTS["hinglish"]
     assert responses[4]["assistant_turn"]["text"] == ANXIETY_LOOP_CLOSE_PROMPTS["hinglish"]
-    assert responses[5]["assistant_turn"]["text"] == FINAL_HOLD_MESSAGES["hinglish"]
+    assert responses[5]["assistant_turn"]["text"] == POST_CLOSE_CHOOSER_MESSAGES["hinglish"]
+
+
+def test_post_close_vague_followup_uses_chooser_in_api_flow():
+    start = client.post("/chat/sessions", json={"language": "en"})
+    session_id = start.json()["session_id"]
+
+    for text in [
+        "I do not know what exactly is wrong.",
+        "It keeps going even when I try hard to stop it.",
+        "Lately when I start any work I get more anxious about the future.",
+        "It keeps going no matter how much I try.",
+        "Mostly it keeps flipping around one same thing and other things disappear.",
+    ]:
+        turn = client.post(f"/chat/sessions/{session_id}/turns", json={"text": text})
+        assert turn.status_code == 200
+
+    followup = client.post(
+        f"/chat/sessions/{session_id}/turns",
+        json={"text": "No not like that."},
+    )
+
+    assert followup.status_code == 200
+    assert followup.json()["assistant_turn"]["text"] == POST_CLOSE_CHOOSER_MESSAGES["en"]
 
 
 def test_hinglish_tense_body_followup_does_not_jump_to_generic_fear_item():
@@ -1165,8 +1188,8 @@ def test_hindi_recent_anxiety_flow_stops_reopening_after_close_point():
 
     continuity_phrase = "अगर यह आपकी हाल की चिंता बातचीत से मिलता-जुलता लग रहा है"
     assert sum(continuity_phrase in reply for reply in replies) <= 1
-    assert replies[-2].startswith("अब मेरे पास मुख्य पैटर्न पकड़ने लायक") or replies[-2].startswith("ठीक है। अभी")
-    assert replies[-1].startswith("ठीक है। अभी") or replies[-1].startswith("अब मेरे पास मुख्य पैटर्न पकड़ने लायक")
+    assert replies[-2].startswith("अब मेरे पास मुख्य पैटर्न पकड़ने लायक") or replies[-2].startswith("ठीक है। अभी") or replies[-2].startswith("मैं थोड़ा रुककर")
+    assert replies[-1].startswith("ठीक है। अभी") or replies[-1].startswith("अब मेरे पास मुख्य पैटर्न पकड़ने लायक") or replies[-1].startswith("अगर आप चाहें")
     assert "जब चिंता शुरू होती है" not in replies[-1]
 
 
@@ -1272,7 +1295,7 @@ def test_hindi_relax_duration_answer_closes_instead_of_reopening_old_anxiety_ite
     body = last.json()
     reply = body["assistant_turn"]["text"]
 
-    assert reply.startswith("ठीक है। अभी के लिए मैं इसे वर्तमान सार मानकर रखता हूँ।")
+    assert reply in FINAL_HOLD_VARIANTS["hi"]
     assert "जब चिंता शुरू होती है" not in reply
 
 
@@ -1297,7 +1320,7 @@ def test_hindi_relax_duration_answer_uses_break_prompt_before_old_loop_reopens()
         assert last.status_code == 200
 
     reply = last.json()["assistant_turn"]["text"]
-    assert reply.startswith("ठीक है। अभी के लिए मैं इसे वर्तमान सार मानकर रखता हूँ।")
+    assert reply in FINAL_HOLD_VARIANTS["hi"]
     assert "जब चिंता शुरू होती है" not in reply
 
 
@@ -1327,7 +1350,7 @@ def test_hindi_break_prompt_family_scoped_answer_closes_instead_of_reopening():
         assert last.status_code == 200
 
     reply = last.json()["assistant_turn"]["text"]
-    assert reply.startswith("ठीक है। अभी के लिए मैं इसे वर्तमान सार मानकर रखता हूँ।")
+    assert reply in FINAL_HOLD_VARIANTS["hi"]
     assert "जब आप खुद को शांत" not in reply
     assert "जब चिंता शुरू" not in reply
 
@@ -1355,7 +1378,7 @@ def test_hindi_close_prompt_followed_by_garbled_detail_stays_on_hold():
         assert last.status_code == 200
 
     reply = last.json()["assistant_turn"]["text"]
-    assert reply.startswith("ठीक है। अभी के लिए मैं इसे वर्तमान सार मानकर रखता हूँ।")
+    assert reply in FINAL_HOLD_VARIANTS["hi"]
     assert "जब चिंता शुरू होती है" not in reply
 
 
@@ -1426,4 +1449,4 @@ def test_hindi_anxiety_loop_break_closes_after_repeated_generic_rotation():
     body = last.json()
     reply = body["assistant_turn"]["text"]
 
-    assert reply.startswith("अब मेरे पास मुख्य पैटर्न पकड़ने लायक") or reply.startswith("ठीक है। अभी")
+    assert reply.startswith("अब मेरे पास मुख्य पैटर्न पकड़ने लायक") or reply.startswith("ठीक है। अभी") or reply.startswith("मैं थोड़ा रुककर")

@@ -45,6 +45,30 @@ FINAL_HOLD_MESSAGES = {
     "hinglish": "Theek hai. Abhi ke liye main ise current summary maan kar hold kar raha hoon. Agar baad mein koi ek zaroori detail missing lage, to aap use seedha bol sakte ho.",
 }
 
+FINAL_HOLD_VARIANTS = {
+    "en": (
+        FINAL_HOLD_MESSAGES["en"],
+        "Understood. I’ll keep this as the current summary for now. If one concrete missing detail stands out later, you can add just that.",
+        "That makes sense. I’m holding the current summary as it is for now. If one important detail still feels missing later, you can say it directly.",
+    ),
+    "hi": (
+        FINAL_HOLD_MESSAGES["hi"],
+        "समझ गया। अभी के लिए मैं इसी सार को पकड़े रखता हूँ। अगर बाद में कोई एक साफ़ छूटी हुई बात याद आए, तो आप उसे सीधे बता सकते हैं।",
+        "ठीक है। मैं अभी यही मौजूदा सार रख रहा हूँ। अगर बाद में कोई एक ज़रूरी बात छूटी लगे, तो आप उसे सीधे बता सकते हैं।",
+    ),
+    "hinglish": (
+        FINAL_HOLD_MESSAGES["hinglish"],
+        "Samajh gaya. Abhi ke liye main isi current summary ko hold kar raha hoon. Agar baad mein koi ek clear missing detail lage, to aap use seedha bol sakte ho.",
+        "Theek hai. Main abhi isi summary ko hold kar raha hoon. Agar baad mein koi ek zaroori detail missing lage, to aap use seedha bol sakte ho.",
+    ),
+}
+
+POST_CLOSE_CHOOSER_MESSAGES = {
+    "en": "If you want, you can add the one missing detail that matters most, or we can leave this as the current summary.",
+    "hi": "अगर आप चाहें, तो सबसे ज़्यादा महत्वपूर्ण एक छूटी हुई बात जोड़ सकते हैं, या हम इसे अभी का सार मानकर यहीं छोड़ सकते हैं।",
+    "hinglish": "Agar aap chahein, to jo ek missing detail sabse important lag rahi ho woh bol sakte ho, ya hum ise current summary maan kar yahin chhod sakte hain.",
+}
+
 ANXIETY_LOOP_BREAK_PROMPTS = {
     "en": "Let me pause and reflect what I’m hearing: this anxiety seems to build at certain times, affect both mind and body, and feel heavier on stressful days. If that fits, tell me just one last thing: does it mostly stay around work or responsibilities, or does it spread into other parts of life too?",
     "hi": "मैं थोड़ा रुककर जो समझ आ रहा है उसे पकड़ना चाहता हूँ: यह चिंता कुछ खास समय पर बढ़ती है, दिमाग और शरीर दोनों पर असर डालती है, और तनाव वाले दिनों में ज्यादा लग सकती है। अगर यह सही लग रहा है, तो बस एक आख़िरी बात बताइए: यह ज़्यादा काम या जिम्मेदारियों तक रहती है, या दूसरी बातों में भी फैल जाती है?",
@@ -1001,12 +1025,9 @@ class DialoguePlanner:
             return SAFETY_MESSAGES[language], plan.target_item
         if self._should_close_after_break_answer(session):
             return ANXIETY_LOOP_CLOSE_PROMPTS[language], None
-        if (
-            self._already_used_segment(last_assistant_text, ANXIETY_LOOP_CLOSE_PROMPTS[language])
-            or self._already_used_segment(last_assistant_text, CLOSING_MESSAGES[language])
-            or self._already_used_segment(last_assistant_text, FINAL_HOLD_MESSAGES[language])
-        ) and not self._has_high_priority_post_close_signal(latest_user_text):
-            return FINAL_HOLD_MESSAGES[language], None
+        post_close_reply = self._post_close_followup_reply(session, latest_user_text, language)
+        if post_close_reply is not None:
+            return post_close_reply, None
         if self._should_break_after_relax_duration_answer(session):
             return ANXIETY_LOOP_BREAK_PROMPTS[language], None
         if self._should_close_anxiety_after_scope_answer(plan, session):
@@ -2257,6 +2278,46 @@ class DialoguePlanner:
             return False
         return normalized_segment in normalized_last_assistant
 
+    def _matches_any_segment(self, normalized_text: str, segments: Iterable[str]) -> bool:
+        return any(self._already_used_segment(normalized_text, segment) for segment in segments)
+
+    def _post_close_segments(self, language: str) -> Tuple[str, ...]:
+        return (
+            ANXIETY_LOOP_CLOSE_PROMPTS[language],
+            CLOSING_MESSAGES[language],
+            POST_CLOSE_CHOOSER_MESSAGES[language],
+            *FINAL_HOLD_VARIANTS[language],
+        )
+
+    def _post_close_followup_reply(
+        self,
+        session: ChatSession,
+        latest_user_text: str,
+        language: str,
+    ) -> Optional[str]:
+        last_assistant_text = self._last_assistant_text(session)
+        if not self._matches_any_segment(last_assistant_text, self._post_close_segments(language)):
+            return None
+        if self._has_high_priority_post_close_signal(latest_user_text):
+            return None
+        if self._should_reopen_after_close(session, latest_user_text):
+            return None
+        if self._is_close_acknowledgement(latest_user_text):
+            return self._select_post_close_hold_message(session, language)
+        if self._is_nonexpansive_followup(latest_user_text):
+            if self._already_used_segment(last_assistant_text, POST_CLOSE_CHOOSER_MESSAGES[language]):
+                return self._select_post_close_hold_message(session, language)
+            return POST_CLOSE_CHOOSER_MESSAGES[language]
+        return self._select_post_close_hold_message(session, language)
+
+    def _select_post_close_hold_message(self, session: ChatSession, language: str) -> str:
+        variants = FINAL_HOLD_VARIANTS[language]
+        recent_assistant_turns = [self._normalize(turn.text) for turn in session.turns if turn.speaker == "assistant"][-3:]
+        for variant in variants:
+            if self._normalize(variant) not in recent_assistant_turns:
+                return variant
+        return variants[len(recent_assistant_turns) % len(variants)]
+
     def _has_timing_or_frequency_answer(self, normalized_text: str) -> bool:
         if not normalized_text:
             return False
@@ -2291,6 +2352,17 @@ class DialoguePlanner:
         if self._has_awful_outcome_signal(normalized_text):
             return True
         return False
+
+    def _should_reopen_after_close(self, session: ChatSession, normalized_text: str) -> bool:
+        if not normalized_text:
+            return False
+        if self._is_close_acknowledgement(normalized_text) or self._is_nonexpansive_followup(normalized_text):
+            return False
+        latest_signal_topics = self._latest_signal_topics(session)
+        if not latest_signal_topics:
+            return False
+        reopenable_topics = (AFFECTIVE_TOPIC_FAMILY | {"sleep"}) - {"anxiety"}
+        return bool(latest_signal_topics & reopenable_topics)
 
     def _has_activation_signal(self, normalized_text: str) -> bool:
         if not normalized_text:

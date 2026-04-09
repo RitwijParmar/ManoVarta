@@ -1,4 +1,4 @@
-from manovarta_core.dialogue import ANXIETY_LOOP_BREAK_PROMPTS, ANXIETY_LOOP_CLOSE_PROMPTS, FINAL_HOLD_MESSAGES, DialoguePlanner
+from manovarta_core.dialogue import ANXIETY_LOOP_BREAK_PROMPTS, ANXIETY_LOOP_CLOSE_PROMPTS, FINAL_HOLD_MESSAGES, FINAL_HOLD_VARIANTS, POST_CLOSE_CHOOSER_MESSAGES, DialoguePlanner
 from manovarta_core.scoring import ConversationScorer
 from manovarta_core.schemas import ChatSession, DialoguePlan, DisclosureMetrics, SafetyFlag, Turn, UserStyleProfile
 
@@ -515,7 +515,7 @@ def test_english_close_prompt_followed_by_nonpriority_reply_stays_on_final_hold(
     reply, asked_item = planner.next_reply(snapshot, session)
 
     assert asked_item is None
-    assert reply == FINAL_HOLD_MESSAGES["en"]
+    assert reply == POST_CLOSE_CHOOSER_MESSAGES["en"]
 
 
 def test_hinglish_close_prompt_followed_by_nonpriority_reply_stays_on_final_hold():
@@ -534,7 +534,7 @@ def test_hinglish_close_prompt_followed_by_nonpriority_reply_stays_on_final_hold
     reply, asked_item = planner.next_reply(snapshot, session)
 
     assert asked_item is None
-    assert reply == FINAL_HOLD_MESSAGES["hinglish"]
+    assert reply == POST_CLOSE_CHOOSER_MESSAGES["hinglish"]
 
 
 def test_continuity_note_is_not_reused_after_it_already_appeared():
@@ -591,7 +591,47 @@ def test_close_prompt_followed_by_short_reply_does_not_reopen_anxiety_branch():
     reply, asked_item = planner.next_reply(snapshot, session)
 
     assert asked_item is None
-    assert reply == FINAL_HOLD_MESSAGES["hi"]
+    assert reply == POST_CLOSE_CHOOSER_MESSAGES["hi"]
+
+
+def test_post_close_nonexpansive_followup_uses_chooser_message():
+    planner = DialoguePlanner()
+    session = ChatSession(
+        session_id="english-post-close-chooser",
+        language="en",
+        turns=[
+            Turn(turn_id=1, speaker="assistant", text=ANXIETY_LOOP_CLOSE_PROMPTS["en"], language_tag="en"),
+            Turn(turn_id=2, speaker="user", text="No not like that.", language_tag="en"),
+        ],
+        asked_items=["gad_q2_control_worry", "gad_q3_excessive_worry", "gad_q4_trouble_relaxing"],
+    )
+
+    snapshot = ConversationScorer().analyze(session.turns, "en", SafetyFlag(level="none"))
+    reply, asked_item = planner.next_reply(snapshot, session)
+
+    assert asked_item is None
+    assert reply == POST_CLOSE_CHOOSER_MESSAGES["en"]
+
+
+def test_post_close_clear_sleep_signal_reopens_specific_branch():
+    planner = DialoguePlanner()
+    session = ChatSession(
+        session_id="english-post-close-reopen-sleep",
+        language="en",
+        turns=[
+            Turn(turn_id=1, speaker="assistant", text=ANXIETY_LOOP_CLOSE_PROMPTS["en"], language_tag="en"),
+            Turn(turn_id=2, speaker="user", text="The main thing still missing is that my sleep is broken almost every night now.", language_tag="en"),
+        ],
+        asked_items=["gad_q2_control_worry", "gad_q3_excessive_worry", "gad_q4_trouble_relaxing"],
+    )
+
+    snapshot = ConversationScorer().analyze(session.turns, "en", SafetyFlag(level="none"))
+    coverage = planner.build_plan(snapshot, session)
+    reply, asked_item = planner.next_reply(snapshot, session)
+
+    assert coverage.dialogue.target_topic == "sleep"
+    assert asked_item == "phq_q3_sleep"
+    assert reply != FINAL_HOLD_MESSAGES["en"]
 
 
 def test_structured_summary_acknowledgement_does_not_reopen_with_new_question():
@@ -614,7 +654,7 @@ def test_structured_summary_acknowledgement_does_not_reopen_with_new_question():
     reply, asked_item = planner.next_reply(snapshot, session)
 
     assert asked_item is None
-    assert reply == FINAL_HOLD_MESSAGES["hi"]
+    assert reply in FINAL_HOLD_VARIANTS["hi"]
 
 
 def test_break_prompt_followed_by_family_scoped_answer_closes_instead_of_reopening():
@@ -660,7 +700,7 @@ def test_close_prompt_followed_by_long_garbled_followup_stays_on_final_hold():
     reply, asked_item = planner.next_reply(snapshot, session)
 
     assert asked_item is None
-    assert reply == FINAL_HOLD_MESSAGES["hi"]
+    assert reply in FINAL_HOLD_VARIANTS["hi"]
 
 
 def test_relax_duration_answer_triggers_break_prompt_before_reopening():
