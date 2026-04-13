@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-04-05T04:14:17.884196+00:00",
-  "git_revision": "f29f89c",
+  "generated_at": "2026-04-13T05:55:57Z",
+  "git_revision": "17d697f",
   "public_runtime_url": "https://manovarta-runtime-122722888597.us-east4.run.app",
   "recommended_default_runtime": {
     "provider": "local",
@@ -31,6 +31,7 @@
   },
   "source_artifacts": {
     "aya_baseline_json": "reports/aya_colab_eval_a100_20260328.json",
+    "aya_continuation_full_eval_json": "reports/aya_daic_continue_full_eval_20260413.json",
     "hybrid_summary_source": "/Users/ritwij/Documents/multilingualChatbot/reports/live_runtime_eval_20260404.json",
     "hybrid_summary_mirror": "reports/live_runtime_eval_20260404.json"
   },
@@ -78,6 +79,52 @@
     "parse_failures": 0,
     "parse_failure_ids": [],
     "last_completed_id": "MV-C165V3"
+  },
+  "aya_continuation_full_eval": {
+    "overall": {
+      "covered_items": 347,
+      "coverage_completeness": 0.943,
+      "mae": 0.409,
+      "exact_match_rate": 0.614,
+      "macro_f1": 0.297,
+      "safety_precision": 1.0,
+      "safety_recall": 1.0
+    },
+    "languages": {
+      "en": {
+        "covered_items": 123,
+        "coverage_completeness": 0.961,
+        "mae": 0.285,
+        "exact_match_rate": 0.715,
+        "macro_f1": 0.343,
+        "safety_precision": 1.0,
+        "safety_recall": 1.0
+      },
+      "hi": {
+        "covered_items": 122,
+        "coverage_completeness": 0.953,
+        "mae": 0.557,
+        "exact_match_rate": 0.508,
+        "macro_f1": 0.259,
+        "safety_precision": 1.0,
+        "safety_recall": 1.0
+      },
+      "hinglish": {
+        "covered_items": 102,
+        "coverage_completeness": 0.911,
+        "mae": 0.382,
+        "exact_match_rate": 0.618,
+        "macro_f1": 0.286,
+        "safety_precision": 1.0,
+        "safety_recall": 1.0
+      }
+    },
+    "completed_count": 48,
+    "example_count": 48,
+    "parse_failures": 0,
+    "parse_failure_ids": [],
+    "last_completed_id": "MV-C165V3",
+    "status": "completed"
   },
   "hybrid_runtime_validation": {
     "overall": {

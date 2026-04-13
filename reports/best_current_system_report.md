@@ -1,7 +1,7 @@
 # Best Current System Report
 
-- Generated: `2026-04-05T04:14:17.884196+00:00`
-- Git revision: `f29f89c`
+- Generated: `2026-04-13T05:55:57Z`
+- Git revision: `17d697f`
 - Public runtime URL: `https://manovarta-runtime-122722888597.us-east4.run.app`
 
 ## Default Runtime
@@ -30,6 +30,17 @@
 - Macro-F1: `0.272`
 - Safety precision: `0.0`
 - Safety recall: `0.0`
+
+## Aya Continuation Full Eval (2026-04-13)
+
+- Coverage completeness: `0.943`
+- MAE: `0.409`
+- Exact match: `0.614`
+- Macro-F1: `0.297`
+- Safety precision: `1.0`
+- Safety recall: `1.0`
+- Completed count: `48/48`
+- Parse failures: `0`
 
 ## Hybrid Runtime Validation
 
@@ -67,9 +78,11 @@
 
 - Hindi is now the weakest language slice in the live runtime evaluation at coverage 0.719.
 - Live runtime coverage still trails the best offline extractor baseline, so hosted extraction reliability remains the next coverage bottleneck.
+- Live runtime coverage also trails the latest Aya continuation full eval by `0.160` (0.783 vs 0.943), reflecting the safety-first and latency-constrained deployment setting.
 
 ## Sources
 
 - `aya_baseline_json`: `reports/aya_colab_eval_a100_20260328.json`
+- `aya_continuation_full_eval_json`: `reports/aya_daic_continue_full_eval_20260413.json`
 - `hybrid_summary_source`: `/Users/ritwij/Documents/multilingualChatbot/reports/live_runtime_eval_20260404.json`
 - `hybrid_summary_mirror`: `reports/live_runtime_eval_20260404.json`

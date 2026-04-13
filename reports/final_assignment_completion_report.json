@@ -1,7 +1,8 @@
 {
-  "generated_at": "2026-04-08T08:38:35Z",
+  "generated_at": "2026-04-13T05:55:57Z",
   "source_reports": {
     "hybrid_runtime_validation": "reports/live_runtime_eval_20260404.json",
+    "aya_continuation_full_eval": "reports/aya_daic_continue_full_eval_20260413.json",
     "best_current_system": "reports/best_current_system_report.json",
     "ship_note": "reports/ship_note_2026-04-04.md"
   },
@@ -23,7 +24,7 @@
       "browser_text_to_speech": true,
       "cloud_speech_to_text": true,
       "cloud_text_to_speech": true,
-      "transcript_before_submit": false,
+      "transcript_before_submit": true,
       "note": "Voice now supports backend Google Cloud STT/TTS for English, Hindi, and Hinglish-oriented use, with browser speech kept as a fallback wrapper."
     },
     "patient_profile_onboarding": {
@@ -64,19 +65,37 @@
         "Urgent human-review routing"
       ]
     },
+    "gold_dataset_and_labels": {
+      "status": "complete",
+      "total_sessions": 60,
+      "fully_complete": 60,
+      "structural_fully_complete": 60,
+      "audio_present": 60,
+      "metadata_rows_present": 60,
+      "transcripts_present": 60,
+      "transcript_placeholders": 0,
+      "label_placeholders": 0,
+      "require_human_labels": true,
+      "human_annotator_a_present": 60,
+      "human_annotator_b_present": 60,
+      "human_adjudicated_present": 60,
+      "sessions_with_human_label_stack": 60,
+      "machine_generated_label_files": 0,
+      "note": "This report enforces human-label strict mode. Structural completeness is tracked separately via structural_fully_complete=60."
+    },
     "deployment": {
-      "status": "partial",
+      "status": "complete",
       "assets": {
         "dockerfile": "Dockerfile",
         "docker_compose_demo": "docker-compose.demo.yml",
         "render_blueprint": "render.yaml",
-        "shipped_bundle": "artifacts/manovarta_shipped_baseline_20260404.zip"
+        "shipped_bundle": "artifacts/manovarta_shipped_baseline_20260413.zip"
       },
       "present": {
         "dockerfile": true,
         "docker_compose_demo": true,
         "render_blueprint": true,
-        "shipped_bundle": false
+        "shipped_bundle": true
       },
       "public_runtime_url": "https://manovarta-runtime-122722888597.us-east4.run.app",
       "live_runtime": {
@@ -90,13 +109,14 @@
         "semantic_safety_model": null,
         "hybrid_safety_enabled": true,
         "local_safety_checkpoint_enabled": true,
-        "local_safety_checkpoint_path": "/tmp/manovarta_local_safety_checkpoint/59e9264e860d",
+        "local_safety_checkpoint_path": "/app/outputs/local_safety_boost/safety-indicbert-best-infer-fp16",
         "remote_safety_fallback_enabled": false,
         "live_chat_llm_analysis_enabled": false,
         "cloud_voice_enabled": true,
         "speech_to_text_enabled": true,
         "text_to_speech_enabled": true
       },
+      "runtime_alignment_issues": [],
       "note": "Repo includes local container deployment, cloud deployment configuration, and a live public runtime whose config is mirrored here."
     },
     "bonus": {
@@ -114,6 +134,7 @@
       "stable_item_traces": 96,
       "avg_turns_to_stable_score": 2.292,
       "median_turns_to_stable_score": 2.0,
+      "source": "seed conversations",
       "note": "This is computed by replaying seed conversations turn by turn and finding the earliest user-turn prefix where an item score matches the conversation-final value and stays there."
     },
     "safety_accuracy": {
@@ -123,19 +144,19 @@
       "source": "live runtime endpoint evaluation"
     },
     "latency": {
-      "cold_start_ms": 7.0,
-      "warm_avg_ms": 8.77,
-      "warm_median_ms": 9.73,
-      "warm_p95_ms": 10.34,
+      "cold_start_ms": 7.55,
+      "warm_avg_ms": 8.18,
+      "warm_median_ms": 8.0,
+      "warm_p95_ms": 8.7,
       "samples": 6,
       "note": "Measured through the FastAPI chat endpoint with Hugging Face network calls disabled so the number reflects deterministic local screening latency rather than hosted-model round trips."
     },
     "bonus_validation": {
       "nudge_feedback_loop_present": true,
       "nudge_queue_after_brief_turn": [
-        "anxiety",
         "example",
-        "impact"
+        "impact",
+        "timing"
       ],
       "nudged_touched_delta": 3,
       "nudge_words_added": 17,
@@ -156,6 +177,19 @@
       "parse_failures": 0,
       "source": "live runtime endpoint evaluation",
       "note": "Coverage completeness is used as the main operational discourse metric because it directly tracks whether the system stayed on task and covered clinically relevant questionnaire areas."
+    },
+    "extractor_continuation_full_eval": {
+      "coverage_completeness": 0.943,
+      "exact_match_rate": 0.614,
+      "macro_f1": 0.297,
+      "mae": 0.409,
+      "safety_precision": 1.0,
+      "safety_recall": 1.0,
+      "completed_count": 48,
+      "example_count": 48,
+      "parse_failures": 0,
+      "source": "reports/aya_daic_continue_full_eval_20260413.json",
+      "note": "Full non-smoke Aya continuation evaluation on the 48-example held-out test set was completed on 2026-04-13 using local Aya base weights + adapter continuation, 4-bit loading, and rule safety monitor."
     }
   },
   "shipped_baseline": {
@@ -170,7 +204,7 @@
       "semantic_safety_enabled": false,
       "decision": "Use the self-hosted local runtime with the promoted local safety checkpoint and rule monitor as the default deployment path."
     },
-    "bundle": "artifacts/manovarta_shipped_baseline_20260404.zip"
+    "bundle": "artifacts/manovarta_shipped_baseline_20260413.zip"
   },
-  "remaining_external_step": "None. The public runtime is live at https://manovarta-runtime-122722888597.us-east4.run.app."
+  "remaining_external_step": "None. The public runtime and strict-compliance pack are aligned."
 }
