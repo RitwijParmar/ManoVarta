@@ -7,7 +7,7 @@
 - PDF pages: `7`
 - References start page: `6`
 - Main content pages (excluding references): `5`
-- Gold dataset strict status: complete (`60/60` sessions, dual annotations + adjudication)
+- Gold dataset assignment status: complete (`30/30` English gold-core sessions plus `30/30` Hindi real-audio sessions with local DSM-aligned dual annotations + adjudication; Hindi remains a repurposed pilot rather than a source-matched clinical corpus)
 - Full Aya continuation held-out eval completed: `48/48`, parse failures `0`
 - Final shipped bundle built: `artifacts/manovarta_shipped_baseline_20260413.zip`
 

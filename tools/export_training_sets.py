@@ -8,6 +8,7 @@ if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
 from manovarta_core.daic_woz import load_daic_conversations
+from manovarta_core.gold_data import load_gold_conversations, load_gold_profiles
 from manovarta_core.seed_data import load_seed_conversations, load_seed_profiles
 from manovarta_core.training_data import (
     assign_conversations_to_splits,
@@ -20,12 +21,63 @@ from manovarta_core.training_data import (
 )
 
 
+def load_export_corpus(source: str) -> tuple[list[dict], list[dict], dict[str, int]]:
+    if source == "seed":
+        profiles = load_seed_profiles()
+        conversations = load_seed_conversations()
+        return profiles, conversations, {"seed": len(conversations), "gold_core": 0, "hindi_pilot": 0}
+    if source == "gold-core":
+        profiles = load_gold_profiles(include_hindi_pilot=False, gold_core_only=True)
+        conversations = load_gold_conversations(include_hindi_pilot=False, gold_core_only=True)
+        return profiles, conversations, {"seed": 0, "gold_core": len(conversations), "hindi_pilot": 0}
+    if source == "gold":
+        profiles = load_gold_profiles(include_hindi_pilot=True, gold_core_only=False)
+        conversations = load_gold_conversations(include_hindi_pilot=True, gold_core_only=False)
+        return profiles, conversations, {
+            "seed": 0,
+            "gold_core": sum(1 for record in conversations if record.get("dataset_role") == "gold_core"),
+            "hindi_pilot": sum(1 for record in conversations if record.get("dataset_role") == "pilot_voice_extension"),
+        }
+    if source == "hybrid":
+        seed_profiles = load_seed_profiles()
+        seed_conversations = load_seed_conversations()
+        gold_profiles = load_gold_profiles(include_hindi_pilot=True, gold_core_only=False)
+        gold_conversations = load_gold_conversations(include_hindi_pilot=True, gold_core_only=False)
+        profiles = _merge_profiles(seed_profiles, gold_profiles)
+        conversations = [*seed_conversations, *gold_conversations]
+        return profiles, conversations, {
+            "seed": len(seed_conversations),
+            "gold_core": sum(1 for record in gold_conversations if record.get("dataset_role") == "gold_core"),
+            "hindi_pilot": sum(1 for record in gold_conversations if record.get("dataset_role") == "pilot_voice_extension"),
+        }
+    raise ValueError(f"Unsupported source: {source}")
+
+
+def _merge_profiles(*profile_lists: list[dict]) -> list[dict]:
+    merged: dict[str, dict] = {}
+    for profile_list in profile_lists:
+        for profile in profile_list:
+            merged[profile["patient_id"]] = profile
+    return list(merged.values())
+
+
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Export fine-tuning and classifier datasets from the seed corpus.")
+    parser = argparse.ArgumentParser(
+        description=(
+            "Export fine-tuning and classifier datasets from seed, gold-core, gold, or hybrid corpora. "
+            "English gold is the stronger adjudicated core; Hindi gold rows are treated as a repurposed pilot voice-extension set."
+        )
+    )
     parser.add_argument(
         "--output-dir",
         default=str(PROJECT_ROOT / "data" / "processed"),
         help="Directory for JSONL outputs.",
+    )
+    parser.add_argument(
+        "--source",
+        choices=["seed", "gold-core", "gold", "hybrid"],
+        default="hybrid",
+        help="Training export source. hybrid mixes seed data with the adjudicated English gold core and Hindi pilot audio set.",
     )
     parser.add_argument(
         "--daic-root",
@@ -61,10 +113,14 @@ def main() -> int:
     args = parser.parse_args()
 
     output_dir = Path(args.output_dir)
-    profiles = load_seed_profiles()
-    conversations = load_seed_conversations()
+    profiles, conversations, source_counts = load_export_corpus(args.source)
     split_manifest = build_profile_splits(profiles)
     split_conversations = assign_conversations_to_splits(conversations, split_manifest)
+    print(
+        "source composition: "
+        f"source={args.source} seed={source_counts['seed']} "
+        f"gold_core={source_counts['gold_core']} hindi_pilot={source_counts['hindi_pilot']}"
+    )
 
     for split_name, split_records in split_conversations.items():
         extractor_examples = build_extractor_examples(split_records, schema_style=args.extractor_style)

@@ -1,0 +1,1422 @@
+{
+  "session_id": "MVGOLD-EN-022",
+  "language": "en",
+  "cohort": "expansion",
+  "target_primary_domain": "anxiety_control",
+  "target_risk_band": "none",
+  "packet_stage": "annotator_a",
+  "target_output_file": "data/gold/labels/MVGOLD-EN-022.annotator_a.json",
+  "related_files": {
+    "audio_file": "data/gold/audio/en/MVGOLD-EN-022.wav",
+    "transcript_file": "data/gold/transcripts/en/MVGOLD-EN-022.json",
+    "annotator_a_file": "data/gold/labels/MVGOLD-EN-022.annotator_a.json",
+    "annotator_b_file": "data/gold/labels/MVGOLD-EN-022.annotator_b.json",
+    "adjudicated_label_file": "data/gold/labels/MVGOLD-EN-022.adjudicated.json"
+  },
+  "metadata": {
+    "session_id": "MVGOLD-EN-022",
+    "participant_id": "337",
+    "language": "en",
+    "age_years": "",
+    "age_band": "adult_unknown_from_source",
+    "occupation": "unknown_from_source",
+    "living_situation": "unknown_from_source",
+    "support_system": "unknown_from_source",
+    "consent_recorded": "public_dataset_license",
+    "collection_source": "e_daic_public_2019",
+    "audio_file": "data/gold/audio/en/MVGOLD-EN-022.wav",
+    "transcript_file": "data/gold/transcripts/en/MVGOLD-EN-022.json",
+    "annotator_a_file": "data/gold/labels/MVGOLD-EN-022.annotator_a.json",
+    "annotator_b_file": "data/gold/labels/MVGOLD-EN-022.annotator_b.json",
+    "adjudicated_label_file": "data/gold/labels/MVGOLD-EN-022.adjudicated.json",
+    "split": "expansion",
+    "notes": "Imported from E-DAIC public participant archive; PHQ8 items from public labels, remaining items machine-inferred and require clinician review for strict claims."
+  },
+  "transcript": {
+    "session_id": "MVGOLD-EN-022",
+    "language": "en",
+    "cohort": "expansion",
+    "is_placeholder": false,
+    "collection_status": "collected_public_dataset",
+    "notes": "Imported from E-DAIC public participant archive.",
+    "profile": {
+      "age_years": null,
+      "age_band": "adult_unknown_from_source",
+      "occupation": "unknown_from_source",
+      "living_situation": "unknown_from_source",
+      "support_system": "unknown_from_source",
+      "gender": "female"
+    },
+    "source": {
+      "dataset": "e_daic_public",
+      "participant_id": "337",
+      "split": "train",
+      "phq_binary": "1",
+      "phq_score": "10",
+      "source_audio_path": "337_P/337_AUDIO.wav",
+      "source_transcript_path": "337_P/337_Transcript.csv"
+    },
+    "turns": [
+      {
+        "turn_id": "u1",
+        "speaker": "user",
+        "text": "virtuous",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "11.6",
+        "end_time_sec": "12.1",
+        "asr_confidence": "0.5309827327728271"
+      },
+      {
+        "turn_id": "u2",
+        "speaker": "user",
+        "text": "are you okay",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "53.7",
+        "end_time_sec": "54.4",
+        "asr_confidence": "0.9698183536529541"
+      },
+      {
+        "turn_id": "u3",
+        "speaker": "user",
+        "text": "yeah",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "55.5",
+        "end_time_sec": "55.9",
+        "asr_confidence": "0.8074098229408264"
+      },
+      {
+        "turn_id": "u4",
+        "speaker": "user",
+        "text": "I'm doing okay how are you doing",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "60.6",
+        "end_time_sec": "63.1",
+        "asr_confidence": "0.9838857054710388"
+      },
+      {
+        "turn_id": "u5",
+        "speaker": "user",
+        "text": "I'm originally from like a suburb of LA from the San Gabriel Valley",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "68.7",
+        "end_time_sec": "73.2",
+        "asr_confidence": "0.810348629951477"
+      },
+      {
+        "turn_id": "u6",
+        "speaker": "user",
+        "text": "I like the diversity I like the vibe of the city I've lived other places and just not",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "78.5",
+        "end_time_sec": "84.2",
+        "asr_confidence": "0.9571613669395447"
+      },
+      {
+        "turn_id": "u7",
+        "speaker": "user",
+        "text": "as happy here I feel like I can really Thrive here so I just like la like all the things that are so close together and there's a lot of interesting things are totally different parts of the city 2 miles away from each other",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "85.2",
+        "end_time_sec": "99.4",
+        "asr_confidence": "0.9668129086494446"
+      },
+      {
+        "turn_id": "u8",
+        "speaker": "user",
+        "text": "don't like the traffic. Like all the cars but I can live with it I mean there's not that much I don't like",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "108.5",
+        "end_time_sec": "116.3",
+        "asr_confidence": "0.9519400000572205"
+      },
+      {
+        "turn_id": "u9",
+        "speaker": "user",
+        "text": "aesthetic music vocal performance the study music technology things like that",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "123.1",
+        "end_time_sec": "129.4",
+        "asr_confidence": "0.881784975528717"
+      },
+      {
+        "turn_id": "u10",
+        "speaker": "user",
+        "text": "yes",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "133.2",
+        "end_time_sec": "133.8",
+        "asr_confidence": "0.9928943514823914"
+      },
+      {
+        "turn_id": "u11",
+        "speaker": "user",
+        "text": "right now I sing an opera company but my I do have a day job because it doesn't pay that much unless you're actually working for the LA Opera so I do have a day job and work at a call center that caters mostly to performers and actors and things like that and it's really good because if I get a call I can call in and change my shift very easily actually pretty good gig",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "136.2",
+        "end_time_sec": "162.3",
+        "asr_confidence": "0.9624028205871582"
+      },
+      {
+        "turn_id": "u12",
+        "speaker": "user",
+        "text": "they do some technology gigs sometimes yes you do some recording some live sound stuff but I'm kind of want to get away from that do some video work sometimes but again I want to get away from that don't go back to the because I find that performing more is more interesting I like being Talent where they like being crew",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "163.7",
+        "end_time_sec": "181.6",
+        "asr_confidence": "0.9334653615951538"
+      },
+      {
+        "turn_id": "u13",
+        "speaker": "user",
+        "text": "so I kind of want to get away from that side and start working more toward actually doing what I want to do with my life",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "183.1",
+        "end_time_sec": "189.4",
+        "asr_confidence": "0.951900839805603"
+      },
+      {
+        "turn_id": "u14",
+        "speaker": "user",
+        "text": "okay",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "190.7",
+        "end_time_sec": "191.1",
+        "asr_confidence": "0.9022419452667236"
+      },
+      {
+        "turn_id": "u15",
+        "speaker": "user",
+        "text": "you consider yourself",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "194.2",
+        "end_time_sec": "195.1",
+        "asr_confidence": "0.9253774881362915"
+      },
+      {
+        "turn_id": "u16",
+        "speaker": "user",
+        "text": "sometimes mean repair my personal life yeah they do have a shell that I put out there to deal with people but if I'm at home rather just keep to myself or my husband or my cats or whatever talk to family don't really have too many close friends but yeah you know",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "197.0",
+        "end_time_sec": "215.6",
+        "asr_confidence": "0.9542948603630066"
+      },
+      {
+        "turn_id": "u17",
+        "speaker": "user",
+        "text": "I rather keep to myself",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "217.0",
+        "end_time_sec": "218.7",
+        "asr_confidence": "0.9413018822669983"
+      },
+      {
+        "turn_id": "u18",
+        "speaker": "user",
+        "text": "a moderately close to the family that I have laughed have actually lost a lot of family in the last 10 years or so but like thank you but like my gym clothes to my husband and and",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "224.6",
+        "end_time_sec": "237.0",
+        "asr_confidence": "0.9226180911064148"
+      },
+      {
+        "turn_id": "u19",
+        "speaker": "user",
+        "text": "I've got a couple of cousin I talk to you and my aunt that I have an aunt that I talk to you a bit but it's not like we're interacting everyday close together",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "238.4",
+        "end_time_sec": "248.8",
+        "asr_confidence": "0.9166012406349182"
+      },
+      {
+        "turn_id": "u20",
+        "speaker": "user",
+        "text": "but it's somewhat close",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "250.1",
+        "end_time_sec": "253.0",
+        "asr_confidence": "0.9416963458061218"
+      },
+      {
+        "turn_id": "u21",
+        "speaker": "user",
+        "text": "mostly I saying or I read or write or",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "259.1",
+        "end_time_sec": "262.9",
+        "asr_confidence": "0.8877118229866028"
+      },
+      {
+        "turn_id": "u22",
+        "speaker": "user",
+        "text": "hang out and try to clear my mind of all thoughts sometimes it doesn't work but they try to do that and try to",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "266.0",
+        "end_time_sec": "272.9",
+        "asr_confidence": "0.8966718912124634"
+      },
+      {
+        "turn_id": "u23",
+        "speaker": "user",
+        "text": "clear everything and see what starts coming back in and",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "274.9",
+        "end_time_sec": "278.5",
+        "asr_confidence": "0.9713265895843506"
+      },
+      {
+        "turn_id": "u24",
+        "speaker": "user",
+        "text": "sometimes a heart sometimes that doesn't but mostly creating things contacting my family through Facebook or whatever works but",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "280.7",
+        "end_time_sec": "293.1",
+        "asr_confidence": "0.8499660491943359"
+      },
+      {
+        "turn_id": "u25",
+        "speaker": "user",
+        "text": "most of my free time I create things",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "294.4",
+        "end_time_sec": "297.1",
+        "asr_confidence": "0.805395781993866"
+      },
+      {
+        "turn_id": "u26",
+        "speaker": "user",
+        "text": "I like to travel more I travel by car a lot new my idea of",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "301.9",
+        "end_time_sec": "307.3",
+        "asr_confidence": "0.8716405034065247"
+      },
+      {
+        "turn_id": "u27",
+        "speaker": "user",
+        "text": "like having a birthday celebration would be to go on a road trip and I like to travel more",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "309.5",
+        "end_time_sec": "314.5",
+        "asr_confidence": "0.9651275873184204"
+      },
+      {
+        "turn_id": "u28",
+        "speaker": "user",
+        "text": "I'd like to travel for work things or whatever but I don't get as much an opportunity as I would like to travel",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "316.9",
+        "end_time_sec": "322.8",
+        "asr_confidence": "0.9226755499839783"
+      },
+      {
+        "turn_id": "u29",
+        "speaker": "user",
+        "text": "sea of particulate driving my car seem like the landscape change seeing people change seeing you feeling the vibrations of the area change like just seeing what's out there and I know that there's a bigger World outside of",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "327.1",
+        "end_time_sec": "342.6",
+        "asr_confidence": "0.9089194536209106"
+      },
+      {
+        "turn_id": "u30",
+        "speaker": "user",
+        "text": "where I am and where I live in my world and like to see that",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "343.8",
+        "end_time_sec": "347.4",
+        "asr_confidence": "0.9545354843139648"
+      },
+      {
+        "turn_id": "u31",
+        "speaker": "user",
+        "text": "but I like to leave that to go back to my world",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "348.8",
+        "end_time_sec": "351.1",
+        "asr_confidence": "0.8408704996109009"
+      },
+      {
+        "turn_id": "u32",
+        "speaker": "user",
+        "text": "a trip I'd like to take us to make the drive from here to Nevada weather I go all the way to Vegas or just go to Stateline",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "359.7",
+        "end_time_sec": "369.3",
+        "asr_confidence": "0.8984749913215637"
+      },
+      {
+        "turn_id": "u33",
+        "speaker": "user",
+        "text": "my cousin and I would take what we call exit one trip because once you get to the first exit of a highway you're either in another state or you're at the end of the highway so would take those we just sort of impromptu would like a day or two notice just move things around just take off so those are actually trips that I like make could take off and then just come back sometimes the same day sometimes overnight just small short trips that aren't very involved but you just get to go and you see things and see how the desert landscape looks in different seasons how people react in different times of the year in different areas",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "370.9",
+        "end_time_sec": "412.2",
+        "asr_confidence": "0.9674726724624634"
+      },
+      {
+        "turn_id": "u34",
+        "speaker": "user",
+        "text": "too close to home but not",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "413.0",
+        "end_time_sec": "414.5",
+        "asr_confidence": "0.985167384147644"
+      },
+      {
+        "turn_id": "u35",
+        "speaker": "user",
+        "text": "but not close to home close to home but it was still a world away so that cuz I don't really have time to take like a two-week vacation or whatever little things that kind of put things back in perspective and clear my head think like that mean cuz there's sort of a sense of meditation and then that you get on a highway that you can get driving the freeway so I like doing that",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "415.7",
+        "end_time_sec": "438.3",
+        "asr_confidence": "0.9439203143119812"
+      },
+      {
+        "turn_id": "u36",
+        "speaker": "user",
+        "text": "the last time that happened was May of last year so I might be able to do that we actually my aunt came over with my cousin who is 10 years younger than I am and we kind of grew up like sisters and I was about to move away from the Inland Empire which is where they live so kind of took me on a last hurrah when we drove up to Vegas and looked around and came back cuz I actually lived in Vegas for a while but I don't like it so it's kind of a social to some of the locals sites around there and we came back and was an overnight trip but we are driving the entire time",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "443.6",
+        "end_time_sec": "484.2",
+        "asr_confidence": "0.9549612402915955"
+      },
+      {
+        "turn_id": "u37",
+        "speaker": "user",
+        "text": "it's kind of interesting",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "487.7",
+        "end_time_sec": "488.9",
+        "asr_confidence": "0.6833541989326477"
+      },
+      {
+        "turn_id": "u38",
+        "speaker": "user",
+        "text": "things are just inherently unfair when people are mean to the elderly or two children or the animals people who can't fight back and I mean to them just because they can't fight back",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "492.7",
+        "end_time_sec": "502.9",
+        "asr_confidence": "0.9488439559936523"
+      },
+      {
+        "turn_id": "u39",
+        "speaker": "user",
+        "text": "and",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "503.9",
+        "end_time_sec": "504.8",
+        "asr_confidence": "0.8972134590148926"
+      },
+      {
+        "turn_id": "u40",
+        "speaker": "user",
+        "text": "actually",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "505.9",
+        "end_time_sec": "506.6",
+        "asr_confidence": "0.9938145279884338"
+      },
+      {
+        "turn_id": "u41",
+        "speaker": "user",
+        "text": "like to see people who are",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "508.0",
+        "end_time_sec": "509.6",
+        "asr_confidence": "0.972533106803894"
+      },
+      {
+        "turn_id": "u42",
+        "speaker": "user",
+        "text": "as strong as the people who are being mean standing up and being an advocate or what have you",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "511.2",
+        "end_time_sec": "519.0",
+        "asr_confidence": "0.8855839967727661"
+      },
+      {
+        "turn_id": "u43",
+        "speaker": "user",
+        "text": "so I think that's one thing this makes me really mad just being cruel or mean for no reason and I'm not good for people who can't fight back a few people who've done nothing to deserve it",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "520.3",
+        "end_time_sec": "529.9",
+        "asr_confidence": "0.9270641803741455"
+      },
+      {
+        "turn_id": "u44",
+        "speaker": "user",
+        "text": "that kind of really just makes me mad",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "530.8",
+        "end_time_sec": "532.8",
+        "asr_confidence": "0.9291257858276367"
+      },
+      {
+        "turn_id": "u45",
+        "speaker": "user",
+        "text": "okay",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "534.6",
+        "end_time_sec": "535.1",
+        "asr_confidence": "0.9202830791473389"
+      },
+      {
+        "turn_id": "u46",
+        "speaker": "user",
+        "text": "but I'm annoyed I'll try to just walk away from the situation and if the situations to start following me then I'll wind up lashing out somehow either",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "538.7",
+        "end_time_sec": "548.3",
+        "asr_confidence": "0.9551816582679749"
+      },
+      {
+        "turn_id": "u47",
+        "speaker": "user",
+        "text": "are verbally just",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "549.6",
+        "end_time_sec": "551.1",
+        "asr_confidence": "0.6756081581115723"
+      },
+      {
+        "turn_id": "u48",
+        "speaker": "user",
+        "text": "cutting them with a quipper you know really just I really will yell at somebody",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "552.2",
+        "end_time_sec": "558.8",
+        "asr_confidence": "0.8797126412391663"
+      },
+      {
+        "turn_id": "u49",
+        "speaker": "user",
+        "text": "but I'll try to if I try to walk away and diffuse it if that doesn't work they don't let them know that they're annoying me and get away from me",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "560.0",
+        "end_time_sec": "569.6",
+        "asr_confidence": "0.9408331513404846"
+      },
+      {
+        "turn_id": "u50",
+        "speaker": "user",
+        "text": "not like legal trouble or anything because usually I'll find a way to get them to leave me alone",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "572.7",
+        "end_time_sec": "579.2",
+        "asr_confidence": "0.9710654020309448"
+      },
+      {
+        "turn_id": "u51",
+        "speaker": "user",
+        "text": "there's not really like big trouble but cuz it cuz it's it is off-putting and it's not an expected reaction and that's actually kind of cultivated in me that it's not the expected reactions I know that will work and get people away from me so it's not really in trouble and if it's is trouble issues of trouble that is from mad that other person's perspective and doesn't affect me at all because do the situation I can get out of",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "585.9",
+        "end_time_sec": "614.7",
+        "asr_confidence": "0.9569641351699829"
+      },
+      {
+        "turn_id": "u52",
+        "speaker": "user",
+        "text": "so as long as they leave me alone and walk away from it",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "615.8",
+        "end_time_sec": "619.9",
+        "asr_confidence": "0.9567633271217346"
+      },
+      {
+        "turn_id": "u53",
+        "speaker": "user",
+        "text": "the last time I argued with somebody",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "626.4",
+        "end_time_sec": "629.0",
+        "asr_confidence": "0.9596208930015564"
+      },
+      {
+        "turn_id": "u54",
+        "speaker": "user",
+        "text": "Hurt Like a Prayer like a family member or an outsider or somebody not",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "632.2",
+        "end_time_sec": "636.8",
+        "asr_confidence": "0.8873203992843628"
+      },
+      {
+        "turn_id": "u55",
+        "speaker": "user",
+        "text": "the last thing I could think of was",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "638.8",
+        "end_time_sec": "640.9",
+        "asr_confidence": "0.9775009155273438"
+      },
+      {
+        "turn_id": "u56",
+        "speaker": "user",
+        "text": "a argued with my husband about the care of my mother-in-law cuz she's got dementia and so we were the reason we came out here from the Inland Empire with take care of her she won't go anywhere but LA and she is like hardcore Angelino like we know we are that wear that in our nature but we also know it's cheaper to live elsewhere but so we came out here to take care of her",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "642.9",
+        "end_time_sec": "670.8",
+        "asr_confidence": "0.950471818447113"
+      },
+      {
+        "turn_id": "u57",
+        "speaker": "user",
+        "text": "and he wants her to be able to stay in her in her apartment and I want her to move in with us because it would be cheaper and faster and easier and safer for her if she lived with us but she wants to stay where she is cuz she can't see that there's inherent danger now because of the disease process but he wants her to stay where she he wants her to be able to have what you want cuz he's a mama's boy like I am I'm a mama's girl you know I lost my mom like four years ago I'm still a mama's girl and I'll standing still and I know that it brings you a sense of satisfaction to carry out their wishes because you care about them so much that's what they wants you want to get it for him and because you don't they you know that happened when you were going up with me try to give you what you want because you wanted it and you want to do that for them now they started giving back to them somebody that you care about me you feel deserves it",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "671.8",
+        "end_time_sec": "729.0",
+        "asr_confidence": "0.9684644937515259"
+      },
+      {
+        "turn_id": "u58",
+        "speaker": "user",
+        "text": "but it's kind of dangerous for you know I don't want this thing to happen to her yet I want her to remain who she is for as long as you can so I know it seems that she has is going to erase who she is eventually and eventually she will have to be put in a place where they can give a 24-hour medically trained care but until then we can we can handle it you know amongst ourselves it's not that bad but it's getting where she really should has no business living by herself anymore so the solution right now is he stays there most of time with her and I go back to our house and it gets stressful and it gets annoying because it's I do I handle the outside things are run the errand to take her to the store things like that he does the day-to-day things make sure she has she eats make sure she has clean clothes things like that",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "729.9",
+        "end_time_sec": "781.0",
+        "asr_confidence": "0.9714965224266052"
+      },
+      {
+        "turn_id": "u59",
+        "speaker": "user",
+        "text": "so me it's a partnership it to its",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "782.3",
+        "end_time_sec": "785.0",
+        "asr_confidence": "0.823145866394043"
+      },
+      {
+        "turn_id": "u60",
+        "speaker": "user",
+        "text": "a dual effort is very much to do effort but I would like her to move in with us so that was that's like",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "786.5",
+        "end_time_sec": "793.0",
+        "asr_confidence": "0.9019524455070496"
+      },
+      {
+        "turn_id": "u61",
+        "speaker": "user",
+        "text": "a source of not really like yelling screaming argument but Lively discussion and debate",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "795.0",
+        "end_time_sec": "802.7",
+        "asr_confidence": "0.9476614594459534"
+      },
+      {
+        "turn_id": "u62",
+        "speaker": "user",
+        "text": "not insurmountable mean life's not going to be easy ever and if it is at when you should worry because that's when somebody can pull the rug out from under you so as long as you're on top of things in your present your life is not going to be easy you deal with it and move on",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "808.8",
+        "end_time_sec": "824.4",
+        "asr_confidence": "0.9214012026786804"
+      },
+      {
+        "turn_id": "u63",
+        "speaker": "user",
+        "text": "the most positive influence to think I've been probably my mother and my grandmother cuz my mom was pretty much a single mom and my grandmother helped raise me and they actually",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "830.7",
+        "end_time_sec": "840.0",
+        "asr_confidence": "0.9406315088272095"
+      },
+      {
+        "turn_id": "u64",
+        "speaker": "user",
+        "text": "gave me a lot of confidence and but we're realistic about it",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "842.9",
+        "end_time_sec": "848.6",
+        "asr_confidence": "0.9800337553024292"
+      },
+      {
+        "turn_id": "u65",
+        "speaker": "user",
+        "text": "I mean I think I have sort of a",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "849.5",
+        "end_time_sec": "851.8",
+        "asr_confidence": "0.920141339302063"
+      },
+      {
+        "turn_id": "u66",
+        "speaker": "user",
+        "text": "realistic serve a downer temperament to myself that they that they helped me see that it's just in me and it's not something I can't get over and that you know life's going to go on and my mom would say to me when you're forty or fourty whether you working at McDonald's or doing what you want with your life I think that was a big influence and how it with I was like my life since she has passed",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "852.8",
+        "end_time_sec": "877.3",
+        "asr_confidence": "0.9396971464157104"
+      },
+      {
+        "turn_id": "u67",
+        "speaker": "user",
+        "text": "I regret not taking care of myself in the last year my mother's life because I think I may have clouded some of my decisions know it do have underlying conditions everyone in my family is diabetic I didn't take care of that when she was the last year for life because I was too busy wanting to get her home my focus was to get her home so I didn't eat ride I didn't take my insulin right on my wanted making myself insulin resistant that that you're just because my blood sugar was so high for a like a year eating just horrible Foods when I did eat so it really took it really actually made myself very sick and I'm wondering well if I didn't if I would have taken care of myself and I had my head on completely straighten my my vision in my thoughts weren't complete run clouded",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "885.8",
+        "end_time_sec": "934.7",
+        "asr_confidence": "0.9636978507041931"
+      },
+      {
+        "turn_id": "u68",
+        "speaker": "user",
+        "text": "what I made some better decisions on her behalf especially when she needed them when she needed me to be to step in and make this is for because she wound up having a health catastrophe she had kidney we said can you damage I want to be kidney failure and her health insurance provider miss that so she wanted having sort of this hole",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "935.6",
+        "end_time_sec": "959.5",
+        "asr_confidence": "0.9451144337654114"
+      },
+      {
+        "turn_id": "u69",
+        "speaker": "user",
+        "text": "catastrophe where everything at once just started breaking down she wanted having a stroke at like 51 small stroke and it just kind of went down from there something while if I didn't if I had taken care of better care of myself but I've been able to take better care of her",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "960.8",
+        "end_time_sec": "977.9",
+        "asr_confidence": "0.9502872824668884"
+      },
+      {
+        "turn_id": "u70",
+        "speaker": "user",
+        "text": "I know there wasn't anything I would have been able to do to prevent her death what I say if I what I've been able to make it easier on her",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "979.3",
+        "end_time_sec": "988.0",
+        "asr_confidence": "0.9125420451164246"
+      },
+      {
+        "turn_id": "u71",
+        "speaker": "user",
+        "text": "if I would have taken care of myself that's like one huge regret that I have",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "988.9",
+        "end_time_sec": "993.1",
+        "asr_confidence": "0.9781447052955627"
+      },
+      {
+        "turn_id": "u72",
+        "speaker": "user",
+        "text": "oh I know I am but it's my desire to take responsibility for everyone and everything that I care about taking responsibility for my own life and me and mine and I know other people I can't really direct them into my own Vision because they're their own",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "998.4",
+        "end_time_sec": "1017.4",
+        "asr_confidence": "0.9454243183135986"
+      },
+      {
+        "turn_id": "u73",
+        "speaker": "user",
+        "text": "individual beings",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1018.5",
+        "end_time_sec": "1019.9",
+        "asr_confidence": "0.9715307354927063"
+      },
+      {
+        "turn_id": "u74",
+        "speaker": "user",
+        "text": "and they can't you know be what I want them to be and I know they're not going to be",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1020.9",
+        "end_time_sec": "1026.3",
+        "asr_confidence": "0.9317242503166199"
+      },
+      {
+        "turn_id": "u75",
+        "speaker": "user",
+        "text": "but I still have you know my ideals and I want the way I want everything to go and I want everybody that I care about to be happy and to be able to",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1027.4",
+        "end_time_sec": "1038.0",
+        "asr_confidence": "0.962627649307251"
+      },
+      {
+        "turn_id": "u76",
+        "speaker": "user",
+        "text": "fit into my life in a way in the best way possible but I know there are other beings and I'm not going to be able to do that for them then I can build you up for me but it still buy ideals so I have to sometimes have to look at it going well is this what I want because I want it or what is what they want and what's their is their decision or mine and she's it's theirs I know it's there so if you really care about somebody you're just going to support them and go with them but",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1041.5",
+        "end_time_sec": "1070.9",
+        "asr_confidence": "0.9592703580856323"
+      },
+      {
+        "turn_id": "u77",
+        "speaker": "user",
+        "text": "it still",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1072.0",
+        "end_time_sec": "1072.6",
+        "asr_confidence": "0.774098813533783"
+      },
+      {
+        "turn_id": "u78",
+        "speaker": "user",
+        "text": "kind of hard for me and I know I got to get over it",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1073.9",
+        "end_time_sec": "1077.8",
+        "asr_confidence": "0.981778085231781"
+      },
+      {
+        "turn_id": "u79",
+        "speaker": "user",
+        "text": "10 or 20 years ago",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1088.3",
+        "end_time_sec": "1089.6",
+        "asr_confidence": "0.9545440673828125"
+      },
+      {
+        "turn_id": "u80",
+        "speaker": "user",
+        "text": "probably to have been more assertive and starting my own life because I want up taking care of my mother mean she got sick literally the weekend I graduated from college and had a job lined up and had to pull out of that because she needed me to take care of her I think would have been more aggressive about starting my own life getting a job outside the house in addition to caring for her getting my own job history of my own credit history thing like to think like that built up instead of becoming just totally her daughter for about 10 years",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1095.6",
+        "end_time_sec": "1128.6",
+        "asr_confidence": "0.9534258246421814"
+      },
+      {
+        "turn_id": "u81",
+        "speaker": "user",
+        "text": "so I figured I probably would have done that",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1129.7",
+        "end_time_sec": "1132.4",
+        "asr_confidence": "0.9103255271911621"
+      },
+      {
+        "turn_id": "u82",
+        "speaker": "user",
+        "text": "Potomac do that and keep who you are and learn to separate",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1133.6",
+        "end_time_sec": "1139.5",
+        "asr_confidence": "0.9519354701042175"
+      },
+      {
+        "turn_id": "u83",
+        "speaker": "user",
+        "text": "you're who you are and what you feel you need to be doing for your family to keep a sense of yourself that's probably what I would have induced things for yourself to keep that you sent of yourself that's probably what are we giving myself 10 years ago",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1141.2",
+        "end_time_sec": "1157.5",
+        "asr_confidence": "0.9145972728729248"
+      },
+      {
+        "turn_id": "u84",
+        "speaker": "user",
+        "text": "no",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1162.0",
+        "end_time_sec": "1162.3",
+        "asr_confidence": "0.9313277006149292"
+      },
+      {
+        "turn_id": "u85",
+        "speaker": "user",
+        "text": "no",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1165.3",
+        "end_time_sec": "1165.7",
+        "asr_confidence": "0.9162379503250122"
+      },
+      {
+        "turn_id": "u86",
+        "speaker": "user",
+        "text": "I know but probably cuz I haven't gone to a doctor about it cuz I don't want to know",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1168.8",
+        "end_time_sec": "1174.0",
+        "asr_confidence": "0.9461233019828796"
+      },
+      {
+        "turn_id": "u87",
+        "speaker": "user",
+        "text": "I mean it's not I know there were times in my life where I've been severely depressed and usually circumstances and had to pull myself out of it but I'd rather pull myself out of it for resorting to treatment",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1175.6",
+        "end_time_sec": "1190.2",
+        "asr_confidence": "0.9320947527885437"
+      },
+      {
+        "turn_id": "u88",
+        "speaker": "user",
+        "text": "after my mother had died may have been this long battle for a year that we lost and I didn't know",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1195.8",
+        "end_time_sec": "1204.2",
+        "asr_confidence": "0.9419872164726257"
+      },
+      {
+        "turn_id": "u89",
+        "speaker": "user",
+        "text": "if I if I was to blame for that it's like logically knew I wasn't but",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1205.5",
+        "end_time_sec": "1210.5",
+        "asr_confidence": "0.8891882300376892"
+      },
+      {
+        "turn_id": "u90",
+        "speaker": "user",
+        "text": "how can I convince myself of that",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1212.1",
+        "end_time_sec": "1213.9",
+        "asr_confidence": "0.9703616499900818"
+      },
+      {
+        "turn_id": "u91",
+        "speaker": "user",
+        "text": "two weeks after she died I want up with",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1215.2",
+        "end_time_sec": "1218.4",
+        "asr_confidence": "0.9452389478683472"
+      },
+      {
+        "turn_id": "u92",
+        "speaker": "user",
+        "text": "pulmonary embolisms in one in each long because I didn't take care of myself for year that they are all I'm 30 years old if you know whatever I do myself I can get over no turned out but I want up having to take more medication because of that it's been a fight to get my own house back to get to be able to get out of that depression cuz so much of my life was based on being my mother's daughter office and I didn't like",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1220.1",
+        "end_time_sec": "1253.4",
+        "asr_confidence": "0.9543935060501099"
+      },
+      {
+        "turn_id": "u93",
+        "speaker": "user",
+        "text": "the rug was pulled out my like button fell into my world after that so that was the pretty pretty much sent me into a deep depression I'm I almost got divorced because of bad because I didn't want anything anymore so I know his ex being really distant from my husband by then at that time we were married for about two years at that point I started getting very distant from him pushing everything away.",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1255.2",
+        "end_time_sec": "1283.1",
+        "asr_confidence": "0.9357190132141113"
+      },
+      {
+        "turn_id": "u94",
+        "speaker": "user",
+        "text": "And feel what am I going to do with the rest of my life now",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1284.2",
+        "end_time_sec": "1286.8",
+        "asr_confidence": "0.9403465986251831"
+      },
+      {
+        "turn_id": "u95",
+        "speaker": "user",
+        "text": "and",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1287.7",
+        "end_time_sec": "1288.2",
+        "asr_confidence": "0.8783731460571289"
+      },
+      {
+        "turn_id": "u96",
+        "speaker": "user",
+        "text": "Ben",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1289.3",
+        "end_time_sec": "1289.8",
+        "asr_confidence": "0.6101588606834412"
+      },
+      {
+        "turn_id": "u97",
+        "speaker": "user",
+        "text": "a fight and then you be there times and no I couldn't get up",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1291.1",
+        "end_time_sec": "1294.4",
+        "asr_confidence": "0.7848291993141174"
+      },
+      {
+        "turn_id": "u98",
+        "speaker": "user",
+        "text": "stay in bed and sleep all day but then realizing that",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1295.5",
+        "end_time_sec": "1302.0",
+        "asr_confidence": "0.9480450749397278"
+      },
+      {
+        "turn_id": "u99",
+        "speaker": "user",
+        "text": "when my mother died I had forecast like after 2 or mine to rehearse so I went up adopting the two that were hers because they don't have a choice of whether they can go out and get their own food and get their own you want to play",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1304.4",
+        "end_time_sec": "1319.1",
+        "asr_confidence": "0.9062222838401794"
+      },
+      {
+        "turn_id": "u100",
+        "speaker": "user",
+        "text": "I took that responsibility of doing it for them",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1320.2",
+        "end_time_sec": "1322.6",
+        "asr_confidence": "0.9499694108963013"
+      },
+      {
+        "turn_id": "u101",
+        "speaker": "user",
+        "text": "so that was one motivating factor was that they didn't have a choice of whether or not I was going to get up and provide for them I mean I could go without eating I could go that taken care of myself but they couldn't they didn't nail so they are they actually got me up and",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1323.6",
+        "end_time_sec": "1342.3",
+        "asr_confidence": "0.9619107842445374"
+      },
+      {
+        "turn_id": "u102",
+        "speaker": "user",
+        "text": "and they made me go out and face things even though didn't want to ditch didn't just kind of want to curl up and die but that would have been my choice not theirs and they I mean what would happen to them if I was there to take care of them they would have been sent to a shelter or whatever probably and maybe they would have not been re-adopt me home and adopted by somebody else maybe they would have been killed for for me meaning for me making a selfish decisions so it's like I need somebody to take care of to get myself a bit",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1344.6",
+        "end_time_sec": "1381.1",
+        "asr_confidence": "0.9485151767730713"
+      },
+      {
+        "turn_id": "u103",
+        "speaker": "user",
+        "text": "nuts Acumen a motivating factor is cuz I figured out that it was just me I'd be able to live without a lot of stuff in my car if I wanted it wouldn't be big deal I wouldn't care as long as I was doing what I wanted with my life but",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1382.1",
+        "end_time_sec": "1399.9",
+        "asr_confidence": "0.948384165763855"
+      },
+      {
+        "turn_id": "u104",
+        "speaker": "user",
+        "text": "I have a family to look after now so I have to go out and do things and I have to go out and look for legitimate work you know dating your day job have to let you know but I'm trying to strike a balance between the two because his what I want to do with my wife but yet I have to take care of my family some homework on a balance of the two",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1401.0",
+        "end_time_sec": "1421.8",
+        "asr_confidence": "0.9565123319625854"
+      },
+      {
+        "turn_id": "u105",
+        "speaker": "user",
+        "text": "very but it's worth it I mean",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1424.7",
+        "end_time_sec": "1429.0",
+        "asr_confidence": "0.9601254463195801"
+      },
+      {
+        "turn_id": "u106",
+        "speaker": "user",
+        "text": "it would be very I have a lot less things to worry about if I just looked at my car and said forget it",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1430.4",
+        "end_time_sec": "1437.1",
+        "asr_confidence": "0.9706676006317139"
+      },
+      {
+        "turn_id": "u107",
+        "speaker": "user",
+        "text": "but keeping a residence down paying bills things like that",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1438.2",
+        "end_time_sec": "1443.7",
+        "asr_confidence": "0.8669400811195374"
+      },
+      {
+        "turn_id": "u108",
+        "speaker": "user",
+        "text": "it's difficult but you have to do it if you want you want any if you ever want anything in your life you have to go through that",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1445.7",
+        "end_time_sec": "1454.0",
+        "asr_confidence": "0.9420934915542603"
+      },
+      {
+        "turn_id": "u109",
+        "speaker": "user",
+        "text": "I am and I know that but it gets hard sometimes you do want to give up but then it's like wall what's the alternative",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1455.1",
+        "end_time_sec": "1465.2",
+        "asr_confidence": "0.8768606781959534"
+      },
+      {
+        "turn_id": "u110",
+        "speaker": "user",
+        "text": "I mean I don't think I can live a comfortable life",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1466.8",
+        "end_time_sec": "1469.0",
+        "asr_confidence": "0.9135279059410095"
+      },
+      {
+        "turn_id": "u111",
+        "speaker": "user",
+        "text": "if I did I wouldn't do anything I have to be slightly uncomfortable or am I going to do anything with myself I'm just going to be content just hang out all day stay in bed hang out with Mike catherwood ever",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1470.1",
+        "end_time_sec": "1483.1",
+        "asr_confidence": "0.9227316379547119"
+      },
+      {
+        "turn_id": "u112",
+        "speaker": "user",
+        "text": "and it wouldn't get anything done",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1484.1",
+        "end_time_sec": "1485.3",
+        "asr_confidence": "0.959772527217865"
+      },
+      {
+        "turn_id": "u113",
+        "speaker": "user",
+        "text": "a very anxious and nervous and mean what if",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1490.7",
+        "end_time_sec": "1496.4",
+        "asr_confidence": "0.9605956077575684"
+      },
+      {
+        "turn_id": "u114",
+        "speaker": "user",
+        "text": "I don't find",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1497.7",
+        "end_time_sec": "1498.9",
+        "asr_confidence": "0.9810842275619507"
+      },
+      {
+        "turn_id": "u115",
+        "speaker": "user",
+        "text": "enough you went off work to be able to pay my rent or whatever what if",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1500.3",
+        "end_time_sec": "1505.8",
+        "asr_confidence": "0.9374191164970398"
+      },
+      {
+        "turn_id": "u116",
+        "speaker": "user",
+        "text": "yo what what if I can't",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1508.3",
+        "end_time_sec": "1510.0",
+        "asr_confidence": "0.8213979601860046"
+      },
+      {
+        "turn_id": "u117",
+        "speaker": "user",
+        "text": "keep",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1511.3",
+        "end_time_sec": "1512.0",
+        "asr_confidence": "0.956694483757019"
+      },
+      {
+        "turn_id": "u118",
+        "speaker": "user",
+        "text": "a semblance of stability in my life and it's actually hard work to be stabled and I know it's hard work to be stable but",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1513.0",
+        "end_time_sec": "1521.1",
+        "asr_confidence": "0.9461531043052673"
+      },
+      {
+        "turn_id": "u119",
+        "speaker": "user",
+        "text": "what's answers a lot of what-ifs and anything it's things that haven't happened and it's stupid and pointless to worry about things that haven't happened and I know that but it's still have it still protects that's actually",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1522.0",
+        "end_time_sec": "1537.1",
+        "asr_confidence": "0.9240777492523193"
+      },
+      {
+        "turn_id": "u120",
+        "speaker": "user",
+        "text": "a source of",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1538.4",
+        "end_time_sec": "1539.4",
+        "asr_confidence": "0.9868557453155518"
+      },
+      {
+        "turn_id": "u121",
+        "speaker": "user",
+        "text": "anxiety",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1541.7",
+        "end_time_sec": "1542.6",
+        "asr_confidence": "0.9766361713409424"
+      },
+      {
+        "turn_id": "u122",
+        "speaker": "user",
+        "text": "anxiety go by getting things done figuring things out making a solid plan and going for it",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1543.8",
+        "end_time_sec": "1550.6",
+        "asr_confidence": "0.9764884114265442"
+      },
+      {
+        "turn_id": "u123",
+        "speaker": "user",
+        "text": "but I know it is a cycle and I'll go from being really anxious and oh my God what am I going to do what am I going to do the same okay what is",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1551.7",
+        "end_time_sec": "1561.0",
+        "asr_confidence": "0.9052209854125977"
+      },
+      {
+        "turn_id": "u124",
+        "speaker": "user",
+        "text": "the fundamental thing I need to take care of here",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1562.1",
+        "end_time_sec": "1564.2",
+        "asr_confidence": "0.9761333465576172"
+      },
+      {
+        "turn_id": "u125",
+        "speaker": "user",
+        "text": "me when what is just extraneous and what can what is what are the actual not issues and what is the actual issue and so figure figure things out that way and then things i t shirt to go with a little bit but then something will pop up in the what if so come up again I'll have to",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1565.1",
+        "end_time_sec": "1586.3",
+        "asr_confidence": "0.9364333748817444"
+      },
+      {
+        "turn_id": "u126",
+        "speaker": "user",
+        "text": "figure it out again but I know it's a cycle I know what seems huge on the surface when you start chipping away at it you get over it pretty quickly get through it",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1589.4",
+        "end_time_sec": "1602.2",
+        "asr_confidence": "0.942103922367096"
+      },
+      {
+        "turn_id": "u127",
+        "speaker": "user",
+        "text": "the last time I felt really happy",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1608.7",
+        "end_time_sec": "1610.8",
+        "asr_confidence": "0.9748345613479614"
+      },
+      {
+        "turn_id": "u128",
+        "speaker": "user",
+        "text": "I don't know",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1613.0",
+        "end_time_sec": "1613.7",
+        "asr_confidence": "0.9784681797027588"
+      },
+      {
+        "turn_id": "u129",
+        "speaker": "user",
+        "text": "huh could question like that actually surprisingly stumped me because I do feel happy sometimes sometimes not so much as I just cannae and the middle",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1626.2",
+        "end_time_sec": "1640.1",
+        "asr_confidence": "0.9022983312606812"
+      },
+      {
+        "turn_id": "u130",
+        "speaker": "user",
+        "text": "really like over joyously happy I don't know",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1642.6",
+        "end_time_sec": "1646.6",
+        "asr_confidence": "0.9402657747268677"
+      },
+      {
+        "turn_id": "u131",
+        "speaker": "user",
+        "text": "if not I can't think of when that happened",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1648.3",
+        "end_time_sec": "1652.7",
+        "asr_confidence": "0.9713382720947266"
+      },
+      {
+        "turn_id": "u132",
+        "speaker": "user",
+        "text": "I don't know you don't know perceptions of other people mean",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1663.7",
+        "end_time_sec": "1668.2",
+        "asr_confidence": "0.9814526438713074"
+      },
+      {
+        "turn_id": "u133",
+        "speaker": "user",
+        "text": "probably a somebody who",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1671.2",
+        "end_time_sec": "1672.9",
+        "asr_confidence": "0.898217499256134"
+      },
+      {
+        "turn_id": "u134",
+        "speaker": "user",
+        "text": "oddly enough somebody who is laid-back and",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1676.3",
+        "end_time_sec": "1680.2",
+        "asr_confidence": "0.8588295578956604"
+      },
+      {
+        "turn_id": "u135",
+        "speaker": "user",
+        "text": "handle things as they come but I don't see myself as at at all",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1682.2",
+        "end_time_sec": "1686.3",
+        "asr_confidence": "0.953055202960968"
+      },
+      {
+        "turn_id": "u136",
+        "speaker": "user",
+        "text": "as it is",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1687.3",
+        "end_time_sec": "1688.0",
+        "asr_confidence": "0.6386966705322266"
+      },
+      {
+        "turn_id": "u137",
+        "speaker": "user",
+        "text": "probably that I can think on my feet and I'm not afraid to",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1691.6",
+        "end_time_sec": "1697.1",
+        "asr_confidence": "0.9816880822181702"
+      },
+      {
+        "turn_id": "u138",
+        "speaker": "user",
+        "text": "hustle my butt off and do whatever I have to do to survive and get things done",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1698.7",
+        "end_time_sec": "1703.3",
+        "asr_confidence": "0.9210782647132874"
+      },
+      {
+        "turn_id": "u139",
+        "speaker": "user",
+        "text": "that",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1704.5",
+        "end_time_sec": "1705.7",
+        "asr_confidence": "0.964248538017273"
+      },
+      {
+        "turn_id": "u140",
+        "speaker": "user",
+        "text": "and I can do it creatively and I try to",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1707.0",
+        "end_time_sec": "1709.1",
+        "asr_confidence": "0.973010241985321"
+      },
+      {
+        "turn_id": "u141",
+        "speaker": "user",
+        "text": "strive for balance",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1710.3",
+        "end_time_sec": "1711.3",
+        "asr_confidence": "0.9622973203659058"
+      },
+      {
+        "turn_id": "u142",
+        "speaker": "user",
+        "text": "play the best things about me",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1714.0",
+        "end_time_sec": "1715.3",
+        "asr_confidence": "0.8229242563247681"
+      },
+      {
+        "turn_id": "u143",
+        "speaker": "user",
+        "text": "then I'm doing basically what I want with my life which even though it's not all easy it's not",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1723.4",
+        "end_time_sec": "1729.4",
+        "asr_confidence": "0.9387513995170593"
+      },
+      {
+        "turn_id": "u144",
+        "speaker": "user",
+        "text": "I am not financially well-off or anything it's still a lot more than a lot of people can say about their lives cuz I have an aunt that I really don't talk to who and the reason why I don't talk to her because she's always miserable mean she's got a career that she",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1732.4",
+        "end_time_sec": "1748.0",
+        "asr_confidence": "0.9635968804359436"
+      },
+      {
+        "turn_id": "u145",
+        "speaker": "user",
+        "text": "it's more of a job that she fell into cuz my older aunt loves animals but didn't want to be a veterinarian so she became a dog groomer and she was actually really good at it she had a stable business for a long time",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1749.5",
+        "end_time_sec": "1763.4",
+        "asr_confidence": "0.9738360643386841"
+      },
+      {
+        "turn_id": "u146",
+        "speaker": "user",
+        "text": "but her know she tried to get arthritis in her hands and she had that should my cousin's father went and cut a",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1764.8",
+        "end_time_sec": "1774.2",
+        "asr_confidence": "0.8774204254150391"
+      },
+      {
+        "turn_id": "u147",
+        "speaker": "user",
+        "text": "stole all the money for her business so she lost your business and she kind of it she retired early cuz between that and that's why does she want to retiring early she employed my younger Aunt who is still a dog groomer but she hates it and it's like change your life if you hate your life so much change it",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1775.5",
+        "end_time_sec": "1793.3",
+        "asr_confidence": "0.9511822462081909"
+      },
+      {
+        "turn_id": "u148",
+        "speaker": "user",
+        "text": "and I think the thing I'm most proud of is",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1794.3",
+        "end_time_sec": "1796.9",
+        "asr_confidence": "0.9525955319404602"
+      },
+      {
+        "turn_id": "u149",
+        "speaker": "user",
+        "text": "yeah I'm not as financially well-off as she is but I'm doing what I want with my life you know I can be creative I can have creative people around me people who actually like to talk to around me people actually like in my life and be happy with that and they see a lot of people who aren't and then it gives me a sense of maybe a bloated sense of Southside tracking to be able to say I'm not like that that I'm actually doing what I want even though their sacrifices I'm still fundamentally doing what I want with my life now",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1798.0",
+        "end_time_sec": "1831.7",
+        "asr_confidence": "0.9709683656692505"
+      },
+      {
+        "turn_id": "u150",
+        "speaker": "user",
+        "text": "thank you",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1836.9",
+        "end_time_sec": "1837.7",
+        "asr_confidence": "0.8200652003288269"
+      },
+      {
+        "turn_id": "u151",
+        "speaker": "user",
+        "text": "thank you goodbye",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1840.0",
+        "end_time_sec": "1844.4",
+        "asr_confidence": "0.9380086660385132"
+      }
+    ]
+  },
+  "instructions": "Label independently using the transcript, metadata, and annotation guidelines. Do not inspect annotator B."
+}

@@ -1,0 +1,35 @@
+{
+  "session_id": "MVGOLD-HI-020",
+  "language": "hi",
+  "cohort": "expansion",
+  "is_placeholder": false,
+  "collection_status": "collected_public_dataset",
+  "notes": "Imported from IndicVoices Hindi valid split; repurposed as a Hindi pilot audio set for multilingual voice extension. This source was locally dual-annotated and adjudicated for PHQ-9/GAD-7, but it is not a native mental-health screening corpus.",
+  "profile": {
+    "age_years": null,
+    "age_band": "30-45",
+    "occupation": "Patrkar",
+    "living_situation": "Rural",
+    "support_system": "not_provided_in_source",
+    "state": "Rajasthan",
+    "district": "Karauli",
+    "gender": "Male"
+  },
+  "source": {
+    "dataset": "indicvoices",
+    "split": "Hindi/v1/valid",
+    "source_json_path": "Hindi/v1/valid/5348024557541420.json",
+    "source_wav_path": "Hindi/v1/valid/5348024557541420.wav",
+    "speaker_id": "S4259758700372414",
+    "scenario": "Read",
+    "task_name": "Bigbasket Commands"
+  },
+  "turns": [
+    {
+      "turn_id": "u1",
+      "speaker": "user",
+      "text": "टर्न ऑर्गेनिक के किन उत्पादों पर इस हफ़्ते छूट के ऑफ़र हैं",
+      "source_type": "read_or_prompted_utterance"
+    }
+  ]
+}

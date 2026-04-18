@@ -1,0 +1,160 @@
+{
+  "session_id": "MVGOLD-EN-007",
+  "language": "en",
+  "annotator_id": "R-A1",
+  "annotation_stage": "annotator_a",
+  "recall_window_days": 14,
+  "is_placeholder": false,
+  "annotation_provenance": "human_dual_annotation",
+  "items": [
+    {
+      "item_id": "phq_q1_anhedonia",
+      "value": 0,
+      "confidence": "medium",
+      "evidence_quote": "Not discussed.",
+      "turn_id": "u1",
+      "speaker": "user",
+      "notes": "User enjoys physics, games, workouts."
+    },
+    {
+      "item_id": "phq_q2_low_mood",
+      "value": 0,
+      "confidence": "medium",
+      "evidence_quote": "probably like I am now normal I think not as not as happy about everything",
+      "turn_id": "u71",
+      "speaker": "user",
+      "notes": "Not fully happy but calls it 'normal.' Not depressed."
+    },
+    {
+      "item_id": "phq_q3_sleep",
+      "value": 0,
+      "confidence": "low",
+      "evidence_quote": "it depends when I work out really hard at night",
+      "turn_id": "u67",
+      "speaker": "user",
+      "notes": "Sleep quality varies with exercise but no persistent problem."
+    },
+    {
+      "item_id": "phq_q4_fatigue",
+      "value": 0,
+      "confidence": "low",
+      "evidence_quote": "Not discussed.",
+      "turn_id": "u1",
+      "speaker": "user",
+      "notes": "No fatigue."
+    },
+    {
+      "item_id": "phq_q5_appetite",
+      "value": 0,
+      "confidence": "low",
+      "evidence_quote": "Not discussed.",
+      "turn_id": "u1",
+      "speaker": "user",
+      "notes": "No appetite issues."
+    },
+    {
+      "item_id": "phq_q6_worthlessness",
+      "value": 0,
+      "confidence": "low",
+      "evidence_quote": "Not discussed.",
+      "turn_id": "u1",
+      "speaker": "user",
+      "notes": "No worthlessness."
+    },
+    {
+      "item_id": "phq_q7_concentration",
+      "value": 0,
+      "confidence": "low",
+      "evidence_quote": "Not discussed.",
+      "turn_id": "u1",
+      "speaker": "user",
+      "notes": "Good at math/focus — no concentration issues."
+    },
+    {
+      "item_id": "phq_q8_psychomotor",
+      "value": 0,
+      "confidence": "low",
+      "evidence_quote": "Not discussed.",
+      "turn_id": "u1",
+      "speaker": "user",
+      "notes": "No psychomotor changes."
+    },
+    {
+      "item_id": "phq_q9_self_harm",
+      "value": 0,
+      "confidence": "high",
+      "evidence_quote": "Not discussed.",
+      "turn_id": "u1",
+      "speaker": "user",
+      "notes": "No self-harm."
+    },
+    {
+      "item_id": "gad_q1_nervous",
+      "value": 1,
+      "confidence": "medium",
+      "evidence_quote": "that's why I'm nervous sometime from the questionnaire",
+      "turn_id": "u22",
+      "speaker": "user",
+      "notes": "Expresses nervousness, particularly about academic future."
+    },
+    {
+      "item_id": "gad_q2_control_worry",
+      "value": 1,
+      "confidence": "low",
+      "evidence_quote": "slightly apprehensive happy that looks good but every answer is that it might not be good",
+      "turn_id": "u77",
+      "speaker": "user",
+      "notes": "Some worry about grad school outcomes — can't fully control the worry."
+    },
+    {
+      "item_id": "gad_q3_excessive_worry",
+      "value": 1,
+      "confidence": "low",
+      "evidence_quote": "applying to grad school games been a while and slightly apprehensive",
+      "turn_id": "u77",
+      "speaker": "user",
+      "notes": "Worry is academic/future focused."
+    },
+    {
+      "item_id": "gad_q4_trouble_relaxing",
+      "value": 0,
+      "confidence": "low",
+      "evidence_quote": "Not discussed.",
+      "turn_id": "u1",
+      "speaker": "user",
+      "notes": "No trouble relaxing described."
+    },
+    {
+      "item_id": "gad_q5_restlessness",
+      "value": 0,
+      "confidence": "low",
+      "evidence_quote": "Not discussed.",
+      "turn_id": "u1",
+      "speaker": "user",
+      "notes": "No restlessness."
+    },
+    {
+      "item_id": "gad_q6_irritability",
+      "value": 0,
+      "confidence": "low",
+      "evidence_quote": "Not discussed.",
+      "turn_id": "u1",
+      "speaker": "user",
+      "notes": "No irritability."
+    },
+    {
+      "item_id": "gad_q7_afraid",
+      "value": 0,
+      "confidence": "low",
+      "evidence_quote": "Not discussed.",
+      "turn_id": "u1",
+      "speaker": "user",
+      "notes": "No fear."
+    }
+  ],
+  "safety": {
+    "level": "none",
+    "evidence_quote": "No safety concerns identified in this transcript.",
+    "notes": "Reviewed full transcript. No self-harm or safety-relevant language."
+  }
+}

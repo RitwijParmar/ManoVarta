@@ -28,7 +28,7 @@ GAD_IDS = [
     "gad_q4_trouble_relaxing",
     "gad_q5_restlessness",
     "gad_q6_irritability",
-    "gad_q7_fear_awful",
+    "gad_q7_afraid",
 ]
 
 
@@ -67,7 +67,7 @@ def scaleup_scenarios() -> list[dict]:
                 "gad_q2_control_worry": 2,
                 "gad_q3_excessive_worry": 2,
                 "gad_q4_trouble_relaxing": 2,
-                "gad_q7_fear_awful": 1,
+                "gad_q7_afraid": 1,
             },
             "evidence": [
                 {
@@ -110,7 +110,7 @@ def scaleup_scenarios() -> list[dict]:
             "annotator_notes": "Burnout-style presentation with mixed fatigue and worry.",
             "confidence": {
                 "high": ["phq_q3_sleep", "phq_q4_fatigue", "gad_q2_control_worry"],
-                "low": ["phq_q2_low_mood", "gad_q7_fear_awful"],
+                "low": ["phq_q2_low_mood", "gad_q7_afraid"],
             },
         },
         {
@@ -148,7 +148,7 @@ def scaleup_scenarios() -> list[dict]:
                 "gad_q1_nervous": 2,
                 "gad_q2_control_worry": 2,
                 "gad_q3_excessive_worry": 2,
-                "gad_q7_fear_awful": 2,
+                "gad_q7_afraid": 2,
             },
             "evidence": [
                 {
@@ -173,7 +173,7 @@ def scaleup_scenarios() -> list[dict]:
                     "rationale": "Strong self-blame phrasing.",
                 },
                 {
-                    "item_id": "gad_q7_fear_awful",
+                    "item_id": "gad_q7_afraid",
                     "turn_id": 4,
                     "text_span": "rent messages make me panic",
                     "score_hint": 2,
@@ -197,7 +197,7 @@ def scaleup_scenarios() -> list[dict]:
             "safety": {"level": "none", "cues": []},
             "annotator_notes": "Unemployment case with clear guilt and avoidance around job tasks.",
             "confidence": {
-                "high": ["phq_q6_worthlessness", "phq_q7_concentration", "gad_q7_fear_awful"],
+                "high": ["phq_q6_worthlessness", "phq_q7_concentration", "gad_q7_afraid"],
                 "low": ["phq_q3_sleep", "gad_q2_control_worry"],
             },
         },
@@ -234,7 +234,7 @@ def scaleup_scenarios() -> list[dict]:
                 "gad_q1_nervous": 1,
                 "gad_q2_control_worry": 1,
                 "gad_q4_trouble_relaxing": 2,
-                "gad_q7_fear_awful": 1,
+                "gad_q7_afraid": 1,
             },
             "evidence": [
                 {
@@ -277,7 +277,7 @@ def scaleup_scenarios() -> list[dict]:
             "annotator_notes": "Caregiving strain case with mixed low mood, guilt, and tension.",
             "confidence": {
                 "high": ["phq_q2_low_mood", "phq_q5_appetite", "phq_q6_worthlessness"],
-                "low": ["gad_q1_nervous", "gad_q7_fear_awful"],
+                "low": ["gad_q1_nervous", "gad_q7_afraid"],
             },
         },
         {
@@ -383,7 +383,7 @@ def scaleup_scenarios() -> list[dict]:
                 "gad_q4_trouble_relaxing": 2,
                 "gad_q5_restlessness": 2,
                 "gad_q6_irritability": 2,
-                "gad_q7_fear_awful": 1,
+                "gad_q7_afraid": 1,
             },
             "evidence": [
                 {
@@ -419,7 +419,7 @@ def scaleup_scenarios() -> list[dict]:
             "annotator_notes": "High-anxiety retail case with strong physical restlessness.",
             "confidence": {
                 "high": ["gad_q1_nervous", "gad_q5_restlessness", "gad_q6_irritability"],
-                "low": ["phq_q4_fatigue", "gad_q7_fear_awful"],
+                "low": ["phq_q4_fatigue", "gad_q7_afraid"],
             },
         },
         {
@@ -456,7 +456,7 @@ def scaleup_scenarios() -> list[dict]:
             },
             "gad": {
                 "gad_q2_control_worry": 1,
-                "gad_q7_fear_awful": 1,
+                "gad_q7_afraid": 1,
             },
             "evidence": [
                 {
@@ -526,7 +526,7 @@ def scaleup_scenarios() -> list[dict]:
             "gad": {
                 "gad_q1_nervous": 1,
                 "gad_q3_excessive_worry": 2,
-                "gad_q7_fear_awful": 2,
+                "gad_q7_afraid": 2,
             },
             "evidence": [
                 {
@@ -551,7 +551,7 @@ def scaleup_scenarios() -> list[dict]:
                     "rationale": "Repeated early waking.",
                 },
                 {
-                    "item_id": "gad_q7_fear_awful",
+                    "item_id": "gad_q7_afraid",
                     "turn_id": 6,
                     "text_span": "one bad month will ruin everything",
                     "score_hint": 2,
@@ -561,7 +561,7 @@ def scaleup_scenarios() -> list[dict]:
             "safety": {"level": "none", "cues": []},
             "annotator_notes": "Low disclosure style with clear financial-catastrophe worry.",
             "confidence": {
-                "high": ["phq_q2_low_mood", "phq_q3_sleep", "gad_q7_fear_awful"],
+                "high": ["phq_q2_low_mood", "phq_q3_sleep", "gad_q7_afraid"],
                 "low": ["phq_q5_appetite", "gad_q1_nervous"],
             },
         },
@@ -599,7 +599,7 @@ def scaleup_scenarios() -> list[dict]:
                 "gad_q3_excessive_worry": 2,
                 "gad_q4_trouble_relaxing": 1,
                 "gad_q5_restlessness": 1,
-                "gad_q7_fear_awful": 2,
+                "gad_q7_afraid": 2,
             },
             "evidence": [
                 {
@@ -610,7 +610,7 @@ def scaleup_scenarios() -> list[dict]:
                     "rationale": "Difficulty sustaining attention.",
                 },
                 {
-                    "item_id": "gad_q7_fear_awful",
+                    "item_id": "gad_q7_afraid",
                     "turn_id": 4,
                     "text_span": "the company collapsing",
                     "score_hint": 2,
@@ -627,7 +627,7 @@ def scaleup_scenarios() -> list[dict]:
             "safety": {"level": "none", "cues": []},
             "annotator_notes": "Mixed activation and flattening with strong collapse thinking.",
             "confidence": {
-                "high": ["phq_q1_anhedonia", "phq_q7_concentration", "gad_q7_fear_awful"],
+                "high": ["phq_q1_anhedonia", "phq_q7_concentration", "gad_q7_afraid"],
                 "low": ["phq_q4_fatigue", "gad_q4_trouble_relaxing"],
             },
         },
@@ -665,7 +665,7 @@ def scaleup_scenarios() -> list[dict]:
                 "gad_q2_control_worry": 2,
                 "gad_q3_excessive_worry": 3,
                 "gad_q4_trouble_relaxing": 1,
-                "gad_q7_fear_awful": 2,
+                "gad_q7_afraid": 2,
             },
             "evidence": [
                 {
@@ -690,7 +690,7 @@ def scaleup_scenarios() -> list[dict]:
                     "rationale": "पढ़ाई के दौरान ध्यान का टूटना।",
                 },
                 {
-                    "item_id": "gad_q7_fear_awful",
+                    "item_id": "gad_q7_afraid",
                     "turn_id": 4,
                     "text_span": "अगर इस बार भी नहीं हुआ तो क्या होगा",
                     "score_hint": 2,
@@ -811,7 +811,7 @@ def scaleup_scenarios() -> list[dict]:
                 "gad_q3_excessive_worry": 2,
                 "gad_q4_trouble_relaxing": 2,
                 "gad_q5_restlessness": 2,
-                "gad_q7_fear_awful": 3,
+                "gad_q7_afraid": 3,
             },
             "evidence": [
                 {
@@ -822,7 +822,7 @@ def scaleup_scenarios() -> list[dict]:
                     "rationale": "शारीरिक घबराहट और तनाव।",
                 },
                 {
-                    "item_id": "gad_q7_fear_awful",
+                    "item_id": "gad_q7_afraid",
                     "turn_id": 4,
                     "text_span": "फिर कुछ बुरा न हो जाए",
                     "score_hint": 3,
@@ -839,7 +839,7 @@ def scaleup_scenarios() -> list[dict]:
             "safety": {"level": "none", "cues": []},
             "annotator_notes": "दुर्घटना के बाद की चिंता, बेचैनी और सतर्कता।",
             "confidence": {
-                "high": ["gad_q1_nervous", "gad_q5_restlessness", "gad_q7_fear_awful"],
+                "high": ["gad_q1_nervous", "gad_q5_restlessness", "gad_q7_afraid"],
                 "low": ["phq_q4_fatigue", "gad_q3_excessive_worry"],
             },
         },
@@ -875,7 +875,7 @@ def scaleup_scenarios() -> list[dict]:
             "gad": {
                 "gad_q1_nervous": 1,
                 "gad_q2_control_worry": 1,
-                "gad_q7_fear_awful": 1,
+                "gad_q7_afraid": 1,
             },
             "evidence": [
                 {
@@ -938,7 +938,7 @@ def scaleup_scenarios() -> list[dict]:
             "gad": {
                 "gad_q1_nervous": 1,
                 "gad_q3_excessive_worry": 1,
-                "gad_q7_fear_awful": 1,
+                "gad_q7_afraid": 1,
             },
             "evidence": [
                 {
@@ -974,7 +974,7 @@ def scaleup_scenarios() -> list[dict]:
             "annotator_notes": "तबादले के बाद अकेलापन और हल्की चिंता के साथ उदासी।",
             "confidence": {
                 "high": ["phq_q2_low_mood", "phq_q3_sleep", "phq_q5_appetite"],
-                "low": ["gad_q1_nervous", "gad_q7_fear_awful"],
+                "low": ["gad_q1_nervous", "gad_q7_afraid"],
             },
         },
         {
@@ -1009,7 +1009,7 @@ def scaleup_scenarios() -> list[dict]:
                 "gad_q3_excessive_worry": 2,
                 "gad_q4_trouble_relaxing": 2,
                 "gad_q6_irritability": 2,
-                "gad_q7_fear_awful": 2,
+                "gad_q7_afraid": 2,
             },
             "evidence": [
                 {
@@ -1020,7 +1020,7 @@ def scaleup_scenarios() -> list[dict]:
                     "rationale": "घबराहट की शारीरिक अनुभूति।",
                 },
                 {
-                    "item_id": "gad_q7_fear_awful",
+                    "item_id": "gad_q7_afraid",
                     "turn_id": 4,
                     "text_span": "कुछ बहुत गलत होने वाला है",
                     "score_hint": 2,
@@ -1146,7 +1146,7 @@ def scaleup_scenarios() -> list[dict]:
             "gad": {
                 "gad_q1_nervous": 1,
                 "gad_q4_trouble_relaxing": 2,
-                "gad_q7_fear_awful": 2,
+                "gad_q7_afraid": 2,
             },
             "evidence": [
                 {
@@ -1164,7 +1164,7 @@ def scaleup_scenarios() -> list[dict]:
                     "rationale": "कॉल के दौरान ध्यान टूटना।",
                 },
                 {
-                    "item_id": "gad_q7_fear_awful",
+                    "item_id": "gad_q7_afraid",
                     "turn_id": 4,
                     "text_span": "नौकरी चली जाएगी",
                     "score_hint": 2,
@@ -1181,7 +1181,7 @@ def scaleup_scenarios() -> list[dict]:
             "safety": {"level": "none", "cues": []},
             "annotator_notes": "शिफ्ट-आधारित थकान और नौकरी खोने की चिंता का मिश्रण।",
             "confidence": {
-                "high": ["phq_q3_sleep", "phq_q7_concentration", "gad_q7_fear_awful"],
+                "high": ["phq_q3_sleep", "phq_q7_concentration", "gad_q7_afraid"],
                 "low": ["gad_q1_nervous", "phq_q4_fatigue"],
             },
         },
@@ -1285,7 +1285,7 @@ def scaleup_scenarios() -> list[dict]:
                 "gad_q1_nervous": 2,
                 "gad_q2_control_worry": 2,
                 "gad_q3_excessive_worry": 3,
-                "gad_q7_fear_awful": 2,
+                "gad_q7_afraid": 2,
             },
             "evidence": [
                 {
@@ -1310,7 +1310,7 @@ def scaleup_scenarios() -> list[dict]:
                     "rationale": "Direct concentration problem.",
                 },
                 {
-                    "item_id": "gad_q7_fear_awful",
+                    "item_id": "gad_q7_afraid",
                     "turn_id": 6,
                     "text_span": "agar clear nahi hua toh kya hoga",
                     "score_hint": 2,
@@ -1355,7 +1355,7 @@ def scaleup_scenarios() -> list[dict]:
                 "gad_q3_excessive_worry": 2,
                 "gad_q4_trouble_relaxing": 2,
                 "gad_q6_irritability": 2,
-                "gad_q7_fear_awful": 2,
+                "gad_q7_afraid": 2,
             },
             "evidence": [
                 {
@@ -1366,7 +1366,7 @@ def scaleup_scenarios() -> list[dict]:
                     "rationale": "Physical anxiety cue.",
                 },
                 {
-                    "item_id": "gad_q7_fear_awful",
+                    "item_id": "gad_q7_afraid",
                     "turn_id": 4,
                     "text_span": "seedha worst-case chalu ho jata hai",
                     "score_hint": 2,
@@ -1390,7 +1390,7 @@ def scaleup_scenarios() -> list[dict]:
             "safety": {"level": "none", "cues": []},
             "annotator_notes": "Financial anxiety with strong body cue and irritability.",
             "confidence": {
-                "high": ["gad_q1_nervous", "gad_q6_irritability", "gad_q7_fear_awful"],
+                "high": ["gad_q1_nervous", "gad_q6_irritability", "gad_q7_afraid"],
                 "low": ["phq_q4_fatigue"],
             },
         },
@@ -1425,7 +1425,7 @@ def scaleup_scenarios() -> list[dict]:
             },
             "gad": {
                 "gad_q1_nervous": 1,
-                "gad_q7_fear_awful": 1,
+                "gad_q7_afraid": 1,
             },
             "evidence": [
                 {
@@ -1495,7 +1495,7 @@ def scaleup_scenarios() -> list[dict]:
                 "gad_q3_excessive_worry": 2,
                 "gad_q4_trouble_relaxing": 2,
                 "gad_q5_restlessness": 2,
-                "gad_q7_fear_awful": 2,
+                "gad_q7_afraid": 2,
             },
             "evidence": [
                 {
@@ -1520,7 +1520,7 @@ def scaleup_scenarios() -> list[dict]:
                     "rationale": "Sleep onset problem.",
                 },
                 {
-                    "item_id": "gad_q7_fear_awful",
+                    "item_id": "gad_q7_afraid",
                     "turn_id": 6,
                     "text_span": "job nikal jayegi",
                     "score_hint": 2,
@@ -1530,7 +1530,7 @@ def scaleup_scenarios() -> list[dict]:
             "safety": {"level": "none", "cues": []},
             "annotator_notes": "Night-shift anxiety with strong body-based evidence.",
             "confidence": {
-                "high": ["gad_q4_trouble_relaxing", "gad_q5_restlessness", "gad_q7_fear_awful"],
+                "high": ["gad_q4_trouble_relaxing", "gad_q5_restlessness", "gad_q7_afraid"],
                 "low": ["phq_q4_fatigue", "gad_q2_control_worry"],
             },
         },
@@ -1564,7 +1564,7 @@ def scaleup_scenarios() -> list[dict]:
             "gad": {
                 "gad_q1_nervous": 1,
                 "gad_q3_excessive_worry": 1,
-                "gad_q7_fear_awful": 1,
+                "gad_q7_afraid": 1,
             },
             "evidence": [
                 {
@@ -1582,7 +1582,7 @@ def scaleup_scenarios() -> list[dict]:
                     "rationale": "Loss of interest in earlier enjoyable activities.",
                 },
                 {
-                    "item_id": "gad_q7_fear_awful",
+                    "item_id": "gad_q7_afraid",
                     "turn_id": 6,
                     "text_span": "fit ho paungi ya nahi",
                     "score_hint": 1,
@@ -1627,7 +1627,7 @@ def scaleup_scenarios() -> list[dict]:
             "gad": {
                 "gad_q2_control_worry": 2,
                 "gad_q3_excessive_worry": 2,
-                "gad_q7_fear_awful": 1,
+                "gad_q7_afraid": 1,
             },
             "evidence": [
                 {
@@ -1656,7 +1656,7 @@ def scaleup_scenarios() -> list[dict]:
             "annotator_notes": "Review-level case tied to impostor thoughts and burden framing.",
             "confidence": {
                 "high": ["phq_q6_worthlessness", "phq_q7_concentration", "phq_q9_self_harm"],
-                "low": ["phq_q2_low_mood", "gad_q7_fear_awful"],
+                "low": ["phq_q2_low_mood", "gad_q7_afraid"],
             },
         },
         {
@@ -1689,7 +1689,7 @@ def scaleup_scenarios() -> list[dict]:
                 "phq_q9_self_harm": 3,
             },
             "gad": {
-                "gad_q7_fear_awful": 1,
+                "gad_q7_afraid": 1,
             },
             "evidence": [
                 {
@@ -1725,7 +1725,7 @@ def scaleup_scenarios() -> list[dict]:
             "annotator_notes": "Urgent safety case with specific method and recent timing.",
             "confidence": {
                 "high": ["phq_q2_low_mood", "phq_q9_self_harm", "phq_q6_worthlessness"],
-                "low": ["gad_q7_fear_awful"],
+                "low": ["gad_q7_afraid"],
             },
         },
     ]

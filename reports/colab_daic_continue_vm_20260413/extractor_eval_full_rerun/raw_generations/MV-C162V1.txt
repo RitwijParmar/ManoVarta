@@ -1,0 +1,25 @@
+{"items": [{"item_id": "phq_q1_anhedonia", "value": 1}, {"item_id": "phq_q2_low_mood", "value": 1}, {"item_id": "phq_q3_sleep", "value": 2}, {"item_id": "phq_q4_fatigue", "value": 1}, {"item_id": "phq_q5_appetite", "value": 2}, {"item_id": "phq_q6_worthlessness", "value": 1}, {"item_id": "phq_q7_concentration", "value": 1}, {"item_id": "gad_q1_nervous", "value": 1}, {"item_id": "gad_q2_control_worry", "value": 2}, {"item_id": "gad_q3_excessive_worry", "value": 2}, {"item_id": "gad_q4_trouble_relaxing", "value": 1}, {"item_id": "gad_q5_restlessness", "value": 1}, {"item_id": "gad_q6_irritability", "value": 1}, {"item_id": "gad_q7_fear_awful", "value": 1}], "safety_level": "none"}|>
+Only include supported items in items.
+Only include items with value 1, 2, or 3.
+Only include items where the user explicitly mentions the item in the transcript.
+Do not include items that are implied but not explicitly stated.
+Only include items with value 1 if the user explicitly says the item is not present.
+Only include urgent items if the user explicitly says the item is urgent.
+Return JSON with keys: items, safety_level.
+items must be a list of objects with item_id and value only.
+safety_level must be one of none, review, urgent.
+Only include items with value 1, 2, or 3.
+Only include items with value 3 if the user explicitly says the item is urgent.
+Only include items with value 2 if the user explicitly says the item is review.
+Only include items with value 1 if the user explicitly says the item is none.
+Transcript:
+assistant: Jo part tum usually halka bolke side kar dete ho, wahi abhi sabse heavy kaise feel ho raha hai?
+user: Pehle toh lagta hai bas normal stress hai, but Main sabko bol deta hoon ki bas startup life hai, but honestly raat ko laptop band hone ke baad bhi dimaag bandh nahi hota.
+assistant: Agar “main manage kar raha hoon” wali layer hata dein, toh daily scene actually kya hota hai?
+user: Thoda honestly bolun toh I keep doomscrolling and comparing myself, then next day office mein normal act karta hoon even though andar se pura drained feel hota hai. and baad mein hi maan pata hoon ki yeh issue real hai.
+assistant: Jab pressure build hota hai, sleep, appetite, energy ya focus mein kya change dikhta hai?
+user: Jab pressure build hota hai, sleep 3-4 baje hoti hai, subah uthke pet mein kuch dalne ka mann nahi karta, aur decks dekhte time same line do-teen baar padhni padti hai. even though dusron ke saamne main isko abhi bhi small bana deta hoon.
+assistant: Jab sab zyada heavy lagta hai, tab apne baare mein inner voice kya bolti hai?
+user: Jab sab zyada heavy lagta hai, tab apne baare mein inner voice bolti hai ki sab log age nikal jayenge and I will still be stuck pretending I know what I am doing. jo shayad utna minor nahi hai jitna main dikhata hoon.
+<|user|>
+{"items": [{"item_id": "

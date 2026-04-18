@@ -6,6 +6,64 @@ The project was built for the "Conversational AI Chatbot for Multilingual Mental
 
 ManoVarta is a research prototype and screening-support system. It is not a therapy product, not a diagnostic device, and not a replacement for licensed clinical care.
 
+## Bilingual evidence datasets
+
+To close assignment gaps around bilingual audio-backed evidence and item-level scoring coverage, the repo now includes a bilingual labeled-data workflow under `data/gold/`.
+
+This includes:
+
+- bilingual audio/transcript layout and registry
+- annotation/adjudication templates and guidance
+- importers for public English/Hindi audio-transcript sources
+- a validator that blocks placeholder assets
+
+Public-source research and import status are tracked in:
+
+- `reports/public_dataset_sourcing_report_20260409.md`
+- `tools/fetch_edaic_public.py`
+- `tools/fetch_po_em_mhlcds.py`
+- `tools/import_indicvoices_hindi_valid.py`
+- `tools/import_edaic_english_public.py`
+
+Current local status (from `python tools/validate_gold_dataset.py --strict --require-human-labels`):
+
+- 60/60 sessions structurally complete (`30 en + 30 hi`)
+- audio/transcript/metadata present for all sessions
+- no placeholder metadata/transcripts/labels
+- human annotator A/B/adjudicated files present for all sessions
+
+Dataset interpretation caveat:
+
+- `English` is the stronger labeled gold core, built from E-DAIC public interview transcripts/audio and extended in-repo with dual human PHQ-9/GAD-7 annotation plus adjudication.
+- `Hindi` is a repurposed real-audio pilot set imported from IndicVoices and labeled in-repo with the same PHQ-9/GAD-7 workflow, but the source corpus is not a native mental-health screening interview dataset.
+- `Hinglish` remains a robustness condition in seed/runtime evaluation, not a gold dataset split.
+
+So the repo now has a complete bilingual labeled asset stack for the assignment: English is the stronger clinically matched gold core, while Hindi is a real-audio multilingual voice-extension pilot labeled in-repo through the allowed DSM-5-TR-aligned transcript-grading path. The Hindi side is still weaker as a source-matched benchmark than English E-DAIC, so it should be described as a repurposed pilot rather than a native Hindi screening corpus.
+
+Human-label process controls now available:
+
+- `python tools/validate_gold_dataset.py --strict --require-human-labels`
+- `python tools/generate_reviewer_workflow_pack.py --annotator-a-capacity 8 --annotator-b-capacity 8 --adjudicator-capacity 6`
+- `python tools/generate_gold_adjudication_report.py`
+
+These produce:
+
+- human-label gating in `reports/gold_dataset_status.json`
+- reviewer A/B/adjudicator queues and day-wise batches in `reports/reviewer_workflow_pack.json`
+- item-wise Cohen's kappa + conflict heatmap in `reports/gold_adjudication_status.json` and `data/gold/adjudication/`
+
+Training/export now supports explicit corpus selection:
+
+- `python tools/export_training_sets.py --source gold-core` for the English adjudicated gold core
+- `python tools/export_training_sets.py --source gold` for English gold core plus the Hindi pilot voice-extension set
+- `python tools/export_training_sets.py --source hybrid` for seed + English gold core + Hindi pilot
+
+The default export path is now `hybrid`, so the supervised training pipeline is no longer seed-only.
+
+AI-assisted completion snapshot is documented in:
+
+- `reports/ai_assisted_completion_report_20260410.md`
+
 ## Current status
 
 The final repository state is not just a notebook experiment. It includes:
@@ -131,13 +189,16 @@ Both bonus features were implemented in the final product:
 - Gamification
   - interactive confidence boosters
   - guided first-line prompts
-  - adaptive nudges that encourage more descriptive disclosure
+  - adaptive nudge deck with low-pressure choice prompts, compare prompts, intensity prompts, and topic-specific body/impact anchors
+  - nudge feedback loop that promotes helpful prompt families and rotates away from unhelpful ones
 - Linguistic personalization
   - style-aware follow-up shaping
   - gentler prompts for guarded users
   - smaller prompts for brief users
   - more open prompts for detailed users
   - code-mix awareness for Hinglish interactions
+  - continuity-aware then-versus-now prompts when recent check-ins are available
+  - autonomy-supportive wording that keeps burden low for guarded or fatigued users
 
 ## Voice support
 
@@ -223,6 +284,7 @@ Final demo videos:
 | `manovarta_admin/` | Django project config |
 | `screening/` | Django app for profiles, conversations, evidence, and review |
 | `data/seed/` | synthetic multilingual seed data |
+| `data/gold/` | bilingual labeled evidence assets (English gold core + Hindi pilot audio set) |
 | `data/processed/` | exported train/dev/test JSONL splits |
 | `reports/` | evaluation bundles, runtime reports, final assignment reports |
 | `reports/acl_paper/` | final paper, bibliography, figures, presentation |

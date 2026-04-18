@@ -1,0 +1,71 @@
+{
+  "session_id": "MVGOLD-HI-003",
+  "language": "hi",
+  "cohort": "pilot",
+  "target_primary_domain": "sleep",
+  "target_risk_band": "none",
+  "packet_stage": "annotator_a",
+  "target_output_file": "data/gold/labels/MVGOLD-HI-003.annotator_a.json",
+  "related_files": {
+    "audio_file": "data/gold/audio/hi/MVGOLD-HI-003.wav",
+    "transcript_file": "data/gold/transcripts/hi/MVGOLD-HI-003.json",
+    "annotator_a_file": "data/gold/labels/MVGOLD-HI-003.annotator_a.json",
+    "annotator_b_file": "data/gold/labels/MVGOLD-HI-003.annotator_b.json",
+    "adjudicated_label_file": "data/gold/labels/MVGOLD-HI-003.adjudicated.json"
+  },
+  "metadata": {
+    "session_id": "MVGOLD-HI-003",
+    "participant_id": "S4259147600324769",
+    "language": "hi",
+    "age_years": "",
+    "age_band": "30-45",
+    "occupation": "House waef",
+    "living_situation": "Urban",
+    "support_system": "not_provided_in_source",
+    "consent_recorded": "public_dataset_license",
+    "collection_source": "indicvoices_hindi_v1_valid_public",
+    "audio_file": "data/gold/audio/hi/MVGOLD-HI-003.wav",
+    "transcript_file": "data/gold/transcripts/hi/MVGOLD-HI-003.json",
+    "annotator_a_file": "data/gold/labels/MVGOLD-HI-003.annotator_a.json",
+    "annotator_b_file": "data/gold/labels/MVGOLD-HI-003.annotator_b.json",
+    "adjudicated_label_file": "data/gold/labels/MVGOLD-HI-003.adjudicated.json",
+    "split": "pilot",
+    "notes": "Imported from IndicVoices Hindi valid split; locally dual-annotated and adjudicated for PHQ-9/GAD-7 as a repurposed Hindi pilot audio set for multilingual voice extension, not a native mental-health screening corpus."
+  },
+  "transcript": {
+    "session_id": "MVGOLD-HI-003",
+    "language": "hi",
+    "cohort": "pilot",
+    "is_placeholder": false,
+    "collection_status": "collected_public_dataset",
+    "notes": "Imported from IndicVoices Hindi valid split; repurposed as a Hindi pilot audio set for multilingual voice extension. This source was locally dual-annotated and adjudicated for PHQ-9/GAD-7, but it is not a native mental-health screening corpus.",
+    "profile": {
+      "age_years": null,
+      "age_band": "30-45",
+      "occupation": "House waef",
+      "living_situation": "Urban",
+      "support_system": "not_provided_in_source",
+      "state": "Rajasthan",
+      "district": "Jodhpur",
+      "gender": "Female"
+    },
+    "source": {
+      "dataset": "indicvoices",
+      "split": "Hindi/v1/valid",
+      "source_json_path": "Hindi/v1/valid/3be0505e-b688-4e2d-bb6d-07e21eb1f144_1.json",
+      "source_wav_path": "Hindi/v1/valid/3be0505e-b688-4e2d-bb6d-07e21eb1f144_1.wav",
+      "speaker_id": "S4259147600324769",
+      "scenario": "Conversation",
+      "task_name": "Conversation"
+    },
+    "turns": [
+      {
+        "turn_id": "u1",
+        "speaker": "user",
+        "text": "हाँ जी नमस्कार अच्छा एक बनवाना है टेंक आपको हाँ हाँ अच्छा तो आप हाँ तो आप पहले तो ये बताएं कि भई आपका जो जहाँ टेंक बनवाना है वो एरिया कित्ता है अच्छा कित्ते बाय कित्ते का है कित्ते कित्ते बाय कित्ते का है तीस बाय पैंतालीस का है ना  [inhaling] हाँ तो फिर अच्छा बन जाएगा टेंक तो बन जाएगा अच्छा कित्ते कित्ते हजार लीटर पानी आना चहिए कित्ते हजार लीटर आना चहिए मतलब आपको कित्ता भाई छोटा टेंक चाहिए [inhaling] एक फैमिली के हिसाब से [inhaling] आप कहो भई हमारा तो तीन फैमिली रहेगी अच्छा अच्छा हाँ तो फिर हजार डेढ़ हजार लीटर का ठीक है [inhaling] तो हाँ ठीक है मैं बना तो दूंगा अब हमको हम जैसे दो तरह से काम लेते हैं या तो ठेके में लेते है या तो मजदूरी पे लेते है अब देखो हम तो काम करने बैठे हैं तो हमको तो दोनों तरफ से फायदा है तभी हम काम कर रहे हैं ठेके में भी फायदा है मजदूरी में भी फायदा है आप चाहो भई अगर आप हमको सामान लाकर दे सको [inhaling] सीमेंट है बजरी है अगर आप लाकर दे सकते हो तो आप मजदूरी में करवाओ [inhaling] हाजरी में करवाओ [inhaling] एक हमारे हाजरी लगेगी एक मजदूर की आप अपने हजार रुपया मान के चलो एक दिन का उसके साथ एक हेल्पर आएगा [inhaling] उसकी आठ सौ रूपए हाजरी [inhaling] दो हजार दो जन आएंगे तो दो हजार रूपए रोज का जाएगा और सामान आपको खुद को लाकर देना है अच्छा अच्छा तो ठीक है फिर अगर मैं ठेके में जाता है [inhaling] मैडम यूँ तो मैं सबसे लेता हूँ चालीस हजार रूपए ठीक है [inhaling] तो अगर जैसे अब अगर आपको किसी ने बताया है तो आप एक काम करो [inhaling] कि आप हमको पैंतिस हजार रूपए में डन करो पैंतिस हजार ज़्यादा नहीं है ये भी आप मैं भी आप तो किसी के थ्रू आए हो इस लिए हम बता रहे हैं वरना तो हम चालीस हजार बोलते अब हम पैंतिस हजार ज़्यादा तो नहीं है [inhaling] फिर भी आपको भेजा किसने है आप उसका नाम बता दो मुझे अच्छा अच्छा रामचन्द्र जी ने हाँ वो तो मेरे बहोत अच्छे मिलने वाले हैं तो अब आप रामचन्द्र जी ने आपको भेजा है तो हम उनका मान रखते हुए कोई बात नहीं मैं आपको पैंतिस बोल रहा था मैं देखूंगा मैंने इस वाले में कमाया ही नहीं है आप मेरेको चौंतीस हजार रूपए दे देना मैडम इससे ज्यादा मैं कम नहीं कर सकता हूँ चौंतीस हजार आप एडवांस देदो दस हजार काम शुरू हो जाएगा कब से काम शुरू करवाना हैं मैम एक हफ्ते में शुरू करना है ठीक है कल आके जगह देख लेता हूँ [inhaling] और फिर काम शुरू कर देता हूँ हाँ हाँ हांजी जरूर ओके",
+        "source_type": "read_or_prompted_utterance"
+      }
+    ]
+  },
+  "instructions": "Label independently using the transcript, metadata, and annotation guidelines. Do not inspect annotator B."
+}

@@ -1,0 +1,1062 @@
+{
+  "session_id": "MVGOLD-EN-021",
+  "language": "en",
+  "cohort": "expansion",
+  "target_primary_domain": "focus",
+  "target_risk_band": "none",
+  "packet_stage": "adjudication",
+  "target_output_file": "data/gold/labels/MVGOLD-EN-021.adjudicated.json",
+  "related_files": {
+    "audio_file": "data/gold/audio/en/MVGOLD-EN-021.wav",
+    "transcript_file": "data/gold/transcripts/en/MVGOLD-EN-021.json",
+    "annotator_a_file": "data/gold/labels/MVGOLD-EN-021.annotator_a.json",
+    "annotator_b_file": "data/gold/labels/MVGOLD-EN-021.annotator_b.json",
+    "adjudicated_label_file": "data/gold/labels/MVGOLD-EN-021.adjudicated.json"
+  },
+  "metadata": {
+    "session_id": "MVGOLD-EN-021",
+    "participant_id": "332",
+    "language": "en",
+    "age_years": "",
+    "age_band": "adult_unknown_from_source",
+    "occupation": "unknown_from_source",
+    "living_situation": "unknown_from_source",
+    "support_system": "unknown_from_source",
+    "consent_recorded": "public_dataset_license",
+    "collection_source": "e_daic_public_2019",
+    "audio_file": "data/gold/audio/en/MVGOLD-EN-021.wav",
+    "transcript_file": "data/gold/transcripts/en/MVGOLD-EN-021.json",
+    "annotator_a_file": "data/gold/labels/MVGOLD-EN-021.annotator_a.json",
+    "annotator_b_file": "data/gold/labels/MVGOLD-EN-021.annotator_b.json",
+    "adjudicated_label_file": "data/gold/labels/MVGOLD-EN-021.adjudicated.json",
+    "split": "expansion",
+    "notes": "Imported from E-DAIC public participant archive; PHQ8 items from public labels, remaining items machine-inferred and require clinician review for strict claims."
+  },
+  "transcript": {
+    "session_id": "MVGOLD-EN-021",
+    "language": "en",
+    "cohort": "expansion",
+    "is_placeholder": false,
+    "collection_status": "collected_public_dataset",
+    "notes": "Imported from E-DAIC public participant archive.",
+    "profile": {
+      "age_years": null,
+      "age_band": "adult_unknown_from_source",
+      "occupation": "unknown_from_source",
+      "living_situation": "unknown_from_source",
+      "support_system": "unknown_from_source",
+      "gender": "female"
+    },
+    "source": {
+      "dataset": "e_daic_public",
+      "participant_id": "332",
+      "split": "train",
+      "phq_binary": "1",
+      "phq_score": "18",
+      "source_audio_path": "332_P/332_AUDIO.wav",
+      "source_transcript_path": "332_P/332_Transcript.csv"
+    },
+    "turns": [
+      {
+        "turn_id": "u1",
+        "speaker": "user",
+        "text": "import and I wonder if people really like understand it you know what I mean like a people do judge yeah bizarre",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "0.0",
+        "end_time_sec": "6.0",
+        "asr_confidence": "0.8670991063117981"
+      },
+      {
+        "turn_id": "u2",
+        "speaker": "user",
+        "text": "I did like The Ricki Lake Show with my friend and I saw myself I TV oh my God yeah but I was speeding I was I was eating candy and I was gone",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "13.5",
+        "end_time_sec": "22.1",
+        "asr_confidence": "0.9451686143875122"
+      },
+      {
+        "turn_id": "u3",
+        "speaker": "user",
+        "text": "it's like that",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "23.2",
+        "end_time_sec": "23.8",
+        "asr_confidence": "0.8936575651168823"
+      },
+      {
+        "turn_id": "u4",
+        "speaker": "user",
+        "text": "and and then I was looking at Ricki Lake like there must be some around my eyes cuz I was like she was like right there I don't know why it's so I had to actually like act you know I'm in the audience but I have to like pretend like I was interested in what you have to say but it looks so I kept looking at her like that like there's something wrong in my eyes no I just thought I was in a doctor's office and they had it on and it's like God it was funny cuz there's these guys like winking at me on the way I like that celebrity 8 dividing sitting there it's like I hated every minute of it but we got sewing machines free sewing machines $200 sewing machines that day it was yeah so it was worth it was worth it but I was so embarrassed yeah only if you get stuff it's worth it otherwise are so stupid shows are so I can't believe that's what I want to television",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "25.3",
+        "end_time_sec": "65.9",
+        "asr_confidence": "0.9527397155761719"
+      },
+      {
+        "turn_id": "u5",
+        "speaker": "user",
+        "text": "so embarrassing",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "66.8",
+        "end_time_sec": "67.7",
+        "asr_confidence": "0.9431015849113464"
+      },
+      {
+        "turn_id": "u6",
+        "speaker": "user",
+        "text": "oh okay",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "69.3",
+        "end_time_sec": "72.3",
+        "asr_confidence": "0.8911320567131042"
+      },
+      {
+        "turn_id": "u7",
+        "speaker": "user",
+        "text": "right on okay this is so weird oh gosh I hope she's nice to me I hope so okay hello",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "76.0",
+        "end_time_sec": "85.1",
+        "asr_confidence": "0.9380366206169128"
+      },
+      {
+        "turn_id": "u8",
+        "speaker": "user",
+        "text": "are you okay",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "106.9",
+        "end_time_sec": "107.6",
+        "asr_confidence": "0.982005774974823"
+      },
+      {
+        "turn_id": "u9",
+        "speaker": "user",
+        "text": "yes",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "108.2",
+        "end_time_sec": "108.8",
+        "asr_confidence": "0.9440985918045044"
+      },
+      {
+        "turn_id": "u10",
+        "speaker": "user",
+        "text": "fine just tired",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "113.4",
+        "end_time_sec": "115.0",
+        "asr_confidence": "0.9318612813949585"
+      },
+      {
+        "turn_id": "u11",
+        "speaker": "user",
+        "text": "California",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "121.2",
+        "end_time_sec": "122.2",
+        "asr_confidence": "0.9843841791152954"
+      },
+      {
+        "turn_id": "u12",
+        "speaker": "user",
+        "text": "from Hollywood",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "123.6",
+        "end_time_sec": "124.4",
+        "asr_confidence": "0.9636626243591309"
+      },
+      {
+        "turn_id": "u13",
+        "speaker": "user",
+        "text": "not too much",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "133.1",
+        "end_time_sec": "134.0",
+        "asr_confidence": "0.9599776268005371"
+      },
+      {
+        "turn_id": "u14",
+        "speaker": "user",
+        "text": "talk to me things I like about it",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "135.8",
+        "end_time_sec": "137.4",
+        "asr_confidence": "0.850974440574646"
+      },
+      {
+        "turn_id": "u15",
+        "speaker": "user",
+        "text": "the people",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "142.1",
+        "end_time_sec": "143.3",
+        "asr_confidence": "0.7030461430549622"
+      },
+      {
+        "turn_id": "u16",
+        "speaker": "user",
+        "text": "it's not clean",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "144.1",
+        "end_time_sec": "146.2",
+        "asr_confidence": "0.9009130597114563"
+      },
+      {
+        "turn_id": "u17",
+        "speaker": "user",
+        "text": "too much crime too many drugs",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "147.7",
+        "end_time_sec": "149.4",
+        "asr_confidence": "0.9137744307518005"
+      },
+      {
+        "turn_id": "u18",
+        "speaker": "user",
+        "text": "eye makeup and hair",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "155.2",
+        "end_time_sec": "156.5",
+        "asr_confidence": "0.8694819211959839"
+      },
+      {
+        "turn_id": "u19",
+        "speaker": "user",
+        "text": "a little bit",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "162.5",
+        "end_time_sec": "163.5",
+        "asr_confidence": "0.9769407510757446"
+      },
+      {
+        "turn_id": "u20",
+        "speaker": "user",
+        "text": "not too much I just arrived",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "167.0",
+        "end_time_sec": "170.4",
+        "asr_confidence": "0.91887366771698"
+      },
+      {
+        "turn_id": "u21",
+        "speaker": "user",
+        "text": "very difficult",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "174.9",
+        "end_time_sec": "175.7",
+        "asr_confidence": "0.9841834902763367"
+      },
+      {
+        "turn_id": "u22",
+        "speaker": "user",
+        "text": "I'm getting a little old to be thinking of a career but",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "186.0",
+        "end_time_sec": "190.1",
+        "asr_confidence": "0.9752407073974609"
+      },
+      {
+        "turn_id": "u23",
+        "speaker": "user",
+        "text": "I just want probably get married and have a little security that's all just be a wife again",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "191.6",
+        "end_time_sec": "196.6",
+        "asr_confidence": "0.96700519323349"
+      },
+      {
+        "turn_id": "u24",
+        "speaker": "user",
+        "text": "a little bit close but everybody's pretty much passed away",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "205.0",
+        "end_time_sec": "208.3",
+        "asr_confidence": "0.9328156113624573"
+      },
+      {
+        "turn_id": "u25",
+        "speaker": "user",
+        "text": "I play FarmVille on Facebook",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "218.1",
+        "end_time_sec": "220.0",
+        "asr_confidence": "0.9272744655609131"
+      },
+      {
+        "turn_id": "u26",
+        "speaker": "user",
+        "text": "I'm good I don't really have a temper",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "226.8",
+        "end_time_sec": "229.0",
+        "asr_confidence": "0.979192852973938"
+      },
+      {
+        "turn_id": "u27",
+        "speaker": "user",
+        "text": "with my ex-husband about money",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "234.1",
+        "end_time_sec": "236.6",
+        "asr_confidence": "0.8163156509399414"
+      },
+      {
+        "turn_id": "u28",
+        "speaker": "user",
+        "text": "people lying cheating conniving drug addicts you know just ugly people people that are",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "248.4",
+        "end_time_sec": "255.3",
+        "asr_confidence": "0.9673755168914795"
+      },
+      {
+        "turn_id": "u29",
+        "speaker": "user",
+        "text": "hideous and inside you know",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "256.6",
+        "end_time_sec": "259.1",
+        "asr_confidence": "0.8444131016731262"
+      },
+      {
+        "turn_id": "u30",
+        "speaker": "user",
+        "text": "Jesus Christ that's about it",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "270.7",
+        "end_time_sec": "272.8",
+        "asr_confidence": "0.9599228501319885"
+      },
+      {
+        "turn_id": "u31",
+        "speaker": "user",
+        "text": "my mother when she was alive when she still a positive influence but",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "273.7",
+        "end_time_sec": "278.2",
+        "asr_confidence": "0.8770284056663513"
+      },
+      {
+        "turn_id": "u32",
+        "speaker": "user",
+        "text": "nobody really but",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "279.3",
+        "end_time_sec": "281.3",
+        "asr_confidence": "0.939754843711853"
+      },
+      {
+        "turn_id": "u33",
+        "speaker": "user",
+        "text": "Jesus",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "282.4",
+        "end_time_sec": "283.0",
+        "asr_confidence": "0.9095379114151001"
+      },
+      {
+        "turn_id": "u34",
+        "speaker": "user",
+        "text": "memorable experiences",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "295.2",
+        "end_time_sec": "296.9",
+        "asr_confidence": "0.9354550838470459"
+      },
+      {
+        "turn_id": "u35",
+        "speaker": "user",
+        "text": "I don't know I can't really think of one right now",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "299.6",
+        "end_time_sec": "302.2",
+        "asr_confidence": "0.974067211151123"
+      },
+      {
+        "turn_id": "u36",
+        "speaker": "user",
+        "text": "gosh",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "309.3",
+        "end_time_sec": "310.1",
+        "asr_confidence": "0.958398699760437"
+      },
+      {
+        "turn_id": "u37",
+        "speaker": "user",
+        "text": "experiences",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "311.5",
+        "end_time_sec": "312.8",
+        "asr_confidence": "0.859075665473938"
+      },
+      {
+        "turn_id": "u38",
+        "speaker": "user",
+        "text": "all I guess like maybe modeling that was pretty cool yeah",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "316.6",
+        "end_time_sec": "320.3",
+        "asr_confidence": "0.9326300621032715"
+      },
+      {
+        "turn_id": "u39",
+        "speaker": "user",
+        "text": "yeah",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "321.5",
+        "end_time_sec": "321.9",
+        "asr_confidence": "0.9070481061935425"
+      },
+      {
+        "turn_id": "u40",
+        "speaker": "user",
+        "text": "I was just kind of",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "325.9",
+        "end_time_sec": "328.3",
+        "asr_confidence": "0.984159529209137"
+      },
+      {
+        "turn_id": "u41",
+        "speaker": "user",
+        "text": "thrill like to see yourself in magazines and pictures and stuff you know I didn't understand how it could have been me but then my photographer told me he was like well someone has to do to might as well be you so oh well and it's true so that was cool",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "329.3",
+        "end_time_sec": "346.7",
+        "asr_confidence": "0.9357702732086182"
+      },
+      {
+        "turn_id": "u42",
+        "speaker": "user",
+        "text": "just kind of fell into it by accident",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "350.5",
+        "end_time_sec": "352.5",
+        "asr_confidence": "0.975560188293457"
+      },
+      {
+        "turn_id": "u43",
+        "speaker": "user",
+        "text": "I've always yeah yeah I wish I did it I took it further but I couldn't",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "355.2",
+        "end_time_sec": "363.1",
+        "asr_confidence": "0.9710061550140381"
+      },
+      {
+        "turn_id": "u44",
+        "speaker": "user",
+        "text": "really happy",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "378.1",
+        "end_time_sec": "379.0",
+        "asr_confidence": "0.9834654331207275"
+      },
+      {
+        "turn_id": "u45",
+        "speaker": "user",
+        "text": "I don't remember",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "381.7",
+        "end_time_sec": "382.6",
+        "asr_confidence": "0.9827090501785278"
+      },
+      {
+        "turn_id": "u46",
+        "speaker": "user",
+        "text": "I really don't",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "384.2",
+        "end_time_sec": "384.9",
+        "asr_confidence": "0.9707752466201782"
+      },
+      {
+        "turn_id": "u47",
+        "speaker": "user",
+        "text": "I really have a best friend but I'm sure",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "391.9",
+        "end_time_sec": "396.0",
+        "asr_confidence": "0.9487961530685425"
+      },
+      {
+        "turn_id": "u48",
+        "speaker": "user",
+        "text": "there anybody would describe me as outgoing",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "397.3",
+        "end_time_sec": "399.6",
+        "asr_confidence": "0.95305335521698"
+      },
+      {
+        "turn_id": "u49",
+        "speaker": "user",
+        "text": "no",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "406.7",
+        "end_time_sec": "407.2",
+        "asr_confidence": "0.9599484205245972"
+      },
+      {
+        "turn_id": "u50",
+        "speaker": "user",
+        "text": "yes",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "409.9",
+        "end_time_sec": "410.4",
+        "asr_confidence": "0.5715522170066833"
+      },
+      {
+        "turn_id": "u51",
+        "speaker": "user",
+        "text": "how was the 1984",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "418.2",
+        "end_time_sec": "419.7",
+        "asr_confidence": "0.6769063472747803"
+      },
+      {
+        "turn_id": "u52",
+        "speaker": "user",
+        "text": "yeah",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "422.6",
+        "end_time_sec": "423.0",
+        "asr_confidence": "0.8623409867286682"
+      },
+      {
+        "turn_id": "u53",
+        "speaker": "user",
+        "text": "I can deal with it",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "428.8",
+        "end_time_sec": "430.1",
+        "asr_confidence": "0.9075834155082703"
+      },
+      {
+        "turn_id": "u54",
+        "speaker": "user",
+        "text": "so I had to see a psychiatrist",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "431.5",
+        "end_time_sec": "433.8",
+        "asr_confidence": "0.9605393409729004"
+      },
+      {
+        "turn_id": "u55",
+        "speaker": "user",
+        "text": "horrified couldn't sleep",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "440.3",
+        "end_time_sec": "442.5",
+        "asr_confidence": "0.9129638671875"
+      },
+      {
+        "turn_id": "u56",
+        "speaker": "user",
+        "text": "panicked",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "444.5",
+        "end_time_sec": "446.0",
+        "asr_confidence": "0.9848335981369019"
+      },
+      {
+        "turn_id": "u57",
+        "speaker": "user",
+        "text": "major anxiety",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "448.9",
+        "end_time_sec": "451.2",
+        "asr_confidence": "0.9779284596443176"
+      },
+      {
+        "turn_id": "u58",
+        "speaker": "user",
+        "text": "oh yeah",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "459.2",
+        "end_time_sec": "459.6",
+        "asr_confidence": "0.6444976925849915"
+      },
+      {
+        "turn_id": "u59",
+        "speaker": "user",
+        "text": "yes I do",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "466.0",
+        "end_time_sec": "466.7",
+        "asr_confidence": "0.9882389307022095"
+      },
+      {
+        "turn_id": "u60",
+        "speaker": "user",
+        "text": "it could be if you see the right doctor",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "471.9",
+        "end_time_sec": "473.9",
+        "asr_confidence": "0.9646971821784973"
+      },
+      {
+        "turn_id": "u61",
+        "speaker": "user",
+        "text": "it gives you the opportunity to talk to somebody and",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "481.5",
+        "end_time_sec": "486.0",
+        "asr_confidence": "0.9815126061439514"
+      },
+      {
+        "turn_id": "u62",
+        "speaker": "user",
+        "text": "hopefully they can give you answers must have him don't they try to find the answers and side of you get it out of you but it's just good to be able to talk to somebody that's kind of biased neutral",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "487.0",
+        "end_time_sec": "498.4",
+        "asr_confidence": "0.8965367674827576"
+      },
+      {
+        "turn_id": "u63",
+        "speaker": "user",
+        "text": "really depressed",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "504.5",
+        "end_time_sec": "505.8",
+        "asr_confidence": "0.9832137227058411"
+      },
+      {
+        "turn_id": "u64",
+        "speaker": "user",
+        "text": "extremely depressed",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "507.1",
+        "end_time_sec": "508.4",
+        "asr_confidence": "0.9876291155815125"
+      },
+      {
+        "turn_id": "u65",
+        "speaker": "user",
+        "text": "poverty",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "515.1",
+        "end_time_sec": "515.9",
+        "asr_confidence": "0.9738552570343018"
+      },
+      {
+        "turn_id": "u66",
+        "speaker": "user",
+        "text": "yeah",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "517.9",
+        "end_time_sec": "518.3",
+        "asr_confidence": "0.875993013381958"
+      },
+      {
+        "turn_id": "u67",
+        "speaker": "user",
+        "text": "yeah I'm a lot more tired I sleep longer and",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "527.4",
+        "end_time_sec": "531.4",
+        "asr_confidence": "0.9303789138793945"
+      },
+      {
+        "turn_id": "u68",
+        "speaker": "user",
+        "text": "I am",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "532.8",
+        "end_time_sec": "533.6",
+        "asr_confidence": "0.9523113369941711"
+      },
+      {
+        "turn_id": "u69",
+        "speaker": "user",
+        "text": "I just don't have the drive motivation that I did before",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "534.9",
+        "end_time_sec": "538.2",
+        "asr_confidence": "0.9780352711677551"
+      },
+      {
+        "turn_id": "u70",
+        "speaker": "user",
+        "text": "just try to be strong just have to get through it and now",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "545.1",
+        "end_time_sec": "549.4",
+        "asr_confidence": "0.956514835357666"
+      },
+      {
+        "turn_id": "u71",
+        "speaker": "user",
+        "text": "yes",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "553.3",
+        "end_time_sec": "553.8",
+        "asr_confidence": "0.9863268136978149"
+      },
+      {
+        "turn_id": "u72",
+        "speaker": "user",
+        "text": "there are",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "555.1",
+        "end_time_sec": "555.7",
+        "asr_confidence": "0.9355857968330383"
+      },
+      {
+        "turn_id": "u73",
+        "speaker": "user",
+        "text": "not really",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "560.1",
+        "end_time_sec": "560.8",
+        "asr_confidence": "0.9876291155815125"
+      },
+      {
+        "turn_id": "u74",
+        "speaker": "user",
+        "text": "I'm an open book",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "563.0",
+        "end_time_sec": "563.9",
+        "asr_confidence": "0.9872856140136719"
+      },
+      {
+        "turn_id": "u75",
+        "speaker": "user",
+        "text": "well I would say perfection is but that's not really good quality cuz it can get dangerous",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "581.2",
+        "end_time_sec": "586.4",
+        "asr_confidence": "0.8751967549324036"
+      },
+      {
+        "turn_id": "u76",
+        "speaker": "user",
+        "text": "I'm just artistic I'm good at a lot of things",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "589.4",
+        "end_time_sec": "591.8",
+        "asr_confidence": "0.9788973331451416"
+      },
+      {
+        "turn_id": "u77",
+        "speaker": "user",
+        "text": "I'm really good at a lot of things but",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "593.1",
+        "end_time_sec": "596.1",
+        "asr_confidence": "0.970107913017273"
+      },
+      {
+        "turn_id": "u78",
+        "speaker": "user",
+        "text": "well I'm good I'm a good hairdresser makeup artist I crochet and knit really well make jewelry",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "599.0",
+        "end_time_sec": "606.9",
+        "asr_confidence": "0.8506888747215271"
+      },
+      {
+        "turn_id": "u79",
+        "speaker": "user",
+        "text": "not good with computers or phones though Electronics",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "609.1",
+        "end_time_sec": "612.1",
+        "asr_confidence": "0.9412254691123962"
+      },
+      {
+        "turn_id": "u80",
+        "speaker": "user",
+        "text": "yeah",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "613.0",
+        "end_time_sec": "613.4",
+        "asr_confidence": "0.864713191986084"
+      },
+      {
+        "turn_id": "u81",
+        "speaker": "user",
+        "text": "okay perfect house or well when I'm not depressed like this I was a perfect wife the perfect wife",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "614.7",
+        "end_time_sec": "621.9",
+        "asr_confidence": "0.892696738243103"
+      },
+      {
+        "turn_id": "u82",
+        "speaker": "user",
+        "text": "hell yeah",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "623.3",
+        "end_time_sec": "624.5",
+        "asr_confidence": "0.9202362895011902"
+      },
+      {
+        "turn_id": "u83",
+        "speaker": "user",
+        "text": "but not anymore cuz I'm divorced now but it wasn't me it was him",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "625.7",
+        "end_time_sec": "631.3",
+        "asr_confidence": "0.9475008249282837"
+      },
+      {
+        "turn_id": "u84",
+        "speaker": "user",
+        "text": "he was on drugs so he chose the drugs were too much problems",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "634.0",
+        "end_time_sec": "640.2",
+        "asr_confidence": "0.8671775460243225"
+      },
+      {
+        "turn_id": "u85",
+        "speaker": "user",
+        "text": "yeah it does",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "642.0",
+        "end_time_sec": "642.9",
+        "asr_confidence": "0.866956353187561"
+      },
+      {
+        "turn_id": "u86",
+        "speaker": "user",
+        "text": "it's really hard because it's like the drugs are his mistress",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "645.9",
+        "end_time_sec": "649.4",
+        "asr_confidence": "0.9269846081733704"
+      },
+      {
+        "turn_id": "u87",
+        "speaker": "user",
+        "text": "how do I what",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "655.1",
+        "end_time_sec": "656.1",
+        "asr_confidence": "0.8089626431465149"
+      },
+      {
+        "turn_id": "u88",
+        "speaker": "user",
+        "text": "who",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "658.4",
+        "end_time_sec": "659.0",
+        "asr_confidence": "0.9371140003204346"
+      },
+      {
+        "turn_id": "u89",
+        "speaker": "user",
+        "text": "yes",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "663.9",
+        "end_time_sec": "664.5",
+        "asr_confidence": "0.9938145279884338"
+      },
+      {
+        "turn_id": "u90",
+        "speaker": "user",
+        "text": "now",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "669.9",
+        "end_time_sec": "670.4",
+        "asr_confidence": "0.968227744102478"
+      },
+      {
+        "turn_id": "u91",
+        "speaker": "user",
+        "text": "well I don't really consider myself an introvert",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "679.5",
+        "end_time_sec": "681.7",
+        "asr_confidence": "0.9859474897384644"
+      },
+      {
+        "turn_id": "u92",
+        "speaker": "user",
+        "text": "yeah",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "689.1",
+        "end_time_sec": "691.0",
+        "asr_confidence": "0.8863722085952759"
+      },
+      {
+        "turn_id": "u93",
+        "speaker": "user",
+        "text": "I have a lot of regrets but there really wasn't anything I could do about it so there's really no point in regretting it",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "692.8",
+        "end_time_sec": "699.8",
+        "asr_confidence": "0.9765066504478455"
+      },
+      {
+        "turn_id": "u94",
+        "speaker": "user",
+        "text": "cuz you do what you do and you make a decision and then",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "700.8",
+        "end_time_sec": "704.3",
+        "asr_confidence": "0.9602862000465393"
+      },
+      {
+        "turn_id": "u95",
+        "speaker": "user",
+        "text": "it's already done so why I regret it why bother you no",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "705.4",
+        "end_time_sec": "709.2",
+        "asr_confidence": "0.8820304274559021"
+      },
+      {
+        "turn_id": "u96",
+        "speaker": "user",
+        "text": "make sure that when you marry a man that you ask him if he does drugs or alcohol",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "720.3",
+        "end_time_sec": "726.9",
+        "asr_confidence": "0.9676558971405029"
+      },
+      {
+        "turn_id": "u97",
+        "speaker": "user",
+        "text": "that's one for sure that was the only question I didn't answer ask I I didn't know",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "729.2",
+        "end_time_sec": "735.8",
+        "asr_confidence": "0.9013539552688599"
+      },
+      {
+        "turn_id": "u98",
+        "speaker": "user",
+        "text": "first lot of things",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "737.8",
+        "end_time_sec": "739.3",
+        "asr_confidence": "0.8800056576728821"
+      },
+      {
+        "turn_id": "u99",
+        "speaker": "user",
+        "text": "a lot of stuff",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "740.4",
+        "end_time_sec": "741.8",
+        "asr_confidence": "0.9859016537666321"
+      },
+      {
+        "turn_id": "u100",
+        "speaker": "user",
+        "text": "I don't know",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "755.3",
+        "end_time_sec": "758.4",
+        "asr_confidence": "0.9907218217849731"
+      },
+      {
+        "turn_id": "u101",
+        "speaker": "user",
+        "text": "just the things that I can do",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "761.2",
+        "end_time_sec": "763.0",
+        "asr_confidence": "0.9775893688201904"
+      },
+      {
+        "turn_id": "u102",
+        "speaker": "user",
+        "text": "that my talents that's it",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "764.7",
+        "end_time_sec": "766.6",
+        "asr_confidence": "0.9324469566345215"
+      },
+      {
+        "turn_id": "u103",
+        "speaker": "user",
+        "text": "well if I can have my Starbucks",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "782.7",
+        "end_time_sec": "785.7",
+        "asr_confidence": "0.958724319934845"
+      },
+      {
+        "turn_id": "u104",
+        "speaker": "user",
+        "text": "and my orange Gina I drink orange juice everyday and I smoke cigarettes and fortunately but it's always good to have those because you know I'm addicted to them and then it's like it's something really",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "787.5",
+        "end_time_sec": "800.9",
+        "asr_confidence": "0.940604031085968"
+      },
+      {
+        "turn_id": "u105",
+        "speaker": "user",
+        "text": "good and healthy at night time and it will basically if I have something to do if I have a goal of somewhere to go something to do like today then",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "802.3",
+        "end_time_sec": "812.6",
+        "asr_confidence": "0.9154014587402344"
+      },
+      {
+        "turn_id": "u106",
+        "speaker": "user",
+        "text": "let's meet a good man yeah otherwise I'd be afraid that I'd stay home and just lay in bed or perform all day I could form for 8 hours on FarmVille",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "813.8",
+        "end_time_sec": "822.6",
+        "asr_confidence": "0.9267388582229614"
+      },
+      {
+        "turn_id": "u107",
+        "speaker": "user",
+        "text": "you're welcome nice to meet you",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "831.0",
+        "end_time_sec": "833.0",
+        "asr_confidence": "0.9734367728233337"
+      },
+      {
+        "turn_id": "u108",
+        "speaker": "user",
+        "text": "so I pressed the button",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "836.9",
+        "end_time_sec": "838.5",
+        "asr_confidence": "0.7658148407936096"
+      },
+      {
+        "turn_id": "u109",
+        "speaker": "user",
+        "text": "you're good",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "840.2",
+        "end_time_sec": "842.0",
+        "asr_confidence": "0.8988595008850098"
+      },
+      {
+        "turn_id": "u110",
+        "speaker": "user",
+        "text": "she's good except for you know it's like the one I can she hear me by the way the one I always come is weird and distracting other than now the one",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "849.4",
+        "end_time_sec": "861.9",
+        "asr_confidence": "0.8986250162124634"
+      },
+      {
+        "turn_id": "u111",
+        "speaker": "user",
+        "text": "yeah she kind of made a mistake on one part",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "0.0",
+        "end_time_sec": "873.9",
+        "asr_confidence": "0.9374563694000244"
+      }
+    ]
+  },
+  "instructions": "Resolve disagreements between annotator A and annotator B, justify the decision, and save one final adjudicated label file."
+}

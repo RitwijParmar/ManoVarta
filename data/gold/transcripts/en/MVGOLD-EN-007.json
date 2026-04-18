@@ -1,0 +1,819 @@
+{
+  "session_id": "MVGOLD-EN-007",
+  "language": "en",
+  "cohort": "expansion",
+  "is_placeholder": false,
+  "collection_status": "collected_public_dataset",
+  "notes": "Imported from E-DAIC public participant archive.",
+  "profile": {
+    "age_years": null,
+    "age_band": "adult_unknown_from_source",
+    "occupation": "unknown_from_source",
+    "living_situation": "unknown_from_source",
+    "support_system": "unknown_from_source",
+    "gender": "male"
+  },
+  "source": {
+    "dataset": "e_daic_public",
+    "participant_id": "312",
+    "split": "train",
+    "phq_binary": "0",
+    "phq_score": "2",
+    "source_audio_path": "312_P/312_AUDIO.wav",
+    "source_transcript_path": "312_P/312_Transcript.csv"
+  },
+  "turns": [
+    {
+      "turn_id": "u1",
+      "speaker": "user",
+      "text": "that should I move my arms around",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "1.4",
+      "end_time_sec": "4.3",
+      "asr_confidence": "0.8402616381645203"
+    },
+    {
+      "turn_id": "u2",
+      "speaker": "user",
+      "text": "and I'm going to start at 10",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "19.0",
+      "end_time_sec": "20.9",
+      "asr_confidence": "0.937870979309082"
+    },
+    {
+      "turn_id": "u3",
+      "speaker": "user",
+      "text": "if it's not it was said don't answer that make sense",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "27.8",
+      "end_time_sec": "31.4",
+      "asr_confidence": "0.8330240249633789"
+    },
+    {
+      "turn_id": "u4",
+      "speaker": "user",
+      "text": "I don't ask that that's all okay that's all.",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "33.3",
+      "end_time_sec": "38.3",
+      "asr_confidence": "0.8156754970550537"
+    },
+    {
+      "turn_id": "u5",
+      "speaker": "user",
+      "text": "Okay",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "41.8",
+      "end_time_sec": "42.4",
+      "asr_confidence": "0.975234866142273"
+    },
+    {
+      "turn_id": "u6",
+      "speaker": "user",
+      "text": "impressive",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "48.0",
+      "end_time_sec": "48.8",
+      "asr_confidence": "0.7426962852478027"
+    },
+    {
+      "turn_id": "u7",
+      "speaker": "user",
+      "text": "are you okay",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "66.6",
+      "end_time_sec": "67.3",
+      "asr_confidence": "0.9782436490058899"
+    },
+    {
+      "turn_id": "u8",
+      "speaker": "user",
+      "text": "yes",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "67.9",
+      "end_time_sec": "68.5",
+      "asr_confidence": "0.9928359985351562"
+    },
+    {
+      "turn_id": "u9",
+      "speaker": "user",
+      "text": "fine how about you",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "73.6",
+      "end_time_sec": "74.7",
+      "asr_confidence": "0.8517988920211792"
+    },
+    {
+      "turn_id": "u10",
+      "speaker": "user",
+      "text": "here",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "81.4",
+      "end_time_sec": "82.0",
+      "asr_confidence": "0.9180594086647034"
+    },
+    {
+      "turn_id": "u11",
+      "speaker": "user",
+      "text": "yes",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "84.6",
+      "end_time_sec": "85.2",
+      "asr_confidence": "0.9938145279884338"
+    },
+    {
+      "turn_id": "u12",
+      "speaker": "user",
+      "text": "the weather",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "90.8",
+      "end_time_sec": "91.5",
+      "asr_confidence": "0.9917526841163635"
+    },
+    {
+      "turn_id": "u13",
+      "speaker": "user",
+      "text": "weather mainly near the met the weather sorry",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "93.5",
+      "end_time_sec": "97.7",
+      "asr_confidence": "0.8326350450515747"
+    },
+    {
+      "turn_id": "u14",
+      "speaker": "user",
+      "text": "not the people put some of the people stuff like that so",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "102.7",
+      "end_time_sec": "106.5",
+      "asr_confidence": "0.8612953424453735"
+    },
+    {
+      "turn_id": "u15",
+      "speaker": "user",
+      "text": "okay I'm cutting you off",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "109.4",
+      "end_time_sec": "110.8",
+      "asr_confidence": "0.9668962359428406"
+    },
+    {
+      "turn_id": "u16",
+      "speaker": "user",
+      "text": "not as much as I used to",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "115.5",
+      "end_time_sec": "117.3",
+      "asr_confidence": "0.8790407180786133"
+    },
+    {
+      "turn_id": "u17",
+      "speaker": "user",
+      "text": "I used to be in school they sell a lot of places for conferences think that that put me out of school right now but later I'll get back into school. Shelmore right now",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "119.8",
+      "end_time_sec": "128.6",
+      "asr_confidence": "0.8873772621154785"
+    },
+    {
+      "turn_id": "u18",
+      "speaker": "user",
+      "text": "I don't",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "133.3",
+      "end_time_sec": "134.2",
+      "asr_confidence": "0.9836094379425049"
+    },
+    {
+      "turn_id": "u19",
+      "speaker": "user",
+      "text": "I don't enjoy traveling",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "136.4",
+      "end_time_sec": "137.6",
+      "asr_confidence": "0.9659589529037476"
+    },
+    {
+      "turn_id": "u20",
+      "speaker": "user",
+      "text": "ask a question that's pretty good all I study Physics and it's mainly",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "140.9",
+      "end_time_sec": "147.0",
+      "asr_confidence": "0.8026601076126099"
+    },
+    {
+      "turn_id": "u21",
+      "speaker": "user",
+      "text": "Ashley",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "150.9",
+      "end_time_sec": "152.3",
+      "asr_confidence": "0.8986416459083557"
+    },
+    {
+      "turn_id": "u22",
+      "speaker": "user",
+      "text": "run out east Community College physics and astronomy research and physics also because I like the type of thing I want me to Grass will hopefully that's why I'm nervous sometime from the questionnaire",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "155.8",
+      "end_time_sec": "165.4",
+      "asr_confidence": "0.8720000982284546"
+    },
+    {
+      "turn_id": "u23",
+      "speaker": "user",
+      "text": "impressive",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "168.1",
+      "end_time_sec": "168.9",
+      "asr_confidence": "0.9558739066123962"
+    },
+    {
+      "turn_id": "u24",
+      "speaker": "user",
+      "text": "professor at a place like USC or UCLA it's not that where the professors do three hours work a week in the grasses to the rest",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "171.4",
+      "end_time_sec": "179.0",
+      "asr_confidence": "0.850601077079773"
+    },
+    {
+      "turn_id": "u25",
+      "speaker": "user",
+      "text": "you're actually pretty good at this",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "182.0",
+      "end_time_sec": "183.3",
+      "asr_confidence": "0.8015294075012207"
+    },
+    {
+      "turn_id": "u26",
+      "speaker": "user",
+      "text": "I got this lot of people the first one I guess is my physics teaching AP Physics tutoring high school even though you just let me to be Engineers have a physics major he still was a very good if what he told me you know he's fertile tell me that",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "190.6",
+      "end_time_sec": "204.1",
+      "asr_confidence": "0.9173651933670044"
+    },
+    {
+      "turn_id": "u27",
+      "speaker": "user",
+      "text": "school is not about a grave about learning",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "205.1",
+      "end_time_sec": "208.4",
+      "asr_confidence": "0.8832558393478394"
+    },
+    {
+      "turn_id": "u28",
+      "speaker": "user",
+      "text": "okay",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "214.8",
+      "end_time_sec": "215.3",
+      "asr_confidence": "0.9752300977706909"
+    },
+    {
+      "turn_id": "u29",
+      "speaker": "user",
+      "text": "oh pretty good I think",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "220.7",
+      "end_time_sec": "222.5",
+      "asr_confidence": "0.7997047901153564"
+    },
+    {
+      "turn_id": "u30",
+      "speaker": "user",
+      "text": "I'm single so I don't get too many arguments but it's part of my brother about",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "229.7",
+      "end_time_sec": "235.6",
+      "asr_confidence": "0.9369047284126282"
+    },
+    {
+      "turn_id": "u31",
+      "speaker": "user",
+      "text": "hiddleswift to play a video game together I know I'm pretty old for this",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "236.8",
+      "end_time_sec": "240.3",
+      "asr_confidence": "0.838424563407898"
+    },
+    {
+      "turn_id": "u32",
+      "speaker": "user",
+      "text": "really close a sedum praealtum pair to see a couple times a week older try to help me with groceries things iPad and a brother I see same same same old same time my sister I tutor her kids my nephew's so I see him but once we go so",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "252.8",
+      "end_time_sec": "274.6",
+      "asr_confidence": "0.9364091753959656"
+    },
+    {
+      "turn_id": "u33",
+      "speaker": "user",
+      "text": "yes",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "281.8",
+      "end_time_sec": "282.3",
+      "asr_confidence": "0.9938145279884338"
+    },
+    {
+      "turn_id": "u34",
+      "speaker": "user",
+      "text": "because I spend long. Of time doing math and reading and not talking anybody message.",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "285.1",
+      "end_time_sec": "292.2",
+      "asr_confidence": "0.9198229312896729"
+    },
+    {
+      "turn_id": "u35",
+      "speaker": "user",
+      "text": "I guess I play video games or it'll work out I work out I think a lot I try to at least",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "298.0",
+      "end_time_sec": "303.4",
+      "asr_confidence": "0.8522918820381165"
+    },
+    {
+      "turn_id": "u36",
+      "speaker": "user",
+      "text": "I rolled my eyes which happened towards a bad thing and let's put it I think",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "309.3",
+      "end_time_sec": "318.0",
+      "asr_confidence": "0.8794031143188477"
+    },
+    {
+      "turn_id": "u37",
+      "speaker": "user",
+      "text": "bad parenting basically parents are more self-centered more than themselves and representations and the kids just do they won't be compared to Art their opinion",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "327.6",
+      "end_time_sec": "338.7",
+      "asr_confidence": "0.857174813747406"
+    },
+    {
+      "turn_id": "u38",
+      "speaker": "user",
+      "text": "I guess",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "349.9",
+      "end_time_sec": "355.9",
+      "asr_confidence": "0.9660553932189941"
+    },
+    {
+      "turn_id": "u39",
+      "speaker": "user",
+      "text": "thank you",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "387.6",
+      "end_time_sec": "388.1",
+      "asr_confidence": "0.9831508994102478"
+    },
+    {
+      "turn_id": "u40",
+      "speaker": "user",
+      "text": "I only have best friend",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "393.4",
+      "end_time_sec": "394.8",
+      "asr_confidence": "0.9131557941436768"
+    },
+    {
+      "turn_id": "u41",
+      "speaker": "user",
+      "text": "it's a remember",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "396.7",
+      "end_time_sec": "397.7",
+      "asr_confidence": "0.8081153631210327"
+    },
+    {
+      "turn_id": "u42",
+      "speaker": "user",
+      "text": "unbiased obviously but they are",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "404.3",
+      "end_time_sec": "408.2",
+      "asr_confidence": "0.8987553715705872"
+    },
+    {
+      "turn_id": "u43",
+      "speaker": "user",
+      "text": "I really good math I'm not really sure if you can't that's why you can't get better than that but thing is it's just have to get recertified conference with it where no matter what it is going to learn in math class. Out I am patient I think and I am just went where I can swim I can spend many hours many many many hours would be books that might not be important but they might be important to do anyway that's a bad thing",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "409.4",
+      "end_time_sec": "432.3",
+      "asr_confidence": "0.9451777338981628"
+    },
+    {
+      "turn_id": "u44",
+      "speaker": "user",
+      "text": "when I a good workout",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "440.7",
+      "end_time_sec": "443.3",
+      "asr_confidence": "0.9735495448112488"
+    },
+    {
+      "turn_id": "u45",
+      "speaker": "user",
+      "text": "Google video game small little things like that when something happens when my not researched I think mathematical physics type thing where it goes well that must put a book that puts me in a good mood",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "444.8",
+      "end_time_sec": "455.7",
+      "asr_confidence": "0.8958703875541687"
+    },
+    {
+      "turn_id": "u46",
+      "speaker": "user",
+      "text": "thank you",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "459.3",
+      "end_time_sec": "459.9",
+      "asr_confidence": "0.9851279258728027"
+    },
+    {
+      "turn_id": "u47",
+      "speaker": "user",
+      "text": "right now",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "466.8",
+      "end_time_sec": "467.6",
+      "asr_confidence": "0.9914342761039734"
+    },
+    {
+      "turn_id": "u48",
+      "speaker": "user",
+      "text": "is it that that",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "468.6",
+      "end_time_sec": "469.4",
+      "asr_confidence": "0.8219374418258667"
+    },
+    {
+      "turn_id": "u49",
+      "speaker": "user",
+      "text": "research that I did I did make it this far",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "471.1",
+      "end_time_sec": "474.1",
+      "asr_confidence": "0.9602976441383362"
+    },
+    {
+      "turn_id": "u50",
+      "speaker": "user",
+      "text": "research why that's all",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "475.7",
+      "end_time_sec": "477.0",
+      "asr_confidence": "0.9037521481513977"
+    },
+    {
+      "turn_id": "u51",
+      "speaker": "user",
+      "text": "that's all",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "478.8",
+      "end_time_sec": "479.4",
+      "asr_confidence": "0.9619387984275818"
+    },
+    {
+      "turn_id": "u52",
+      "speaker": "user",
+      "text": "interesting",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "481.5",
+      "end_time_sec": "482.3",
+      "asr_confidence": "0.9639699459075928"
+    },
+    {
+      "turn_id": "u53",
+      "speaker": "user",
+      "text": "we start off in school read about I say things like that he's a general tutoring hero particle physics and no idea what it is you know it's very complicated because iCloud mechanics and you still have that and but you not sure if I should make it and eventually he still has lot of time goes by you reach you as time goes on you can get closer closer emission Mexico I miss you realize you are just men as good as we are up there you can do research and visit you can't admit knowledge",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "487.8",
+      "end_time_sec": "515.8",
+      "asr_confidence": "0.9501517415046692"
+    },
+    {
+      "turn_id": "u54",
+      "speaker": "user",
+      "text": "okay",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "525.4",
+      "end_time_sec": "525.9",
+      "asr_confidence": "0.954174280166626"
+    },
+    {
+      "turn_id": "u55",
+      "speaker": "user",
+      "text": "a few weeks ago when I got a good grade in the class",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "531.2",
+      "end_time_sec": "535.4",
+      "asr_confidence": "0.9605007171630859"
+    },
+    {
+      "turn_id": "u56",
+      "speaker": "user",
+      "text": "thank you",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "538.9",
+      "end_time_sec": "539.5",
+      "asr_confidence": "0.9831554293632507"
+    },
+    {
+      "turn_id": "u57",
+      "speaker": "user",
+      "text": "yes briefly",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "542.6",
+      "end_time_sec": "543.6",
+      "asr_confidence": "0.9600079655647278"
+    },
+    {
+      "turn_id": "u58",
+      "speaker": "user",
+      "text": "many years ago",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "545.1",
+      "end_time_sec": "545.9",
+      "asr_confidence": "0.8486446142196655"
+    },
+    {
+      "turn_id": "u59",
+      "speaker": "user",
+      "text": "I don't know she's always growing up I always thought I was always thought Dreamworld the kid that's why and I just we're not doing that",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "551.0",
+      "end_time_sec": "560.1",
+      "asr_confidence": "0.8846206068992615"
+    },
+    {
+      "turn_id": "u60",
+      "speaker": "user",
+      "text": "I was National Guard or I think about 18 19 I got commissioned at2021 as longing for about a year so I let it 2022",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "564.0",
+      "end_time_sec": "574.5",
+      "asr_confidence": "0.841678261756897"
+    },
+    {
+      "turn_id": "u61",
+      "speaker": "user",
+      "text": "yes. Really",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "576.9",
+      "end_time_sec": "578.7",
+      "asr_confidence": "0.9004871845245361"
+    },
+    {
+      "turn_id": "u62",
+      "speaker": "user",
+      "text": "I don't think it did I think I just need to grow up your butt or expecting to be as much",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "584.2",
+      "end_time_sec": "590.8",
+      "asr_confidence": "0.8702770471572876"
+    },
+    {
+      "turn_id": "u63",
+      "speaker": "user",
+      "text": "graduate school",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "594.0",
+      "end_time_sec": "595.9",
+      "asr_confidence": "0.9860289692878723"
+    },
+    {
+      "turn_id": "u64",
+      "speaker": "user",
+      "text": "in physics",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "597.5",
+      "end_time_sec": "598.3",
+      "asr_confidence": "0.777157723903656"
+    },
+    {
+      "turn_id": "u65",
+      "speaker": "user",
+      "text": "no",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "603.7",
+      "end_time_sec": "604.1",
+      "asr_confidence": "0.935146689414978"
+    },
+    {
+      "turn_id": "u66",
+      "speaker": "user",
+      "text": "nope",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "606.8",
+      "end_time_sec": "607.3",
+      "asr_confidence": "0.902807354927063"
+    },
+    {
+      "turn_id": "u67",
+      "speaker": "user",
+      "text": "it depends when I work out really hard at night of the day of the day before if I work out pretty hard as bad if I don't workout it I don't know it's hard moderately",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "611.6",
+      "end_time_sec": "622.3",
+      "asr_confidence": "0.8959087133407593"
+    },
+    {
+      "turn_id": "u68",
+      "speaker": "user",
+      "text": "thank you",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "624.2",
+      "end_time_sec": "624.8",
+      "asr_confidence": "0.9831609725952148"
+    },
+    {
+      "turn_id": "u69",
+      "speaker": "user",
+      "text": "yes",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "627.2",
+      "end_time_sec": "627.7",
+      "asr_confidence": "0.9922001361846924"
+    },
+    {
+      "turn_id": "u70",
+      "speaker": "user",
+      "text": "it's okay",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "631.3",
+      "end_time_sec": "632.0",
+      "asr_confidence": "0.9483532905578613"
+    },
+    {
+      "turn_id": "u71",
+      "speaker": "user",
+      "text": "probably like I am now normal I think not as not as happy about everything was still pretty okay still function",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "635.5",
+      "end_time_sec": "643.2",
+      "asr_confidence": "0.9109874367713928"
+    },
+    {
+      "turn_id": "u72",
+      "speaker": "user",
+      "text": "no",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "651.1",
+      "end_time_sec": "651.5",
+      "asr_confidence": "0.9466397762298584"
+    },
+    {
+      "turn_id": "u73",
+      "speaker": "user",
+      "text": "hey sliding",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "653.0",
+      "end_time_sec": "654.0",
+      "asr_confidence": "0.5526171326637268"
+    },
+    {
+      "turn_id": "u74",
+      "speaker": "user",
+      "text": "no",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "658.5",
+      "end_time_sec": "658.9",
+      "asr_confidence": "0.8314507007598877"
+    },
+    {
+      "turn_id": "u75",
+      "speaker": "user",
+      "text": "yes",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "662.7",
+      "end_time_sec": "663.3",
+      "asr_confidence": "0.9938145279884338"
+    },
+    {
+      "turn_id": "u76",
+      "speaker": "user",
+      "text": "yes I have changed my thoughts",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "667.2",
+      "end_time_sec": "668.8",
+      "asr_confidence": "0.9409242272377014"
+    },
+    {
+      "turn_id": "u77",
+      "speaker": "user",
+      "text": "applying to grad school games been a while and slightly apprehensive happy that looks good but every answer is that it might not be good things like that",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "677.0",
+      "end_time_sec": "685.4",
+      "asr_confidence": "0.8792056441307068"
+    },
+    {
+      "turn_id": "u78",
+      "speaker": "user",
+      "text": "what do you mean by that is I know so you could Peter but I didn't how hard to do these thoughts or how hard is it going to grad school",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "689.6",
+      "end_time_sec": "695.1",
+      "asr_confidence": "0.9107088446617126"
+    },
+    {
+      "turn_id": "u79",
+      "speaker": "user",
+      "text": "understand",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "700.1",
+      "end_time_sec": "700.9",
+      "asr_confidence": "0.9600387811660767"
+    },
+    {
+      "turn_id": "u80",
+      "speaker": "user",
+      "text": "okay",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "706.5",
+      "end_time_sec": "707.1",
+      "asr_confidence": "0.9752396941184998"
+    },
+    {
+      "turn_id": "u81",
+      "speaker": "user",
+      "text": "I agree",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "712.8",
+      "end_time_sec": "713.5",
+      "asr_confidence": "0.9336454272270203"
+    },
+    {
+      "turn_id": "u82",
+      "speaker": "user",
+      "text": "no not really",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "723.9",
+      "end_time_sec": "724.8",
+      "asr_confidence": "0.9858453273773193"
+    },
+    {
+      "turn_id": "u83",
+      "speaker": "user",
+      "text": "how to keep doing what you do even though I'm not that old believe it or not 20 years ago was probably 15 kit for 12 workout if I work if it was a little bit different don't think it'll work out so well it was a perfect now they were doing really well personally",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "733.7",
+      "end_time_sec": "752.8",
+      "asr_confidence": "0.9350189566612244"
+    },
+    {
+      "turn_id": "u84",
+      "speaker": "user",
+      "text": "thank you",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "757.0",
+      "end_time_sec": "757.6",
+      "asr_confidence": "0.9365198016166687"
+    },
+    {
+      "turn_id": "u85",
+      "speaker": "user",
+      "text": "same here",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "761.4",
+      "end_time_sec": "763.4",
+      "asr_confidence": "0.9363884329795837"
+    },
+    {
+      "turn_id": "u86",
+      "speaker": "user",
+      "text": "goodbye",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "764.9",
+      "end_time_sec": "765.5",
+      "asr_confidence": "0.9405769109725952"
+    },
+    {
+      "turn_id": "u87",
+      "speaker": "user",
+      "text": "I'll keep this on",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "771.2",
+      "end_time_sec": "772.4",
+      "asr_confidence": "0.8761039972305298"
+    },
+    {
+      "turn_id": "u88",
+      "speaker": "user",
+      "text": "take us off now",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "779.7",
+      "end_time_sec": "780.6",
+      "asr_confidence": "0.8307009935379028"
+    }
+  ]
+}

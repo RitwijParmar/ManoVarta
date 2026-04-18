@@ -1,0 +1,621 @@
+{
+  "session_id": "MVGOLD-EN-017",
+  "language": "en",
+  "cohort": "expansion",
+  "target_primary_domain": "anhedonia",
+  "target_risk_band": "none",
+  "packet_stage": "annotator_b",
+  "target_output_file": "data/gold/labels/MVGOLD-EN-017.annotator_b.json",
+  "related_files": {
+    "audio_file": "data/gold/audio/en/MVGOLD-EN-017.wav",
+    "transcript_file": "data/gold/transcripts/en/MVGOLD-EN-017.json",
+    "annotator_a_file": "data/gold/labels/MVGOLD-EN-017.annotator_a.json",
+    "annotator_b_file": "data/gold/labels/MVGOLD-EN-017.annotator_b.json",
+    "adjudicated_label_file": "data/gold/labels/MVGOLD-EN-017.adjudicated.json"
+  },
+  "metadata": {
+    "session_id": "MVGOLD-EN-017",
+    "participant_id": "309",
+    "language": "en",
+    "age_years": "",
+    "age_band": "adult_unknown_from_source",
+    "occupation": "unknown_from_source",
+    "living_situation": "unknown_from_source",
+    "support_system": "unknown_from_source",
+    "consent_recorded": "public_dataset_license",
+    "collection_source": "e_daic_public_2019",
+    "audio_file": "data/gold/audio/en/MVGOLD-EN-017.wav",
+    "transcript_file": "data/gold/transcripts/en/MVGOLD-EN-017.json",
+    "annotator_a_file": "data/gold/labels/MVGOLD-EN-017.annotator_a.json",
+    "annotator_b_file": "data/gold/labels/MVGOLD-EN-017.annotator_b.json",
+    "adjudicated_label_file": "data/gold/labels/MVGOLD-EN-017.adjudicated.json",
+    "split": "expansion",
+    "notes": "Imported from E-DAIC public participant archive; PHQ8 items from public labels, remaining items machine-inferred and require clinician review for strict claims."
+  },
+  "transcript": {
+    "session_id": "MVGOLD-EN-017",
+    "language": "en",
+    "cohort": "expansion",
+    "is_placeholder": false,
+    "collection_status": "collected_public_dataset",
+    "notes": "Imported from E-DAIC public participant archive.",
+    "profile": {
+      "age_years": null,
+      "age_band": "adult_unknown_from_source",
+      "occupation": "unknown_from_source",
+      "living_situation": "unknown_from_source",
+      "support_system": "unknown_from_source",
+      "gender": "male"
+    },
+    "source": {
+      "dataset": "e_daic_public",
+      "participant_id": "309",
+      "split": "train",
+      "phq_binary": "1",
+      "phq_score": "15",
+      "source_audio_path": "309_P/309_AUDIO.wav",
+      "source_transcript_path": "309_P/309_Transcript.csv"
+    },
+    "turns": [
+      {
+        "turn_id": "u1",
+        "speaker": "user",
+        "text": "there we go",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "5.4",
+        "end_time_sec": "6.0",
+        "asr_confidence": "0.8815883994102478"
+      },
+      {
+        "turn_id": "u2",
+        "speaker": "user",
+        "text": "bring up virtual human",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "34.3",
+        "end_time_sec": "36.0",
+        "asr_confidence": "0.8835773468017578"
+      },
+      {
+        "turn_id": "u3",
+        "speaker": "user",
+        "text": "chat with her for a bit and I'm going to give you the",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "37.6",
+        "end_time_sec": "39.7",
+        "asr_confidence": "0.9856788516044617"
+      },
+      {
+        "turn_id": "u4",
+        "speaker": "user",
+        "text": "yeah",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "74.5",
+        "end_time_sec": "75.2",
+        "asr_confidence": "0.9164890050888062"
+      },
+      {
+        "turn_id": "u5",
+        "speaker": "user",
+        "text": "I'm doing good",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "79.7",
+        "end_time_sec": "81.1",
+        "asr_confidence": "0.9753305912017822"
+      },
+      {
+        "turn_id": "u6",
+        "speaker": "user",
+        "text": "Arizona",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "85.4",
+        "end_time_sec": "87.4",
+        "asr_confidence": "0.9876290559768677"
+      },
+      {
+        "turn_id": "u7",
+        "speaker": "user",
+        "text": "because of acting and other stuff like that entered the entertainment industry",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "91.3",
+        "end_time_sec": "95.9",
+        "asr_confidence": "0.8133218288421631"
+      },
+      {
+        "turn_id": "u8",
+        "speaker": "user",
+        "text": "no",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "100.8",
+        "end_time_sec": "101.3",
+        "asr_confidence": "0.9177445769309998"
+      },
+      {
+        "turn_id": "u9",
+        "speaker": "user",
+        "text": "not at the moment at least",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "103.3",
+        "end_time_sec": "104.3",
+        "asr_confidence": "0.857730507850647"
+      },
+      {
+        "turn_id": "u10",
+        "speaker": "user",
+        "text": "currently a student",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "107.3",
+        "end_time_sec": "109.4",
+        "asr_confidence": "0.9603013396263123"
+      },
+      {
+        "turn_id": "u11",
+        "speaker": "user",
+        "text": "I produce hip-hop why rap and produce hiphop I play video games and then hang out with people",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "117.8",
+        "end_time_sec": "126.4",
+        "asr_confidence": "0.9207197427749634"
+      },
+      {
+        "turn_id": "u12",
+        "speaker": "user",
+        "text": "no",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "132.9",
+        "end_time_sec": "133.5",
+        "asr_confidence": "0.9432374238967896"
+      },
+      {
+        "turn_id": "u13",
+        "speaker": "user",
+        "text": "not very good at break things",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "139.9",
+        "end_time_sec": "142.3",
+        "asr_confidence": "0.9653677344322205"
+      },
+      {
+        "turn_id": "u14",
+        "speaker": "user",
+        "text": "on the way over here my mom and how to get here",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "148.3",
+        "end_time_sec": "151.1",
+        "asr_confidence": "0.9687451124191284"
+      },
+      {
+        "turn_id": "u15",
+        "speaker": "user",
+        "text": "the beach",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "162.2",
+        "end_time_sec": "162.8",
+        "asr_confidence": "0.9542092680931091"
+      },
+      {
+        "turn_id": "u16",
+        "speaker": "user",
+        "text": "imputed",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "166.8",
+        "end_time_sec": "169.2",
+        "asr_confidence": "0.7624187469482422"
+      },
+      {
+        "turn_id": "u17",
+        "speaker": "user",
+        "text": "I know the last place I went with Los Cabos",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "171.6",
+        "end_time_sec": "174.7",
+        "asr_confidence": "0.8520582318305969"
+      },
+      {
+        "turn_id": "u18",
+        "speaker": "user",
+        "text": "when I go somewhere Mexico",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "179.0",
+        "end_time_sec": "181.4",
+        "asr_confidence": "0.8936970829963684"
+      },
+      {
+        "turn_id": "u19",
+        "speaker": "user",
+        "text": "no",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "188.4",
+        "end_time_sec": "188.9",
+        "asr_confidence": "0.9314738512039185"
+      },
+      {
+        "turn_id": "u20",
+        "speaker": "user",
+        "text": "no",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "191.6",
+        "end_time_sec": "192.2",
+        "asr_confidence": "0.9620286226272583"
+      },
+      {
+        "turn_id": "u21",
+        "speaker": "user",
+        "text": "yes",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "195.0",
+        "end_time_sec": "195.5",
+        "asr_confidence": "0.9647638201713562"
+      },
+      {
+        "turn_id": "u22",
+        "speaker": "user",
+        "text": "I like 4 years ago",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "199.1",
+        "end_time_sec": "201.6",
+        "asr_confidence": "0.8394108414649963"
+      },
+      {
+        "turn_id": "u23",
+        "speaker": "user",
+        "text": "right now na",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "207.7",
+        "end_time_sec": "208.4",
+        "asr_confidence": "0.9676886796951294"
+      },
+      {
+        "turn_id": "u24",
+        "speaker": "user",
+        "text": "lately not very easy",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "215.5",
+        "end_time_sec": "216.9",
+        "asr_confidence": "0.9635037183761597"
+      },
+      {
+        "turn_id": "u25",
+        "speaker": "user",
+        "text": "not just lately",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "223.6",
+        "end_time_sec": "224.5",
+        "asr_confidence": "0.9223254323005676"
+      },
+      {
+        "turn_id": "u26",
+        "speaker": "user",
+        "text": "call my wife left like three weeks ago and after that I haven't been able to sleep",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "237.7",
+        "end_time_sec": "240.9",
+        "asr_confidence": "0.8325484395027161"
+      },
+      {
+        "turn_id": "u27",
+        "speaker": "user",
+        "text": "and I just bury my head and stuff I don't know how to do stuff I try to keep my mind off of it like do yoga and other things keep my mind off of everything",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "254.7",
+        "end_time_sec": "262.3",
+        "asr_confidence": "0.9325392246246338"
+      },
+      {
+        "turn_id": "u28",
+        "speaker": "user",
+        "text": "I don't have to I never went to therapy",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "269.4",
+        "end_time_sec": "271.1",
+        "asr_confidence": "0.9728752374649048"
+      },
+      {
+        "turn_id": "u29",
+        "speaker": "user",
+        "text": "when I did go to therapy",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "275.4",
+        "end_time_sec": "276.8",
+        "asr_confidence": "0.7270874977111816"
+      },
+      {
+        "turn_id": "u30",
+        "speaker": "user",
+        "text": "like 3-4 years ago",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "283.6",
+        "end_time_sec": "285.3",
+        "asr_confidence": "0.7886695861816406"
+      },
+      {
+        "turn_id": "u31",
+        "speaker": "user",
+        "text": "cuz I went to a separate therapist but then I went to I think we're at they did a bunch of cognitive test in memory test and then she diagnosed me with a type of depression that lasts for a long time like I get depressed and it lasts for months on end",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "287.0",
+        "end_time_sec": "301.9",
+        "asr_confidence": "0.8886193037033081"
+      },
+      {
+        "turn_id": "u32",
+        "speaker": "user",
+        "text": "yeah",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "303.3",
+        "end_time_sec": "303.8",
+        "asr_confidence": "0.8668866157531738"
+      },
+      {
+        "turn_id": "u33",
+        "speaker": "user",
+        "text": "to be honest I don't know I think it's more about like you focusing on yourself and like I don't know I don't know how to explain that it's like you have to figure out things within yourself you don't need someone else to talk to",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "311.7",
+        "end_time_sec": "321.9",
+        "asr_confidence": "0.9557755589485168"
+      },
+      {
+        "turn_id": "u34",
+        "speaker": "user",
+        "text": "well raised me when I went to the therapist I was court-ordered and I want to go to therapy for my anger management though",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "328.7",
+        "end_time_sec": "333.6",
+        "asr_confidence": "0.891762912273407"
+      },
+      {
+        "turn_id": "u35",
+        "speaker": "user",
+        "text": "I don't know.",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "341.0",
+        "end_time_sec": "342.4",
+        "asr_confidence": "0.8350016474723816"
+      },
+      {
+        "turn_id": "u36",
+        "speaker": "user",
+        "text": "I mean my wife left like 3 weeks ago so yes",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "355.8",
+        "end_time_sec": "358.5",
+        "asr_confidence": "0.9292773604393005"
+      },
+      {
+        "turn_id": "u37",
+        "speaker": "user",
+        "text": "it's probably the hardest thing I've ever done so yeah",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "371.0",
+        "end_time_sec": "373.3",
+        "asr_confidence": "0.9547033309936523"
+      },
+      {
+        "turn_id": "u38",
+        "speaker": "user",
+        "text": "well considering I'm only 19 if I could go back 19 years I would say not to fuck up and let myself get depressed about certain things that would have drove away my wife and not to be angry",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "391.7",
+        "end_time_sec": "402.7",
+        "asr_confidence": "0.9400994181632996"
+      },
+      {
+        "turn_id": "u39",
+        "speaker": "user",
+        "text": "yeah driving away my wife",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "410.2",
+        "end_time_sec": "411.7",
+        "asr_confidence": "0.9198636412620544"
+      },
+      {
+        "turn_id": "u40",
+        "speaker": "user",
+        "text": "gas mini many things every day every day",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "417.4",
+        "end_time_sec": "419.4",
+        "asr_confidence": "0.6174046993255615"
+      },
+      {
+        "turn_id": "u41",
+        "speaker": "user",
+        "text": "I could have not broken stuff",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "427.3",
+        "end_time_sec": "429.0",
+        "asr_confidence": "0.8193528056144714"
+      },
+      {
+        "turn_id": "u42",
+        "speaker": "user",
+        "text": "and I could have a",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "430.4",
+        "end_time_sec": "431.9",
+        "asr_confidence": "0.9121465086936951"
+      },
+      {
+        "turn_id": "u43",
+        "speaker": "user",
+        "text": "stop the Legos basically blocking out the external universe and I was putting everything into myself and like focusing on other things so that I don't focus on the real life I was basically escaping until tonight since I wasn't paying attention to her and that's basically why she left that mean that I'm being angry is like both contributed their own portion",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "433.9",
+        "end_time_sec": "456.3",
+        "asr_confidence": "0.9529367685317993"
+      },
+      {
+        "turn_id": "u44",
+        "speaker": "user",
+        "text": "earlier today",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "470.7",
+        "end_time_sec": "471.4",
+        "asr_confidence": "0.9569854140281677"
+      },
+      {
+        "turn_id": "u45",
+        "speaker": "user",
+        "text": "I mean I feel really happy all the time and then it just goes away it's like back and forth like one day on one side and I'll be really happy and then another second I'll be really sad cuz I'll think about some onion and I got to keep my mind off of things and like move forward and like thinking",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "485.3",
+        "end_time_sec": "498.3",
+        "asr_confidence": "0.9246830940246582"
+      },
+      {
+        "turn_id": "u46",
+        "speaker": "user",
+        "text": "I really know how to explain it it's just something you feel",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "499.2",
+        "end_time_sec": "501.6",
+        "asr_confidence": "0.7693410515785217"
+      },
+      {
+        "turn_id": "u47",
+        "speaker": "user",
+        "text": "know any better programming",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "505.2",
+        "end_time_sec": "508.4",
+        "asr_confidence": "0.9236468076705933"
+      },
+      {
+        "turn_id": "u48",
+        "speaker": "user",
+        "text": "silly",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "515.6",
+        "end_time_sec": "516.2",
+        "asr_confidence": "0.7874393463134766"
+      },
+      {
+        "turn_id": "u49",
+        "speaker": "user",
+        "text": "I'm creative potential of intelligence",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "526.1",
+        "end_time_sec": "530.7",
+        "asr_confidence": "0.9676458239555359"
+      },
+      {
+        "turn_id": "u50",
+        "speaker": "user",
+        "text": "charming and loving",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "535.4",
+        "end_time_sec": "536.8",
+        "asr_confidence": "0.9191409349441528"
+      },
+      {
+        "turn_id": "u51",
+        "speaker": "user",
+        "text": "at some point, all those things at some point.",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "538.7",
+        "end_time_sec": "542.0",
+        "asr_confidence": "0.8373684287071228"
+      },
+      {
+        "turn_id": "u52",
+        "speaker": "user",
+        "text": "Doing yoga playing video games and having my wife around",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "548.4",
+        "end_time_sec": "551.9",
+        "asr_confidence": "0.8744803071022034"
+      },
+      {
+        "turn_id": "u53",
+        "speaker": "user",
+        "text": "my hip hop",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "558.0",
+        "end_time_sec": "558.9",
+        "asr_confidence": "0.8592832088470459"
+      },
+      {
+        "turn_id": "u54",
+        "speaker": "user",
+        "text": "I mean kid traveling",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "579.4",
+        "end_time_sec": "580.6",
+        "asr_confidence": "0.9484912157058716"
+      },
+      {
+        "turn_id": "u55",
+        "speaker": "user",
+        "text": "you need better programming kit traveling is my friend",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "600.8",
+        "end_time_sec": "606.0",
+        "asr_confidence": "0.8368507623672485"
+      },
+      {
+        "turn_id": "u56",
+        "speaker": "user",
+        "text": "to be a hip hop artist",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "615.6",
+        "end_time_sec": "616.7",
+        "asr_confidence": "0.9101434350013733"
+      },
+      {
+        "turn_id": "u57",
+        "speaker": "user",
+        "text": "I don't know what to start on Monday",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "623.7",
+        "end_time_sec": "625.0",
+        "asr_confidence": "0.7737446427345276"
+      },
+      {
+        "turn_id": "u58",
+        "speaker": "user",
+        "text": "not hard anymore let me know so I was practicing when I was younger and I was like 11 and 12 no it's easy",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "633.6",
+        "end_time_sec": "639.0",
+        "asr_confidence": "0.8777297139167786"
+      },
+      {
+        "turn_id": "u59",
+        "speaker": "user",
+        "text": "I'm still in school",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "653.8",
+        "end_time_sec": "654.7",
+        "asr_confidence": "0.9876290559768677"
+      },
+      {
+        "turn_id": "u60",
+        "speaker": "user",
+        "text": "no problem",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "668.6",
+        "end_time_sec": "669.6",
+        "asr_confidence": "0.9178347587585449"
+      },
+      {
+        "turn_id": "u61",
+        "speaker": "user",
+        "text": "yeah I have a nice day bye bye",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "675.4",
+        "end_time_sec": "677.2",
+        "asr_confidence": "0.9493173956871033"
+      },
+      {
+        "turn_id": "u62",
+        "speaker": "user",
+        "text": "did I started clicking it twice and I'm like",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "695.2",
+        "end_time_sec": "697.1",
+        "asr_confidence": "0.7810558676719666"
+      }
+    ]
+  },
+  "instructions": "Label independently using the transcript, metadata, and annotation guidelines. Do not inspect annotator A."
+}

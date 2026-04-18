@@ -47,7 +47,7 @@ EXTRACTOR_ITEM_HINTS = {
     "gad_q4_trouble_relaxing": "cannot switch off, cannot settle, replaying whole conversations, body staying tense after stress",
     "gad_q5_restlessness": "pacing around, cleaning or checking to avoid sitting still, chain se baith nahi pata",
     "gad_q6_irritability": "snappy for no good reason, choti baat par gussa, irritability from stress spillover",
-    "gad_q7_fear_awful": "getting written up, not covering rent, something bad will happen, debt or catastrophe anticipation",
+    "gad_q7_afraid": "getting written up, not covering rent, something bad will happen, debt or catastrophe anticipation",
 }
 ENGLISH_VERIFIER_FOCUS_ITEMS = (
     "gad_q1_nervous",
@@ -61,14 +61,18 @@ ENGLISH_VERIFIER_FOCUS_ITEMS = (
 ENGLISH_CONTROL_WORRY_CUES = (
     "mind won't stop",
     "thoughts won't stop",
+    "mind keeps looping",
+    "thoughts keep looping",
     "can't stop worrying",
     "cannot stop worrying",
+    "worrying a lot",
     "replay whole conversations",
     "replaying comments from my advisor",
     "brain keeps replaying",
     "head keeps saying",
 )
 ENGLISH_EXCESSIVE_WORRY_CUES = (
+    "worrying a lot",
     "get written up",
     "cover rent",
     "wrong thing",
@@ -85,6 +89,8 @@ ENGLISH_TROUBLE_RELAXING_CUES = (
     "cannot really switch off",
     "can't switch off",
     "cannot switch off",
+    "can't settle",
+    "cannot settle",
     "replay whole conversations",
     "replaying comments from my advisor",
     "pace around",
@@ -246,6 +252,8 @@ class HuggingFaceResponder:
         safety = snapshot.safety.level
         profile_context = profile_summary(session.profile)
         topic_knowledge = knowledge_summary_for_topic(dialogue.target_topic)
+        style_guidance = self._build_style_guidance(dialogue)
+        nudge_guidance = self._build_nudge_guidance(dialogue)
 
         system_prompt = (
             "You are ManoVarta, a multilingual mental health screening assistant. "
@@ -253,10 +261,14 @@ class HuggingFaceResponder:
             "Write one concise follow-up question or one brief closing message. "
             "Stay in the user's language. Use at most two sentences and prefer one focused question. "
             "Mirror the user's pacing and level of detail without sounding scripted. "
+            "Use autonomy-supportive phrasing like 'if easier' or 'you can pick one' for guarded or fatigued users. "
             "Never say 'great to hear', 'good to hear', or 'glad to hear' when the user is describing distress, symptoms, or impairment. "
             "If the user is guarded or brief, ask one smaller concrete follow-up and make it clear that a short answer is okay. "
             "If the user is detailed, let them continue in their own words instead of forcing a checklist. "
             "If the user's code-mix is medium or high, mirror it lightly and naturally without caricature or slang overload. "
+            "Prefer one reflective line plus one concrete anchor over stacked empathy or multiple asks. "
+            "If the planner suggests a compare, body, coping, support, or scale nudge, weave it in naturally instead of naming it like a technique. "
+            "Do not sound gamified, competitive, or childish. "
             "Do not stack gratitude, continuity reminders, and reflective paraphrases in the same short reply. "
             "Do not repeat the previous assistant question in the same wording. "
             "If the user already answered timing or frequency, move to what the symptom feels like, how strong it is, or how it affects the day. "
@@ -281,6 +293,8 @@ class HuggingFaceResponder:
             f"Readiness: {dialogue.readiness}\n"
             f"Fatigue: {dialogue.fatigue}\n"
             f"Recommended nudge families: {', '.join(dialogue.recommended_nudges) or 'none'}\n"
+            f"Style guidance: {style_guidance}\n"
+            f"Nudge guidance: {nudge_guidance}\n"
             f"Unresolved items: {unresolved}\n"
             f"Knowledge guidance: {topic_knowledge}\n"
             f"Planner rationale: {dialogue.rationale}\n"
@@ -293,6 +307,43 @@ class HuggingFaceResponder:
             {"role": "system", "content": system_prompt},
             {"role": "user", "content": user_prompt},
         ]
+
+    def _build_style_guidance(self, dialogue) -> str:
+        parts: list[str] = []
+        if dialogue.fatigue == "high":
+            parts.append("Keep the burden light and accept a short answer without pushing for a full story.")
+        if dialogue.user_style.openness == "guarded":
+            parts.append("Offer the easiest anchor first so the user can choose what feels safest to answer.")
+        elif dialogue.user_style.verbosity == "brief":
+            parts.append("Ask for one concrete anchor only, not a broad multi-part explanation.")
+        elif dialogue.user_style.verbosity == "detailed":
+            parts.append("Let the narrative breathe, then narrow gently toward impact, intensity, or change.")
+        else:
+            parts.append("Use a balanced guided pace with one focused follow-up.")
+        if dialogue.user_style.code_mix in {"medium", "high"}:
+            parts.append("Mirror code-mix lightly and naturally.")
+        if dialogue.continuity_note:
+            parts.append("If it fits, use a then-versus-now comparison instead of restarting the topic from scratch.")
+        return " ".join(parts)
+
+    def _build_nudge_guidance(self, dialogue) -> str:
+        guidance_map = {
+            "example": "Invite one recent concrete moment.",
+            "timing": "Ask when it becomes strongest or most noticeable.",
+            "impact": "Ask how it affects routine, sleep, work, study, appetite, or relationships.",
+            "choice": "Offer a small choice such as example, timing, or daily impact and let the user pick one.",
+            "scale": "If words feel hard, accept a quick intensity estimate or stronger-versus-weaker comparison.",
+            "body": "Invite body sensations or physical tension if that is easier than naming the whole emotion.",
+            "compare": "Ask what changed compared with before or compared with the last check-in.",
+            "coping": "Ask what makes it worse, what softens it, or what the user does when it shows up.",
+            "support": "Ask for one person, routine, or anchor that notices, helps, or keeps the user steadier.",
+            "safety": "Keep the question brief, direct, and non-elaborate.",
+            "mood": "Clarify the heaviest part of the low-mood experience.",
+            "sleep": "Clarify the sleep pattern rather than asking about sleep in general.",
+            "anxiety": "Clarify whether the worry feels mental, physical, or both.",
+        }
+        nudges = [guidance_map[key] for key in dialogue.recommended_nudges if key in guidance_map]
+        return " ".join(nudges[:3]) or "Use the smallest prompt that adds real clarity."
 
     def _build_reply_transcript(self, turns: list[Turn]) -> str:
         window = turns[-10:] if len(turns) > 10 else turns
@@ -431,13 +482,40 @@ class HuggingFaceExtractor:
         if not self.enabled:
             return None
 
-        if language.lower() in {"en", "hi", "hinglish"}:
-            return self._extract_with_window_verifier(turns, language.lower())
+        normalized_language = language.lower()
+        if self.config.local_inference_enabled:
+            return self._extract_with_local_fast_path(turns, normalized_language)
+
+        if normalized_language in {"en", "hi", "hinglish"}:
+            return self._extract_with_window_verifier(turns, normalized_language)
 
         transcript = self._build_extraction_transcript(turns)
         full_transcript = self._build_extraction_transcript(turns, include_assistant=True)
         item_lines = self._item_lines(include_hints=False)
-        return self._run_attempt_sequence(language, transcript, full_transcript, item_lines)
+        return self._run_attempt_sequence(normalized_language, transcript, full_transcript, item_lines)
+
+    def _extract_with_local_fast_path(self, turns: list[Turn], language: str) -> Optional[dict]:
+        transcripts = self._build_local_fast_transcripts(turns)
+        best_payload = None
+        for index, transcript in enumerate(transcripts):
+            try:
+                output = self._client.chat_completion(
+                    messages=self._build_compact_extraction_messages(language, transcript, max_items=4),
+                    temperature=0.0,
+                    max_tokens=64 if index == 0 else 80,
+                )
+            except Exception:
+                continue
+            payload = self._parse_json(output.choices[0].message.content)
+            payload = self._apply_local_refinements(language, transcript, payload)
+            if payload and payload.get("items"):
+                return payload
+            if payload is not None:
+                best_payload = payload
+
+        if transcripts:
+            best_payload = self._apply_local_refinements(language, transcripts[-1], best_payload)
+        return best_payload
 
     def _extract_with_window_verifier(self, turns: list[Turn], language: str) -> Optional[dict]:
         item_lines = self._item_lines(include_hints=False)
@@ -570,6 +648,19 @@ class HuggingFaceExtractor:
         else:
             selected_turns = turns[-12:] if include_assistant else [turn for turn in turns if turn.speaker == "user"][-6:]
         return "\n".join(f"{turn.speaker}: {turn.text}" for turn in selected_turns)
+
+    def _build_local_fast_transcripts(self, turns: list[Turn]) -> list[str]:
+        transcripts: list[str] = []
+        primary_turns = [turn for turn in turns if turn.speaker == "user"][-4:]
+        primary = "\n".join(f"{turn.speaker}: {turn.text}" for turn in primary_turns if turn.text.strip())
+        if primary:
+            transcripts.append(primary)
+
+        fallback_turns = turns[-6:]
+        fallback = "\n".join(f"{turn.speaker}: {turn.text}" for turn in fallback_turns if turn.text.strip())
+        if fallback and fallback not in transcripts:
+            transcripts.append(fallback)
+        return transcripts
 
     def _build_window_transcripts(self, turns: list[Turn]) -> list[str]:
         user_indices = [index for index, turn in enumerate(turns) if turn.speaker == "user"]
@@ -774,7 +865,13 @@ class HuggingFaceExtractor:
             },
         ]
 
-    def _build_compact_extraction_messages(self, language: str, transcript: str) -> list[dict[str, str]]:
+    def _build_compact_extraction_messages(
+        self,
+        language: str,
+        transcript: str,
+        *,
+        max_items: int = 6,
+    ) -> list[dict[str, str]]:
         compact_items = "\n".join(
             f"- {item_id}: {item.label}"
             for item_id, item in ITEM_INDEX.items()
@@ -788,6 +885,7 @@ class HuggingFaceExtractor:
                     "Only include supported items with values 1, 2, or 3. "
                     "Each item should include item_id, value, and evidence_quote. "
                     "Keep evidence quotes short. "
+                    f"Include at most {max_items} strongest items. "
                     "Use compact one-line JSON. "
                     'Example: {"items":[{"item_id":"phq_q3_sleep","value":2,"evidence_quote":"sleep breaks at 3 am"}],"safety_level":"none","safety_cues":[],"notes":"brief"}. '
                     "Use safety_level exactly as one of: none, review, urgent."
@@ -807,6 +905,18 @@ class HuggingFaceExtractor:
                 ),
             },
         ]
+
+    def _apply_local_refinements(self, language: str, transcript: str, payload: Optional[dict]) -> Optional[dict]:
+        base_payload = payload or {
+            "items": [],
+            "safety_level": "none",
+            "safety_cues": [],
+            "notes": "local_fast",
+        }
+        if language in {"en", "hinglish"}:
+            refined = self._refine_english_anxiety_payload(transcript, base_payload)
+            return refined or base_payload
+        return base_payload
 
     def _build_english_verifier_messages(
         self,

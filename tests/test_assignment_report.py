@@ -18,6 +18,7 @@ def test_detect_voice_layer_reports_browser_wrapper():
     assert voice["browser_text_to_speech"] is True
     assert voice["cloud_speech_to_text"] is True
     assert voice["cloud_text_to_speech"] is True
+    assert voice["transcript_before_submit"] is True
 
 
 def test_detect_deployment_assets_finds_new_configs():
@@ -56,6 +57,16 @@ def test_render_markdown_mentions_required_metric_names():
             "task_1_smart_screening": {"status": "complete"},
             "task_2_llm_inference_engine": {"status": "complete"},
             "task_3_safety_trigger_system": {"status": "complete"},
+            "gold_dataset_and_labels": {
+                "status": "partial",
+                "total_sessions": 60,
+                "fully_complete": 0,
+                "audio_present": 0,
+                "transcripts_present": 60,
+                "transcript_placeholders": 60,
+                "label_placeholders": 180,
+                "note": "gold note",
+            },
             "deployment": {
                 "status": "complete",
                 "present": {
@@ -69,6 +80,7 @@ def test_render_markdown_mentions_required_metric_names():
                     "hybrid_safety_enabled": True,
                     "cloud_voice_enabled": True,
                 },
+                "runtime_alignment_issues": [],
                 "note": "deploy note",
             },
             "bonus": {"implemented": ["linguistic_personalization"], "note": "bonus note"},
@@ -78,6 +90,7 @@ def test_render_markdown_mentions_required_metric_names():
                 "stable_item_traces": 10,
                 "avg_turns_to_stable_score": 1.5,
                 "median_turns_to_stable_score": 1.0,
+                "source": "seed conversations",
             },
             "safety_accuracy": {"precision": 0.3, "recall": 1.0, "f1": 0.46},
             "latency": {
@@ -110,6 +123,8 @@ def test_render_markdown_mentions_required_metric_names():
     markdown = render_markdown(report)
 
     assert "Disclosure Efficiency" in markdown
+    assert "Gold Dataset" in markdown
+    assert "Source" in markdown
     assert "Safety Accuracy" in markdown
     assert "Latency" in markdown
     assert "Bonus Validation" in markdown

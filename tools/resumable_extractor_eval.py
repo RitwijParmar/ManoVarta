@@ -25,6 +25,7 @@ def parse_args():
     parser.add_argument("--model-path", required=True)
     parser.add_argument("--eval-file", required=True)
     parser.add_argument("--output-dir", required=True)
+    parser.add_argument("--base-model-path", default=None)
     parser.add_argument("--max-new-tokens", type=int, default=1200)
     parser.add_argument("--device", choices=["auto", "cuda", "mps", "cpu"], default="auto")
     parser.add_argument("--limit", type=int, default=None)
@@ -32,6 +33,7 @@ def parse_args():
     parser.add_argument("--stop-on-parse-failure", action="store_true")
     parser.add_argument("--max-parse-failures", type=int, default=None)
     parser.add_argument("--hf-token", default=None)
+    parser.add_argument("--use-4bit", action="store_true")
     parser.add_argument("--use-rule-safety-monitor", action="store_true")
     parser.add_argument("--safety-checkpoint", default=None)
     return parser.parse_args()
@@ -40,7 +42,7 @@ def parse_args():
 def main() -> int:
     try:
         import torch
-        from transformers import AutoModelForCausalLM, AutoTokenizer
+        from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
         from peft import PeftConfig, PeftModel
     except ImportError as exc:  # pragma: no cover
         raise SystemExit("Install training extras first: pip install -e .[train]") from exc
@@ -64,6 +66,15 @@ def main() -> int:
     }
     if args.hf_token:
         model_kwargs["token"] = args.hf_token
+    quantization_config = None
+    if args.use_4bit and device == "cuda":
+        compute_dtype = torch.bfloat16 if torch.cuda.is_bf16_supported() else torch.float16
+        quantization_config = BitsAndBytesConfig(
+            load_in_4bit=True,
+            bnb_4bit_quant_type="nf4",
+            bnb_4bit_compute_dtype=compute_dtype,
+        )
+        model_kwargs["quantization_config"] = quantization_config
     if device == "cuda":
         model_kwargs["device_map"] = "auto"
     else:
@@ -71,7 +82,7 @@ def main() -> int:
         model_kwargs["low_cpu_mem_usage"] = True
     if adapter_config.exists():
         peft_config = PeftConfig.from_pretrained(args.model_path, token=args.hf_token)
-        base_model_path = peft_config.base_model_name_or_path
+        base_model_path = args.base_model_path or peft_config.base_model_name_or_path
         tokenizer = AutoTokenizer.from_pretrained(base_model_path, trust_remote_code=True, token=args.hf_token)
         base_model = AutoModelForCausalLM.from_pretrained(base_model_path, **model_kwargs)
         model = PeftModel.from_pretrained(base_model, args.model_path, token=args.hf_token)

@@ -1,0 +1,34 @@
+{
+  "total_sessions": 60,
+  "by_language": {
+    "en": 30,
+    "hi": 30
+  },
+  "english_gold_core_sessions": 30,
+  "hindi_repurposed_pilot_audio_sessions": 30,
+  "by_cohort": {
+    "pilot": 10,
+    "expansion": 50
+  },
+  "audio_present": 60,
+  "metadata_rows_present": 60,
+  "transcripts_present": 60,
+  "annotator_a_present": 60,
+  "annotator_b_present": 60,
+  "adjudicated_present": 60,
+  "human_annotator_a_present": 60,
+  "human_annotator_b_present": 60,
+  "human_adjudicated_present": 60,
+  "sessions_with_human_label_stack": 60,
+  "machine_generated_label_files": 0,
+  "metadata_placeholders": 0,
+  "transcript_placeholders": 0,
+  "label_placeholders": 0,
+  "require_human_labels": true,
+  "fully_complete": 60,
+  "issues": [
+    "English is the stronger clinically matched labeled core.",
+    "Hindi files are structurally complete and human-labeled, and they are assignment-valid under the DSM-5-TR transcript-grading path.",
+    "The IndicVoices source corpus is not a native mental-health screening interview dataset, so the Hindi side should be described as a repurposed multilingual voice-extension pilot rather than a source-matched clinical benchmark."
+  ]
+}

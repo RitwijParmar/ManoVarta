@@ -239,9 +239,11 @@ def add_turn(session_id: str, payload: ChatTurnRequest) -> ChatTurnResponse:
     if session is None:
         raise HTTPException(status_code=404, detail="Session not found.")
 
-    prior_user_turns = sum(1 for turn in session.turns if turn.speaker == "user")
-    prior_use_llm = runtime_config.live_chat_llm_analysis_enabled and prior_user_turns >= runtime_config.live_llm_turn_threshold
-    previous_snapshot = engine.analyze(session.turns, session.language, use_llm=prior_use_llm)
+    previous_snapshot = None
+    if payload.nudge_id and payload.nudge_strategy:
+        prior_user_turns = sum(1 for turn in session.turns if turn.speaker == "user")
+        prior_use_llm = runtime_config.live_chat_llm_analysis_enabled and prior_user_turns >= runtime_config.live_llm_turn_threshold
+        previous_snapshot = engine.analyze(session.turns, session.language, use_llm=prior_use_llm)
     user_notes = []
     if payload.from_voice:
         user_notes.append("source:voice")
@@ -256,11 +258,20 @@ def add_turn(session_id: str, payload: ChatTurnRequest) -> ChatTurnResponse:
     )
     use_llm = _should_use_live_llm(session)
     snapshot = engine.analyze(session.turns, session.language, use_llm=use_llm)
-    if payload.nudge_id and payload.nudge_strategy:
+    if payload.nudge_id and payload.nudge_strategy and previous_snapshot is not None:
         evidence_gain = max(snapshot.coverage.touched_items - previous_snapshot.coverage.touched_items, 0)
         resolved_gain = max(len(snapshot.coverage.resolved_items) - len(previous_snapshot.coverage.resolved_items), 0)
         words_added = len(payload.text.split())
-        outcome = "helpful" if evidence_gain > 0 or resolved_gain > 0 or words_added >= 18 else "unhelpful"
+        low_burden_strategies = {"choice", "scale", "safety"}
+        contextual_strategies = {"compare", "body", "coping", "support"}
+        helpful = (
+            evidence_gain > 0
+            or resolved_gain > 0
+            or words_added >= 18
+            or (payload.nudge_strategy in low_burden_strategies and words_added >= 6)
+            or (payload.nudge_strategy in contextual_strategies and words_added >= 10)
+        )
+        outcome = "helpful" if helpful else "unhelpful"
         session.nudge_events.append(
             NudgeEvent(
                 nudge_id=payload.nudge_id,

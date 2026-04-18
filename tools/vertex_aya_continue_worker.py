@@ -115,6 +115,34 @@ def upload_file(local_path: Path, destination_uri: str) -> None:
 
 
 def materialize_input(source: str, destination: Path) -> Path:
+    def _resolve_adapter_root(path: Path) -> Path:
+        if path.is_file():
+            return path
+
+        direct_config = path / "adapter_config.json"
+        if direct_config.exists():
+            return path
+
+        candidates = sorted(path.rglob("adapter_config.json"))
+        if not candidates:
+            return path
+
+        # Prefer a directory that also has adapter weights, then shortest path depth.
+        ranked: list[tuple[int, int, Path]] = []
+        for config_path in candidates:
+            root = config_path.parent
+            has_weights = int((root / "adapter_model.safetensors").exists())
+            depth = len(root.relative_to(path).parts)
+            ranked.append((-has_weights, depth, root))
+        ranked.sort()
+        return ranked[0][2]
+
+    def _extract_archive(file_path: Path, extract_root: Path) -> Path:
+        extract_root.mkdir(parents=True, exist_ok=True)
+        with tarfile.open(file_path, "r:*") as archive:
+            archive.extractall(extract_root)
+        return _resolve_adapter_root(extract_root)
+
     if source.startswith("gs://"):
         bucket_name, blob_or_prefix = parse_gcs_uri(source)
         storage_client = _storage_client()
@@ -122,28 +150,15 @@ def materialize_input(source: str, destination: Path) -> Path:
         if blob.exists():
             local_file = destination / Path(blob_or_prefix).name
             download_gcs_file(source, local_file)
-            if local_file.suffixes[-2:] == [".tar", ".gz"]:
-                extract_dir = destination / "extracted"
-                extract_dir.mkdir(parents=True, exist_ok=True)
-                with tarfile.open(local_file, "r:gz") as archive:
-                    archive.extractall(extract_dir)
-                children = [path for path in extract_dir.iterdir()]
-                if len(children) == 1 and children[0].is_dir():
-                    return children[0]
-                return extract_dir
+            if tarfile.is_tarfile(local_file):
+                return _extract_archive(local_file, destination / "extracted")
             return local_file
         download_gcs_tree(source, destination)
-        return destination
+        return _resolve_adapter_root(destination)
 
     source_path = Path(source)
-    if source_path.is_file() and source_path.suffixes[-2:] == [".tar", ".gz"]:
-        destination.mkdir(parents=True, exist_ok=True)
-        with tarfile.open(source_path, "r:gz") as archive:
-            archive.extractall(destination)
-        children = [path for path in destination.iterdir()]
-        if len(children) == 1 and children[0].is_dir():
-            return children[0]
-        return destination
+    if source_path.is_file() and tarfile.is_tarfile(source_path):
+        return _extract_archive(source_path, destination)
     if source_path.is_dir():
         if destination.exists():
             shutil.rmtree(destination)

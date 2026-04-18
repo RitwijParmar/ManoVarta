@@ -114,7 +114,7 @@ def main() -> int:
     manifest = {
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "git_revision": git_revision(),
-        "git_tag": "shipped-baseline-2026-04-04",
+        "git_tag": "shipped-baseline-2026-04-13",
         "archive_name": args.archive_name,
         "default_runtime": {
             "chat_model": "/models/qwen2.5-0.5b-instruct",

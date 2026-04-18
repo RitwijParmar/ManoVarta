@@ -1,0 +1,71 @@
+{
+  "session_id": "MVGOLD-HI-002",
+  "language": "hi",
+  "cohort": "pilot",
+  "target_primary_domain": "anhedonia",
+  "target_risk_band": "none",
+  "packet_stage": "annotator_a",
+  "target_output_file": "data/gold/labels/MVGOLD-HI-002.annotator_a.json",
+  "related_files": {
+    "audio_file": "data/gold/audio/hi/MVGOLD-HI-002.wav",
+    "transcript_file": "data/gold/transcripts/hi/MVGOLD-HI-002.json",
+    "annotator_a_file": "data/gold/labels/MVGOLD-HI-002.annotator_a.json",
+    "annotator_b_file": "data/gold/labels/MVGOLD-HI-002.annotator_b.json",
+    "adjudicated_label_file": "data/gold/labels/MVGOLD-HI-002.adjudicated.json"
+  },
+  "metadata": {
+    "session_id": "MVGOLD-HI-002",
+    "participant_id": "S4257815300309166",
+    "language": "hi",
+    "age_years": "",
+    "age_band": "18-30",
+    "occupation": "Technician",
+    "living_situation": "Urban",
+    "support_system": "not_provided_in_source",
+    "consent_recorded": "public_dataset_license",
+    "collection_source": "indicvoices_hindi_v1_valid_public",
+    "audio_file": "data/gold/audio/hi/MVGOLD-HI-002.wav",
+    "transcript_file": "data/gold/transcripts/hi/MVGOLD-HI-002.json",
+    "annotator_a_file": "data/gold/labels/MVGOLD-HI-002.annotator_a.json",
+    "annotator_b_file": "data/gold/labels/MVGOLD-HI-002.annotator_b.json",
+    "adjudicated_label_file": "data/gold/labels/MVGOLD-HI-002.adjudicated.json",
+    "split": "pilot",
+    "notes": "Imported from IndicVoices Hindi valid split; locally dual-annotated and adjudicated for PHQ-9/GAD-7 as a repurposed Hindi pilot audio set for multilingual voice extension, not a native mental-health screening corpus."
+  },
+  "transcript": {
+    "session_id": "MVGOLD-HI-002",
+    "language": "hi",
+    "cohort": "pilot",
+    "is_placeholder": false,
+    "collection_status": "collected_public_dataset",
+    "notes": "Imported from IndicVoices Hindi valid split; repurposed as a Hindi pilot audio set for multilingual voice extension. This source was locally dual-annotated and adjudicated for PHQ-9/GAD-7, but it is not a native mental-health screening corpus.",
+    "profile": {
+      "age_years": null,
+      "age_band": "18-30",
+      "occupation": "Technician",
+      "living_situation": "Urban",
+      "support_system": "not_provided_in_source",
+      "state": "Madhya Pradesh",
+      "district": "Jabalpur",
+      "gender": "Male"
+    },
+    "source": {
+      "dataset": "indicvoices",
+      "split": "Hindi/v1/valid",
+      "source_json_path": "Hindi/v1/valid/2892452d-2d04-4a70-ad1f-b0409f4ece0a_1.json",
+      "source_wav_path": "Hindi/v1/valid/2892452d-2d04-4a70-ad1f-b0409f4ece0a_1.wav",
+      "speaker_id": "S4257815300309166",
+      "scenario": "Conversation",
+      "task_name": "Conversation"
+    },
+    "turns": [
+      {
+        "turn_id": "u1",
+        "speaker": "user",
+        "text": "हेलो हाँ भैया हाँ भैया अभी दसेहरी आम में दसेहरी रखें हैं [talking] ओर केले भी हैं हमारे पास अभी मतलब बताइये आपको कित्ते के चाहिए हाँ भैया [stammers] केले चल रहा पचास रूपए दर्जन भाई दसेहरी सो रूपए किलो चल रहा है अरे भैया बिलकुल पूरे जो फल फ्रूट्स है बिल्कुल फ्रेश फल फ्रूट मिलेंगे आपको और एक तो ये [stammers] जी जी अरे नहीं भैया बिलकुल बिलकुल आप लोगों की सेवा के लिए बिलकुल फल फ्रूट हम लोग फ्रेश लाते हैं ताकि आप लोगो को कोई प्रॉब्लम न हो खाने वाने में और एक तो सीज़न [uhh] जी जी भैया एक तो सीज़न भी चल रहा है ना आप इस बात को भी तो समझिए माँग ज़्यादा है एक तो सीज़न भी सीज़न है तो इस वजह आम का रेट थोड़ा सा मेहँगा चल रहा है और केले की अभी केला भी भाई बिलकुल साफ़ सुथरा आप खुद देखें कित्ते कित्ते साफ़ सुथरे केले रखे हैं ओर आम भी एक तो सीज़न चल रहा है इस वजह से थोड़ा सा रेट तेज़ आ रहा है हमारे को खुद [stammers] जो मंडी है वहां से यही रेट मिल रहा है हमें हम तो खुद कम लागत से मतलब अरे भैया बात समझिए ना तो वही तो है पाँच किलो भी लेंगे तो हमें नहीं पड़ेगा ना उत्ते में हम भी हमारा भी तो हो मतलब हम बेच रहे हें तो हमे कुछ मिले तो आप समझिए ना आप तो भैया वो ही तो अगर दोनों की क्वालिटी में भी तो फर्क है हमारे पास जो आम हैं उनके पास थोड़ी ना मिलेगा वो वाला आम हम डायरेक्ट बगीचे से ला रहे हैं आम नहीं ना यार भैया [stammers] नहीं पड़ पाएगा ना यार इत्ता आप बताएँ फिर चलो अस्सी आम हमें आम अस्सी कर लेता हूँ और केले चालीस कर पाउँगा आप बताएँ फिर अब इससे ज़्यादा तो नहीं हो पाएगा मेरे से कर देता हूँ बताओ आप में अभी पेक हो जाएंगे बताओ फिर भईया नहीं ना भैया यार इतना नहीं ना इससे ज़्यादा नहीं हो पाएगा मेने बताओ अब भी बहुत ज़्यादा कर ली नहीं तो मैं बाकी ग्राहकों को नब्बे रूपए कर के दे रहा हूँ आपको तो अस्सी करे बीस रूपए कम कर दिए आपको और केले तो मैं पैतालीस रूपए दे रहा हूँ आपको तब भी चालीस दिए क्योंकि आप पुराने ग्राहक हैं मेरे आप इससे पहले भी आ चुके हैं बताएं फिर चलिए",
+        "source_type": "read_or_prompted_utterance"
+      }
+    ]
+  },
+  "instructions": "Label independently using the transcript, metadata, and annotation guidelines. Do not inspect annotator B."
+}

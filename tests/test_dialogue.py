@@ -1,4 +1,4 @@
-from manovarta_core.dialogue import ANXIETY_LOOP_BREAK_PROMPTS, ANXIETY_LOOP_CLOSE_PROMPTS, FINAL_HOLD_MESSAGES, FINAL_HOLD_VARIANTS, FINAL_REST_MESSAGES, POST_CLOSE_CHOOSER_MESSAGES, DialoguePlanner
+from manovarta_core.dialogue import ANXIETY_LOOP_BREAK_PROMPTS, ANXIETY_LOOP_CLOSE_PROMPTS, FINAL_HOLD_MESSAGES, FINAL_HOLD_VARIANTS, FINAL_REST_MESSAGES, POST_CLOSE_CHOOSER_MESSAGES, POST_CLOSE_IDLE_MESSAGES, DialoguePlanner
 from manovarta_core.scoring import ConversationScorer
 from manovarta_core.schemas import ChatSession, DialoguePlan, DisclosureMetrics, SafetyFlag, Turn, UserStyleProfile
 
@@ -21,6 +21,22 @@ def test_dialogue_planner_prioritizes_control_worry_in_anxiety_topic_when_unreso
     target_item = planner._select_target_item(snapshot, session, "anxiety", [], "low", UserStyleProfile())
 
     assert target_item == "gad_q2_control_worry"
+
+
+def test_recommend_nudges_prefers_low_pressure_choice_for_brief_guarded_user():
+    planner = DialoguePlanner()
+    session = ChatSession(session_id="session-2b", language="en")
+
+    nudges = planner._recommend_nudges(
+        session,
+        "anxiety",
+        UserStyleProfile(verbosity="brief", openness="guarded", steering_preference="guided"),
+        "exploration",
+        "low",
+    )
+
+    assert "choice" in nudges
+    assert any(key in nudges for key in {"scale", "example", "body"})
 
 
 def test_compose_prompt_hides_continuity_note_during_rapport():
@@ -562,6 +578,101 @@ def test_hinglish_close_prompt_followed_by_nonpriority_reply_stays_on_final_hold
 
     assert asked_item is None
     assert reply == POST_CLOSE_CHOOSER_MESSAGES["hinglish"]
+
+
+def test_repeated_post_close_acknowledgements_shift_to_idle_message_in_all_languages():
+    planner = DialoguePlanner()
+    scorer = ConversationScorer()
+    cases = [
+        ("en", "okay"),
+        ("hi", "ठीक है"),
+        ("hinglish", "theek hai"),
+    ]
+
+    for language, acknowledgement in cases:
+        session = ChatSession(
+            session_id=f"post-close-idle-{language}",
+            language=language,  # type: ignore[arg-type]
+            turns=[
+                Turn(turn_id=1, speaker="assistant", text=ANXIETY_LOOP_CLOSE_PROMPTS[language], language_tag=language),  # type: ignore[arg-type]
+                Turn(turn_id=2, speaker="user", text=acknowledgement, language_tag=language),  # type: ignore[arg-type]
+            ],
+            asked_items=["gad_q2_control_worry", "gad_q3_excessive_worry", "gad_q4_trouble_relaxing"],
+        )
+
+        first_snapshot = scorer.analyze(session.turns, language, SafetyFlag(level="none"))  # type: ignore[arg-type]
+        first_reply, first_item = planner.next_reply(first_snapshot, session)
+        session.turns.append(
+            Turn(
+                turn_id=3,
+                speaker="assistant",
+                text=first_reply,
+                language_tag=language,  # type: ignore[arg-type]
+            )
+        )
+        session.turns.append(
+            Turn(
+                turn_id=4,
+                speaker="user",
+                text=acknowledgement,
+                language_tag=language,  # type: ignore[arg-type]
+            )
+        )
+
+        second_snapshot = scorer.analyze(session.turns, language, SafetyFlag(level="none"))  # type: ignore[arg-type]
+        second_reply, second_item = planner.next_reply(second_snapshot, session)
+        session.turns.append(
+            Turn(
+                turn_id=5,
+                speaker="assistant",
+                text=second_reply,
+                language_tag=language,  # type: ignore[arg-type]
+            )
+        )
+        session.turns.append(
+            Turn(
+                turn_id=6,
+                speaker="user",
+                text=acknowledgement,
+                language_tag=language,  # type: ignore[arg-type]
+            )
+        )
+
+        third_snapshot = scorer.analyze(session.turns, language, SafetyFlag(level="none"))  # type: ignore[arg-type]
+        third_reply, third_item = planner.next_reply(third_snapshot, session)
+
+        assert first_item is None
+        assert second_item is None
+        assert third_item is None
+        assert first_reply in FINAL_HOLD_VARIANTS[language]
+        assert second_reply == POST_CLOSE_IDLE_MESSAGES[language]
+        assert third_reply == POST_CLOSE_IDLE_MESSAGES[language]
+
+
+def test_recent_break_prompt_is_not_reused_again_in_same_hindi_flow():
+    planner = DialoguePlanner()
+    session = ChatSession(
+        session_id="hindi-no-repeat-break",
+        language="hi",
+        turns=[
+            Turn(turn_id=1, speaker="assistant", text=ANXIETY_LOOP_BREAK_PROMPTS["hi"], language_tag="hi"),
+            Turn(turn_id=2, speaker="user", text="एक ही बात पर अटकी रहती है", language_tag="hi"),
+            Turn(
+                turn_id=3,
+                speaker="assistant",
+                text="जब आप खुद को शांत करने की कोशिश करते हैं, क्या ज़्यादा मुश्किल दिमाग को शांत करना होता है, शरीर को ढीला करना, या दोनों?",
+                language_tag="hi",
+            ),
+            Turn(turn_id=4, speaker="user", text="साथ में", language_tag="hi"),
+        ],
+        asked_items=["gad_q2_control_worry", "gad_q3_excessive_worry", "gad_q4_trouble_relaxing"],
+    )
+
+    snapshot = ConversationScorer().analyze(session.turns, "hi", SafetyFlag(level="none"))
+    reply, asked_item = planner.next_reply(snapshot, session)
+
+    assert asked_item is None
+    assert reply == ANXIETY_LOOP_CLOSE_PROMPTS["hi"]
 
 
 def test_hindi_post_close_echo_uses_short_rest_message():

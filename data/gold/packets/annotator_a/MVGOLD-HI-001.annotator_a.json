@@ -1,0 +1,71 @@
+{
+  "session_id": "MVGOLD-HI-001",
+  "language": "hi",
+  "cohort": "pilot",
+  "target_primary_domain": "mood",
+  "target_risk_band": "none",
+  "packet_stage": "annotator_a",
+  "target_output_file": "data/gold/labels/MVGOLD-HI-001.annotator_a.json",
+  "related_files": {
+    "audio_file": "data/gold/audio/hi/MVGOLD-HI-001.wav",
+    "transcript_file": "data/gold/transcripts/hi/MVGOLD-HI-001.json",
+    "annotator_a_file": "data/gold/labels/MVGOLD-HI-001.annotator_a.json",
+    "annotator_b_file": "data/gold/labels/MVGOLD-HI-001.annotator_b.json",
+    "adjudicated_label_file": "data/gold/labels/MVGOLD-HI-001.adjudicated.json"
+  },
+  "metadata": {
+    "session_id": "MVGOLD-HI-001",
+    "participant_id": "S4257706500388171",
+    "language": "hi",
+    "age_years": "",
+    "age_band": "60+",
+    "occupation": "Electrician",
+    "living_situation": "Urban",
+    "support_system": "not_provided_in_source",
+    "consent_recorded": "public_dataset_license",
+    "collection_source": "indicvoices_hindi_v1_valid_public",
+    "audio_file": "data/gold/audio/hi/MVGOLD-HI-001.wav",
+    "transcript_file": "data/gold/transcripts/hi/MVGOLD-HI-001.json",
+    "annotator_a_file": "data/gold/labels/MVGOLD-HI-001.annotator_a.json",
+    "annotator_b_file": "data/gold/labels/MVGOLD-HI-001.annotator_b.json",
+    "adjudicated_label_file": "data/gold/labels/MVGOLD-HI-001.adjudicated.json",
+    "split": "pilot",
+    "notes": "Imported from IndicVoices Hindi valid split; locally dual-annotated and adjudicated for PHQ-9/GAD-7 as a repurposed Hindi pilot audio set for multilingual voice extension, not a native mental-health screening corpus."
+  },
+  "transcript": {
+    "session_id": "MVGOLD-HI-001",
+    "language": "hi",
+    "cohort": "pilot",
+    "is_placeholder": false,
+    "collection_status": "collected_public_dataset",
+    "notes": "Imported from IndicVoices Hindi valid split; repurposed as a Hindi pilot audio set for multilingual voice extension. This source was locally dual-annotated and adjudicated for PHQ-9/GAD-7, but it is not a native mental-health screening corpus.",
+    "profile": {
+      "age_years": null,
+      "age_band": "60+",
+      "occupation": "Electrician",
+      "living_situation": "Urban",
+      "support_system": "not_provided_in_source",
+      "state": "Rajasthan",
+      "district": "Jaipur",
+      "gender": "Male"
+    },
+    "source": {
+      "dataset": "indicvoices",
+      "split": "Hindi/v1/valid",
+      "source_json_path": "Hindi/v1/valid/1894b585-b9d7-488e-8902-e28fa11f27da_0.json",
+      "source_wav_path": "Hindi/v1/valid/1894b585-b9d7-488e-8902-e28fa11f27da_0.wav",
+      "speaker_id": "S4257706500388171",
+      "scenario": "Conversation",
+      "task_name": "Conversation"
+    },
+    "turns": [
+      {
+        "turn_id": "u1",
+        "speaker": "user",
+        "text": "हलो नमश्कार हाँ बात कर रहा हूँ हान जी अच्छा भैया कौनसी जगह की बात है ये हाँ अच्छा अच्छा खातीपुरा में हाँ वो जो नल नल लीक कर रहा था उसी की बात कर रहे हैं ना आप अच्छा आप उनके शर्मा जी के घर के बगल वाले जो हैं वो ही बोल रहें अच्छा अच्छा [inhaling] तो उसमें अभी भी [uhh] लीक कर रहा है वो आ रही है [uhh] मैं एक्चुअली क्या अभी तो कहीं आया हुआ हूँ है ना तो मैं कल आ जाऊं एक बार अच्छा [talking] एक्चुअली मैं अभी जहाँ आया हूँ ना वो अभी मैं दादी के फ़ाटक के तरफ़ हूँ और मुझे अभी यहाँ दो कॉल हैं दो जगह जा के फ़िर मैं आ पाउँगा तो लेट हो जाऊंगा कोई दिक्कत थोड़ी नहीं है फ़िर नहीं तो पिछली बार तो मैं उसमें डाल के आया था ना वो सब पूरा ठीक करके आया था वॉशर डाला था मैंने जो आपको मैंने बताया था भैया तो उसमें तो मैंने है ना वॉशर डाल दिया मेरा काम खतम अब क्यों हो रहा है दूसरा देखना पड़ेगा हो सकता है उसकी है ना अन्दर से इस्प्लेंडर खराब हो गया हो जंग लग गई हो कुछ भी हो सकता है चलो मैं देखता हूँ मैं एक काम करता हूँ कि अभी अभी है ना मैं यहाँ हूँ [uhh] दादी के फ़ाटक की तरफ़ दो कॉल दो कॉल के बाद मैं आता हूँ है ना और आप कब तक मिलेंगे शाम को आप है ना अगर मॉर्निंग में [uhh] सुबह फ़ोन कर देते तो मैं आ भी जाता अब मैं निकल [talking] चुका हूँ चलो ठीक है मैं एक काम करता हूँ यहाँ से फ़िरी होके आप कित्ते बजे तक मिलोगे चलिए ठीक है मैं एक काम करता हूँ मैं आता हूँ शाम को पाँच बजे आ जाऊं ठीक है ओके",
+        "source_type": "read_or_prompted_utterance"
+      }
+    ]
+  },
+  "instructions": "Label independently using the transcript, metadata, and annotation guidelines. Do not inspect annotator B."
+}

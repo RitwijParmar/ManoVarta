@@ -1,0 +1,125 @@
+# MVGOLD-EN-005 annotator_a packet
+
+- Language: `en`
+- Cohort: `pilot`
+- Target primary domain: `worthlessness`
+- Target risk band: `review_candidate`
+- Target output file: `data/gold/labels/MVGOLD-EN-005.annotator_a.json`
+
+## Metadata
+
+- Participant ID: `307`
+- Age years: ``
+- Age band: `adult_unknown_from_source`
+- Occupation: `unknown_from_source`
+- Living situation: `unknown_from_source`
+- Support system: `unknown_from_source`
+- Consent recorded: `public_dataset_license`
+- Collection source: `e_daic_public_2019`
+
+## Instructions
+
+Label independently using the transcript, metadata, and annotation guidelines. Do not inspect annotator B.
+
+## Transcript
+
+- `u1` user: looking at you all right okay so now let's make sure the Xbox Kinect is picking you up with his move around dance
+- `u2` user: can't wait till this guy pops up is like a little green skeleton
+- `u3` user: okay when is the temperature let you know and you can just hit the door. So let me know.
+- `u4` user: thanks for coming in today I was created to talk to people in a safe and secure environment think of me as a friend I don't judge I can I'm a computer I'm here to learn about people and would love to learn about you I'll ask a few questions to get it started and please feel
+- `u5` user: your answers
+- `u6` user: where are you from originally
+- `u7` user: Moscow
+- `u8` user: vitamins for life my family move to the US and then I moved down here eventually for college
+- `u9` user: how easy was it for you to get used to
+- `u10` user: long time to leave the money here for about a year since I graduated so there's been a lot of ups and downs but finally gotten adjusted to it so it took a while though that's good
+- `u11` user: how do you like your living situation. I have two roommates and there's a little bit of drama here and there between the girls but for the most part after a year in a couple months I think we finally learned how to live together but it was pretty much like a reality TV show for a while
+- `u12` user: how do you know the ones from college and the other one I found on Craigslist
+- `u13` user: how close are you to that varies depending on whether or not we're mad at each other so I just pretty cuz
+- `u14` user: right now I kind of distant
+- `u15` user: tell me more about that event the distance
+- `u16` user: okay, well we haven't seen each other around hung out in like 2 weeks cuz one of them got into like with car accident and so she's been distant since 10 and kind of locks herself up in her room
+- `u17` user: and the other one is always working late so we are scheduling has been off and the ones we made an attempt to hang out with anyone so it's kind of we're just waiting for someone I guess to make the first move
+- `u18` user: yeah that sucks it's okay
+- `u19` user: how are you at controlling your temper
+- `u20` user: it depends with whom
+- `u21` user: I'm dealing with I guess I would say it was them people I guess is my family's not very good my boyfriend is not very good but with other people that I might not know so well then I'm able to control little bit more but I'll do a little more passive aggressive rather than my full on anger
+- `u22` user: Sonic songs
+- `u23` user: Houston has been a positive influence in your life
+- `u24` user: she's probably been she's been we've been best friends for High School freshman year of high school when we first mom
+- `u25` user: give me an example of that
+- `u26` user: as of what
+- `u27` user: how do you know that my friend to call we met in French class freshman year of high school we were in the same class and then we kind of surgeon homework together and we had a lot of cloud the same classes together and so you can send Hangouts and then we just became closer and stay really close since then
+- `u28` user: what are some things you like to do for fun at going out with friends and the bar is going dancing biking hiking staying active then the movies playing at Cedar Restaurant stop tography
+- `u29` user: was hanging out with friends I guess whatever okay
+- `u30` user: how close are you to your family and various like I'm really close to them when it comes to things of a like schoolwork those kinds of things but when it comes to relationships and friendships and more personal personal things I don't really discuss that with them
+- `u31` user: Vegas superficially Club
+- `u32` user: but I rely on them a lot so what by guess
+- `u33` user: what are some things that make you really mad
+- `u34` user: I guess it depends who it is again I guess people who are in considerate and thoughtful flaky ignorant and
+- `u35` user: yeah and get those kinds of people and then people just and it's a lot of things that people react to different situations can make me angry I guess
+- `u36` user: when was the last time you argue with someone and what was it about my boyfriend and we argued because he's trying to be healthy and workout and save money and so so finding that when he doesn't see the orders pizza in so he's not saving money and he's not very healthy and so I got frustrated with him cuz I'm constantly trying to push him to be healthy and that each time he was going to do it when you do it then he doesn't phase consulate breaking promises that's another thing that makes me angry people who don't follow through
+- `u37` user: yeah
+- `u38` user: do you feel that way often
+- `u39` user: about other people about myself or angry
+- `u40` user: whatever comes to your mind
+- `u41` user: angry I am so glad that now I don't feel angry often
+- `u42` user: okay
+- `u43` user: what's your dream job
+- `u44` user: that is a tough one how about getting paid to leave me now that's kind of what I'm going to figure out right now cuz I quit my full-time job because I hated it as opposed to sitting in an office all day which I thought was extremely boring so now I work in a restaurant job and I'm too old for a second job to support myself my dream job
+- `u45` user: I don't know what it would be but I know it involves people and I'd love to have some kind of like finished product or some kind of accomplishment turns band and yet there's something I realized I like to see
+- `u46` user: the result from all my hard work cuz I majored in sociology and as much as I love that major it's you realize it's a whole lot of theorizing in arguing but with no real solution such as like as a and that's all you have is just being theoretical element that you can't do anything with and nothing to show for your work except for a piece of paper with your essays or no people amazing artistic I love photography I love cooking baking and particularly so I know something
+- `u47` user: and that
+- `u48` user: Mom I guess okay
+- `u49` user: you travel a lot I used to travel a lot my family is known for traveling we've gone to 578 different countries I've lived in three or four different countries I haven't traveled a lot lately just because I have no money and jobs kind of tie you down but I would love to have that is my dream job would be a photographer for National Geographic that would be awesome or a food photographer that traveled but anyways you enjoy about traveling
+- `u50` user: in the new places near faces and experiences I get Restless very easily it says nice of conflict be on the move and see different things and see different cultures and types of people and just not get stuck in the same routine I hate the routine and Monday mass of everyday life is so it's nice to
+- `u51` user: does things.
+- `u52` user: I want to hear about one of your trips
+- `u53` user: okay
+- `u54` user: tennis tank mermaid trips
+- `u55` user: I have begun talking about I don't know what's funny even though I've been to lots of different country is one of my most memorable memorable trips as one of the trips I took with my family is a three-week road trip with my family this five of us packed in a tiny little station wagon but it was really fun and even though I've traveled so many places I realize that there's like such a beauty and the American landscape and so we were all around this house last in the Grand Canyon to Zion to the Grand Tetons to Yellowstone and it's absolutely amazing to sing about natural beauty is so and it's a grizzly bear black bear the Bison sounds really cool natural wonders also really miss me cuz those things aren't men made as as pretentious as it sounds after while you're kind of gets old but it's like and I guess the same way
+- `u56` user: white old white man building great buildings in artwork and yeah I see what you mean
+- `u57` user: how easy is it for you to get a good night sleep
+- `u58` user: I want
+- `u59` user: pretty easy as long as I
+- `u60` user: get supply I sleep so easy
+- `u61` user: what are you like when you don't sleep well grumpy and just very lethargic and just low energy don't say much I just kind of offer in my own world you feel that way often anymore I usually get enough sleep and I've been working out more so it's not too bad that's good
+- `u62` user: have you noticed any changes in your behavior or thoughts lately
+- `u63` user: I haven't just been one negative but I have to do it by circumstances kind of like spend about almost 5 months since I quit my full-time job haven't found anything else boyfriend interested in so
+- `u64` user: Esmeralda's like what am I doing that I did that kind of thing
+- `u65` user: can be talked about a good job these days it is higher than market and looks like I'm very picky because I don't want to just sit in a little my own Cuba fault if I quit my job exactly for that reason why go back to another job just do the same exact thing that I quit my other job so it looks like I have to make it worthwhile that I quit my last job to get a better job as a kind of like stuck in this section of like living paycheck-to-paycheck barely making it just waiting for the right opportunity to come across but it's like when did I give up and sell my soul and go back to the corporate world and spitting and we'll keep a cold I don't know when does that same situation after college so but I guess it's tough cuz a lot of my friends so they went to a pretty good school and you not have a friend his teaching English in Afghanistan
+- `u66` user: Teach for America and their friends in Hartford at schools like Harvard Matthew not getting her master's that's kind of like
+- `u67` user: got that comparison and then here I am with you in a little restaurant job so
+- `u68` user: do you feel down
+- `u69` user: I do sometimes yes but I'm going to Hawaii next week so right now I'm fine yes but yeah usually it's been kind of like down because I'm just trying to find like what I'm supposed to do you not like what I want to do next and my money situations are just very stressful as a school loan to pay off Insurance rent car loans like ants the groceries but I can't even afford groceries it's just hard to live this way specially after we paid so much money for amazing cause education so frustrating but there's a lot of people the same situation
+- `u70` user: turn down
+- `u71` user: have you been diagnosed with depression I don't think so but I mean I think everyone goes through depression here now so I don't know if you can but not like medically diagnose I'm not on meds okay have you ever been diagnosed with PTSD
+- `u72` user: okay
+- `u73` user: what advice would you give yourself 10 or 20 years ago
+- `u74` user: oh that's to try lots of different things and not be afraid to fail cuz I'm one of those people from not going to be the best at something and I'm not going to try except the best or nothing at all go big or go home so but I didn't get them told my high school self that don't try lots of things even if it means I'm not going to be the best at it about 10 years ago made me like 12 so
+- `u75` user: I used to do a lot of things but I used to ask and it got to continue doing that I used to write a lot when I was younger I used to write miniature like little sorry sorry sorry it's for my parents all the time and I kind of stopped doing those things cuz it's like I'm not good at it so I'm not going to do it I just continue doing those things and tried sneaking out of classes and I'm no different sports soccer growing up I don't know just expand my sophomore rather than likely I'm good at and just stay with it but never really try harder cuz like I said I was going to say that one that was like once I'm good I just stay for good and I'll try that go about that that monster Newsom
+- `u76` user: yeah
+- `u77` user: what do you do to relax
+- `u78` user: all right now it's super lame but I watch TV but I used to read of mice to read on my off-time or just listen to music or just take a nap or bake bananas like since I'm on my feet all day and like consol interacting with people I just kind of want to unwind by like sitting and lying on the couch and be like I'm done
+- `u79` user: which one of your most memorable experience
+- `u80` user: the top question
+- `u81` user: I'm probably the day I got accepted into Pomona College it was a freshman at Wellesley College courses that woman called back and I hated it from Mike II from like the first week I just knew that I chose the wrong College not like miserable for the entire year and I only apply to one school of the transfer Pomona College by steps at in Clermont and
+- `u82` user: anime how can I get in and I also because there's like a 4% acceptance rate and if I go to the chances like this is ridiculous I don't think we can get in and I'll let you know the thought of going back to sleep but then I got an email from one of the admissions counselors that I had met when I was visiting Pomona and he's like I talk to you I just wanted to see if you had any last minute questions about Pomona hope all is well and I was like why are you telling me the day we find out if we got you next that's it or not unless I got the acceptance and so sure enough a couple hours later I got the email that I was accepted into Pomona and I was like my best day of my life so happy cuz I want ya and I text my mom and my little brother
+- `u83` user: hair pierce my dad's I was like let's start this whole thing over
+- `u84` user: how do your best friend describe you
+- `u85` user: The Voice
+- `u86` user: fine
+- `u87` user: maybe Moody you never know what you're going to get sometimes
+- `u88` user: probably
+- `u89` user: definitely friendly like a positive person
+- `u90` user: but sometimes maybe a little bit
+- `u91` user: aggressive
+- `u92` user: the most practicing positive things I mean she's my best friend so okay
+- `u93` user: when is the last time you felt really happy
+- `u94` user: really happy
+- `u95` user: oh and I was in Mexico over winter in San Clemente and that was really fun and it just like when sailing and walked on the missions at the beach that was really fun
+- `u96` user: don't forget time to greet the situation at school
+- `u97` user: okay I think I've asked everything I need to thanks for sharing your thoughts with me
+- `u98` user: goodbye
+- `u99` user: I didn't know you were super good thing
+- `u100` user: set the recording down in a we just have a quick food survey and then I can tell you a little bit more about what

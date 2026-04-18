@@ -1,0 +1,909 @@
+{
+  "session_id": "MVGOLD-EN-002",
+  "language": "en",
+  "cohort": "pilot",
+  "target_primary_domain": "anhedonia",
+  "target_risk_band": "none",
+  "packet_stage": "adjudication",
+  "target_output_file": "data/gold/labels/MVGOLD-EN-002.adjudicated.json",
+  "related_files": {
+    "audio_file": "data/gold/audio/en/MVGOLD-EN-002.wav",
+    "transcript_file": "data/gold/transcripts/en/MVGOLD-EN-002.json",
+    "annotator_a_file": "data/gold/labels/MVGOLD-EN-002.annotator_a.json",
+    "annotator_b_file": "data/gold/labels/MVGOLD-EN-002.annotator_b.json",
+    "adjudicated_label_file": "data/gold/labels/MVGOLD-EN-002.adjudicated.json"
+  },
+  "metadata": {
+    "session_id": "MVGOLD-EN-002",
+    "participant_id": "303",
+    "language": "en",
+    "age_years": "",
+    "age_band": "adult_unknown_from_source",
+    "occupation": "unknown_from_source",
+    "living_situation": "unknown_from_source",
+    "support_system": "unknown_from_source",
+    "consent_recorded": "public_dataset_license",
+    "collection_source": "e_daic_public_2019",
+    "audio_file": "data/gold/audio/en/MVGOLD-EN-002.wav",
+    "transcript_file": "data/gold/transcripts/en/MVGOLD-EN-002.json",
+    "annotator_a_file": "data/gold/labels/MVGOLD-EN-002.annotator_a.json",
+    "annotator_b_file": "data/gold/labels/MVGOLD-EN-002.annotator_b.json",
+    "adjudicated_label_file": "data/gold/labels/MVGOLD-EN-002.adjudicated.json",
+    "split": "pilot",
+    "notes": "Imported from E-DAIC public participant archive; PHQ8 items from public labels, remaining items machine-inferred and require clinician review for strict claims."
+  },
+  "transcript": {
+    "session_id": "MVGOLD-EN-002",
+    "language": "en",
+    "cohort": "pilot",
+    "is_placeholder": false,
+    "collection_status": "collected_public_dataset",
+    "notes": "Imported from E-DAIC public participant archive.",
+    "profile": {
+      "age_years": null,
+      "age_band": "adult_unknown_from_source",
+      "occupation": "unknown_from_source",
+      "living_situation": "unknown_from_source",
+      "support_system": "unknown_from_source",
+      "gender": "female"
+    },
+    "source": {
+      "dataset": "e_daic_public",
+      "participant_id": "303",
+      "split": "train",
+      "phq_binary": "0",
+      "phq_score": "0",
+      "source_audio_path": "303_P/303_AUDIO.wav",
+      "source_transcript_path": "303_P/303_Transcript.csv"
+    },
+    "turns": [
+      {
+        "turn_id": "u1",
+        "speaker": "user",
+        "text": "wow okay",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1.3",
+        "end_time_sec": "4.2",
+        "asr_confidence": "0.899737536907196"
+      },
+      {
+        "turn_id": "u2",
+        "speaker": "user",
+        "text": "when you're finished when she's done",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "18.2",
+        "end_time_sec": "20.1",
+        "asr_confidence": "0.940545916557312"
+      },
+      {
+        "turn_id": "u3",
+        "speaker": "user",
+        "text": "okay",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "21.9",
+        "end_time_sec": "22.6",
+        "asr_confidence": "0.659070611000061"
+      },
+      {
+        "turn_id": "u4",
+        "speaker": "user",
+        "text": "thank you",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "23.7",
+        "end_time_sec": "24.3",
+        "asr_confidence": "0.8233070969581604"
+      },
+      {
+        "turn_id": "u5",
+        "speaker": "user",
+        "text": "how are you doing today okay how about yourself",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "49.3",
+        "end_time_sec": "51.6",
+        "asr_confidence": "0.9354435801506042"
+      },
+      {
+        "turn_id": "u6",
+        "speaker": "user",
+        "text": "here in California",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "56.5",
+        "end_time_sec": "57.4",
+        "asr_confidence": "0.8395904302597046"
+      },
+      {
+        "turn_id": "u7",
+        "speaker": "user",
+        "text": "all well that is big and bras a lot to do a lot of",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "63.7",
+        "end_time_sec": "66.8",
+        "asr_confidence": "0.8599732518196106"
+      },
+      {
+        "turn_id": "u8",
+        "speaker": "user",
+        "text": "I'm job opportunities than other states pretty much that is big and it's a lot you can do here",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "69.3",
+        "end_time_sec": "77.2",
+        "asr_confidence": "0.9582683444023132"
+      },
+      {
+        "turn_id": "u9",
+        "speaker": "user",
+        "text": "traffic Maybe",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "83.0",
+        "end_time_sec": "85.6",
+        "asr_confidence": "0.9124020934104919"
+      },
+      {
+        "turn_id": "u10",
+        "speaker": "user",
+        "text": "the violence right the bad news even though you don't even want to know what's going on in your environment but you still have to watch it so you can you know look out to see what's going on on a daily basis",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "86.9",
+        "end_time_sec": "96.1",
+        "asr_confidence": "0.930941641330719"
+      },
+      {
+        "turn_id": "u11",
+        "speaker": "user",
+        "text": "sociology I have a",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "100.4",
+        "end_time_sec": "102.2",
+        "asr_confidence": "0.9145299196243286"
+      },
+      {
+        "turn_id": "u12",
+        "speaker": "user",
+        "text": "2 year degree in Liberal Arts but my major was sociology",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "103.3",
+        "end_time_sec": "106.4",
+        "asr_confidence": "0.8854362964630127"
+      },
+      {
+        "turn_id": "u13",
+        "speaker": "user",
+        "text": "no I'm actually MTA bus operator",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "110.8",
+        "end_time_sec": "112.9",
+        "asr_confidence": "0.9593172669410706"
+      },
+      {
+        "turn_id": "u14",
+        "speaker": "user",
+        "text": "what's your",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "115.3",
+        "end_time_sec": "115.8",
+        "asr_confidence": "0.8075089454650879"
+      },
+      {
+        "turn_id": "u15",
+        "speaker": "user",
+        "text": "well since Metro is study growing my dream job is to move up in the company and I'm about to actually start some classes for supervisor free next week so cuz they look to promote within the company so that's a good thing is a lot of opportunities at Metro where you can take classes in their pay for your tuition and things of that nature",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "118.0",
+        "end_time_sec": "142.9",
+        "asr_confidence": "0.9472001791000366"
+      },
+      {
+        "turn_id": "u16",
+        "speaker": "user",
+        "text": "thanks",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "146.0",
+        "end_time_sec": "146.8",
+        "asr_confidence": "0.9876290559768677"
+      },
+      {
+        "turn_id": "u17",
+        "speaker": "user",
+        "text": "well it's not actually hard as right now is easy if you take advantage of it right now cuz they look to promote within so you know since I'm already working there that's a good thing so is good to go ahead and take the classes that you need that you're interested in and go ahead and move up the ladder as soon as possible",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "148.5",
+        "end_time_sec": "166.2",
+        "asr_confidence": "0.9569956660270691"
+      },
+      {
+        "turn_id": "u18",
+        "speaker": "user",
+        "text": "what do you mean I'm sorry",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "173.3",
+        "end_time_sec": "174.3",
+        "asr_confidence": "0.9860013723373413"
+      },
+      {
+        "turn_id": "u19",
+        "speaker": "user",
+        "text": "okay",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "176.2",
+        "end_time_sec": "178.3",
+        "asr_confidence": "0.8933060169219971"
+      },
+      {
+        "turn_id": "u20",
+        "speaker": "user",
+        "text": "free take a long walk hot bath",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "180.7",
+        "end_time_sec": "183.9",
+        "asr_confidence": "0.8499104976654053"
+      },
+      {
+        "turn_id": "u21",
+        "speaker": "user",
+        "text": "meditate just close my eyes sometimes",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "184.9",
+        "end_time_sec": "187.4",
+        "asr_confidence": "0.9150599241256714"
+      },
+      {
+        "turn_id": "u22",
+        "speaker": "user",
+        "text": "okay",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "189.8",
+        "end_time_sec": "190.4",
+        "asr_confidence": "0.8741128444671631"
+      },
+      {
+        "turn_id": "u23",
+        "speaker": "user",
+        "text": "I'm pretty much good because see by me being a bus operator you run into circumstances and situations you got to remain calm and still remain professional at the same time",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "194.6",
+        "end_time_sec": "205.5",
+        "asr_confidence": "0.9371302723884583"
+      },
+      {
+        "turn_id": "u24",
+        "speaker": "user",
+        "text": "well I look at it like it it goes with a Ami comes with experience you know you do something on a continuous basis usually you somewhere down the line you become good at it you know so I I look at it like that so I've been driving for years and dealing with the public so it's just how you handle circumstances how you treat people like you want to be treated",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "209.2",
+        "end_time_sec": "235.0",
+        "asr_confidence": "0.9370259642601013"
+      },
+      {
+        "turn_id": "u25",
+        "speaker": "user",
+        "text": "I'm pretty good at it now maybe when I were younger you know you as you get older you get wiser you learn different things and I'm still learning today",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "240.6",
+        "end_time_sec": "250.2",
+        "asr_confidence": "0.9464849829673767"
+      },
+      {
+        "turn_id": "u26",
+        "speaker": "user",
+        "text": "I will say my family you know my kids so you know even though you don't have been having a lot of deaths around me but that's just that's part of the",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "258.0",
+        "end_time_sec": "267.3",
+        "asr_confidence": "0.9300897717475891"
+      },
+      {
+        "turn_id": "u27",
+        "speaker": "user",
+        "text": "life experience you know you born here but you got to leave here one day but",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "268.2",
+        "end_time_sec": "273.0",
+        "asr_confidence": "0.9611484408378601"
+      },
+      {
+        "turn_id": "u28",
+        "speaker": "user",
+        "text": "my kids will keep me you don't saying and you know I love them in my family",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "274.1",
+        "end_time_sec": "279.2",
+        "asr_confidence": "0.8774268627166748"
+      },
+      {
+        "turn_id": "u29",
+        "speaker": "user",
+        "text": "thank you",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "283.1",
+        "end_time_sec": "283.9",
+        "asr_confidence": "0.9831598401069641"
+      },
+      {
+        "turn_id": "u30",
+        "speaker": "user",
+        "text": "no",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "286.7",
+        "end_time_sec": "287.1",
+        "asr_confidence": "0.9316655993461609"
+      },
+      {
+        "turn_id": "u31",
+        "speaker": "user",
+        "text": "set good examples you know because you're the first teacher you know and you want to set a positive good example for your kids and I think that's a good thing and it starts at home",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "291.4",
+        "end_time_sec": "306.3",
+        "asr_confidence": "0.9383029341697693"
+      },
+      {
+        "turn_id": "u32",
+        "speaker": "user",
+        "text": "well",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "311.8",
+        "end_time_sec": "312.6",
+        "asr_confidence": "0.9814774990081787"
+      },
+      {
+        "turn_id": "u33",
+        "speaker": "user",
+        "text": "by you being the first teacher your kids you're that you're you're the one that they see on a daily basis when they wake up so whatever's been taught in the home they looking and learn everyday you know brother is that homeschool you know kids have a tendency to do things with a c you know what I mean so you try to keep it positive teaching good morals and values and how to get along with other people regardless of race and you know different things of that nature",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "314.4",
+        "end_time_sec": "343.3",
+        "asr_confidence": "0.9454227089881897"
+      },
+      {
+        "turn_id": "u34",
+        "speaker": "user",
+        "text": "I have a 4 1/2 year old son I have a seven-year-old daughter and I also have a 23 year old",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "347.4",
+        "end_time_sec": "354.5",
+        "asr_confidence": "0.8328744173049927"
+      },
+      {
+        "turn_id": "u35",
+        "speaker": "user",
+        "text": "yeah I'm about to be well my daughter's pregnant with the boy she has three little girls go have three grand kids and one on the way which is the boy this time",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "356.0",
+        "end_time_sec": "367.6",
+        "asr_confidence": "0.8941237330436707"
+      },
+      {
+        "turn_id": "u36",
+        "speaker": "user",
+        "text": "yeah thank you",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "368.9",
+        "end_time_sec": "370.3",
+        "asr_confidence": "0.9662878513336182"
+      },
+      {
+        "turn_id": "u37",
+        "speaker": "user",
+        "text": "the hardest thing is we're right now I'm a single parent so that makes it hard alone itself you know and",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "376.4",
+        "end_time_sec": "385.7",
+        "asr_confidence": "0.9495646953582764"
+      },
+      {
+        "turn_id": "u38",
+        "speaker": "user",
+        "text": "they can be expensive at times you know and depends on the person's situation you know whether they have helped or job you know things of that nature to help the situation better but it's hard you know but you are trying to keep a job you know keep food in the house you know just maintaining support my kids the best way I can",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "387.0",
+        "end_time_sec": "410.3",
+        "asr_confidence": "0.9537841081619263"
+      },
+      {
+        "turn_id": "u39",
+        "speaker": "user",
+        "text": "with my kids or Just.",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "420.0",
+        "end_time_sec": "422.4",
+        "asr_confidence": "0.9461556077003479"
+      },
+      {
+        "turn_id": "u40",
+        "speaker": "user",
+        "text": "what's memorable for me is that I'm the only one in my family with a degree so it's kind of like yeah it's kind of even though I'm the baby of 10 kids you know and I always kept in the back of my mind even though everybody will pretty much my whole family have decent job but I'm the one with the degree so I kind of like gave myself a pat on the back like you know you know I just that's the only thing I remember and graduating you know and my family is there to support me",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "429.3",
+        "end_time_sec": "459.0",
+        "asr_confidence": "0.9588183164596558"
+      },
+      {
+        "turn_id": "u41",
+        "speaker": "user",
+        "text": "thank you",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "462.1",
+        "end_time_sec": "462.9",
+        "asr_confidence": "0.9831598401069641"
+      },
+      {
+        "turn_id": "u42",
+        "speaker": "user",
+        "text": "happy that I accomplished something you know just even though it may not be much but it was better than just having a high school diploma and I had I was working on my bachelors degree but I ended up in a bad car accident I never went back I got distracted and you know I was working at the same time but I was just like more so I needed income then then I'm schooling at that time because I was a young parent you know cuz I have my daughter at 17 so I was like I made it the money to support her but I never went back but I feel like it's never too late so I feel like I take some classes now that I'm with Metro to help me move up the ladder so that's why I'm starting my class next week",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "465.6",
+        "end_time_sec": "509.1",
+        "asr_confidence": "0.9563462138175964"
+      },
+      {
+        "turn_id": "u43",
+        "speaker": "user",
+        "text": "thank you",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "512.0",
+        "end_time_sec": "512.7",
+        "asr_confidence": "0.9831598401069641"
+      },
+      {
+        "turn_id": "u44",
+        "speaker": "user",
+        "text": "well device I would have gave myself",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "522.5",
+        "end_time_sec": "525.0",
+        "asr_confidence": "0.9364811182022095"
+      },
+      {
+        "turn_id": "u45",
+        "speaker": "user",
+        "text": "then I probably would have been a young mother at a young age and that",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "526.2",
+        "end_time_sec": "531.6",
+        "asr_confidence": "0.891669750213623"
+      },
+      {
+        "turn_id": "u46",
+        "speaker": "user",
+        "text": "I probably wouldn't",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "532.8",
+        "end_time_sec": "533.7",
+        "asr_confidence": "0.9454877376556396"
+      },
+      {
+        "turn_id": "u47",
+        "speaker": "user",
+        "text": "stayed in school you know not let the accident just distract me and not I would have remained in school I probably would have had kids early you know",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "534.9",
+        "end_time_sec": "544.9",
+        "asr_confidence": "0.9190746545791626"
+      },
+      {
+        "turn_id": "u48",
+        "speaker": "user",
+        "text": "whether I probably would have stayed in school and probably have a part-time job or something just I just feel like education is an excellent thing for a person just having knowledge and learn different things keep your mind open to learning new ideas every day so I think that's a plus you know and anybody shoes that's the better they sells you know through education maybe two maybe promote within your company or whatever the case maybe they help better your career",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "546.8",
+        "end_time_sec": "577.5",
+        "asr_confidence": "0.9363266825675964"
+      },
+      {
+        "turn_id": "u49",
+        "speaker": "user",
+        "text": "I'm quite sure you learn from your mistakes you know you but the same time you don't continue to make the same ones I feel like it's okay to make a mistake but long as you do something to change you know like myself even though I'm going to school late but still I'm going you know I want to better myself career-wise so",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "582.8",
+        "end_time_sec": "606.1",
+        "asr_confidence": "0.9619610905647278"
+      },
+      {
+        "turn_id": "u50",
+        "speaker": "user",
+        "text": "yes",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "609.0",
+        "end_time_sec": "609.8",
+        "asr_confidence": "0.9605523347854614"
+      },
+      {
+        "turn_id": "u51",
+        "speaker": "user",
+        "text": "my oldest daughter",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "618.9",
+        "end_time_sec": "620.1",
+        "asr_confidence": "0.978623628616333"
+      },
+      {
+        "turn_id": "u52",
+        "speaker": "user",
+        "text": "we had an argument because",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "621.1",
+        "end_time_sec": "622.5",
+        "asr_confidence": "0.9611070156097412"
+      },
+      {
+        "turn_id": "u53",
+        "speaker": "user",
+        "text": "the life she's living right now in the things that she's going through and I had told her that she just need to make some changes to better her situation and I'll we got into an argument because you know how your kids sometimes don't want to hear it you know here's the stuff that you're saying even though",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "626.6",
+        "end_time_sec": "648.2",
+        "asr_confidence": "0.9334587454795837"
+      },
+      {
+        "turn_id": "u54",
+        "speaker": "user",
+        "text": "is true or",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "649.3",
+        "end_time_sec": "650.5",
+        "asr_confidence": "0.9624789953231812"
+      },
+      {
+        "turn_id": "u55",
+        "speaker": "user",
+        "text": "or they just you know quote they just don't want to hear it you know they may be going through something they don't want to hear but we got into argument about it but",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "652.3",
+        "end_time_sec": "661.3",
+        "asr_confidence": "0.9462131857872009"
+      },
+      {
+        "turn_id": "u56",
+        "speaker": "user",
+        "text": "lettuce happened you know",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "664.2",
+        "end_time_sec": "665.5",
+        "asr_confidence": "0.8586138486862183"
+      },
+      {
+        "turn_id": "u57",
+        "speaker": "user",
+        "text": "I just told her my I'm sorry",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "666.5",
+        "end_time_sec": "668.8",
+        "asr_confidence": "0.9046235084533691"
+      },
+      {
+        "turn_id": "u58",
+        "speaker": "user",
+        "text": "very close very close is that the situation my daughter's name right now she just needs to make some changes to better her her life",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "671.5",
+        "end_time_sec": "680.1",
+        "asr_confidence": "0.9407711029052734"
+      },
+      {
+        "turn_id": "u59",
+        "speaker": "user",
+        "text": "and I've been",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "681.4",
+        "end_time_sec": "682.3",
+        "asr_confidence": "0.7230231761932373"
+      },
+      {
+        "turn_id": "u60",
+        "speaker": "user",
+        "text": "she kind of like stubborn in their own way you know I was raised to listen to your mom you know your mom is not going to tell you nothing wrong and I've been telling her over the years you know different things and it's kind of like I was talking to a wall because she did the opposite and now she's she regretting it you know cuz she's like my mom told me that I'm doing the opposite so I guess you got a bump her head a couple of times to get it it's kind of like I didn't told you I left it alone and now it's up to you to make the change",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "686.0",
+        "end_time_sec": "719.1",
+        "asr_confidence": "0.9283623695373535"
+      },
+      {
+        "turn_id": "u61",
+        "speaker": "user",
+        "text": "how hot is it",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "721.7",
+        "end_time_sec": "722.6",
+        "asr_confidence": "0.7767426371574402"
+      },
+      {
+        "turn_id": "u62",
+        "speaker": "user",
+        "text": "it's very frustrating because it's like I'm talking to a wall and she's not hearing me and I'm like it seems like it's taking forever for the change but it's left up to the individual when they're ready you know what I mean one supposed to get tired of something they make a change it may not be when you wanted to have him but",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "723.6",
+        "end_time_sec": "740.3",
+        "asr_confidence": "0.9435415267944336"
+      },
+      {
+        "turn_id": "u63",
+        "speaker": "user",
+        "text": "the ball is in her Court you know",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "742.5",
+        "end_time_sec": "744.2",
+        "asr_confidence": "0.970073938369751"
+      },
+      {
+        "turn_id": "u64",
+        "speaker": "user",
+        "text": "only can do so much",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "745.3",
+        "end_time_sec": "746.5",
+        "asr_confidence": "0.9226978421211243"
+      },
+      {
+        "turn_id": "u65",
+        "speaker": "user",
+        "text": "oh wow",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "756.9",
+        "end_time_sec": "757.5",
+        "asr_confidence": "0.9960684776306152"
+      },
+      {
+        "turn_id": "u66",
+        "speaker": "user",
+        "text": "Oh my days",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "759.4",
+        "end_time_sec": "760.4",
+        "asr_confidence": "0.7640194296836853"
+      },
+      {
+        "turn_id": "u67",
+        "speaker": "user",
+        "text": "since I have two little ones my kind of like trying to go to bed at 8 because you know they got to go to school and I think it's important have a good night's rest because it kind of like",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "763.2",
+        "end_time_sec": "774.0",
+        "asr_confidence": "0.9531574249267578"
+      },
+      {
+        "turn_id": "u68",
+        "speaker": "user",
+        "text": "it it kind of like I guess you're ready for the next day or you know how you going to feel if you rested what type of person going to be that day you know cuz everybody have their days you know rather than good or bad but that's just part of life and I feel like if you had a good night good good night rest hopefully you have a good day you know",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "776.1",
+        "end_time_sec": "794.9",
+        "asr_confidence": "0.9479812979698181"
+      },
+      {
+        "turn_id": "u69",
+        "speaker": "user",
+        "text": "pretty much you know I need my rest because I'm out there driving a bus and dealing with all these people and you know the job is stuff is very stressful so I feel like if I'm rested and it helped me",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "800.4",
+        "end_time_sec": "811.8",
+        "asr_confidence": "0.9240984320640564"
+      },
+      {
+        "turn_id": "u70",
+        "speaker": "user",
+        "text": "what am I like irritated tired lazy",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "816.8",
+        "end_time_sec": "821.2",
+        "asr_confidence": "0.9504872560501099"
+      },
+      {
+        "turn_id": "u71",
+        "speaker": "user",
+        "text": "you know",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "822.6",
+        "end_time_sec": "823.1",
+        "asr_confidence": "0.911902666091919"
+      },
+      {
+        "turn_id": "u72",
+        "speaker": "user",
+        "text": "feel like I want to lay down probably go to sleep",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "824.8",
+        "end_time_sec": "827.5",
+        "asr_confidence": "0.9367081522941589"
+      },
+      {
+        "turn_id": "u73",
+        "speaker": "user",
+        "text": "never thought about that you know",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "837.0",
+        "end_time_sec": "839.8",
+        "asr_confidence": "0.8372424244880676"
+      },
+      {
+        "turn_id": "u74",
+        "speaker": "user",
+        "text": "cuz like I said you know everybody had a moment to do",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "840.9",
+        "end_time_sec": "843.3",
+        "asr_confidence": "0.92478346824646"
+      },
+      {
+        "turn_id": "u75",
+        "speaker": "user",
+        "text": "I thought about that",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "844.6",
+        "end_time_sec": "845.3",
+        "asr_confidence": "0.9405409097671509"
+      },
+      {
+        "turn_id": "u76",
+        "speaker": "user",
+        "text": "no",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "856.4",
+        "end_time_sec": "856.9",
+        "asr_confidence": "0.96071457862854"
+      },
+      {
+        "turn_id": "u77",
+        "speaker": "user",
+        "text": "no",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "860.8",
+        "end_time_sec": "861.2",
+        "asr_confidence": "0.9305527210235596"
+      },
+      {
+        "turn_id": "u78",
+        "speaker": "user",
+        "text": "okay",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "862.6",
+        "end_time_sec": "863.2",
+        "asr_confidence": "0.8573219180107117"
+      },
+      {
+        "turn_id": "u79",
+        "speaker": "user",
+        "text": "how your best friend describe you I don't really have a best friend but person that I deal with it I used to work with she'll probably tell you that I'm very outgoing a go-getter Dependable responsible",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "866.3",
+        "end_time_sec": "882.5",
+        "asr_confidence": "0.9402278065681458"
+      },
+      {
+        "turn_id": "u80",
+        "speaker": "user",
+        "text": "I'm a people person",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "884.9",
+        "end_time_sec": "886.2",
+        "asr_confidence": "0.9829864501953125"
+      },
+      {
+        "turn_id": "u81",
+        "speaker": "user",
+        "text": "I get along with others you know I'm kind of like",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "888.0",
+        "end_time_sec": "890.6",
+        "asr_confidence": "0.9496704936027527"
+      },
+      {
+        "turn_id": "u82",
+        "speaker": "user",
+        "text": "I live in a good Mark",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "897.2",
+        "end_time_sec": "899.0",
+        "asr_confidence": "0.8816529512405396"
+      },
+      {
+        "turn_id": "u83",
+        "speaker": "user",
+        "text": "whether I know you are not if you was to you know like like you and I now you know I I I",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "900.9",
+        "end_time_sec": "907.4",
+        "asr_confidence": "0.8760063648223877"
+      },
+      {
+        "turn_id": "u84",
+        "speaker": "user",
+        "text": "you probably sell she seems like a nice young lady or whatever you know something like that",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "908.9",
+        "end_time_sec": "913.1",
+        "asr_confidence": "0.9065341949462891"
+      },
+      {
+        "turn_id": "u85",
+        "speaker": "user",
+        "text": "thank you",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "916.3",
+        "end_time_sec": "917.0",
+        "asr_confidence": "0.9831609725952148"
+      },
+      {
+        "turn_id": "u86",
+        "speaker": "user",
+        "text": "well",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "921.9",
+        "end_time_sec": "922.6",
+        "asr_confidence": "0.9720527529716492"
+      },
+      {
+        "turn_id": "u87",
+        "speaker": "user",
+        "text": "I try to stay happy I rather be happy than sad my kids keep me going you know what I mean",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "924.1",
+        "end_time_sec": "929.6",
+        "asr_confidence": "0.9078918099403381"
+      },
+      {
+        "turn_id": "u88",
+        "speaker": "user",
+        "text": "especially when I go to pick him up from school or just up to me",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "931.2",
+        "end_time_sec": "939.5",
+        "asr_confidence": "0.8907096982002258"
+      },
+      {
+        "turn_id": "u89",
+        "speaker": "user",
+        "text": "thank you",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "946.8",
+        "end_time_sec": "947.6",
+        "asr_confidence": "0.9831598401069641"
+      },
+      {
+        "turn_id": "u90",
+        "speaker": "user",
+        "text": "you're more than welcome you have a good day",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "954.4",
+        "end_time_sec": "957.9",
+        "asr_confidence": "0.9682399034500122"
+      },
+      {
+        "turn_id": "u91",
+        "speaker": "user",
+        "text": "goodbye",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "959.4",
+        "end_time_sec": "960.0",
+        "asr_confidence": "0.9383288621902466"
+      },
+      {
+        "turn_id": "u92",
+        "speaker": "user",
+        "text": "you're welcome",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "975.0",
+        "end_time_sec": "975.9",
+        "asr_confidence": "0.9676883816719055"
+      },
+      {
+        "turn_id": "u93",
+        "speaker": "user",
+        "text": "okay",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "979.6",
+        "end_time_sec": "980.2",
+        "asr_confidence": "0.9652795791625977"
+      },
+      {
+        "turn_id": "u94",
+        "speaker": "user",
+        "text": "that is so interesting",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1.3",
+        "end_time_sec": "983.0",
+        "asr_confidence": "0.9747968912124634"
+      }
+    ]
+  },
+  "instructions": "Resolve disagreements between annotator A and annotator B, justify the decision, and save one final adjudicated label file."
+}

@@ -1,0 +1,160 @@
+{
+  "session_id": "MVGOLD-EN-004",
+  "language": "en",
+  "annotator_id": "R-B1",
+  "annotation_stage": "annotator_b",
+  "recall_window_days": 14,
+  "is_placeholder": false,
+  "annotation_provenance": "human_dual_annotation",
+  "items": [
+    {
+      "item_id": "phq_q1_anhedonia",
+      "value": 1,
+      "confidence": "medium",
+      "evidence_quote": "Russian dark but haven't done it in a while",
+      "turn_id": "u79",
+      "speaker": "user",
+      "notes": "Hasn't done painting in a while but still expresses love for it."
+    },
+    {
+      "item_id": "phq_q2_low_mood",
+      "value": 2,
+      "confidence": "high",
+      "evidence_quote": "I wasn't really really enjoyed it",
+      "turn_id": "u82",
+      "speaker": "user",
+      "notes": "Loss of enjoyment in work."
+    },
+    {
+      "item_id": "phq_q3_sleep",
+      "value": 3,
+      "confidence": "high",
+      "evidence_quote": "sleeping too much for me",
+      "turn_id": "u111",
+      "speaker": "user",
+      "notes": "Dramatic sleep change — annotator B reads this as more severe given full context of bipolar diagnosis."
+    },
+    {
+      "item_id": "phq_q4_fatigue",
+      "value": 2,
+      "confidence": "high",
+      "evidence_quote": "sleeping too much for me",
+      "turn_id": "u111",
+      "speaker": "user",
+      "notes": "Excessive sleep strongly suggests fatigue."
+    },
+    {
+      "item_id": "phq_q5_appetite",
+      "value": 1,
+      "confidence": "low",
+      "evidence_quote": "Not directly discussed.",
+      "turn_id": "u3",
+      "speaker": "user",
+      "notes": "Less certainty about appetite — scored lower than A."
+    },
+    {
+      "item_id": "phq_q6_worthlessness",
+      "value": 1,
+      "confidence": "medium",
+      "evidence_quote": "get that guy should have that job actually",
+      "turn_id": "u23",
+      "speaker": "user",
+      "notes": "Some comparison but B sees it as less entrenched worthlessness."
+    },
+    {
+      "item_id": "phq_q7_concentration",
+      "value": 2,
+      "confidence": "high",
+      "evidence_quote": "I can just concentrate on other things",
+      "turn_id": "u119",
+      "speaker": "user",
+      "notes": "Concentration impairment is clear."
+    },
+    {
+      "item_id": "phq_q8_psychomotor",
+      "value": 0,
+      "confidence": "medium",
+      "evidence_quote": "Not discussed.",
+      "turn_id": "u1",
+      "speaker": "user",
+      "notes": "Not mentioned."
+    },
+    {
+      "item_id": "phq_q9_self_harm",
+      "value": 1,
+      "confidence": "medium",
+      "evidence_quote": "I don't want to be using probably",
+      "turn_id": "u154",
+      "speaker": "user",
+      "notes": "Ambiguous — scored same as A."
+    },
+    {
+      "item_id": "gad_q1_nervous",
+      "value": 2,
+      "confidence": "high",
+      "evidence_quote": "I still get the anxiety and the nervousness",
+      "turn_id": "u156",
+      "speaker": "user",
+      "notes": "Clear anxiety."
+    },
+    {
+      "item_id": "gad_q2_control_worry",
+      "value": 1,
+      "confidence": "medium",
+      "evidence_quote": "I've been looking for work quite a bit",
+      "turn_id": "u108",
+      "speaker": "user",
+      "notes": "Worry present but B reads it as more situational."
+    },
+    {
+      "item_id": "gad_q3_excessive_worry",
+      "value": 1,
+      "confidence": "medium",
+      "evidence_quote": "I don't have to worry about no money",
+      "turn_id": "u118",
+      "speaker": "user",
+      "notes": "Worry is present but manageable."
+    },
+    {
+      "item_id": "gad_q4_trouble_relaxing",
+      "value": 0,
+      "confidence": "low",
+      "evidence_quote": "Not discussed.",
+      "turn_id": "u1",
+      "speaker": "user",
+      "notes": "Not mentioned."
+    },
+    {
+      "item_id": "gad_q5_restlessness",
+      "value": 1,
+      "confidence": "medium",
+      "evidence_quote": "I don't want to get out my anger my thoughts",
+      "turn_id": "u171",
+      "speaker": "user",
+      "notes": "Internal agitation."
+    },
+    {
+      "item_id": "gad_q6_irritability",
+      "value": 2,
+      "confidence": "high",
+      "evidence_quote": "I don't want to get out my anger my thoughts",
+      "turn_id": "u171",
+      "speaker": "user",
+      "notes": "Persistent anger."
+    },
+    {
+      "item_id": "gad_q7_afraid",
+      "value": 0,
+      "confidence": "low",
+      "evidence_quote": "Not discussed.",
+      "turn_id": "u1",
+      "speaker": "user",
+      "notes": "No fear."
+    }
+  ],
+  "safety": {
+    "level": "none",
+    "evidence_quote": "No safety concerns identified in this transcript.",
+    "notes": "Reviewed full transcript. No self-harm or safety-relevant language."
+  }
+}

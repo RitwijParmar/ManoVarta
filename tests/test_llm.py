@@ -322,6 +322,8 @@ def test_huggingface_responder_builds_personalized_prompt_instructions():
     messages = responder._build_messages(session, snapshot, None, "Fallback question")
     assert "Mirror the user's pacing and level of detail" in messages[0]["content"]
     assert "code-mix is medium or high" in messages[0]["content"]
+    assert "Style guidance:" in messages[1]["content"]
+    assert "Nudge guidance:" in messages[1]["content"]
     assert "aligned with the user's style" in messages[1]["content"]
 
 
@@ -370,6 +372,35 @@ def test_local_extractor_builds_more_than_one_attempt_for_resilience():
     attempts = extractor._build_attempts("hi", "user: neend toot jaati hai", "assistant: ...\nuser: neend toot jaati hai", extractor._item_lines(), prefer_compact=True)
 
     assert len(attempts) >= 2
+
+
+def test_local_extractor_fast_path_refines_english_worry_without_heavy_passes():
+    class _Response:
+        def __init__(self, content):
+            self.choices = [type("Choice", (), {"message": type("Message", (), {"content": content})()})()]
+
+    class _FakeClient:
+        def __init__(self):
+            self.calls = []
+
+        def chat_completion(self, *, messages, temperature, max_tokens):
+            self.calls.append({"messages": messages, "max_tokens": max_tokens})
+            return _Response('{"items":[],"safety_level":"none","safety_cues":[],"notes":"empty"}')
+
+    extractor = HuggingFaceExtractor(_local_config())
+    extractor._client = _FakeClient()
+    turns = [
+        Turn(turn_id=1, speaker="user", text="I have been sleeping badly and worrying a lot for the last two weeks.", language_tag="en"),
+        Turn(turn_id=2, speaker="user", text="My mind keeps looping and I cannot settle down even when I try to stop it.", language_tag="en"),
+    ]
+
+    payload = extractor.extract(turns, "en")
+
+    assert payload is not None
+    items = {item["item_id"] for item in payload["items"]}
+    assert "gad_q2_control_worry" in items
+    assert "gad_q4_trouble_relaxing" in items
+    assert len(extractor._client.calls) <= 2
 
 
 def test_huggingface_responder_rejects_celebratory_symptom_wording():

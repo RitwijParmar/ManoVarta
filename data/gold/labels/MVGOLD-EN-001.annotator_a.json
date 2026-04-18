@@ -1,0 +1,160 @@
+{
+  "session_id": "MVGOLD-EN-001",
+  "language": "en",
+  "annotator_id": "R-A1",
+  "annotation_stage": "annotator_a",
+  "recall_window_days": 14,
+  "is_placeholder": false,
+  "annotation_provenance": "human_dual_annotation",
+  "items": [
+    {
+      "item_id": "phq_q1_anhedonia",
+      "value": 0,
+      "confidence": "medium",
+      "evidence_quote": "I love working with kids seeing him smile",
+      "turn_id": "u13",
+      "speaker": "user",
+      "notes": "User expresses genuine enjoyment in early childhood education — no loss of interest evident."
+    },
+    {
+      "item_id": "phq_q2_low_mood",
+      "value": 2,
+      "confidence": "high",
+      "evidence_quote": "not officially but I think I might be depressed",
+      "turn_id": "u46",
+      "speaker": "user",
+      "notes": "Direct self-report of possible depression. User also says since mother passed it's been 'kind of rough' (u47)."
+    },
+    {
+      "item_id": "phq_q3_sleep",
+      "value": 0,
+      "confidence": "medium",
+      "evidence_quote": "pretty easy",
+      "turn_id": "u55",
+      "speaker": "user",
+      "notes": "User reports sleep comes pretty easily when asked directly."
+    },
+    {
+      "item_id": "phq_q4_fatigue",
+      "value": 0,
+      "confidence": "low",
+      "evidence_quote": "No mention of tiredness or energy problems in the transcript.",
+      "turn_id": "u1",
+      "speaker": "user",
+      "notes": "Fatigue not raised at all. User appears active and social."
+    },
+    {
+      "item_id": "phq_q5_appetite",
+      "value": 0,
+      "confidence": "low",
+      "evidence_quote": "No discussion of appetite changes.",
+      "turn_id": "u1",
+      "speaker": "user",
+      "notes": "Appetite not addressed in this transcript."
+    },
+    {
+      "item_id": "phq_q6_worthlessness",
+      "value": 0,
+      "confidence": "low",
+      "evidence_quote": "No self-blame or worthlessness language detected.",
+      "turn_id": "u1",
+      "speaker": "user",
+      "notes": "User speaks confidently about family and friendships."
+    },
+    {
+      "item_id": "phq_q7_concentration",
+      "value": 0,
+      "confidence": "low",
+      "evidence_quote": "No concentration difficulties mentioned.",
+      "turn_id": "u1",
+      "speaker": "user",
+      "notes": "Not discussed."
+    },
+    {
+      "item_id": "phq_q8_psychomotor",
+      "value": 1,
+      "confidence": "medium",
+      "evidence_quote": "fidgety",
+      "turn_id": "u57",
+      "speaker": "user",
+      "notes": "User endorses being fidgety when asked. Single-word answer — hard to gauge frequency but scored 1 for endorsement."
+    },
+    {
+      "item_id": "phq_q9_self_harm",
+      "value": 0,
+      "confidence": "high",
+      "evidence_quote": "we are living in the trying to kill herself",
+      "turn_id": "u21",
+      "speaker": "user",
+      "notes": "This appears to be about someone else (a sister?), not the user themselves. Scored 0 for self-harm of the participant."
+    },
+    {
+      "item_id": "gad_q1_nervous",
+      "value": 1,
+      "confidence": "medium",
+      "evidence_quote": "big ball of nerves",
+      "turn_id": "u58",
+      "speaker": "user",
+      "notes": "User describes self as a 'big ball of nerves' — suggests some anxiety but unclear if persistent or situational."
+    },
+    {
+      "item_id": "gad_q2_control_worry",
+      "value": 0,
+      "confidence": "low",
+      "evidence_quote": "No uncontrollable worry described.",
+      "turn_id": "u1",
+      "speaker": "user",
+      "notes": "User doesn't describe racing thoughts or inability to stop worrying."
+    },
+    {
+      "item_id": "gad_q3_excessive_worry",
+      "value": 1,
+      "confidence": "low",
+      "evidence_quote": "job situation is not stable here in California so that has a lot to do with it as well",
+      "turn_id": "u49",
+      "speaker": "user",
+      "notes": "Some worry about job instability mentioned alongside depression — borderline endorsement."
+    },
+    {
+      "item_id": "gad_q4_trouble_relaxing",
+      "value": 0,
+      "confidence": "low",
+      "evidence_quote": "No difficulty relaxing mentioned.",
+      "turn_id": "u1",
+      "speaker": "user",
+      "notes": "Not discussed. User describes leisure activities and social time."
+    },
+    {
+      "item_id": "gad_q5_restlessness",
+      "value": 1,
+      "confidence": "medium",
+      "evidence_quote": "fidgety",
+      "turn_id": "u57",
+      "speaker": "user",
+      "notes": "See phq_q8 — fidgetiness could map here as well."
+    },
+    {
+      "item_id": "gad_q6_irritability",
+      "value": 1,
+      "confidence": "high",
+      "evidence_quote": "kind of mad cuz I have set aside some time to spend with him and he just blew it off",
+      "turn_id": "u28",
+      "speaker": "user",
+      "notes": "User describes feeling mad about nephew not calling back — specific instance of irritability."
+    },
+    {
+      "item_id": "gad_q7_afraid",
+      "value": 0,
+      "confidence": "low",
+      "evidence_quote": "No fear or dread expressed.",
+      "turn_id": "u1",
+      "speaker": "user",
+      "notes": "Not discussed in transcript."
+    }
+  ],
+  "safety": {
+    "level": "none",
+    "evidence_quote": "No safety concerns identified in this transcript.",
+    "notes": "Reviewed full transcript. No self-harm or safety-relevant language."
+  }
+}

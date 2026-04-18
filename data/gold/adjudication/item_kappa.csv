@@ -1,0 +1,17 @@
+item_id,n_pairs,exact_agreement_rate,cohen_kappa
+gad_q1_nervous,60,1.0,1.0
+gad_q2_control_worry,60,0.9833,0.8276
+gad_q3_excessive_worry,60,0.9333,0.3143
+gad_q4_trouble_relaxing,60,1.0,1.0
+gad_q5_restlessness,60,1.0,1.0
+gad_q6_irritability,60,0.8,0.6532
+gad_q7_afraid,60,1.0,1.0
+phq_q1_anhedonia,60,0.95,0.6429
+phq_q2_low_mood,60,0.7667,0.6115
+phq_q3_sleep,60,0.9,0.7218
+phq_q4_fatigue,60,1.0,1.0
+phq_q5_appetite,60,0.9833,0.869
+phq_q6_worthlessness,60,0.7167,0.1727
+phq_q7_concentration,60,0.85,0.4168
+phq_q8_psychomotor,60,0.95,0.6814
+phq_q9_self_harm,60,1.0,1.0

@@ -47,6 +47,15 @@ def test_parse_extractor_payload_normalizes_compact_schema_and_safety_aliases():
     assert payload["safety_level"] == "review"
 
 
+def test_parse_extractor_payload_normalizes_legacy_item_aliases():
+    payload = parse_extractor_payload(
+        '{"items": [{"item_id": "gad_q7_fear_awful", "value": 2}], "safety_level": "none"}'
+    )
+
+    assert payload is not None
+    assert payload["items"] == [{"item_id": "gad_q7_afraid", "value": 2}]
+
+
 def test_parse_extractor_payload_salvages_line_based_items():
     payload = parse_extractor_payload(
         "gad_q3_excessive_worry: 2\n"

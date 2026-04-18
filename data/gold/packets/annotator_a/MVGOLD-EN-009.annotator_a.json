@@ -1,0 +1,1089 @@
+{
+  "session_id": "MVGOLD-EN-009",
+  "language": "en",
+  "cohort": "expansion",
+  "target_primary_domain": "trouble_relaxing",
+  "target_risk_band": "none",
+  "packet_stage": "annotator_a",
+  "target_output_file": "data/gold/labels/MVGOLD-EN-009.annotator_a.json",
+  "related_files": {
+    "audio_file": "data/gold/audio/en/MVGOLD-EN-009.wav",
+    "transcript_file": "data/gold/transcripts/en/MVGOLD-EN-009.json",
+    "annotator_a_file": "data/gold/labels/MVGOLD-EN-009.annotator_a.json",
+    "annotator_b_file": "data/gold/labels/MVGOLD-EN-009.annotator_b.json",
+    "adjudicated_label_file": "data/gold/labels/MVGOLD-EN-009.adjudicated.json"
+  },
+  "metadata": {
+    "session_id": "MVGOLD-EN-009",
+    "participant_id": "314",
+    "language": "en",
+    "age_years": "",
+    "age_band": "adult_unknown_from_source",
+    "occupation": "unknown_from_source",
+    "living_situation": "unknown_from_source",
+    "support_system": "unknown_from_source",
+    "consent_recorded": "public_dataset_license",
+    "collection_source": "e_daic_public_2019",
+    "audio_file": "data/gold/audio/en/MVGOLD-EN-009.wav",
+    "transcript_file": "data/gold/transcripts/en/MVGOLD-EN-009.json",
+    "annotator_a_file": "data/gold/labels/MVGOLD-EN-009.annotator_a.json",
+    "annotator_b_file": "data/gold/labels/MVGOLD-EN-009.annotator_b.json",
+    "adjudicated_label_file": "data/gold/labels/MVGOLD-EN-009.adjudicated.json",
+    "split": "expansion",
+    "notes": "Imported from E-DAIC public participant archive; PHQ8 items from public labels, remaining items machine-inferred and require clinician review for strict claims."
+  },
+  "transcript": {
+    "session_id": "MVGOLD-EN-009",
+    "language": "en",
+    "cohort": "expansion",
+    "is_placeholder": false,
+    "collection_status": "collected_public_dataset",
+    "notes": "Imported from E-DAIC public participant archive.",
+    "profile": {
+      "age_years": null,
+      "age_band": "adult_unknown_from_source",
+      "occupation": "unknown_from_source",
+      "living_situation": "unknown_from_source",
+      "support_system": "unknown_from_source",
+      "gender": "female"
+    },
+    "source": {
+      "dataset": "e_daic_public",
+      "participant_id": "314",
+      "split": "train",
+      "phq_binary": "0",
+      "phq_score": "1",
+      "source_audio_path": "314_P/314_AUDIO.wav",
+      "source_transcript_path": "314_P/314_Transcript.csv"
+    },
+    "turns": [
+      {
+        "turn_id": "u1",
+        "speaker": "user",
+        "text": "don't I look gorgeous you straighten up a little bit here",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1.5",
+        "end_time_sec": "5.0",
+        "asr_confidence": "0.8964216113090515"
+      },
+      {
+        "turn_id": "u2",
+        "speaker": "user",
+        "text": "okay now you're going to chat with her for a bit",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "17.8",
+        "end_time_sec": "19.8",
+        "asr_confidence": "0.9326775670051575"
+      },
+      {
+        "turn_id": "u3",
+        "speaker": "user",
+        "text": "okay",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "26.8",
+        "end_time_sec": "27.3",
+        "asr_confidence": "0.9752300977706909"
+      },
+      {
+        "turn_id": "u4",
+        "speaker": "user",
+        "text": "yes",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "58.1",
+        "end_time_sec": "58.8",
+        "asr_confidence": "0.9763237237930298"
+      },
+      {
+        "turn_id": "u5",
+        "speaker": "user",
+        "text": "quite well I feel good",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "63.5",
+        "end_time_sec": "65.2",
+        "asr_confidence": "0.936397135257721"
+      },
+      {
+        "turn_id": "u6",
+        "speaker": "user",
+        "text": "Los Angeles California here",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "68.6",
+        "end_time_sec": "71.1",
+        "asr_confidence": "0.9689922332763672"
+      },
+      {
+        "turn_id": "u7",
+        "speaker": "user",
+        "text": "one of the few native-born Los angele ins",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "74.5",
+        "end_time_sec": "78.9",
+        "asr_confidence": "0.8057201504707336"
+      },
+      {
+        "turn_id": "u8",
+        "speaker": "user",
+        "text": "I homeschool my ten-year-old son and I'm a homemaker I have five children and married 22 years",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "82.6",
+        "end_time_sec": "92.1",
+        "asr_confidence": "0.9557270407676697"
+      },
+      {
+        "turn_id": "u9",
+        "speaker": "user",
+        "text": "about the full-time job",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "97.8",
+        "end_time_sec": "99.0",
+        "asr_confidence": "0.8513790369033813"
+      },
+      {
+        "turn_id": "u10",
+        "speaker": "user",
+        "text": "somewhat we can we went to Israel about two months ago for a pilgrimage with our church yeah so I would say yes I've traveled a bit",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "101.5",
+        "end_time_sec": "110.9",
+        "asr_confidence": "0.9288815259933472"
+      },
+      {
+        "turn_id": "u11",
+        "speaker": "user",
+        "text": "I will most recently we like 2 months ago we went to Israel for a pilgrimage we were gone about nine days and was fabulous it was we spent the first five days in Corazon which is near the Galilee and in a place called I mean the name of the area is causing but we stayed in place called The domus galilaeae which is",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "114.9",
+        "end_time_sec": "141.4",
+        "asr_confidence": "0.9427663683891296"
+      },
+      {
+        "turn_id": "u12",
+        "speaker": "user",
+        "text": "a house for that welcomes Christian pilgrims as well as Jewish pilgrims",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "144.3",
+        "end_time_sec": "153.8",
+        "asr_confidence": "0.9569641947746277"
+      },
+      {
+        "turn_id": "u13",
+        "speaker": "user",
+        "text": "I enjoy like really the most important I dress like meeting the people and and of course seeing that the history especially Israel amidst the totally ancient but most dangerous is the the people I think to get a better understanding of how different cultures",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "161.2",
+        "end_time_sec": "180.9",
+        "asr_confidence": "0.9315125942230225"
+      },
+      {
+        "turn_id": "u14",
+        "speaker": "user",
+        "text": "live",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "183.3",
+        "end_time_sec": "183.8",
+        "asr_confidence": "0.9260005354881287"
+      },
+      {
+        "turn_id": "u15",
+        "speaker": "user",
+        "text": "no not at all",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "189.9",
+        "end_time_sec": "191.5",
+        "asr_confidence": "0.9828192591667175"
+      },
+      {
+        "turn_id": "u16",
+        "speaker": "user",
+        "text": "just don't I have all my life I've always been",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "194.1",
+        "end_time_sec": "197.8",
+        "asr_confidence": "0.8844031691551208"
+      },
+      {
+        "turn_id": "u17",
+        "speaker": "user",
+        "text": "open and and willing to socialize and I remember my younger brother I was joking saying that I would talk to anybody and I will I'll talk to just about anybody just because I enjoyed learning about other people",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "199.2",
+        "end_time_sec": "214.8",
+        "asr_confidence": "0.9442261457443237"
+      },
+      {
+        "turn_id": "u18",
+        "speaker": "user",
+        "text": "most of the top five by the end of the day after I've cooked dinner and we've had dinner together as a family I there's a word game on the computer that I like to play for a little while and then watch TV have a cocktail with my husband and just relax that's what we do and you know because we have a lot going on we don't stay up too late song",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "220.4",
+        "end_time_sec": "244.6",
+        "asr_confidence": "0.9489051103591919"
+      },
+      {
+        "turn_id": "u19",
+        "speaker": "user",
+        "text": "like to watch crime dramas",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "245.8",
+        "end_time_sec": "247.4",
+        "asr_confidence": "0.9312164187431335"
+      },
+      {
+        "turn_id": "u20",
+        "speaker": "user",
+        "text": "really mad probably not a lot",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "254.4",
+        "end_time_sec": "259.7",
+        "asr_confidence": "0.9463544487953186"
+      },
+      {
+        "turn_id": "u21",
+        "speaker": "user",
+        "text": "I get frustrated with for example my daughter does not clean up her room almost ever so that that gets me angry but",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "262.0",
+        "end_time_sec": "272.5",
+        "asr_confidence": "0.9692938327789307"
+      },
+      {
+        "turn_id": "u22",
+        "speaker": "user",
+        "text": "in terms of like really getting like heated Langer I mean other than like little things that my children do you know especially my oldest child is 21 you know he can be confrontational cell",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "274.2",
+        "end_time_sec": "287.8",
+        "asr_confidence": "0.9344773292541504"
+      },
+      {
+        "turn_id": "u23",
+        "speaker": "user",
+        "text": "other than that nothing really gets me like really angry",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "288.9",
+        "end_time_sec": "292.1",
+        "asr_confidence": "0.9753774404525757"
+      },
+      {
+        "turn_id": "u24",
+        "speaker": "user",
+        "text": "haven't I have haven't felt that",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "293.3",
+        "end_time_sec": "295.2",
+        "asr_confidence": "0.9632665514945984"
+      },
+      {
+        "turn_id": "u25",
+        "speaker": "user",
+        "text": "contributing to society helping",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "301.6",
+        "end_time_sec": "304.7",
+        "asr_confidence": "0.9803435206413269"
+      },
+      {
+        "turn_id": "u26",
+        "speaker": "user",
+        "text": "helping to raise responsible people I guess",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "306.4",
+        "end_time_sec": "311.2",
+        "asr_confidence": "0.9690424799919128"
+      },
+      {
+        "turn_id": "u27",
+        "speaker": "user",
+        "text": "and of course the love and affection in the the sun and the excitement that goes with it and all the stages that go I mean like really right now I'm in a stage where my children are either adults or teenagers I only had I have one 11 year old and the rest are all teenagers and adults so it's really fun because we're able to talk about current events and all kinds of stuff that's going on in the world and you know have to have a challenging discussions and that sort of thing so it's it's a different level than when you're taking care of babies and you know changing diapers and that kind of stuff",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "313.1",
+        "end_time_sec": "353.5",
+        "asr_confidence": "0.9606502652168274"
+      },
+      {
+        "turn_id": "u28",
+        "speaker": "user",
+        "text": "the hardest thing is that it's 24/7",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "358.7",
+        "end_time_sec": "361.9",
+        "asr_confidence": "0.9413564801216125"
+      },
+      {
+        "turn_id": "u29",
+        "speaker": "user",
+        "text": "you never not a parent you know it's and so you have to accept that and that's I remember when I first with my first child thinking you know when I brought him home from the hospital this is it I mean there's no going back you cannot change I mean I guess you could if you did something horrible but I mean the normal circumstances you can't change that and it's a permanent thing and",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "365.2",
+        "end_time_sec": "388.4",
+        "asr_confidence": "0.9474937319755554"
+      },
+      {
+        "turn_id": "u30",
+        "speaker": "user",
+        "text": "it is in some ways it takes away your freedom but in other ways it gives you a different sort of freedom",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "390.5",
+        "end_time_sec": "396.4",
+        "asr_confidence": "0.9154355525970459"
+      },
+      {
+        "turn_id": "u31",
+        "speaker": "user",
+        "text": "always",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "403.1",
+        "end_time_sec": "403.8",
+        "asr_confidence": "0.9684282541275024"
+      },
+      {
+        "turn_id": "u32",
+        "speaker": "user",
+        "text": "I'm sorry I didn't get what you said",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "408.2",
+        "end_time_sec": "410.4",
+        "asr_confidence": "0.9787022471427917"
+      },
+      {
+        "turn_id": "u33",
+        "speaker": "user",
+        "text": "some of the things that have been a positive influence in my life most importantly my church and my face but also my husband he's been a really",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "412.9",
+        "end_time_sec": "422.7",
+        "asr_confidence": "0.9632299542427063"
+      },
+      {
+        "turn_id": "u34",
+        "speaker": "user",
+        "text": "he's kind of his very like logical thinking and very grounded so if I get emotional or I get upset about something he's always we balance each other out likewise if he gets upset about something I'm able to balance him out so it's been it's been a great gift in my life",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "424.5",
+        "end_time_sec": "445.5",
+        "asr_confidence": "0.9638786315917969"
+      },
+      {
+        "turn_id": "u35",
+        "speaker": "user",
+        "text": "I don't think I'd be categorized as somebody with a temper occasionally I occasionally I get angry but I don't like have like rarely do I have outbursts I'm more more likely to you know to say what I feel not let it build up so you don't like my husband and I don't",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "452.7",
+        "end_time_sec": "474.6",
+        "asr_confidence": "0.9321510195732117"
+      },
+      {
+        "turn_id": "u36",
+        "speaker": "user",
+        "text": "rarely fight like have arguments that are yelling and screaming or anything like that it almost never happens because I like I said I'm more of a type of person that communicates on the spot self I'm thinking something I usually communicate it right away instead of letting it build up",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "475.6",
+        "end_time_sec": "492.6",
+        "asr_confidence": "0.9462267756462097"
+      },
+      {
+        "turn_id": "u37",
+        "speaker": "user",
+        "text": "usually I'm arguing with my older son because he you know he thinks he knows everything he's 21 years old so he has the know-it-all mentality and I'm just telling him that he doesn't know it all and you know I was like was on Hiller and more and he's very confident and very self",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "499.0",
+        "end_time_sec": "518.1",
+        "asr_confidence": "0.9145929217338562"
+      },
+      {
+        "turn_id": "u38",
+        "speaker": "user",
+        "text": "cell phone with the ra self-assured and so he thinks that you know everything he does is correct and he still has a lot of learning to do that's all",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "519.9",
+        "end_time_sec": "529.4",
+        "asr_confidence": "0.9689520597457886"
+      },
+      {
+        "turn_id": "u39",
+        "speaker": "user",
+        "text": "it is a can be",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "531.6",
+        "end_time_sec": "533.6",
+        "asr_confidence": "0.7226755023002625"
+      },
+      {
+        "turn_id": "u40",
+        "speaker": "user",
+        "text": "I think that many of them are spoiled and living environment of",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "537.5",
+        "end_time_sec": "545.5",
+        "asr_confidence": "0.9650024771690369"
+      },
+      {
+        "turn_id": "u41",
+        "speaker": "user",
+        "text": "of instant gratification which I think is going to be detrimental to the to the future of this country but",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "547.0",
+        "end_time_sec": "558.3",
+        "asr_confidence": "0.9754775762557983"
+      },
+      {
+        "turn_id": "u42",
+        "speaker": "user",
+        "text": "in a given that with all the technology we have is really not any way to go back so I I have hope that they will I mean I think this country was built on hard work and an ethics and hopefully our art the Next Generation and the generations after that can maintain that that standard of living I don't know if it's possible",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "560.8",
+        "end_time_sec": "589.5",
+        "asr_confidence": "0.9529905915260315"
+      },
+      {
+        "turn_id": "u43",
+        "speaker": "user",
+        "text": "as loving nurturing funny",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "598.8",
+        "end_time_sec": "605.4",
+        "asr_confidence": "0.948021411895752"
+      },
+      {
+        "turn_id": "u44",
+        "speaker": "user",
+        "text": "we laugh a lot and",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "606.7",
+        "end_time_sec": "608.2",
+        "asr_confidence": "0.9746842384338379"
+      },
+      {
+        "turn_id": "u45",
+        "speaker": "user",
+        "text": "caring honest",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "611.6",
+        "end_time_sec": "613.5",
+        "asr_confidence": "0.9775331616401672"
+      },
+      {
+        "turn_id": "u46",
+        "speaker": "user",
+        "text": "things that I mean my best I have will actually my best friend is it's two people it's two sisters that I grew up with and we for some years took care of their mother was Alzheimer's before my parents got sick so I would had a very close have a very close relationship with them still do and so I'm considered the fourth sister so I would say that those are my best friends and and",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "616.1",
+        "end_time_sec": "645.2",
+        "asr_confidence": "0.959746241569519"
+      },
+      {
+        "turn_id": "u47",
+        "speaker": "user",
+        "text": "we love each other very much is a good relationship",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "647.2",
+        "end_time_sec": "649.6",
+        "asr_confidence": "0.9303039312362671"
+      },
+      {
+        "turn_id": "u48",
+        "speaker": "user",
+        "text": "no",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "657.2",
+        "end_time_sec": "657.7",
+        "asr_confidence": "0.9410539269447327"
+      },
+      {
+        "turn_id": "u49",
+        "speaker": "user",
+        "text": "no",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "661.0",
+        "end_time_sec": "661.4",
+        "asr_confidence": "0.9406710863113403"
+      },
+      {
+        "turn_id": "u50",
+        "speaker": "user",
+        "text": "yes",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "664.0",
+        "end_time_sec": "664.6",
+        "asr_confidence": "0.9938145279884338"
+      },
+      {
+        "turn_id": "u51",
+        "speaker": "user",
+        "text": "most mostly mine early depression it was more anxiety probably it's probably been five or six years I mean I've had it off and on all my life but it was never diagnosed originally like as a teenager I think is when I first had started with anxiety but",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "666.3",
+        "end_time_sec": "684.6",
+        "asr_confidence": "0.96409010887146"
+      },
+      {
+        "turn_id": "u52",
+        "speaker": "user",
+        "text": "other than that I let you know so depression kind of goes with anxiety if it's not under control but now it's under control so I have a great huh",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "687.0",
+        "end_time_sec": "698.2",
+        "asr_confidence": "0.9534285068511963"
+      },
+      {
+        "turn_id": "u53",
+        "speaker": "user",
+        "text": "no I think it was what they call fleece free floating anxiety more of a organic reason for it in other words that there was a chemical imbalance",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "700.9",
+        "end_time_sec": "712.7",
+        "asr_confidence": "0.9378905296325684"
+      },
+      {
+        "turn_id": "u54",
+        "speaker": "user",
+        "text": "in my brain",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "714.2",
+        "end_time_sec": "715.0",
+        "asr_confidence": "0.8915589451789856"
+      },
+      {
+        "turn_id": "u55",
+        "speaker": "user",
+        "text": "I've been feeling pretty good actually the holidays were great good family gatherings a little stressed because we're making a big decision right now to help my parents out my dad is really sick and we've offered to move in with them they have a big home but we would have to do a lot of",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "718.2",
+        "end_time_sec": "738.5",
+        "asr_confidence": "0.9692639708518982"
+      },
+      {
+        "turn_id": "u56",
+        "speaker": "user",
+        "text": "some renovation and some to help and some obviously moving around and so we're in the throes of that and so that's a big big change but I'm looking forward to it because I really don't want my parents to be alone as they get their in their 80s",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "740.0",
+        "end_time_sec": "756.5",
+        "asr_confidence": "0.9551838636398315"
+      },
+      {
+        "turn_id": "u57",
+        "speaker": "user",
+        "text": "so as I get closer to death I want to have my family there with them",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "757.7",
+        "end_time_sec": "761.6",
+        "asr_confidence": "0.9709065556526184"
+      },
+      {
+        "turn_id": "u58",
+        "speaker": "user",
+        "text": "not easy usually all my life I think I've always I mean I've always had at least I wake up at least once in the middle of the night to go to the bathroom basically",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "770.1",
+        "end_time_sec": "783.9",
+        "asr_confidence": "0.9731630682945251"
+      },
+      {
+        "turn_id": "u59",
+        "speaker": "user",
+        "text": "other than that I mean no not sleep well I mean other than that I sleep well but sometimes if I wake up like really early in the morning then I can't go back to sleep I'll get up and maybe do some work on the computer and then go back to bed and go back to sleep because I want my schedule is when if the kids are have to be at the school early and there's a lot of factors",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "784.7",
+        "end_time_sec": "804.9",
+        "asr_confidence": "0.9520477056503296"
+      },
+      {
+        "turn_id": "u60",
+        "speaker": "user",
+        "text": "sometimes it does",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "806.4",
+        "end_time_sec": "807.9",
+        "asr_confidence": "0.8649896383285522"
+      },
+      {
+        "turn_id": "u61",
+        "speaker": "user",
+        "text": "probably basically the same I think I might complain the bit like oh I'm tired or my body hurts or whatever you know but I think overall I'm probably the same",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "816.4",
+        "end_time_sec": "826.5",
+        "asr_confidence": "0.9166487455368042"
+      },
+      {
+        "turn_id": "u62",
+        "speaker": "user",
+        "text": "my kids know I'll be there I'll tell my get though I'm really tired and they'll understand like my older daughter will be really helpful and letting my the. I will try to cook dinner or something like that so that you know",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "828.3",
+        "end_time_sec": "838.2",
+        "asr_confidence": "0.9284536838531494"
+      },
+      {
+        "turn_id": "u63",
+        "speaker": "user",
+        "text": "then they put you in a little bit more",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "839.5",
+        "end_time_sec": "840.9",
+        "asr_confidence": "0.9178226590156555"
+      },
+      {
+        "turn_id": "u64",
+        "speaker": "user",
+        "text": "not really not not no",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "851.2",
+        "end_time_sec": "854.3",
+        "asr_confidence": "0.9112481474876404"
+      },
+      {
+        "turn_id": "u65",
+        "speaker": "user",
+        "text": "not really. I think significant",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "856.2",
+        "end_time_sec": "858.9",
+        "asr_confidence": "0.9758802652359009"
+      },
+      {
+        "turn_id": "u66",
+        "speaker": "user",
+        "text": "actually yes I do I do feel like therapy is useful",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "861.9",
+        "end_time_sec": "865.9",
+        "asr_confidence": "0.9766245484352112"
+      },
+      {
+        "turn_id": "u67",
+        "speaker": "user",
+        "text": "well we had a situation with my daughter",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "867.8",
+        "end_time_sec": "870.8",
+        "asr_confidence": "0.9754687547683716"
+      },
+      {
+        "turn_id": "u68",
+        "speaker": "user",
+        "text": "she also suffers from anxiety and we have had her in therapy for some time and we just recently our we're about to finish a group with her it was a 6 months",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "873.6",
+        "end_time_sec": "885.5",
+        "asr_confidence": "0.9385360479354858"
+      },
+      {
+        "turn_id": "u69",
+        "speaker": "user",
+        "text": "group for DVT it's called and it's like a the first time that is the first time they're documenting using it with teenagers and it's been really good it's been very helpful it's just all about how to live in the moment and how do you know the actual physical and mental strategies to keep you or keep you from your mind from going crazy you know worrying about things or we know",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "887.3",
+        "end_time_sec": "916.5",
+        "asr_confidence": "0.9658927917480469"
+      },
+      {
+        "turn_id": "u70",
+        "speaker": "user",
+        "text": "in this case some of the kids have tried to harm themselves or whatever so that's the focus of the therapy and it's been really good my husband and I both have been going with our daughter and it's been really really informational and really helpful I think",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "917.4",
+        "end_time_sec": "933.8",
+        "asr_confidence": "0.9772716164588928"
+      },
+      {
+        "turn_id": "u71",
+        "speaker": "user",
+        "text": "oh my God I was she was in a bad way she was being all suffering a lot and we knew it and we acted on it that's all",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "939.0",
+        "end_time_sec": "948.6",
+        "asr_confidence": "0.9298141002655029"
+      },
+      {
+        "turn_id": "u72",
+        "speaker": "user",
+        "text": "like",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "961.0",
+        "end_time_sec": "961.5",
+        "asr_confidence": "0.963597297668457"
+      },
+      {
+        "turn_id": "u73",
+        "speaker": "user",
+        "text": "really joyful and happy I would say probably",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "962.9",
+        "end_time_sec": "966.4",
+        "asr_confidence": "0.9724997282028198"
+      },
+      {
+        "turn_id": "u74",
+        "speaker": "user",
+        "text": "probably would be in Israel when we renewed our marriage vows in the the ethic in Cana",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "968.5",
+        "end_time_sec": "974.7",
+        "asr_confidence": "0.9250515699386597"
+      },
+      {
+        "turn_id": "u75",
+        "speaker": "user",
+        "text": "so you know where the wedding of Cana took place that was really moving and beautiful and it was it happened that our anniversary was we left on our anniversary day we flew to Israel on so it was right at the same time it was beautiful",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "976.0",
+        "end_time_sec": "992.0",
+        "asr_confidence": "0.9236728549003601"
+      },
+      {
+        "turn_id": "u76",
+        "speaker": "user",
+        "text": "find meaningful and other than that I would say you know like other joyful occasions have been you don't like Christmas and you know family gatherings and you know my dad's birthday turned 83 on Christmas Eve you know that kind of think so",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "993.5",
+        "end_time_sec": "1010.3",
+        "asr_confidence": "0.8996860980987549"
+      },
+      {
+        "turn_id": "u77",
+        "speaker": "user",
+        "text": "that's an interesting question I would say",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1022.3",
+        "end_time_sec": "1025.3",
+        "asr_confidence": "0.9698002338409424"
+      },
+      {
+        "turn_id": "u78",
+        "speaker": "user",
+        "text": "once I get like things done that I need to do like if I'm have a lot of a lot of either work to do around the house or",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1028.2",
+        "end_time_sec": "1036.1",
+        "asr_confidence": "0.9765329360961914"
+      },
+      {
+        "turn_id": "u79",
+        "speaker": "user",
+        "text": "answer one once I get them done I feel like I could sense of accomplishment",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1037.4",
+        "end_time_sec": "1041.4",
+        "asr_confidence": "0.9102401733398438"
+      },
+      {
+        "turn_id": "u80",
+        "speaker": "user",
+        "text": "you know much like I mean I worked for many years in it as an administrative manager at UCLA and",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1042.8",
+        "end_time_sec": "1048.7",
+        "asr_confidence": "0.8968034386634827"
+      },
+      {
+        "turn_id": "u81",
+        "speaker": "user",
+        "text": "you don't want to get a project done or you get your whatever month-end stuff done or there's a lot of different things that have to meet deadlines or so that feeling of like yeah I got it done you know so I think that would be a no for me the most",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1050.3",
+        "end_time_sec": "1064.2",
+        "asr_confidence": "0.9434396028518677"
+      },
+      {
+        "turn_id": "u82",
+        "speaker": "user",
+        "text": "most recent way of feeling good and feeling you know like feeling accomplished",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1065.8",
+        "end_time_sec": "1072.5",
+        "asr_confidence": "0.9666288495063782"
+      },
+      {
+        "turn_id": "u83",
+        "speaker": "user",
+        "text": "dream job",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1077.5",
+        "end_time_sec": "1078.8",
+        "asr_confidence": "0.9400947093963623"
+      },
+      {
+        "turn_id": "u84",
+        "speaker": "user",
+        "text": "I think I've already lived it I'm also a birth Doula and yeah and so I've attended a lot of Earth and now I really only do it for family and friends and it's the most rewarding thing you could possibly ask to be involved in is the birth of bringing a new life into this world so I would say that's probably was my was a dream job and I didn't know what I trained much after you know I did my managerial stuff and",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1081.6",
+        "end_time_sec": "1112.8",
+        "asr_confidence": "0.9673959016799927"
+      },
+      {
+        "turn_id": "u85",
+        "speaker": "user",
+        "text": "with all it is and was awesome so I don't work at a hospital anymore actually the hospital that I work at is now closed but",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1114.0",
+        "end_time_sec": "1121.8",
+        "asr_confidence": "0.9028682708740234"
+      },
+      {
+        "turn_id": "u86",
+        "speaker": "user",
+        "text": "but like I said it for family and friends",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1123.2",
+        "end_time_sec": "1124.7",
+        "asr_confidence": "0.8502516746520996"
+      },
+      {
+        "turn_id": "u87",
+        "speaker": "user",
+        "text": "I attended a friend of mine's Birth by accident she up she happen to have the same old BS I did with all my children and I came to bring food for her husband when she was in labor we were freaking out close friends and you know her labor picked up quite a bit when I got there she wanted me to say she didn't want me to leave I hadn't planned on it so that was the first birthday I attended outside of it you know myself giving birth which is a whole different experience so after that it was really interesting and interested in possibly setting nurse-midwifery",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1127.9",
+        "end_time_sec": "1164.1",
+        "asr_confidence": "0.9546566605567932"
+      },
+      {
+        "turn_id": "u88",
+        "speaker": "user",
+        "text": "but then I discovered this thing called being a doula which is really gives you even a lot more Hands-On one-on-one contact with the patient which is what I like",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1165.0",
+        "end_time_sec": "1175.6",
+        "asr_confidence": "0.9803750514984131"
+      },
+      {
+        "turn_id": "u89",
+        "speaker": "user",
+        "text": "so I tried to do that at the hospital in Inglewood about 15 years ago cuz my son is 15 and he was a year Old Mill 16 years ago so",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1176.7",
+        "end_time_sec": "1186.7",
+        "asr_confidence": "0.8811736702919006"
+      },
+      {
+        "turn_id": "u90",
+        "speaker": "user",
+        "text": "yeah and I've been",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1188.4",
+        "end_time_sec": "1190.6",
+        "asr_confidence": "0.9614418745040894"
+      },
+      {
+        "turn_id": "u91",
+        "speaker": "user",
+        "text": "well it can be challenging in terms of hours it depends on how long the woman is in labor but and you know also like for me I always tell my friends and family if they want me to be there dual that I cannot guarantee 100% I'm not doing it for business and that way and because of that I don't have like backup doulas that in case I'm sick or I'm not available somebody else could fill in for me so but so far it's been that all the women that have asked me I've been able to be there for some reason still there",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1192.4",
+        "end_time_sec": "1223.1",
+        "asr_confidence": "0.9627667665481567"
+      },
+      {
+        "turn_id": "u92",
+        "speaker": "user",
+        "text": "the the only one that I missed was one A friend of mine from church who wanted me to go with her second baby I was with her for her first but her labor went so fast you didn't call me in the middle of the night and she was like two hours of Labor she would even if it called me I would have been there in time so I went really fast but other than that you know",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1225.1",
+        "end_time_sec": "1244.7",
+        "asr_confidence": "0.9597954750061035"
+      },
+      {
+        "turn_id": "u93",
+        "speaker": "user",
+        "text": "yeah I've been I've been able to attend all the verse of people that have asked me to do",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1247.1",
+        "end_time_sec": "1251.1",
+        "asr_confidence": "0.8998710513114929"
+      },
+      {
+        "turn_id": "u94",
+        "speaker": "user",
+        "text": "all of life or in your job",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1258.3",
+        "end_time_sec": "1261.2",
+        "asr_confidence": "0.8426312208175659"
+      },
+      {
+        "turn_id": "u95",
+        "speaker": "user",
+        "text": "probably might my own births I mean my the birth of my own children",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1263.4",
+        "end_time_sec": "1268.3",
+        "asr_confidence": "0.9032662510871887"
+      },
+      {
+        "turn_id": "u96",
+        "speaker": "user",
+        "text": "like there's an extreme",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1272.1",
+        "end_time_sec": "1275.0",
+        "asr_confidence": "0.9739570617675781"
+      },
+      {
+        "turn_id": "u97",
+        "speaker": "user",
+        "text": "sense of Joy excitement relief because of course you're out of the pain and then like it's just it's just a matter of you know going forward from there but it's it's like something you can explain it's just it's awesome after you give birth so",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1276.0",
+        "end_time_sec": "1295.7",
+        "asr_confidence": "0.9477462768554688"
+      },
+      {
+        "turn_id": "u98",
+        "speaker": "user",
+        "text": "and I've experienced both ways I've done both natural and I at my last job was a spy a C-section so I've had both both experiences",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1296.8",
+        "end_time_sec": "1307.7",
+        "asr_confidence": "0.8831397891044617"
+      },
+      {
+        "turn_id": "u99",
+        "speaker": "user",
+        "text": "all right with my Fairchild had kind of a crazy nurse she was a little psychotic but other than that we laugh about it now but when I was in labor it wasn't funny and she",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1318.5",
+        "end_time_sec": "1329.2",
+        "asr_confidence": "0.9303385019302368"
+      },
+      {
+        "turn_id": "u100",
+        "speaker": "user",
+        "text": "she was not there when the doctor I mean it was my third child was",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1330.3",
+        "end_time_sec": "1334.8",
+        "asr_confidence": "0.8932109475135803"
+      },
+      {
+        "turn_id": "u101",
+        "speaker": "user",
+        "text": "born very quickly after he broke the water and wolf my husband was there but she was not in there with the doctor and she got in a lot of trouble because I only had like two contractions after that and my daughter was born in the bed so for me it was great cuz I didn't have to go through any of the labor but I'm sure they weren't happy that you fill out a lot of paperwork after that",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1335.8",
+        "end_time_sec": "1357.1",
+        "asr_confidence": "0.9619774222373962"
+      },
+      {
+        "turn_id": "u102",
+        "speaker": "user",
+        "text": "so",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1358.1",
+        "end_time_sec": "1358.6",
+        "asr_confidence": "0.8641213178634644"
+      },
+      {
+        "turn_id": "u103",
+        "speaker": "user",
+        "text": "now what I get myself for 10 or 20 years ago",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1365.8",
+        "end_time_sec": "1368.8",
+        "asr_confidence": "0.9442124962806702"
+      },
+      {
+        "turn_id": "u104",
+        "speaker": "user",
+        "text": "10 or 20 years ago is probably more not as some relaxed not as",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1375.0",
+        "end_time_sec": "1381.5",
+        "asr_confidence": "0.9377039074897766"
+      },
+      {
+        "turn_id": "u105",
+        "speaker": "user",
+        "text": "like I feeling out my age that",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1383.4",
+        "end_time_sec": "1385.2",
+        "asr_confidence": "0.9198024868965149"
+      },
+      {
+        "turn_id": "u106",
+        "speaker": "user",
+        "text": "I don't have the same concerns that I did then it's I don't worry about I don't worry at all about what people think about me I don't worry at all about what you know you know like why I noticed my daughters on Mom you can't wear that because people are going to say this I said I don't care you know but they do because it's still in their frame of mind that owe mom you have to dress like this or just like that or whatever so that would probably be at the wisdom that you you achieve with AIDs that you do see how life there's so many things that are more important in life than worrying about little things",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1388.8",
+        "end_time_sec": "1421.6",
+        "asr_confidence": "0.9695795178413391"
+      },
+      {
+        "turn_id": "u107",
+        "speaker": "user",
+        "text": "most proud of",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1428.8",
+        "end_time_sec": "1429.8",
+        "asr_confidence": "0.9770253896713257"
+      },
+      {
+        "turn_id": "u108",
+        "speaker": "user",
+        "text": "probably my family like my husband and my my children I mean the fact that we've stayed married that we weren't intact family that my kids see every day how their friends suffer who who come from divorced families or single parents and they they actually Express gratitude sometimes that we are married and we still you know we are still a family so I would say that's probably it",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1432.5",
+        "end_time_sec": "1461.7",
+        "asr_confidence": "0.9558478593826294"
+      },
+      {
+        "turn_id": "u109",
+        "speaker": "user",
+        "text": "probably the one of my best qualities is being able to listen to people and being able to not be judgemental through the years I've had a lot of experience with",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1471.2",
+        "end_time_sec": "1486.8",
+        "asr_confidence": "0.9647473096847534"
+      },
+      {
+        "turn_id": "u110",
+        "speaker": "user",
+        "text": "people with problems lot of friends with problems people I know from church and it's just taught me that everybody has weaknesses everybody has problems and I don't think I'm better than someone else if you think you're better than someone else and that's usually to me a sign that you don't know yourself well enough",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1489.1",
+        "end_time_sec": "1510.4",
+        "asr_confidence": "0.9584425687789917"
+      },
+      {
+        "turn_id": "u111",
+        "speaker": "user",
+        "text": "okay",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1515.8",
+        "end_time_sec": "1516.4",
+        "asr_confidence": "0.9752396941184998"
+      },
+      {
+        "turn_id": "u112",
+        "speaker": "user",
+        "text": "okay",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1520.8",
+        "end_time_sec": "1521.3",
+        "asr_confidence": "0.975234866142273"
+      },
+      {
+        "turn_id": "u113",
+        "speaker": "user",
+        "text": "goodbye",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1522.6",
+        "end_time_sec": "1523.1",
+        "asr_confidence": "0.9393614530563354"
+      },
+      {
+        "turn_id": "u114",
+        "speaker": "user",
+        "text": "real quick",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1537.6",
+        "end_time_sec": "1538.3",
+        "asr_confidence": "0.7114464640617371"
+      }
+    ]
+  },
+  "instructions": "Label independently using the transcript, metadata, and annotation guidelines. Do not inspect annotator B."
+}

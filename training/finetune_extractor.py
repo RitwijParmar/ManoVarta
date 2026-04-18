@@ -2,11 +2,14 @@
 from __future__ import annotations
 
 import argparse
+from contextlib import contextmanager
 import inspect
 import json
 import os
 from pathlib import Path
 import sys
+import threading
+import time
 
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
@@ -45,6 +48,19 @@ def parse_args():
     parser.add_argument("--eval-steps", type=int, default=50)
     parser.add_argument("--resume-from-checkpoint", default=None)
     parser.add_argument("--hf-token", default=None, help="Optional Hugging Face token for gated base models.")
+    parser.add_argument(
+        "--hf-snapshot-dir",
+        default=None,
+        help="Optional local directory used to cache a full model snapshot before loading.",
+    )
+    parser.add_argument(
+        "--base-model-path",
+        default=None,
+        help=(
+            "Optional local directory for the base model weights. "
+            "When set, this overrides remote base-model resolution and skips Hub download."
+        ),
+    )
     parser.add_argument(
         "--save-only-model",
         action="store_true",
@@ -117,6 +133,58 @@ def resolve_resume_checkpoint(output_dir: str, resume_arg: str | None) -> str | 
     return str(checkpoints[-1][1])
 
 
+@contextmanager
+def stage_heartbeat(label: str, interval_seconds: int = 30):
+    stop_event = threading.Event()
+    start = time.monotonic()
+
+    def _tick() -> None:
+        while not stop_event.wait(interval_seconds):
+            elapsed = int(time.monotonic() - start)
+            print(f"[finetune] still working on {label} (elapsed={elapsed}s)", flush=True)
+
+    worker = threading.Thread(target=_tick, daemon=True)
+    worker.start()
+    try:
+        yield
+    finally:
+        stop_event.set()
+        worker.join(timeout=1.0)
+
+
+def _looks_like_local_path(value: str) -> bool:
+    path = Path(value)
+    return path.exists() or value.startswith(("/", "./", "../"))
+
+
+def ensure_model_snapshot(
+    model_name: str,
+    token: str | None,
+    output_dir: str,
+    snapshot_dir_arg: str | None,
+) -> str:
+    if _looks_like_local_path(model_name):
+        return model_name
+
+    from huggingface_hub import snapshot_download
+
+    snapshot_root = Path(snapshot_dir_arg) if snapshot_dir_arg else (Path(output_dir) / "_hf_snapshot")
+    snapshot_root.mkdir(parents=True, exist_ok=True)
+    print(f"[finetune] preparing model snapshot for {model_name} under {snapshot_root}", flush=True)
+
+    with stage_heartbeat(f"snapshot download ({model_name})", interval_seconds=30):
+        snapshot_path = snapshot_download(
+            repo_id=model_name,
+            token=token,
+            local_dir=str(snapshot_root),
+            local_dir_use_symlinks=False,
+            resume_download=True,
+            max_workers=8,
+        )
+    print(f"[finetune] model snapshot ready at {snapshot_path}", flush=True)
+    return str(snapshot_path)
+
+
 def main() -> int:
     try:
         import torch
@@ -129,23 +197,49 @@ def main() -> int:
     from training.runtime_utils import detect_device, pick_model_dtype, pick_precision
 
     args = parse_args()
+    print("[finetune] starting extractor fine-tune", flush=True)
+    print(
+        f"[finetune] model={args.model_name} init_adapter={args.init_adapter or 'none'} "
+        f"train={args.train_file} eval={args.eval_file} output={args.output_dir}",
+        flush=True,
+    )
     hf_token = args.hf_token or os.environ.get("HF_TOKEN") or os.environ.get("HUGGING_FACE_HUB_TOKEN")
+    os.environ.setdefault("HF_HUB_ENABLE_HF_TRANSFER", "1")
+    os.environ.setdefault("HF_HUB_DISABLE_TELEMETRY", "1")
+    print(f"[finetune] hf_token_present={'yes' if hf_token else 'no'}", flush=True)
+    print("[finetune] loading dataset...", flush=True)
     dataset = load_dataset(
         "json",
         data_files={"train": args.train_file, "eval": args.eval_file},
+    )
+    print(
+        f"[finetune] dataset loaded: train={len(dataset['train'])} eval={len(dataset['eval'])}",
+        flush=True,
     )
     for split_name in dataset.keys():
         drop_cols = [col for col in dataset[split_name].column_names if col != "text"]
         if drop_cols:
             dataset[split_name] = dataset[split_name].remove_columns(drop_cols)
 
-    base_model_name = resolve_adapter_base_model(args.init_adapter) or args.model_name
+    base_model_name = args.base_model_path or resolve_adapter_base_model(args.init_adapter) or args.model_name
+    model_source = ensure_model_snapshot(
+        model_name=base_model_name,
+        token=hf_token,
+        output_dir=args.output_dir,
+        snapshot_dir_arg=args.hf_snapshot_dir,
+    )
     tokenizer_source = resolve_tokenizer_source(args.model_name, args.init_adapter)
+    if args.base_model_path and not _looks_like_local_path(tokenizer_source):
+        tokenizer_source = model_source
+    if tokenizer_source == base_model_name and not _looks_like_local_path(tokenizer_source):
+        tokenizer_source = model_source
 
+    print(f"[finetune] loading tokenizer from {tokenizer_source}...", flush=True)
     tokenizer = AutoTokenizer.from_pretrained(tokenizer_source, trust_remote_code=True, token=hf_token)
     if tokenizer.pad_token is None:
         tokenizer.pad_token = tokenizer.eos_token
     tokenizer.padding_side = "right"
+    print("[finetune] tokenizer ready", flush=True)
 
     device = detect_device(torch, args.device)
     use_bf16, use_fp16 = pick_precision(torch, args.precision, device=device)
@@ -169,7 +263,13 @@ def main() -> int:
         model_kwargs["torch_dtype"] = pick_model_dtype(torch, device, requested=args.model_dtype)
         model_kwargs["low_cpu_mem_usage"] = True
 
-    model = AutoModelForCausalLM.from_pretrained(base_model_name, **model_kwargs)
+    print(
+        f"[finetune] loading base model {model_source} (device={device}, quant_4bit={'yes' if quantization_config else 'no'})...",
+        flush=True,
+    )
+    with stage_heartbeat("base model load", interval_seconds=30):
+        model = AutoModelForCausalLM.from_pretrained(model_source, **model_kwargs)
+    print("[finetune] base model loaded", flush=True)
     if quantization_config is None and device != "cpu":
         model.to(device)
     if quantization_config is not None:
@@ -177,8 +277,11 @@ def main() -> int:
             model,
             use_gradient_checkpointing=args.gradient_checkpointing,
         )
+        print("[finetune] k-bit preparation complete", flush=True)
     if args.init_adapter:
+        print(f"[finetune] loading init adapter from {args.init_adapter}...", flush=True)
         model = PeftModel.from_pretrained(model, args.init_adapter, is_trainable=True, token=hf_token)
+        print("[finetune] init adapter loaded", flush=True)
     if args.gradient_checkpointing:
         model.gradient_checkpointing_enable()
         if hasattr(model, "config"):
@@ -212,6 +315,10 @@ def main() -> int:
         "gradient_checkpointing": args.gradient_checkpointing,
         "dataloader_pin_memory": device == "cuda",
         "optim": "adamw_torch",
+        "logging_strategy": "steps",
+        "log_level": "info",
+        "log_level_replica": "info",
+        "disable_tqdm": False,
     }
     if device == "cpu":
         training_kwargs["no_cuda"] = True
@@ -257,7 +364,12 @@ def main() -> int:
     trainer = SFTTrainer(**trainer_kwargs)
 
     resume_checkpoint = resolve_resume_checkpoint(args.output_dir, args.resume_from_checkpoint)
+    print(
+        f"[finetune] trainer ready, resume_checkpoint={resume_checkpoint or 'none'}; starting train...",
+        flush=True,
+    )
     trainer.train(resume_from_checkpoint=resume_checkpoint)
+    print("[finetune] train completed; saving model...", flush=True)
     trainer.save_model(args.output_dir)
     tokenizer.save_pretrained(args.output_dir)
     print(f"saved extractor checkpoint to {Path(args.output_dir).resolve()}")

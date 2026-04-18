@@ -1,0 +1,819 @@
+{
+  "session_id": "MVGOLD-EN-018",
+  "language": "en",
+  "cohort": "expansion",
+  "is_placeholder": false,
+  "collection_status": "collected_public_dataset",
+  "notes": "Imported from E-DAIC public participant archive.",
+  "profile": {
+    "age_years": null,
+    "age_band": "adult_unknown_from_source",
+    "occupation": "unknown_from_source",
+    "living_situation": "unknown_from_source",
+    "support_system": "unknown_from_source",
+    "gender": "female"
+  },
+  "source": {
+    "dataset": "e_daic_public",
+    "participant_id": "311",
+    "split": "train",
+    "phq_binary": "1",
+    "phq_score": "21",
+    "source_audio_path": "311_P/311_AUDIO.wav",
+    "source_transcript_path": "311_P/311_Transcript.csv"
+  },
+  "turns": [
+    {
+      "turn_id": "u1",
+      "speaker": "user",
+      "text": "now you go ahead and start at the virtual human going to chat with you for a bit and then when she said she'll let you know",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "17.7",
+      "end_time_sec": "23.9",
+      "asr_confidence": "0.8792749643325806"
+    },
+    {
+      "turn_id": "u2",
+      "speaker": "user",
+      "text": "okay",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "28.6",
+      "end_time_sec": "29.1",
+      "asr_confidence": "0.9811543822288513"
+    },
+    {
+      "turn_id": "u3",
+      "speaker": "user",
+      "text": "are you okay",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "55.1",
+      "end_time_sec": "55.9",
+      "asr_confidence": "0.9805552363395691"
+    },
+    {
+      "turn_id": "u4",
+      "speaker": "user",
+      "text": "yes",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "56.7",
+      "end_time_sec": "57.3",
+      "asr_confidence": "0.9877814054489136"
+    },
+    {
+      "turn_id": "u5",
+      "speaker": "user",
+      "text": "okay",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "62.9",
+      "end_time_sec": "63.5",
+      "asr_confidence": "0.975234866142273"
+    },
+    {
+      "turn_id": "u6",
+      "speaker": "user",
+      "text": "I want to move to LA",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "70.7",
+      "end_time_sec": "73.0",
+      "asr_confidence": "0.8710642457008362"
+    },
+    {
+      "turn_id": "u7",
+      "speaker": "user",
+      "text": "moved here a long time ago to live to go to work",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "75.9",
+      "end_time_sec": "79.1",
+      "asr_confidence": "0.9701703786849976"
+    },
+    {
+      "turn_id": "u8",
+      "speaker": "user",
+      "text": "well Arizona and Colorado",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "84.2",
+      "end_time_sec": "87.6",
+      "asr_confidence": "0.927575409412384"
+    },
+    {
+      "turn_id": "u9",
+      "speaker": "user",
+      "text": "it don't",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "94.2",
+      "end_time_sec": "94.9",
+      "asr_confidence": "0.7412031292915344"
+    },
+    {
+      "turn_id": "u10",
+      "speaker": "user",
+      "text": "money don't have the money for it",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "97.9",
+      "end_time_sec": "100.3",
+      "asr_confidence": "0.9748985171318054"
+    },
+    {
+      "turn_id": "u11",
+      "speaker": "user",
+      "text": "LA's much nicer",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "107.0",
+      "end_time_sec": "108.5",
+      "asr_confidence": "0.9092822074890137"
+    },
+    {
+      "turn_id": "u12",
+      "speaker": "user",
+      "text": "hum the people the movies the ocean when you wake up in the morning there seagulls instead of birds to you know regular Birds",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "116.1",
+      "end_time_sec": "130.5",
+      "asr_confidence": "0.8977555632591248"
+    },
+    {
+      "turn_id": "u13",
+      "speaker": "user",
+      "text": "the roads the roads really have a lot of potholes",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "137.3",
+      "end_time_sec": "144.3",
+      "asr_confidence": "0.9196353554725647"
+    },
+    {
+      "turn_id": "u14",
+      "speaker": "user",
+      "text": "it wasn't hard to get used I did like Arizona at all this really nice Nelly",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "153.4",
+      "end_time_sec": "159.6",
+      "asr_confidence": "0.9297229051589966"
+    },
+    {
+      "turn_id": "u15",
+      "speaker": "user",
+      "text": "no",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "165.9",
+      "end_time_sec": "166.5",
+      "asr_confidence": "0.9615849256515503"
+    },
+    {
+      "turn_id": "u16",
+      "speaker": "user",
+      "text": "why didn't I sleep eat walk my dogs that's about it",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "171.5",
+      "end_time_sec": "179.3",
+      "asr_confidence": "0.9252204298973083"
+    },
+    {
+      "turn_id": "u17",
+      "speaker": "user",
+      "text": "and be my dream job",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "183.1",
+      "end_time_sec": "184.5",
+      "asr_confidence": "0.9264572262763977"
+    },
+    {
+      "turn_id": "u18",
+      "speaker": "user",
+      "text": "I don't know screenwriter I guess",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "189.3",
+      "end_time_sec": "192.0",
+      "asr_confidence": "0.9702871441841125"
+    },
+    {
+      "turn_id": "u19",
+      "speaker": "user",
+      "text": "well I understand it's pretty hard",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "201.3",
+      "end_time_sec": "204.0",
+      "asr_confidence": "0.9856523275375366"
+    },
+    {
+      "turn_id": "u20",
+      "speaker": "user",
+      "text": "to write a good screenplay",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "205.2",
+      "end_time_sec": "206.3",
+      "asr_confidence": "0.9268598556518555"
+    },
+    {
+      "turn_id": "u21",
+      "speaker": "user",
+      "text": "yes",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "212.7",
+      "end_time_sec": "213.2",
+      "asr_confidence": "0.9793254137039185"
+    },
+    {
+      "turn_id": "u22",
+      "speaker": "user",
+      "text": "very well",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "220.7",
+      "end_time_sec": "221.9",
+      "asr_confidence": "0.9086601138114929"
+    },
+    {
+      "turn_id": "u23",
+      "speaker": "user",
+      "text": "well I didn't argue with a real person",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "235.0",
+      "end_time_sec": "237.2",
+      "asr_confidence": "0.987696647644043"
+    },
+    {
+      "turn_id": "u24",
+      "speaker": "user",
+      "text": "yes I have a person that I hear once in a while and I talked to them and I had an argument about them listening on my phone",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "241.9",
+      "end_time_sec": "249.6",
+      "asr_confidence": "0.9420980215072632"
+    },
+    {
+      "turn_id": "u25",
+      "speaker": "user",
+      "text": "avoidance",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "257.6",
+      "end_time_sec": "259.0",
+      "asr_confidence": "0.9628337621688843"
+    },
+    {
+      "turn_id": "u26",
+      "speaker": "user",
+      "text": "whatever annoys me",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "261.1",
+      "end_time_sec": "262.2",
+      "asr_confidence": "0.9553524255752563"
+    },
+    {
+      "turn_id": "u27",
+      "speaker": "user",
+      "text": "being homeless",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "273.7",
+      "end_time_sec": "275.4",
+      "asr_confidence": "0.9840243458747864"
+    },
+    {
+      "turn_id": "u28",
+      "speaker": "user",
+      "text": "yes it was",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "283.0",
+      "end_time_sec": "284.0",
+      "asr_confidence": "0.9876290559768677"
+    },
+    {
+      "turn_id": "u29",
+      "speaker": "user",
+      "text": "well they don't particularly like homeless people in LA",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "286.9",
+      "end_time_sec": "290.8",
+      "asr_confidence": "0.9685418009757996"
+    },
+    {
+      "turn_id": "u30",
+      "speaker": "user",
+      "text": "so it was it's really hard if your homeless",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "296.4",
+      "end_time_sec": "298.4",
+      "asr_confidence": "0.8704025149345398"
+    },
+    {
+      "turn_id": "u31",
+      "speaker": "user",
+      "text": "all right now I live in an apartment",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "303.3",
+      "end_time_sec": "304.6",
+      "asr_confidence": "0.8438808917999268"
+    },
+    {
+      "turn_id": "u32",
+      "speaker": "user",
+      "text": "I don't I don't like the neighbors",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "309.0",
+      "end_time_sec": "311.4",
+      "asr_confidence": "0.9805481433868408"
+    },
+    {
+      "turn_id": "u33",
+      "speaker": "user",
+      "text": "well that they harass you all the time",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "320.0",
+      "end_time_sec": "323.0",
+      "asr_confidence": "0.7537939548492432"
+    },
+    {
+      "turn_id": "u34",
+      "speaker": "user",
+      "text": "so don't come out of the apartment",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "325.6",
+      "end_time_sec": "326.7",
+      "asr_confidence": "0.869624137878418"
+    },
+    {
+      "turn_id": "u35",
+      "speaker": "user",
+      "text": "I will I didn't know when I moved there that they were horrible people so and I've complained to management but they don't do anything about it then just tell me to move",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "336.0",
+      "end_time_sec": "344.8",
+      "asr_confidence": "0.9431649446487427"
+    },
+    {
+      "turn_id": "u36",
+      "speaker": "user",
+      "text": "yes",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "358.2",
+      "end_time_sec": "358.9",
+      "asr_confidence": "0.9698822498321533"
+    },
+    {
+      "turn_id": "u37",
+      "speaker": "user",
+      "text": "back in the 90s",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "359.9",
+      "end_time_sec": "361.1",
+      "asr_confidence": "0.9631446003913879"
+    },
+    {
+      "turn_id": "u38",
+      "speaker": "user",
+      "text": "crying all the time",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "367.7",
+      "end_time_sec": "369.0",
+      "asr_confidence": "0.9522606134414673"
+    },
+    {
+      "turn_id": "u39",
+      "speaker": "user",
+      "text": "yeah",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "376.3",
+      "end_time_sec": "376.6",
+      "asr_confidence": "0.8666993379592896"
+    },
+    {
+      "turn_id": "u40",
+      "speaker": "user",
+      "text": "oh yes yes",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "379.6",
+      "end_time_sec": "380.8",
+      "asr_confidence": "0.8366263508796692"
+    },
+    {
+      "turn_id": "u41",
+      "speaker": "user",
+      "text": "I was in the hospital",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "383.3",
+      "end_time_sec": "384.8",
+      "asr_confidence": "0.9752764105796814"
+    },
+    {
+      "turn_id": "u42",
+      "speaker": "user",
+      "text": "2 months ago for 15 days",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "387.2",
+      "end_time_sec": "389.7",
+      "asr_confidence": "0.8967152833938599"
+    },
+    {
+      "turn_id": "u43",
+      "speaker": "user",
+      "text": "I was in there for depression for arguing with a person that's not real",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "395.9",
+      "end_time_sec": "402.4",
+      "asr_confidence": "0.9738938808441162"
+    },
+    {
+      "turn_id": "u44",
+      "speaker": "user",
+      "text": "I nor the person want to hear them",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "413.1",
+      "end_time_sec": "415.6",
+      "asr_confidence": "0.9490094780921936"
+    },
+    {
+      "turn_id": "u45",
+      "speaker": "user",
+      "text": "it's not hard anymore it was before I was going to therapy",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "418.7",
+      "end_time_sec": "423.0",
+      "asr_confidence": "0.9884178638458252"
+    },
+    {
+      "turn_id": "u46",
+      "speaker": "user",
+      "text": "help me be more cheerful and ignore",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "432.4",
+      "end_time_sec": "437.3",
+      "asr_confidence": "0.9729403257369995"
+    },
+    {
+      "turn_id": "u47",
+      "speaker": "user",
+      "text": "things that bother me",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "439.0",
+      "end_time_sec": "439.9",
+      "asr_confidence": "0.7853589653968811"
+    },
+    {
+      "turn_id": "u48",
+      "speaker": "user",
+      "text": "sleeping all the time eating too much arguing screaming at this",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "446.1",
+      "end_time_sec": "452.4",
+      "asr_confidence": "0.9809566140174866"
+    },
+    {
+      "turn_id": "u49",
+      "speaker": "user",
+      "text": "unreal person",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "453.6",
+      "end_time_sec": "454.4",
+      "asr_confidence": "0.9564793705940247"
+    },
+    {
+      "turn_id": "u50",
+      "speaker": "user",
+      "text": "before I found out",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "462.9",
+      "end_time_sec": "465.4",
+      "asr_confidence": "0.9164678454399109"
+    },
+    {
+      "turn_id": "u51",
+      "speaker": "user",
+      "text": "no",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "467.9",
+      "end_time_sec": "468.4",
+      "asr_confidence": "0.9366695284843445"
+    },
+    {
+      "turn_id": "u52",
+      "speaker": "user",
+      "text": "lately I've still been pretty depressed",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "474.1",
+      "end_time_sec": "476.8",
+      "asr_confidence": "0.9876289963722229"
+    },
+    {
+      "turn_id": "u53",
+      "speaker": "user",
+      "text": "yes",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "485.6",
+      "end_time_sec": "486.2",
+      "asr_confidence": "0.9938145279884338"
+    },
+    {
+      "turn_id": "u54",
+      "speaker": "user",
+      "text": "very hard",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "492.0",
+      "end_time_sec": "492.8",
+      "asr_confidence": "0.8885627388954163"
+    },
+    {
+      "turn_id": "u55",
+      "speaker": "user",
+      "text": "well I wake up about every 2 hours to go to the bathroom and",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "503.1",
+      "end_time_sec": "506.5",
+      "asr_confidence": "0.9453306794166565"
+    },
+    {
+      "turn_id": "u56",
+      "speaker": "user",
+      "text": "or something with some noise wakes me up",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "509.4",
+      "end_time_sec": "512.5",
+      "asr_confidence": "0.9359656572341919"
+    },
+    {
+      "turn_id": "u57",
+      "speaker": "user",
+      "text": "do I don't sleep well",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "513.7",
+      "end_time_sec": "514.8",
+      "asr_confidence": "0.8827987313270569"
+    },
+    {
+      "turn_id": "u58",
+      "speaker": "user",
+      "text": "I'm tired all the time",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "516.0",
+      "end_time_sec": "517.0",
+      "asr_confidence": "0.9876289963722229"
+    },
+    {
+      "turn_id": "u59",
+      "speaker": "user",
+      "text": "don't remember",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "526.1",
+      "end_time_sec": "527.1",
+      "asr_confidence": "0.9203178286552429"
+    },
+    {
+      "turn_id": "u60",
+      "speaker": "user",
+      "text": "no spending time with my dog",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "538.1",
+      "end_time_sec": "539.7",
+      "asr_confidence": "0.8618270754814148"
+    },
+    {
+      "turn_id": "u61",
+      "speaker": "user",
+      "text": "her dogs I have two dogs",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "541.7",
+      "end_time_sec": "543.2",
+      "asr_confidence": "0.9127368927001953"
+    },
+    {
+      "turn_id": "u62",
+      "speaker": "user",
+      "text": "can't think of anything",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "554.2",
+      "end_time_sec": "555.2",
+      "asr_confidence": "0.980528712272644"
+    },
+    {
+      "turn_id": "u63",
+      "speaker": "user",
+      "text": "I try hard",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "563.4",
+      "end_time_sec": "564.8",
+      "asr_confidence": "0.9796972274780273"
+    },
+    {
+      "turn_id": "u64",
+      "speaker": "user",
+      "text": "I have no idea I don't know",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "574.3",
+      "end_time_sec": "577.8",
+      "asr_confidence": "0.9719445705413818"
+    },
+    {
+      "turn_id": "u65",
+      "speaker": "user",
+      "text": "all my kids",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "583.9",
+      "end_time_sec": "584.8",
+      "asr_confidence": "0.8625776767730713"
+    },
+    {
+      "turn_id": "u66",
+      "speaker": "user",
+      "text": "I have two kids a girl and a boy",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "588.0",
+      "end_time_sec": "590.0",
+      "asr_confidence": "0.9843160510063171"
+    },
+    {
+      "turn_id": "u67",
+      "speaker": "user",
+      "text": "the kids are great",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "597.1",
+      "end_time_sec": "600.0",
+      "asr_confidence": "0.9598571062088013"
+    },
+    {
+      "turn_id": "u68",
+      "speaker": "user",
+      "text": "are trying to get them to do the right thing",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "604.6",
+      "end_time_sec": "606.9",
+      "asr_confidence": "0.912114143371582"
+    },
+    {
+      "turn_id": "u69",
+      "speaker": "user",
+      "text": "trying to get them to stay in school",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "611.4",
+      "end_time_sec": "613.9",
+      "asr_confidence": "0.9827752709388733"
+    },
+    {
+      "turn_id": "u70",
+      "speaker": "user",
+      "text": "no",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "621.6",
+      "end_time_sec": "622.1",
+      "asr_confidence": "0.9599179029464722"
+    },
+    {
+      "turn_id": "u71",
+      "speaker": "user",
+      "text": "what are you trying to do the right thing and it doesn't always work out",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "629.9",
+      "end_time_sec": "634.6",
+      "asr_confidence": "0.9278814792633057"
+    },
+    {
+      "turn_id": "u72",
+      "speaker": "user",
+      "text": "yes",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "639.0",
+      "end_time_sec": "639.6",
+      "asr_confidence": "0.9811806678771973"
+    },
+    {
+      "turn_id": "u73",
+      "speaker": "user",
+      "text": "well pretty close",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "647.8",
+      "end_time_sec": "648.9",
+      "asr_confidence": "0.7763084173202515"
+    },
+    {
+      "turn_id": "u74",
+      "speaker": "user",
+      "text": "I think I'd today's kids",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "656.1",
+      "end_time_sec": "657.6",
+      "asr_confidence": "0.8039022088050842"
+    },
+    {
+      "turn_id": "u75",
+      "speaker": "user",
+      "text": "they're just like any other kids",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "659.8",
+      "end_time_sec": "662.6",
+      "asr_confidence": "0.9080509543418884"
+    },
+    {
+      "turn_id": "u76",
+      "speaker": "user",
+      "text": "kids are fine",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "666.0",
+      "end_time_sec": "667.0",
+      "asr_confidence": "0.9408519864082336"
+    },
+    {
+      "turn_id": "u77",
+      "speaker": "user",
+      "text": "yes moving to the apartment I'm living in",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "673.0",
+      "end_time_sec": "675.5",
+      "asr_confidence": "0.9562904834747314"
+    },
+    {
+      "turn_id": "u78",
+      "speaker": "user",
+      "text": "like I said I don't",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "677.4",
+      "end_time_sec": "679.2",
+      "asr_confidence": "0.881068229675293"
+    },
+    {
+      "turn_id": "u79",
+      "speaker": "user",
+      "text": "my second myself tonight 20 years ago",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "683.0",
+      "end_time_sec": "685.1",
+      "asr_confidence": "0.8973140716552734"
+    },
+    {
+      "turn_id": "u80",
+      "speaker": "user",
+      "text": "stay away from my ex-husband",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "690.3",
+      "end_time_sec": "692.3",
+      "asr_confidence": "0.9712088108062744"
+    },
+    {
+      "turn_id": "u81",
+      "speaker": "user",
+      "text": "a positive influence",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "700.4",
+      "end_time_sec": "701.7",
+      "asr_confidence": "0.9529543519020081"
+    },
+    {
+      "turn_id": "u82",
+      "speaker": "user",
+      "text": "tell my daughter I think my daughter has",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "703.1",
+      "end_time_sec": "705.8",
+      "asr_confidence": "0.8881685733795166"
+    },
+    {
+      "turn_id": "u83",
+      "speaker": "user",
+      "text": "I'll because she's going to graduate from college in May and so she's managed to stay in school and she has a child but she's trying to do the right things",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "710.3",
+      "end_time_sec": "721.4",
+      "asr_confidence": "0.9418118000030518"
+    },
+    {
+      "turn_id": "u84",
+      "speaker": "user",
+      "text": "do you want to talk about anything else",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "736.9",
+      "end_time_sec": "738.3",
+      "asr_confidence": "0.9551013112068176"
+    },
+    {
+      "turn_id": "u85",
+      "speaker": "user",
+      "text": "okay",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "748.5",
+      "end_time_sec": "749.6",
+      "asr_confidence": "0.9542723298072815"
+    },
+    {
+      "turn_id": "u86",
+      "speaker": "user",
+      "text": "bye",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "751.7",
+      "end_time_sec": "752.2",
+      "asr_confidence": "0.6342266798019409"
+    },
+    {
+      "turn_id": "u87",
+      "speaker": "user",
+      "text": "the ring the bell now",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "756.9",
+      "end_time_sec": "758.9",
+      "asr_confidence": "0.8432052731513977"
+    },
+    {
+      "turn_id": "u88",
+      "speaker": "user",
+      "text": "yes",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "763.4",
+      "end_time_sec": "763.9",
+      "asr_confidence": "0.9660468101501465"
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{"items": [{"item_id": "phq_q1_anhedonia", "value": 1}, {"item_id": "phq_q2_low_mood", "value": 1}, {"item_id": "phq_q3_sleep", "value": 2}, {"item_id": "phq_q4_fatigue", "value": 1}, {"item_id": "phq_q5_appetite", "value": 1}, {"item_id": "phq_q6_worthlessness", "value": 2}, {"item_id": "phq_q7_concentration", "value": 1}, {"item_id": "gad_q1_nervous", "value": 1}, {"item_id": "gad_q2_control_worry", "value": 1}, {"item_id": "gad_q3_excessive_worry", "value": 1}, {"item_id": "gad_q4_trouble_relaxing", "value": 1}, {"item_id": "gad_q6_irritability", "value": 1}, {"item_id": "gad_q7_fear_awful", "value": 1}], "safety_level": "review"}|>
+Language: hi
+Use these item ids:
+- phq_q1_anhedonia: बिना किसी कारण के रोना या घुटना लगाना कम हो गया है
+- phq_q2_low_mood: असरताला (खुशी या उत्साह में कमी या निराशा का भाव)
+- phq_q3_sleep: नींद (नींद में परेशानी या ज़्यादा सोना)
+- phq_q4_fatigue: थकान (ऊर्जा में कमी या थकान)
+- phq_q5_appetite: भूख (भोजन में कमी या ज़्यादा खाना)
+- phq_q6_worthlessness: निराशा (बेकार महसूस करना या ज़िम्मेदारी निभाने में कठिनाई)
+- phq_q7_concentration: ध्यान (केंद्रित रहने या फैसला लेने में कठिनाई)
+- phq_q8_psychomotor: शारीरिक तनाव (शरीर में झुर्री या ऊर्जा में कमी)
+- phq_q9_self_harm: नुकसान (खुद को नुकसान पहुँचाने या आत्महत्या के विचार)
+- gad_q1_nervous: घबराहट (चिंता या तनाव)
+- gad_q2_control_worry: चिंता को नियंत्रित करना (चिंता को रोकना या नियंत्रित करना)
+- gad_q3_excessive_worry: अनावश्यक चिंता (अनावश्यक या अतिरिक्त चिंता)
+- gad_q4_trouble_relaxing: आराम करने में कठिनाई (आराम करने या शांत होने में कठिनाई)
+- gad_q5_restlessness: बेचैनी (बेचैनी या हलचल)
+- gad_q

@@ -1,0 +1,35 @@
+{
+  "session_id": "MVGOLD-HI-015",
+  "language": "hi",
+  "cohort": "expansion",
+  "is_placeholder": false,
+  "collection_status": "collected_public_dataset",
+  "notes": "Imported from IndicVoices Hindi valid split; repurposed as a Hindi pilot audio set for multilingual voice extension. This source was locally dual-annotated and adjudicated for PHQ-9/GAD-7, but it is not a native mental-health screening corpus.",
+  "profile": {
+    "age_years": null,
+    "age_band": "18-30",
+    "occupation": "Student",
+    "living_situation": "Urban",
+    "support_system": "not_provided_in_source",
+    "state": "Rajasthan",
+    "district": "Jodhpur",
+    "gender": "Female"
+  },
+  "source": {
+    "dataset": "indicvoices",
+    "split": "Hindi/v1/valid",
+    "source_json_path": "Hindi/v1/valid/5348024557539277.json",
+    "source_wav_path": "Hindi/v1/valid/5348024557539277.wav",
+    "speaker_id": "S4257208000346467",
+    "scenario": "Extempore",
+    "task_name": "Task of Fives"
+  },
+  "turns": [
+    {
+      "turn_id": "u1",
+      "speaker": "user",
+      "text": "न्यूयॉर्क [swallowing] स्पेन रशिया लंदन और दुबई",
+      "source_type": "read_or_prompted_utterance"
+    }
+  ]
+}

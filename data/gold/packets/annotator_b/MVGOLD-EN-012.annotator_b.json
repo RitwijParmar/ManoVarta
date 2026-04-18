@@ -1,0 +1,495 @@
+{
+  "session_id": "MVGOLD-EN-012",
+  "language": "en",
+  "cohort": "expansion",
+  "target_primary_domain": "fear",
+  "target_risk_band": "none",
+  "packet_stage": "annotator_b",
+  "target_output_file": "data/gold/labels/MVGOLD-EN-012.annotator_b.json",
+  "related_files": {
+    "audio_file": "data/gold/audio/en/MVGOLD-EN-012.wav",
+    "transcript_file": "data/gold/transcripts/en/MVGOLD-EN-012.json",
+    "annotator_a_file": "data/gold/labels/MVGOLD-EN-012.annotator_a.json",
+    "annotator_b_file": "data/gold/labels/MVGOLD-EN-012.annotator_b.json",
+    "adjudicated_label_file": "data/gold/labels/MVGOLD-EN-012.adjudicated.json"
+  },
+  "metadata": {
+    "session_id": "MVGOLD-EN-012",
+    "participant_id": "318",
+    "language": "en",
+    "age_years": "",
+    "age_band": "adult_unknown_from_source",
+    "occupation": "unknown_from_source",
+    "living_situation": "unknown_from_source",
+    "support_system": "unknown_from_source",
+    "consent_recorded": "public_dataset_license",
+    "collection_source": "e_daic_public_2019",
+    "audio_file": "data/gold/audio/en/MVGOLD-EN-012.wav",
+    "transcript_file": "data/gold/transcripts/en/MVGOLD-EN-012.json",
+    "annotator_a_file": "data/gold/labels/MVGOLD-EN-012.annotator_a.json",
+    "annotator_b_file": "data/gold/labels/MVGOLD-EN-012.annotator_b.json",
+    "adjudicated_label_file": "data/gold/labels/MVGOLD-EN-012.adjudicated.json",
+    "split": "expansion",
+    "notes": "Imported from E-DAIC public participant archive; PHQ8 items from public labels, remaining items machine-inferred and require clinician review for strict claims."
+  },
+  "transcript": {
+    "session_id": "MVGOLD-EN-012",
+    "language": "en",
+    "cohort": "expansion",
+    "is_placeholder": false,
+    "collection_status": "collected_public_dataset",
+    "notes": "Imported from E-DAIC public participant archive.",
+    "profile": {
+      "age_years": null,
+      "age_band": "adult_unknown_from_source",
+      "occupation": "unknown_from_source",
+      "living_situation": "unknown_from_source",
+      "support_system": "unknown_from_source",
+      "gender": "male"
+    },
+    "source": {
+      "dataset": "e_daic_public",
+      "participant_id": "318",
+      "split": "train",
+      "phq_binary": "0",
+      "phq_score": "3",
+      "source_audio_path": "318_P/318_AUDIO.wav",
+      "source_transcript_path": "318_P/318_Transcript.csv"
+    },
+    "turns": [
+      {
+        "turn_id": "u1",
+        "speaker": "user",
+        "text": "all right",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "0.7000000000000001",
+        "end_time_sec": "1.6",
+        "asr_confidence": "0.7938972115516663"
+      },
+      {
+        "turn_id": "u2",
+        "speaker": "user",
+        "text": "okay",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "17.2",
+        "end_time_sec": "17.7",
+        "asr_confidence": "0.9338023662567139"
+      },
+      {
+        "turn_id": "u3",
+        "speaker": "user",
+        "text": "oh actually before that one thing I almost forgot to do something that stinks",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "22.0",
+        "end_time_sec": "25.8",
+        "asr_confidence": "0.9116658568382263"
+      },
+      {
+        "turn_id": "u4",
+        "speaker": "user",
+        "text": "are you okay",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "66.7",
+        "end_time_sec": "67.4",
+        "asr_confidence": "0.9759001731872559"
+      },
+      {
+        "turn_id": "u5",
+        "speaker": "user",
+        "text": "yes",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "68.1",
+        "end_time_sec": "68.7",
+        "asr_confidence": "0.9938145279884338"
+      },
+      {
+        "turn_id": "u6",
+        "speaker": "user",
+        "text": "I'm all right",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "73.1",
+        "end_time_sec": "73.7",
+        "asr_confidence": "0.6276119947433472"
+      },
+      {
+        "turn_id": "u7",
+        "speaker": "user",
+        "text": "Los Angeles California",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "78.1",
+        "end_time_sec": "79.2",
+        "asr_confidence": "0.9768490791320801"
+      },
+      {
+        "turn_id": "u8",
+        "speaker": "user",
+        "text": "the lights big city it's always something going on",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "86.9",
+        "end_time_sec": "91.8",
+        "asr_confidence": "0.9743776321411133"
+      },
+      {
+        "turn_id": "u9",
+        "speaker": "user",
+        "text": "the traffic and that's it",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "96.6",
+        "end_time_sec": "100.3",
+        "asr_confidence": "0.9022795557975769"
+      },
+      {
+        "turn_id": "u10",
+        "speaker": "user",
+        "text": "business administration and business management",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "106.5",
+        "end_time_sec": "109.0",
+        "asr_confidence": "0.9594318270683289"
+      },
+      {
+        "turn_id": "u11",
+        "speaker": "user",
+        "text": "not that about something else I'm doing networking at the moment",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "111.8",
+        "end_time_sec": "115.7",
+        "asr_confidence": "0.8861055374145508"
+      },
+      {
+        "turn_id": "u12",
+        "speaker": "user",
+        "text": "to open up a big clothing line and just Supply the whole world with clothing",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "120.4",
+        "end_time_sec": "127.6",
+        "asr_confidence": "0.9200933575630188"
+      },
+      {
+        "turn_id": "u13",
+        "speaker": "user",
+        "text": "yeah",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "134.9",
+        "end_time_sec": "135.3",
+        "asr_confidence": "0.9163756370544434"
+      },
+      {
+        "turn_id": "u14",
+        "speaker": "user",
+        "text": "definitely",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "137.3",
+        "end_time_sec": "138.3",
+        "asr_confidence": "0.9817631244659424"
+      },
+      {
+        "turn_id": "u15",
+        "speaker": "user",
+        "text": "I'm all about myself it's all about me",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "143.9",
+        "end_time_sec": "146.5",
+        "asr_confidence": "0.9334084987640381"
+      },
+      {
+        "turn_id": "u16",
+        "speaker": "user",
+        "text": "not often but more times than not yeah",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "151.7",
+        "end_time_sec": "154.3",
+        "asr_confidence": "0.9479576945304871"
+      },
+      {
+        "turn_id": "u17",
+        "speaker": "user",
+        "text": "being lied to and I guess people think you're dumber than do anything with you are",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "160.5",
+        "end_time_sec": "168.4",
+        "asr_confidence": "0.9057852029800415"
+      },
+      {
+        "turn_id": "u18",
+        "speaker": "user",
+        "text": "try to get away from everything going to my own space",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "176.6",
+        "end_time_sec": "181.3",
+        "asr_confidence": "0.9588395953178406"
+      },
+      {
+        "turn_id": "u19",
+        "speaker": "user",
+        "text": "very well I'm great at controlling my temper",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "185.5",
+        "end_time_sec": "188.2",
+        "asr_confidence": "0.9441441297531128"
+      },
+      {
+        "turn_id": "u20",
+        "speaker": "user",
+        "text": "probably like 2 days ago it was probably just over some sports it wasn't a real argument",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "195.3",
+        "end_time_sec": "201.5",
+        "asr_confidence": "0.8901183605194092"
+      },
+      {
+        "turn_id": "u21",
+        "speaker": "user",
+        "text": "not a lot but I travel enough",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "208.9",
+        "end_time_sec": "211.1",
+        "asr_confidence": "0.9397887587547302"
+      },
+      {
+        "turn_id": "u22",
+        "speaker": "user",
+        "text": "just being able to get a change of pace see somebody knows he new faces new environment",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "214.5",
+        "end_time_sec": "220.6",
+        "asr_confidence": "0.8842945098876953"
+      },
+      {
+        "turn_id": "u23",
+        "speaker": "user",
+        "text": "let me see the last trip I had was Vegas you know how Vegas cuz it was pretty fun it's a lot of a lot of drinking and a lot of partying going on",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "225.6",
+        "end_time_sec": "238.3",
+        "asr_confidence": "0.912081778049469"
+      },
+      {
+        "turn_id": "u24",
+        "speaker": "user",
+        "text": "I'm pretty open-minded I'm kind pretty much everybody I'm a pretty even-keel guy",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "247.5",
+        "end_time_sec": "255.6",
+        "asr_confidence": "0.9168780446052551"
+      },
+      {
+        "turn_id": "u25",
+        "speaker": "user",
+        "text": "it's all right it could be better",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "259.6",
+        "end_time_sec": "260.9",
+        "asr_confidence": "0.794622540473938"
+      },
+      {
+        "turn_id": "u26",
+        "speaker": "user",
+        "text": "no",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "263.1",
+        "end_time_sec": "263.6",
+        "asr_confidence": "0.9381767511367798"
+      },
+      {
+        "turn_id": "u27",
+        "speaker": "user",
+        "text": "no ma'am",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "269.5",
+        "end_time_sec": "271.6",
+        "asr_confidence": "0.938542366027832"
+      },
+      {
+        "turn_id": "u28",
+        "speaker": "user",
+        "text": "nope",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "275.0",
+        "end_time_sec": "275.6",
+        "asr_confidence": "0.9505056142807007"
+      },
+      {
+        "turn_id": "u29",
+        "speaker": "user",
+        "text": "no",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "278.3",
+        "end_time_sec": "278.9",
+        "asr_confidence": "0.9512693285942078"
+      },
+      {
+        "turn_id": "u30",
+        "speaker": "user",
+        "text": "lately it's been pretty tough I guess cuz I've been staying up so late but that's my fault",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "283.6",
+        "end_time_sec": "291.1",
+        "asr_confidence": "0.9285219311714172"
+      },
+      {
+        "turn_id": "u31",
+        "speaker": "user",
+        "text": "I don't know I guess I'm a night owl all of a sudden I'm turning into an hour",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "293.3",
+        "end_time_sec": "297.9",
+        "asr_confidence": "0.9498114585876465"
+      },
+      {
+        "turn_id": "u32",
+        "speaker": "user",
+        "text": "sluggish and tired all day if I don't sleep well all day I'm just laying around",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "304.9",
+        "end_time_sec": "309.6",
+        "asr_confidence": "0.97540283203125"
+      },
+      {
+        "turn_id": "u33",
+        "speaker": "user",
+        "text": "no not too much",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "316.8",
+        "end_time_sec": "318.4",
+        "asr_confidence": "0.9615774154663086"
+      },
+      {
+        "turn_id": "u34",
+        "speaker": "user",
+        "text": "give",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "328.8",
+        "end_time_sec": "329.2",
+        "asr_confidence": "0.9876290559768677"
+      },
+      {
+        "turn_id": "u35",
+        "speaker": "user",
+        "text": "stay focused and listen to the adults",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "331.7",
+        "end_time_sec": "335.0",
+        "asr_confidence": "0.9775972366333008"
+      },
+      {
+        "turn_id": "u36",
+        "speaker": "user",
+        "text": "yeah",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "342.3",
+        "end_time_sec": "342.9",
+        "asr_confidence": "0.8894045948982239"
+      },
+      {
+        "turn_id": "u37",
+        "speaker": "user",
+        "text": "self-explanatory I could have just listen to parents are other adults I tried to steer you in the right way and you know you're being a stubborn kid at that at those ages so it's like why do what are you talkin about I miss my life I can do what I want I don't have to listen to you but now I see that with every telling me was correct",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "346.8",
+        "end_time_sec": "366.9",
+        "asr_confidence": "0.9189614057540894"
+      },
+      {
+        "turn_id": "u38",
+        "speaker": "user",
+        "text": "how would your best friend describe",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "370.3",
+        "end_time_sec": "371.4",
+        "asr_confidence": "0.8636941313743591"
+      },
+      {
+        "turn_id": "u39",
+        "speaker": "user",
+        "text": "hilarious",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "373.1",
+        "end_time_sec": "375.2",
+        "asr_confidence": "0.9876290559768677"
+      },
+      {
+        "turn_id": "u40",
+        "speaker": "user",
+        "text": "are you to your family pretty close",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "382.7",
+        "end_time_sec": "385.3",
+        "asr_confidence": "0.8903201818466187"
+      },
+      {
+        "turn_id": "u41",
+        "speaker": "user",
+        "text": "both my parents mother and father",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "391.2",
+        "end_time_sec": "393.6",
+        "asr_confidence": "0.982792854309082"
+      },
+      {
+        "turn_id": "u42",
+        "speaker": "user",
+        "text": "recently did I do a New Year's Eve party I had thought I had the time of my life it was so fun",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "404.4",
+        "end_time_sec": "415.6",
+        "asr_confidence": "0.8207582831382751"
+      },
+      {
+        "turn_id": "u43",
+        "speaker": "user",
+        "text": "I'd love to hear all about",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "417.3",
+        "end_time_sec": "418.6",
+        "asr_confidence": "0.9626383781433105"
+      },
+      {
+        "turn_id": "u44",
+        "speaker": "user",
+        "text": "this New Year's Eve I went to a party at friend's house in Baldwin Hills area he had it at a pretty nice house it's a three-story house and it was like 350 people in there it was pretty fun but it was also not that fun because it was telling people and you couldn't really move so that was the only downfall of the size that I brought my new year in great with tons of friends and that's how supposed to be done",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "419.7",
+        "end_time_sec": "449.2",
+        "asr_confidence": "0.9726576805114746"
+      },
+      {
+        "turn_id": "u45",
+        "speaker": "user",
+        "text": "what are some things that usually put in",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "455.5",
+        "end_time_sec": "457.4",
+        "asr_confidence": "0.9486470818519592"
+      },
+      {
+        "turn_id": "u46",
+        "speaker": "user",
+        "text": "I'm generally in a good mood every day I mean waking up with me in a good mood I guess you can say that but I don't know how good a good meal",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "459.7",
+        "end_time_sec": "472.5",
+        "asr_confidence": "0.9537241458892822"
+      },
+      {
+        "turn_id": "u47",
+        "speaker": "user",
+        "text": "one of my most memorable experiences are probably when I was younger I was in Boy Scouts and we should go camping all the time and one year we went to Yellowstone or Yosemite one of those places and we had to work on a mountain biking merit badge and of course made from the city I'm like a mountain biking I can ride a mountain bike but once we got in the real mountains on got on real mountain bikes I gained a new respect for the mountain bikers it was pretty it was fun and pretty intense going downhill doing about 45 miles an hour and dirt on a bicycle was pretty intense and I was I'll never forget that",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "484.9",
+        "end_time_sec": "526.0",
+        "asr_confidence": "0.9543455839157104"
+      },
+      {
+        "turn_id": "u48",
+        "speaker": "user",
+        "text": "I don't know that's a tough one. What am I most proud of I don't know honestly",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "538.7",
+        "end_time_sec": "546.8",
+        "asr_confidence": "0.941261887550354"
+      }
+    ]
+  },
+  "instructions": "Label independently using the transcript, metadata, and annotation guidelines. Do not inspect annotator A."
+}

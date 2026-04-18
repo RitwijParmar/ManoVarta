@@ -1,0 +1,21 @@
+{"items": [{"item_id": "phq_q1_anhedonia", "value": 1}, {"item_id": "phq_q2_low_mood", "value": 1}, {"item_id": "phq_q3_sleep", "value": 2}, {"item_id": "phq_q4_fatigue", "value": 1}, {"item_id": "phq_q5_appetite", "value": 1}, {"item_id": "phq_q6_worthlessness", "value": 2}, {"item_id": "phq_q7_concentration", "value": 1}, {"item_id": "gad_q1_nervous", "value": 1}, {"item_id": "gad_q2_control_worry", "value": 2}, {"item_id": "gad_q3_excessive_worry", "value": 2}, {"item_id": "gad_q4_trouble_relaxing", "value": 2}, {"item_id": "gad_q5_restlessness", "value": 2}, {"item_id": "gad_q6_irritability", "value": 1}, {"item_id": "gad_q7_fear_awful", "value": 2}], "safety_level": "review"}|>
+<|user|>
+Language: hi
+Use these item ids:
+- phq_q1_anhedonia: रुचि का नुकसान (रोज़मर्रा में हित या आनंद में कमी)
+- phq_q2_low_mood: धीमापन या उदासी (उदासी, निराशा या खाली-खालीपन)
+- phq_q3_sleep: नींद (नींद में समस्या या भारी होना)
+- phq_q4_fatigue: थकान (ऊर्जा में कमी या थकान)
+- phq_q5_appetite: भूख (भोजन में ज़्यादा या कमी)
+- phq_q6_worthlessness: दोष का अहसास (असभी काम में निराशा या अक्षमता का अहसास)
+- phq_q7_concentration: ध्यान (ध्यान या निर्णय में समस्या)
+- gad_q1_nervous: घबराहट (चिंता, असुरक्षा या घबराहट)
+- gad_q2_control_worry: चिंता को रोकना (चिंता या तनाव को रोक पाना)
+- gad_q3_excessive_worry: अत्यधिक चिंता (अनावश्यक या अत्यधिक चिंता)
+- gad_q4_trouble_relaxing: आराम (शांत होने या आराम करने में कठिनाई)
+- gad_q5_restlessness: बेचैनी (बेचैनी या हलचल)
+- gad_q6_irritability: असहनशीलता (क्रोध या असहनशीलता में बढ़ोतरी)
+- gad_q7_fear_awful: कुछ भयानक होने का डर (कुछ भयानक या नियंत्रण से बाहर होने का डर)
+
+Return JSON with keys: items, safety_level.
+items must be

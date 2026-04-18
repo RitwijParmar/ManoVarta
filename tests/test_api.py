@@ -3,7 +3,7 @@ import io
 from fastapi.testclient import TestClient
 
 import manovarta_core.api as api_module
-from manovarta_core.dialogue import ANXIETY_LOOP_BREAK_PROMPTS, ANXIETY_LOOP_CLOSE_PROMPTS, FINAL_HOLD_MESSAGES, FINAL_HOLD_VARIANTS, FINAL_REST_MESSAGES, POST_CLOSE_CHOOSER_MESSAGES, DialoguePlanner
+from manovarta_core.dialogue import ANXIETY_LOOP_BREAK_PROMPTS, ANXIETY_LOOP_CLOSE_PROMPTS, FINAL_HOLD_MESSAGES, FINAL_HOLD_VARIANTS, FINAL_REST_MESSAGES, POST_CLOSE_CHOOSER_MESSAGES, POST_CLOSE_IDLE_MESSAGES, DialoguePlanner
 from manovarta_core.engine import RuntimeEngine
 from manovarta_core.schemas import ChatSession, DialoguePlan, Turn
 
@@ -55,6 +55,29 @@ def test_runtime_config_reports_huggingface_disabled_by_default():
     assert "chat_model" in body
     assert "huggingface_enabled" in body
     assert "self_hosted_inference_enabled" in body
+
+
+def test_add_turn_skips_prior_analysis_without_nudge(monkeypatch):
+    call_count = 0
+    original_analyze = api_module.engine.analyze
+
+    def wrapped_analyze(*args, **kwargs):
+        nonlocal call_count
+        call_count += 1
+        return original_analyze(*args, **kwargs)
+
+    monkeypatch.setattr(api_module.engine, "analyze", wrapped_analyze)
+
+    start = client.post("/chat/sessions", json={"language": "en"})
+    session_id = start.json()["session_id"]
+
+    turn = client.post(
+        f"/chat/sessions/{session_id}/turns",
+        json={"text": "I feel tired and my sleep has been bad lately."},
+    )
+
+    assert turn.status_code == 200
+    assert call_count == 1
 
 
 def test_demo_bootstrap_exposes_runtime_profiles_and_links():
@@ -251,6 +274,7 @@ def test_brief_guarded_reply_sets_guarded_style_profile():
     dialogue = turn.json()["snapshot"]["coverage"]["dialogue"]
     assert dialogue["user_style"]["verbosity"] == "brief"
     assert dialogue["user_style"]["openness"] in {"guarded", "cautious"}
+    assert any(key in dialogue["recommended_nudges"] for key in {"choice", "example", "scale"})
     assert "?" in reply
     assert "hurting yourself" not in reply.lower()
     assert any(token in reply.lower() for token in ("tired", "feeling", "example", "detail", "changes"))
@@ -1570,7 +1594,12 @@ def test_hindi_recent_anxiety_flow_stops_reopening_after_close_point():
     continuity_phrase = "अगर यह आपकी हाल की चिंता बातचीत से मिलता-जुलता लग रहा है"
     assert sum(continuity_phrase in reply for reply in replies) <= 1
     assert replies[-2].startswith("अब मेरे पास मुख्य पैटर्न पकड़ने लायक") or replies[-2].startswith("ठीक है। अभी") or replies[-2].startswith("मैं थोड़ा रुककर")
-    assert replies[-1].startswith("ठीक है। अभी") or replies[-1].startswith("अब मेरे पास मुख्य पैटर्न पकड़ने लायक") or replies[-1].startswith("अगर आप चाहें")
+    assert (
+        replies[-1].startswith("ठीक है। अभी")
+        or replies[-1].startswith("अब मेरे पास मुख्य पैटर्न पकड़ने लायक")
+        or replies[-1].startswith("अगर आप चाहें")
+        or replies[-1] == POST_CLOSE_IDLE_MESSAGES["hi"]
+    )
     assert "जब चिंता शुरू होती है" not in replies[-1]
 
 
@@ -1731,7 +1760,7 @@ def test_hindi_post_close_echo_does_not_cycle_hold_variants():
         json={"text": "ठीक है अभी के लिए मैं इसे वर्तमान सार मानकर रखता हूं अगर बाद में कोई एक जरूरी बात छूटी लगे तो आप उसे सीधे बता सकते हैं"},
     )
     assert echoed_hold.status_code == 200
-    assert echoed_hold.json()["assistant_turn"]["text"] == FINAL_REST_MESSAGES["hi"]
+    assert echoed_hold.json()["assistant_turn"]["text"] in {FINAL_REST_MESSAGES["hi"], POST_CLOSE_IDLE_MESSAGES["hi"]}
 
 
 def test_hindi_break_prompt_family_scoped_answer_closes_instead_of_reopening():

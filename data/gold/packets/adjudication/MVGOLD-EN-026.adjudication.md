@@ -1,0 +1,143 @@
+# MVGOLD-EN-026 adjudication packet
+
+- Language: `en`
+- Cohort: `expansion`
+- Target primary domain: `irritability`
+- Target risk band: `none`
+- Target output file: `data/gold/labels/MVGOLD-EN-026.adjudicated.json`
+
+## Metadata
+
+- Participant ID: `346`
+- Age years: ``
+- Age band: `adult_unknown_from_source`
+- Occupation: `unknown_from_source`
+- Living situation: `unknown_from_source`
+- Support system: `unknown_from_source`
+- Consent recorded: `public_dataset_license`
+- Collection source: `e_daic_public_2019`
+
+## Instructions
+
+Resolve disagreements between annotator A and annotator B, justify the decision, and save one final adjudicated label file.
+
+## Transcript
+
+- `u1` user: how to start up a virtual human and she's going to chat with you for a bit
+- `u2` user: okay
+- `u3` user: thank you
+- `u4` user: yes
+- `u5` user: I'm okay
+- `u6` user: hey Los Angeles
+- `u7` user: there's a lot of things to do I love the beach I love the I love it sunny all the time
+- `u8` user: I'm the amount of people
+- `u9` user: that's really about it behind of people
+- `u10` user: just a little
+- `u11` user: I just like going to new places and just discovering new things
+- `u12` user: I recently went to New York I was there for about three months and it was extremely boring I went to Western New York and it was extremely a snowy and it was an imposition why I didn't have a car so I can get to go very many places and I was in a small town so I
+- `u13` user: it was beautiful for what I got to see but really it wasn't really much to it
+- `u14` user: yeah
+- `u15` user: both I'm both an introvert and an extrovert
+- `u16` user: I really enjoy doing things for myself I have a lot of my own up my likes and dislikes and I spend a lot of time alone even though I had you have a lot of friends and when I do go out I I do tend to meet a lot of people but I also enjoy being by myself a lot
+- `u17` user: probably outgoing creative
+- `u18` user: talented fun trustworthy
+- `u19` user: I studied language and physics and
+- `u20` user: math
+- `u21` user: no I'm not I'm actually I'm up I'm trying to be an actress
+- `u22` user: I was something that I fell into when I was a teenager
+- `u23` user: and I really enjoyed doing it I hadn't done it for years so I figured why not I just came back to California to might as well try something that I did enjoy really doing
+- `u24` user: are you happy
+- `u25` user: so far I just got picked up by an agent so I haven't really done anything yet as an adult
+- `u26` user: I'm hoping hoping something it'll be fruitful
+- `u27` user: I really don't have and have too many
+- `u28` user: I guess my sister she's done really well
+- `u29` user: my boyfriend he's a
+- `u30` user: he's a very positive human being but really I haven't had too many positive influences
+- `u31` user: I'm close I mean we hang out I don't tell them everything they're kind of judgmental but other than that I mean I mean we hang out I mean I see them everyday
+- `u32` user: cheese
+- `u33` user: it's kind of hard for me to relax, try to watch TV and I read a lot
+- `u34` user: tell me about it I read I do a lot of sleeping I'm a little depressed so yeah it's kind of like I said it's really hard for me to relax
+- `u35` user: it isn't I tend to think a lot about things that stress me out been through a lot of a lot of stuff so I
+- `u36` user: yes I I don't I don't I don't sleep very well tonight and if I do fall asleep I wake up other than I usually with some kind of anxiety attacks
+- `u37` user: I dream a lot about the stuff that has a has affected me throughout the years so
+- `u38` user: usually Unocal dream about something that stressed me out and then I'll wake up and make my chest to hurt or just I just can't sleep all night because I just think it seemed to be I don't know if I'm afraid to go to sleep but I
+- `u39` user: I just I don't know I feel like they've got the vulnerable place for me because of stuff that have happened to me so
+- `u40` user: so I sleeping is just not really something I do well
+- `u41` user: tired I'm in a moody is very sensitive
+- `u42` user: yeah I'm just not a negative person which really that's not me
+- `u43` user: yeah I'm judgemental is not me either I just I'm just not a not a nice person to be around
+- `u44` user: I tried I spent a lot of my time reading I try to go out and do I force myself to go out and do things just to keep myself involved so that I don't just sit around in the end and dwell on the fact that I can't sleep and I try to get myself is exhausted as I possibly can buy running around and doing things
+- `u45` user: it's difficult I do like there is a part of me that doesn't want to I don't really want to go out and do things I have to actually force myself to if I have make appointment I got I make appointments just like for auditions or leaving to do this I am I attend to
+- `u46` user: just not like at the last minute I'll try to convince myself not to go but then I force myself to you anyways
+- `u47` user: I've been diagnosed for two instances I was diagnosed about three years three and a half years ago and then I was diagnosed again in August
+- `u48` user: the first time it was
+- `u49` user: I just wasn't because of the not sleeping and Leah Justice of the unbelievable stress and then the second time it was going to start with the not sleeping and then every moment of the day was just thinking about what happened to me
+- `u50` user: and I just like I just couldn't take it anymore so I figured I was getting too gloomy I was getting I come
+- `u51` user: not thinking life was worth it and I guess I just needed to see somebody before anyting escalated
+- `u52` user: yeah it was
+- `u53` user: find I do not
+- `u54` user: one of the reasons I went to New York was to try to get out of my environment and I'm not seem to help a lot and I'm out here I I was I just the counselors that I was going to just didn't really seem to be helping me much they just they just seem to be giving me a lot of medication and I don't believe that that's what I needed yeah so stressed lately I've been really sad and I don't know why
+- `u55` user: but like I said I've been trying to combat that by keeping myself busy
+- `u56` user: actually I'm kind of a couple days ago
+- `u57` user: I was actually really happen it was genuinely happy but then I went back to being you going back to feeling miserable
+- `u58` user: I realized
+- `u59` user: I got up in the morning I actually did get a good night of sleep and
+- `u60` user: I realized that I'm actually really lucky
+- `u61` user: cuz I've been through a lot in my life and I have somebody in my life who really loves me and somebody who is finally there for me and
+- `u62` user: you know gives me what I need emotionally and I was just really thankful for by and that made me really happy
+- `u63` user: yeah
+- `u64` user: thank you
+- `u65` user: Oggi's
+- `u66` user: I've had so many years of just
+- `u67` user: just bad there's a lot of bad that there has been a long time since I've been proud of anything I guess if anything it's my ability to survive through all the hardships I've been through
+- `u68` user: a lesser person I guess would have gotten rid of themselves a long time ago but even though like I'm really depressed and I feel gloomy and I just feel miserable about a lot of things there's got to be a silver lining
+- `u69` user: so
+- `u70` user: so yeah so me and like I guess that's what I'm proud of that
+- `u71` user: although whole bunch of bad things happen to me and hasn't ruined me I still try to be a good person and try not to be negative towards other people and
+- `u72` user: untruthful and I still I still have Drive-In me
+- `u73` user: huh so much
+- `u74` user: I lost marriage
+- `u75` user: I'm not getting out when I should have
+- `u76` user: Panda just
+- `u77` user: I regret a lot
+- `u78` user: the any situation that would have had a red flag
+- `u79` user: just get out of it you know some things just don't work and
+- `u80` user: no matter how hard you try no matter how much you put into it so I I I would tell myself to
+- `u81` user: it's not selfish to let go of a bad situation and not everybody can be helped so sometimes you just got to live for yourself and help yourself so I know not done had I known that then I I I probably would have done better in life
+- `u82` user: people who
+- `u83` user: when people are down on me for my faults that I have done that I have things that I've done in my past that people steal still relive when I'm trying to forgive myself people who are mean to other people people who talk poorly about people behind their backs people that are untrustworthy
+- `u84` user: just anybody who pick some a little guy you know people who don't care about the environment or animals
+- `u85` user: I just I think that everybody should be as good as I possibly can be and it's it's disheartening and it just makes me so mad that people just can't be people don't let people live people try to make everybody feel is negative and it's partly if they do and that makes me mad
+- `u86` user: event July 10th event and then
+- `u87` user: and then and then it's usually over I try not to bad-mouth people
+- `u88` user: I try to just talk through it until until it's gone and then it doesn't bother me anymore
+- `u89` user: I tried not to get angry because I have a really bad temper and did
+- `u90` user: and I can get out of hand so what I do is I I have something gets me so mad I tend to go and take a nap I'm not in that situation where I can just go and I usually just walk away from the situation and I try to clear my mind and come back to it
+- `u91` user: it was a couple days ago it was actually my mother it was about
+- `u92` user: actually she thought that I had taken a shirt from her and she was screaming and yelling at me and I was I was tired of my was it was late and I started to yell back at her unit because I was hurt that she would accuse me of something so petty
+- `u93` user: any
+- `u94` user: it's a going back to my past you know when I was younger in and I didn't care about you know people's things and I would just kind of take and do whatever I wanted to and I'm not so far from that person and it hurt me so I got mad and I think I started to yell and argue
+- `u95` user: kind of petty and stupid but at the time it seemed seemed viable
+- `u96` user: my most memorable experiences
+- `u97` user: I've had so many
+- `u98` user: Maybe
+- `u99` user: it was
+- `u100` user: I don't know
+- `u101` user: it was
+- `u102` user: probably graduating pharmacy school
+- `u103` user: I felt pretty great I didn't know if I was doing very very well or not and I ended up getting like on my last test scores I get end up getting like 98% and
+- `u104` user: I actually I did had no confidence that I had done it well it and class in school at all and I I didn't even know I was getting the grades I was getting so that was a really big accomplishment for me
+- `u105` user: and yeah that was great it was a great memory
+- `u106` user: unreliable
+- `u107` user: I am
+- `u108` user: I'm talented I
+- `u109` user: I'm a good listener I'm always there to help people I tend to always try to do the right thing
+- `u110` user: sometimes I actually forget that I have any good qualities but
+- `u111` user: I'm just
+- `u112` user: I am around that try to be you know his is good in the best person that I can meet other people and myself
+- `u113` user: Gwen, shows
+- `u114` user: just them
+- `u115` user: having moments where you just laugh with people
+- `u116` user: sometimes just rating puts me in a good mood
+- `u117` user: play that's about it
+- `u118` user: thank you

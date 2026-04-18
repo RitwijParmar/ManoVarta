@@ -1,0 +1,32 @@
+{
+  "generated_at": "2026-04-10T19:45:46Z",
+  "queues": {
+    "annotator_a": [],
+    "annotator_b": [],
+    "adjudicator": []
+  },
+  "daily_batches": {
+    "annotator_a": [],
+    "annotator_b": [],
+    "adjudicator": []
+  },
+  "progress_tracker": {
+    "total_sessions": 60,
+    "human_annotator_a_complete": 60,
+    "human_annotator_b_complete": 60,
+    "human_adjudication_complete": 60,
+    "dual_human_ready_for_adjudication": 60,
+    "sessions_with_dual_human_disagreement": 31,
+    "fully_human_complete_sessions": 60,
+    "annotator_a_remaining": 0,
+    "annotator_b_remaining": 0,
+    "adjudicator_remaining": 0,
+    "human_completion_rate": 1.0,
+    "estimated_days_remaining": {
+      "annotator_a": 0,
+      "annotator_b": 0,
+      "adjudicator": 0,
+      "overall_pipeline_days": 0
+    }
+  }
+}

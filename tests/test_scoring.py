@@ -46,6 +46,71 @@ def test_scoring_picks_up_hindi_worry_and_sleep():
     assert snapshot.items["phq_q3_sleep"].value == 2
 
 
+def test_scoring_picks_up_live_english_worry_loop_and_sleep_badly_phrasing():
+    turns = [
+        Turn(turn_id=1, speaker="user", text="I have been sleeping badly and worrying a lot for the last two weeks.", language_tag="en"),
+        Turn(
+            turn_id=2,
+            speaker="user",
+            text="I wake up around 3 or 4, feel exhausted all day, and my mind keeps looping even when I try to stop it.",
+            language_tag="en",
+        ),
+    ]
+
+    snapshot = ConversationScorer().analyze(turns, "en", SafetyMonitor().assess(turns))
+
+    assert snapshot.items["phq_q3_sleep"].value >= 2
+    assert snapshot.items["phq_q4_fatigue"].value >= 2
+    assert snapshot.items["gad_q2_control_worry"].value >= 2
+
+
+def test_scoring_picks_up_live_hindi_worry_loop_and_sleep_badly_phrasing():
+    turns = [
+        Turn(
+            turn_id=1,
+            speaker="user",
+            text="Pichhle do hafton se meri neend kharab hai aur dimaag mein chinta chalti rehti hai.",
+            language_tag="hi",
+        ),
+        Turn(
+            turn_id=2,
+            speaker="user",
+            text="Raat ko 3 baje aankh khul jaati hai, din bhar thakan rehti hai, aur dimaag ko rokne ki koshish karun tab bhi soch chalti rehti hai.",
+            language_tag="hi",
+        ),
+    ]
+
+    snapshot = ConversationScorer().analyze(turns, "hi", SafetyMonitor().assess(turns))
+
+    assert snapshot.items["phq_q3_sleep"].value >= 2
+    assert snapshot.items["phq_q4_fatigue"].value >= 2
+    assert snapshot.items["gad_q2_control_worry"].value >= 2
+
+
+def test_scoring_picks_up_later_turn_interest_guilt_and_focus_phrasing():
+    turns = [
+        Turn(turn_id=1, speaker="user", text="Sleep has been bad and my mind keeps looping.", language_tag="en"),
+        Turn(
+            turn_id=2,
+            speaker="user",
+            text="I have also lost interest in music, feel guilty that I am disappointing people, and it is harder to focus in class.",
+            language_tag="en",
+        ),
+        Turn(
+            turn_id=3,
+            speaker="user",
+            text="Ab gaane sunne ya doston se baat karne ka mann nahi karta, khud par guilt hota hai, aur dhyan bhi kam lagta hai.",
+            language_tag="hinglish",
+        ),
+    ]
+
+    snapshot = ConversationScorer().analyze(turns, "hinglish", SafetyMonitor().assess(turns))
+
+    assert snapshot.items["phq_q1_anhedonia"].value >= 2
+    assert snapshot.items["phq_q6_worthlessness"].value >= 1
+    assert snapshot.items["phq_q7_concentration"].value >= 1
+
+
 def test_scoring_abstains_on_unresolved_contradiction():
     turns = [
         Turn(turn_id=1, speaker="assistant", text="How has your sleep been?", language_tag="en"),
@@ -141,7 +206,7 @@ def test_scoring_picks_up_devanagari_hindi_review_and_urgent_cues():
     snapshot = ConversationScorer().analyze(turns, "hi", SafetyMonitor().assess(turns))
 
     assert snapshot.items["phq_q9_self_harm"].value >= 2
-    assert snapshot.items["gad_q7_fear_awful"].value >= 1
+    assert snapshot.items["gad_q7_afraid"].value >= 1
 
 
 def test_scoring_picks_up_hinglish_worry_relaxing_and_restlessness():

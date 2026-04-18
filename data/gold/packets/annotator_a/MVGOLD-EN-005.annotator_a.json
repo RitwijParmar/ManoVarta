@@ -1,0 +1,963 @@
+{
+  "session_id": "MVGOLD-EN-005",
+  "language": "en",
+  "cohort": "pilot",
+  "target_primary_domain": "worthlessness",
+  "target_risk_band": "review_candidate",
+  "packet_stage": "annotator_a",
+  "target_output_file": "data/gold/labels/MVGOLD-EN-005.annotator_a.json",
+  "related_files": {
+    "audio_file": "data/gold/audio/en/MVGOLD-EN-005.wav",
+    "transcript_file": "data/gold/transcripts/en/MVGOLD-EN-005.json",
+    "annotator_a_file": "data/gold/labels/MVGOLD-EN-005.annotator_a.json",
+    "annotator_b_file": "data/gold/labels/MVGOLD-EN-005.annotator_b.json",
+    "adjudicated_label_file": "data/gold/labels/MVGOLD-EN-005.adjudicated.json"
+  },
+  "metadata": {
+    "session_id": "MVGOLD-EN-005",
+    "participant_id": "307",
+    "language": "en",
+    "age_years": "",
+    "age_band": "adult_unknown_from_source",
+    "occupation": "unknown_from_source",
+    "living_situation": "unknown_from_source",
+    "support_system": "unknown_from_source",
+    "consent_recorded": "public_dataset_license",
+    "collection_source": "e_daic_public_2019",
+    "audio_file": "data/gold/audio/en/MVGOLD-EN-005.wav",
+    "transcript_file": "data/gold/transcripts/en/MVGOLD-EN-005.json",
+    "annotator_a_file": "data/gold/labels/MVGOLD-EN-005.annotator_a.json",
+    "annotator_b_file": "data/gold/labels/MVGOLD-EN-005.annotator_b.json",
+    "adjudicated_label_file": "data/gold/labels/MVGOLD-EN-005.adjudicated.json",
+    "split": "pilot",
+    "notes": "Imported from E-DAIC public participant archive; PHQ8 items from public labels, remaining items machine-inferred and require clinician review for strict claims."
+  },
+  "transcript": {
+    "session_id": "MVGOLD-EN-005",
+    "language": "en",
+    "cohort": "pilot",
+    "is_placeholder": false,
+    "collection_status": "collected_public_dataset",
+    "notes": "Imported from E-DAIC public participant archive.",
+    "profile": {
+      "age_years": null,
+      "age_band": "adult_unknown_from_source",
+      "occupation": "unknown_from_source",
+      "living_situation": "unknown_from_source",
+      "support_system": "unknown_from_source",
+      "gender": "female"
+    },
+    "source": {
+      "dataset": "e_daic_public",
+      "participant_id": "307",
+      "split": "train",
+      "phq_binary": "0",
+      "phq_score": "4",
+      "source_audio_path": "307_P/307_AUDIO.wav",
+      "source_transcript_path": "307_P/307_Transcript.csv"
+    },
+    "turns": [
+      {
+        "turn_id": "u1",
+        "speaker": "user",
+        "text": "looking at you all right okay so now let's make sure the Xbox Kinect is picking you up with his move around dance",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "0.1",
+        "end_time_sec": "5.9",
+        "asr_confidence": "0.8865955471992493"
+      },
+      {
+        "turn_id": "u2",
+        "speaker": "user",
+        "text": "can't wait till this guy pops up is like a little green skeleton",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "7.3",
+        "end_time_sec": "11.1",
+        "asr_confidence": "0.9449302554130554"
+      },
+      {
+        "turn_id": "u3",
+        "speaker": "user",
+        "text": "okay when is the temperature let you know and you can just hit the door. So let me know.",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "25.0",
+        "end_time_sec": "29.9",
+        "asr_confidence": "0.8972275257110596"
+      },
+      {
+        "turn_id": "u4",
+        "speaker": "user",
+        "text": "thanks for coming in today I was created to talk to people in a safe and secure environment think of me as a friend I don't judge I can I'm a computer I'm here to learn about people and would love to learn about you I'll ask a few questions to get it started and please feel",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "32.3",
+        "end_time_sec": "51.2",
+        "asr_confidence": "0.9680301547050476"
+      },
+      {
+        "turn_id": "u5",
+        "speaker": "user",
+        "text": "your answers",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "52.4",
+        "end_time_sec": "53.1",
+        "asr_confidence": "0.9223494529724121"
+      },
+      {
+        "turn_id": "u6",
+        "speaker": "user",
+        "text": "where are you from originally",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "54.8",
+        "end_time_sec": "56.2",
+        "asr_confidence": "0.9745212197303772"
+      },
+      {
+        "turn_id": "u7",
+        "speaker": "user",
+        "text": "Moscow",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "57.6",
+        "end_time_sec": "59.3",
+        "asr_confidence": "0.6202943325042725"
+      },
+      {
+        "turn_id": "u8",
+        "speaker": "user",
+        "text": "vitamins for life my family move to the US and then I moved down here eventually for college",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "61.6",
+        "end_time_sec": "67.9",
+        "asr_confidence": "0.8624744415283203"
+      },
+      {
+        "turn_id": "u9",
+        "speaker": "user",
+        "text": "how easy was it for you to get used to",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "69.4",
+        "end_time_sec": "71.3",
+        "asr_confidence": "0.9277381300926208"
+      },
+      {
+        "turn_id": "u10",
+        "speaker": "user",
+        "text": "long time to leave the money here for about a year since I graduated so there's been a lot of ups and downs but finally gotten adjusted to it so it took a while though that's good",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "73.2",
+        "end_time_sec": "86.2",
+        "asr_confidence": "0.9206718802452087"
+      },
+      {
+        "turn_id": "u11",
+        "speaker": "user",
+        "text": "how do you like your living situation. I have two roommates and there's a little bit of drama here and there between the girls but for the most part after a year in a couple months I think we finally learned how to live together but it was pretty much like a reality TV show for a while",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "88.2",
+        "end_time_sec": "107.9",
+        "asr_confidence": "0.911643385887146"
+      },
+      {
+        "turn_id": "u12",
+        "speaker": "user",
+        "text": "how do you know the ones from college and the other one I found on Craigslist",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "108.7",
+        "end_time_sec": "114.5",
+        "asr_confidence": "0.8135069608688354"
+      },
+      {
+        "turn_id": "u13",
+        "speaker": "user",
+        "text": "how close are you to that varies depending on whether or not we're mad at each other so I just pretty cuz",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "115.8",
+        "end_time_sec": "124.8",
+        "asr_confidence": "0.9423075914382935"
+      },
+      {
+        "turn_id": "u14",
+        "speaker": "user",
+        "text": "right now I kind of distant",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "125.9",
+        "end_time_sec": "127.4",
+        "asr_confidence": "0.9378812909126282"
+      },
+      {
+        "turn_id": "u15",
+        "speaker": "user",
+        "text": "tell me more about that event the distance",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "132.8",
+        "end_time_sec": "135.5",
+        "asr_confidence": "0.856248676776886"
+      },
+      {
+        "turn_id": "u16",
+        "speaker": "user",
+        "text": "okay, well we haven't seen each other around hung out in like 2 weeks cuz one of them got into like with car accident and so she's been distant since 10 and kind of locks herself up in her room",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "136.7",
+        "end_time_sec": "150.4",
+        "asr_confidence": "0.9185525178909302"
+      },
+      {
+        "turn_id": "u17",
+        "speaker": "user",
+        "text": "and the other one is always working late so we are scheduling has been off and the ones we made an attempt to hang out with anyone so it's kind of we're just waiting for someone I guess to make the first move",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "152.0",
+        "end_time_sec": "167.0",
+        "asr_confidence": "0.9362525939941406"
+      },
+      {
+        "turn_id": "u18",
+        "speaker": "user",
+        "text": "yeah that sucks it's okay",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "168.5",
+        "end_time_sec": "171.8",
+        "asr_confidence": "0.8507416844367981"
+      },
+      {
+        "turn_id": "u19",
+        "speaker": "user",
+        "text": "how are you at controlling your temper",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "177.0",
+        "end_time_sec": "178.6",
+        "asr_confidence": "0.919170618057251"
+      },
+      {
+        "turn_id": "u20",
+        "speaker": "user",
+        "text": "it depends with whom",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "180.8",
+        "end_time_sec": "182.5",
+        "asr_confidence": "0.9014363288879395"
+      },
+      {
+        "turn_id": "u21",
+        "speaker": "user",
+        "text": "I'm dealing with I guess I would say it was them people I guess is my family's not very good my boyfriend is not very good but with other people that I might not know so well then I'm able to control little bit more but I'll do a little more passive aggressive rather than my full on anger",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "184.0",
+        "end_time_sec": "203.6",
+        "asr_confidence": "0.9444196820259094"
+      },
+      {
+        "turn_id": "u22",
+        "speaker": "user",
+        "text": "Sonic songs",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "209.3",
+        "end_time_sec": "211.4",
+        "asr_confidence": "0.8820968270301819"
+      },
+      {
+        "turn_id": "u23",
+        "speaker": "user",
+        "text": "Houston has been a positive influence in your life",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "213.5",
+        "end_time_sec": "215.6",
+        "asr_confidence": "0.9098418354988098"
+      },
+      {
+        "turn_id": "u24",
+        "speaker": "user",
+        "text": "she's probably been she's been we've been best friends for High School freshman year of high school when we first mom",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "219.6",
+        "end_time_sec": "227.2",
+        "asr_confidence": "0.905281126499176"
+      },
+      {
+        "turn_id": "u25",
+        "speaker": "user",
+        "text": "give me an example of that",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "231.2",
+        "end_time_sec": "233.0",
+        "asr_confidence": "0.8054195046424866"
+      },
+      {
+        "turn_id": "u26",
+        "speaker": "user",
+        "text": "as of what",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "233.9",
+        "end_time_sec": "236.2",
+        "asr_confidence": "0.9178692698478699"
+      },
+      {
+        "turn_id": "u27",
+        "speaker": "user",
+        "text": "how do you know that my friend to call we met in French class freshman year of high school we were in the same class and then we kind of surgeon homework together and we had a lot of cloud the same classes together and so you can send Hangouts and then we just became closer and stay really close since then",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "238.3",
+        "end_time_sec": "260.9",
+        "asr_confidence": "0.9309535622596741"
+      },
+      {
+        "turn_id": "u28",
+        "speaker": "user",
+        "text": "what are some things you like to do for fun at going out with friends and the bar is going dancing biking hiking staying active then the movies playing at Cedar Restaurant stop tography",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "263.8",
+        "end_time_sec": "281.0",
+        "asr_confidence": "0.9119190573692322"
+      },
+      {
+        "turn_id": "u29",
+        "speaker": "user",
+        "text": "was hanging out with friends I guess whatever okay",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "284.0",
+        "end_time_sec": "287.7",
+        "asr_confidence": "0.898820698261261"
+      },
+      {
+        "turn_id": "u30",
+        "speaker": "user",
+        "text": "how close are you to your family and various like I'm really close to them when it comes to things of a like schoolwork those kinds of things but when it comes to relationships and friendships and more personal personal things I don't really discuss that with them",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "289.2",
+        "end_time_sec": "308.7",
+        "asr_confidence": "0.9422053098678589"
+      },
+      {
+        "turn_id": "u31",
+        "speaker": "user",
+        "text": "Vegas superficially Club",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "309.5",
+        "end_time_sec": "311.7",
+        "asr_confidence": "0.826522707939148"
+      },
+      {
+        "turn_id": "u32",
+        "speaker": "user",
+        "text": "but I rely on them a lot so what by guess",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "312.7",
+        "end_time_sec": "315.5",
+        "asr_confidence": "0.9170041680335999"
+      },
+      {
+        "turn_id": "u33",
+        "speaker": "user",
+        "text": "what are some things that make you really mad",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "319.0",
+        "end_time_sec": "321.0",
+        "asr_confidence": "0.9605861902236938"
+      },
+      {
+        "turn_id": "u34",
+        "speaker": "user",
+        "text": "I guess it depends who it is again I guess people who are in considerate and thoughtful flaky ignorant and",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "323.8",
+        "end_time_sec": "341.2",
+        "asr_confidence": "0.9046990275382996"
+      },
+      {
+        "turn_id": "u35",
+        "speaker": "user",
+        "text": "yeah and get those kinds of people and then people just and it's a lot of things that people react to different situations can make me angry I guess",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "345.3",
+        "end_time_sec": "363.3",
+        "asr_confidence": "0.8697602152824402"
+      },
+      {
+        "turn_id": "u36",
+        "speaker": "user",
+        "text": "when was the last time you argue with someone and what was it about my boyfriend and we argued because he's trying to be healthy and workout and save money and so so finding that when he doesn't see the orders pizza in so he's not saving money and he's not very healthy and so I got frustrated with him cuz I'm constantly trying to push him to be healthy and that each time he was going to do it when you do it then he doesn't phase consulate breaking promises that's another thing that makes me angry people who don't follow through",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "366.7",
+        "end_time_sec": "401.3",
+        "asr_confidence": "0.9270200729370117"
+      },
+      {
+        "turn_id": "u37",
+        "speaker": "user",
+        "text": "yeah",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "402.0",
+        "end_time_sec": "402.3",
+        "asr_confidence": "0.7154158353805542"
+      },
+      {
+        "turn_id": "u38",
+        "speaker": "user",
+        "text": "do you feel that way often",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "403.6",
+        "end_time_sec": "404.8",
+        "asr_confidence": "0.9607861638069153"
+      },
+      {
+        "turn_id": "u39",
+        "speaker": "user",
+        "text": "about other people about myself or angry",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "406.3",
+        "end_time_sec": "409.3",
+        "asr_confidence": "0.9670785665512085"
+      },
+      {
+        "turn_id": "u40",
+        "speaker": "user",
+        "text": "whatever comes to your mind",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "410.6",
+        "end_time_sec": "411.6",
+        "asr_confidence": "0.938183605670929"
+      },
+      {
+        "turn_id": "u41",
+        "speaker": "user",
+        "text": "angry I am so glad that now I don't feel angry often",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "419.6",
+        "end_time_sec": "422.6",
+        "asr_confidence": "0.9303334951400757"
+      },
+      {
+        "turn_id": "u42",
+        "speaker": "user",
+        "text": "okay",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "424.5",
+        "end_time_sec": "425.0",
+        "asr_confidence": "0.975234866142273"
+      },
+      {
+        "turn_id": "u43",
+        "speaker": "user",
+        "text": "what's your dream job",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "426.6",
+        "end_time_sec": "427.6",
+        "asr_confidence": "0.9876290559768677"
+      },
+      {
+        "turn_id": "u44",
+        "speaker": "user",
+        "text": "that is a tough one how about getting paid to leave me now that's kind of what I'm going to figure out right now cuz I quit my full-time job because I hated it as opposed to sitting in an office all day which I thought was extremely boring so now I work in a restaurant job and I'm too old for a second job to support myself my dream job",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "430.7",
+        "end_time_sec": "454.1",
+        "asr_confidence": "0.946251630783081"
+      },
+      {
+        "turn_id": "u45",
+        "speaker": "user",
+        "text": "I don't know what it would be but I know it involves people and I'd love to have some kind of like finished product or some kind of accomplishment turns band and yet there's something I realized I like to see",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "455.6",
+        "end_time_sec": "467.6",
+        "asr_confidence": "0.9369344115257263"
+      },
+      {
+        "turn_id": "u46",
+        "speaker": "user",
+        "text": "the result from all my hard work cuz I majored in sociology and as much as I love that major it's you realize it's a whole lot of theorizing in arguing but with no real solution such as like as a and that's all you have is just being theoretical element that you can't do anything with and nothing to show for your work except for a piece of paper with your essays or no people amazing artistic I love photography I love cooking baking and particularly so I know something",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "469.2",
+        "end_time_sec": "500.2",
+        "asr_confidence": "0.9639613032341003"
+      },
+      {
+        "turn_id": "u47",
+        "speaker": "user",
+        "text": "and that",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "501.7",
+        "end_time_sec": "502.4",
+        "asr_confidence": "0.9109198451042175"
+      },
+      {
+        "turn_id": "u48",
+        "speaker": "user",
+        "text": "Mom I guess okay",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "504.0",
+        "end_time_sec": "506.1",
+        "asr_confidence": "0.8529052734375"
+      },
+      {
+        "turn_id": "u49",
+        "speaker": "user",
+        "text": "you travel a lot I used to travel a lot my family is known for traveling we've gone to 578 different countries I've lived in three or four different countries I haven't traveled a lot lately just because I have no money and jobs kind of tie you down but I would love to have that is my dream job would be a photographer for National Geographic that would be awesome or a food photographer that traveled but anyways you enjoy about traveling",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "507.4",
+        "end_time_sec": "544.6",
+        "asr_confidence": "0.9365463256835938"
+      },
+      {
+        "turn_id": "u50",
+        "speaker": "user",
+        "text": "in the new places near faces and experiences I get Restless very easily it says nice of conflict be on the move and see different things and see different cultures and types of people and just not get stuck in the same routine I hate the routine and Monday mass of everyday life is so it's nice to",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "545.5",
+        "end_time_sec": "563.9",
+        "asr_confidence": "0.9218656420707703"
+      },
+      {
+        "turn_id": "u51",
+        "speaker": "user",
+        "text": "does things.",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "565.1",
+        "end_time_sec": "566.1",
+        "asr_confidence": "0.8703869581222534"
+      },
+      {
+        "turn_id": "u52",
+        "speaker": "user",
+        "text": "I want to hear about one of your trips",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "569.5",
+        "end_time_sec": "571.1",
+        "asr_confidence": "0.8187482953071594"
+      },
+      {
+        "turn_id": "u53",
+        "speaker": "user",
+        "text": "okay",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "572.5",
+        "end_time_sec": "574.0",
+        "asr_confidence": "0.9173194169998169"
+      },
+      {
+        "turn_id": "u54",
+        "speaker": "user",
+        "text": "tennis tank mermaid trips",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "577.3",
+        "end_time_sec": "580.2",
+        "asr_confidence": "0.7086378931999207"
+      },
+      {
+        "turn_id": "u55",
+        "speaker": "user",
+        "text": "I have begun talking about I don't know what's funny even though I've been to lots of different country is one of my most memorable memorable trips as one of the trips I took with my family is a three-week road trip with my family this five of us packed in a tiny little station wagon but it was really fun and even though I've traveled so many places I realize that there's like such a beauty and the American landscape and so we were all around this house last in the Grand Canyon to Zion to the Grand Tetons to Yellowstone and it's absolutely amazing to sing about natural beauty is so and it's a grizzly bear black bear the Bison sounds really cool natural wonders also really miss me cuz those things aren't men made as as pretentious as it sounds after while you're kind of gets old but it's like and I guess the same way",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "584.3",
+        "end_time_sec": "644.1",
+        "asr_confidence": "0.9708382487297058"
+      },
+      {
+        "turn_id": "u56",
+        "speaker": "user",
+        "text": "white old white man building great buildings in artwork and yeah I see what you mean",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "644.3",
+        "end_time_sec": "658.0",
+        "asr_confidence": "0.8714664578437805"
+      },
+      {
+        "turn_id": "u57",
+        "speaker": "user",
+        "text": "how easy is it for you to get a good night sleep",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "661.1",
+        "end_time_sec": "663.7",
+        "asr_confidence": "0.9615119695663452"
+      },
+      {
+        "turn_id": "u58",
+        "speaker": "user",
+        "text": "I want",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "665.3",
+        "end_time_sec": "666.1",
+        "asr_confidence": "0.6355107426643372"
+      },
+      {
+        "turn_id": "u59",
+        "speaker": "user",
+        "text": "pretty easy as long as I",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "667.8",
+        "end_time_sec": "669.6",
+        "asr_confidence": "0.9585404992103577"
+      },
+      {
+        "turn_id": "u60",
+        "speaker": "user",
+        "text": "get supply I sleep so easy",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "671.1",
+        "end_time_sec": "674.4",
+        "asr_confidence": "0.630847156047821"
+      },
+      {
+        "turn_id": "u61",
+        "speaker": "user",
+        "text": "what are you like when you don't sleep well grumpy and just very lethargic and just low energy don't say much I just kind of offer in my own world you feel that way often anymore I usually get enough sleep and I've been working out more so it's not too bad that's good",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "675.6",
+        "end_time_sec": "702.4",
+        "asr_confidence": "0.9123916029930115"
+      },
+      {
+        "turn_id": "u62",
+        "speaker": "user",
+        "text": "have you noticed any changes in your behavior or thoughts lately",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "703.6",
+        "end_time_sec": "706.7",
+        "asr_confidence": "0.9431498646736145"
+      },
+      {
+        "turn_id": "u63",
+        "speaker": "user",
+        "text": "I haven't just been one negative but I have to do it by circumstances kind of like spend about almost 5 months since I quit my full-time job haven't found anything else boyfriend interested in so",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "709.5",
+        "end_time_sec": "723.8",
+        "asr_confidence": "0.8889967203140259"
+      },
+      {
+        "turn_id": "u64",
+        "speaker": "user",
+        "text": "Esmeralda's like what am I doing that I did that kind of thing",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "725.6",
+        "end_time_sec": "730.1",
+        "asr_confidence": "0.8873944878578186"
+      },
+      {
+        "turn_id": "u65",
+        "speaker": "user",
+        "text": "can be talked about a good job these days it is higher than market and looks like I'm very picky because I don't want to just sit in a little my own Cuba fault if I quit my job exactly for that reason why go back to another job just do the same exact thing that I quit my other job so it looks like I have to make it worthwhile that I quit my last job to get a better job as a kind of like stuck in this section of like living paycheck-to-paycheck barely making it just waiting for the right opportunity to come across but it's like when did I give up and sell my soul and go back to the corporate world and spitting and we'll keep a cold I don't know when does that same situation after college so but I guess it's tough cuz a lot of my friends so they went to a pretty good school and you not have a friend his teaching English in Afghanistan",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "731.6",
+        "end_time_sec": "790.3",
+        "asr_confidence": "0.9521053433418274"
+      },
+      {
+        "turn_id": "u66",
+        "speaker": "user",
+        "text": "Teach for America and their friends in Hartford at schools like Harvard Matthew not getting her master's that's kind of like",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "791.5",
+        "end_time_sec": "799.7",
+        "asr_confidence": "0.8240413665771484"
+      },
+      {
+        "turn_id": "u67",
+        "speaker": "user",
+        "text": "got that comparison and then here I am with you in a little restaurant job so",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "801.0",
+        "end_time_sec": "804.8",
+        "asr_confidence": "0.8580998778343201"
+      },
+      {
+        "turn_id": "u68",
+        "speaker": "user",
+        "text": "do you feel down",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "808.3",
+        "end_time_sec": "809.3",
+        "asr_confidence": "0.8066492080688477"
+      },
+      {
+        "turn_id": "u69",
+        "speaker": "user",
+        "text": "I do sometimes yes but I'm going to Hawaii next week so right now I'm fine yes but yeah usually it's been kind of like down because I'm just trying to find like what I'm supposed to do you not like what I want to do next and my money situations are just very stressful as a school loan to pay off Insurance rent car loans like ants the groceries but I can't even afford groceries it's just hard to live this way specially after we paid so much money for amazing cause education so frustrating but there's a lot of people the same situation",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "810.5",
+        "end_time_sec": "851.6",
+        "asr_confidence": "0.967117428779602"
+      },
+      {
+        "turn_id": "u70",
+        "speaker": "user",
+        "text": "turn down",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "854.4",
+        "end_time_sec": "855.2",
+        "asr_confidence": "0.49902138113975525"
+      },
+      {
+        "turn_id": "u71",
+        "speaker": "user",
+        "text": "have you been diagnosed with depression I don't think so but I mean I think everyone goes through depression here now so I don't know if you can but not like medically diagnose I'm not on meds okay have you ever been diagnosed with PTSD",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "856.2",
+        "end_time_sec": "872.9",
+        "asr_confidence": "0.9426805973052979"
+      },
+      {
+        "turn_id": "u72",
+        "speaker": "user",
+        "text": "okay",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "878.6",
+        "end_time_sec": "879.1",
+        "asr_confidence": "0.975234866142273"
+      },
+      {
+        "turn_id": "u73",
+        "speaker": "user",
+        "text": "what advice would you give yourself 10 or 20 years ago",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "880.3",
+        "end_time_sec": "883.1",
+        "asr_confidence": "0.9682705402374268"
+      },
+      {
+        "turn_id": "u74",
+        "speaker": "user",
+        "text": "oh that's to try lots of different things and not be afraid to fail cuz I'm one of those people from not going to be the best at something and I'm not going to try except the best or nothing at all go big or go home so but I didn't get them told my high school self that don't try lots of things even if it means I'm not going to be the best at it about 10 years ago made me like 12 so",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "885.2",
+        "end_time_sec": "914.8",
+        "asr_confidence": "0.961089015007019"
+      },
+      {
+        "turn_id": "u75",
+        "speaker": "user",
+        "text": "I used to do a lot of things but I used to ask and it got to continue doing that I used to write a lot when I was younger I used to write miniature like little sorry sorry sorry it's for my parents all the time and I kind of stopped doing those things cuz it's like I'm not good at it so I'm not going to do it I just continue doing those things and tried sneaking out of classes and I'm no different sports soccer growing up I don't know just expand my sophomore rather than likely I'm good at and just stay with it but never really try harder cuz like I said I was going to say that one that was like once I'm good I just stay for good and I'll try that go about that that monster Newsom",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "915.9",
+        "end_time_sec": "965.2",
+        "asr_confidence": "0.9728215932846069"
+      },
+      {
+        "turn_id": "u76",
+        "speaker": "user",
+        "text": "yeah",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "966.1",
+        "end_time_sec": "966.5",
+        "asr_confidence": "0.8099535703659058"
+      },
+      {
+        "turn_id": "u77",
+        "speaker": "user",
+        "text": "what do you do to relax",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "968.5",
+        "end_time_sec": "969.6",
+        "asr_confidence": "0.9657255411148071"
+      },
+      {
+        "turn_id": "u78",
+        "speaker": "user",
+        "text": "all right now it's super lame but I watch TV but I used to read of mice to read on my off-time or just listen to music or just take a nap or bake bananas like since I'm on my feet all day and like consol interacting with people I just kind of want to unwind by like sitting and lying on the couch and be like I'm done",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "972.4",
+        "end_time_sec": "996.2",
+        "asr_confidence": "0.9498627185821533"
+      },
+      {
+        "turn_id": "u79",
+        "speaker": "user",
+        "text": "which one of your most memorable experience",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1002.8",
+        "end_time_sec": "1004.9",
+        "asr_confidence": "0.898503303527832"
+      },
+      {
+        "turn_id": "u80",
+        "speaker": "user",
+        "text": "the top question",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1008.2",
+        "end_time_sec": "1009.9",
+        "asr_confidence": "0.8853217363357544"
+      },
+      {
+        "turn_id": "u81",
+        "speaker": "user",
+        "text": "I'm probably the day I got accepted into Pomona College it was a freshman at Wellesley College courses that woman called back and I hated it from Mike II from like the first week I just knew that I chose the wrong College not like miserable for the entire year and I only apply to one school of the transfer Pomona College by steps at in Clermont and",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1011.9",
+        "end_time_sec": "1040.6",
+        "asr_confidence": "0.9462273716926575"
+      },
+      {
+        "turn_id": "u82",
+        "speaker": "user",
+        "text": "anime how can I get in and I also because there's like a 4% acceptance rate and if I go to the chances like this is ridiculous I don't think we can get in and I'll let you know the thought of going back to sleep but then I got an email from one of the admissions counselors that I had met when I was visiting Pomona and he's like I talk to you I just wanted to see if you had any last minute questions about Pomona hope all is well and I was like why are you telling me the day we find out if we got you next that's it or not unless I got the acceptance and so sure enough a couple hours later I got the email that I was accepted into Pomona and I was like my best day of my life so happy cuz I want ya and I text my mom and my little brother",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1042.3",
+        "end_time_sec": "1097.1",
+        "asr_confidence": "0.9431561231613159"
+      },
+      {
+        "turn_id": "u83",
+        "speaker": "user",
+        "text": "hair pierce my dad's I was like let's start this whole thing over",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1102.2",
+        "end_time_sec": "1105.8",
+        "asr_confidence": "0.7970514297485352"
+      },
+      {
+        "turn_id": "u84",
+        "speaker": "user",
+        "text": "how do your best friend describe you",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1112.5",
+        "end_time_sec": "1114.1",
+        "asr_confidence": "0.9059473872184753"
+      },
+      {
+        "turn_id": "u85",
+        "speaker": "user",
+        "text": "The Voice",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1117.9",
+        "end_time_sec": "1118.7",
+        "asr_confidence": "0.843562662601471"
+      },
+      {
+        "turn_id": "u86",
+        "speaker": "user",
+        "text": "fine",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1120.1",
+        "end_time_sec": "1121.2",
+        "asr_confidence": "0.6054611206054688"
+      },
+      {
+        "turn_id": "u87",
+        "speaker": "user",
+        "text": "maybe Moody you never know what you're going to get sometimes",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1123.3",
+        "end_time_sec": "1126.6",
+        "asr_confidence": "0.9149203896522522"
+      },
+      {
+        "turn_id": "u88",
+        "speaker": "user",
+        "text": "probably",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1129.8",
+        "end_time_sec": "1130.5",
+        "asr_confidence": "0.9428269863128662"
+      },
+      {
+        "turn_id": "u89",
+        "speaker": "user",
+        "text": "definitely friendly like a positive person",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1132.3",
+        "end_time_sec": "1139.3",
+        "asr_confidence": "0.8515576124191284"
+      },
+      {
+        "turn_id": "u90",
+        "speaker": "user",
+        "text": "but sometimes maybe a little bit",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1141.3",
+        "end_time_sec": "1144.0",
+        "asr_confidence": "0.953755795955658"
+      },
+      {
+        "turn_id": "u91",
+        "speaker": "user",
+        "text": "aggressive",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1145.1",
+        "end_time_sec": "1146.2",
+        "asr_confidence": "0.9416936635971069"
+      },
+      {
+        "turn_id": "u92",
+        "speaker": "user",
+        "text": "the most practicing positive things I mean she's my best friend so okay",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1148.6",
+        "end_time_sec": "1153.8",
+        "asr_confidence": "0.8979640007019043"
+      },
+      {
+        "turn_id": "u93",
+        "speaker": "user",
+        "text": "when is the last time you felt really happy",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1155.2",
+        "end_time_sec": "1157.7",
+        "asr_confidence": "0.9652259945869446"
+      },
+      {
+        "turn_id": "u94",
+        "speaker": "user",
+        "text": "really happy",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1165.9",
+        "end_time_sec": "1167.3",
+        "asr_confidence": "0.9965885281562805"
+      },
+      {
+        "turn_id": "u95",
+        "speaker": "user",
+        "text": "oh and I was in Mexico over winter in San Clemente and that was really fun and it just like when sailing and walked on the missions at the beach that was really fun",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1169.0",
+        "end_time_sec": "1191.4",
+        "asr_confidence": "0.9271771907806396"
+      },
+      {
+        "turn_id": "u96",
+        "speaker": "user",
+        "text": "don't forget time to greet the situation at school",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1193.2",
+        "end_time_sec": "1196.6",
+        "asr_confidence": "0.8702362179756165"
+      },
+      {
+        "turn_id": "u97",
+        "speaker": "user",
+        "text": "okay I think I've asked everything I need to thanks for sharing your thoughts with me",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1198.7",
+        "end_time_sec": "1203.2",
+        "asr_confidence": "0.945221483707428"
+      },
+      {
+        "turn_id": "u98",
+        "speaker": "user",
+        "text": "goodbye",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1204.7",
+        "end_time_sec": "1205.2",
+        "asr_confidence": "0.9070325493812561"
+      },
+      {
+        "turn_id": "u99",
+        "speaker": "user",
+        "text": "I didn't know you were super good thing",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "1209.6",
+        "end_time_sec": "1212.1",
+        "asr_confidence": "0.8475196361541748"
+      },
+      {
+        "turn_id": "u100",
+        "speaker": "user",
+        "text": "set the recording down in a we just have a quick food survey and then I can tell you a little bit more about what",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "0.1",
+        "end_time_sec": "1237.4",
+        "asr_confidence": "0.9331537485122681"
+      }
+    ]
+  },
+  "instructions": "Label independently using the transcript, metadata, and annotation guidelines. Do not inspect annotator B."
+}

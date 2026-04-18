@@ -20,8 +20,16 @@ The idea is simple:
 python tools/generate_seed_scaleup.py
 python tools/colab_bootstrap.py
 python tools/create_data_splits.py
-python tools/export_training_sets.py
+python tools/export_training_sets.py --source hybrid
 ```
+
+`export_training_sets.py` now supports:
+
+- `--source gold-core` for the English adjudicated gold core only
+- `--source gold` for English gold core plus the Hindi pilot voice-extension set
+- `--source hybrid` for seed + English gold core + Hindi pilot
+
+Use `gold-core` when you want the stricter clinically matched supervised slice, and `hybrid` when you want the broader multilingual training mix.
 
 For Vertex AI submission from a local machine, also install the optional Google Cloud SDK dependencies:
 

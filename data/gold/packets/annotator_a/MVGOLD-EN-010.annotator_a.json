@@ -1,0 +1,747 @@
+{
+  "session_id": "MVGOLD-EN-010",
+  "language": "en",
+  "cohort": "expansion",
+  "target_primary_domain": "restlessness",
+  "target_risk_band": "none",
+  "packet_stage": "annotator_a",
+  "target_output_file": "data/gold/labels/MVGOLD-EN-010.annotator_a.json",
+  "related_files": {
+    "audio_file": "data/gold/audio/en/MVGOLD-EN-010.wav",
+    "transcript_file": "data/gold/transcripts/en/MVGOLD-EN-010.json",
+    "annotator_a_file": "data/gold/labels/MVGOLD-EN-010.annotator_a.json",
+    "annotator_b_file": "data/gold/labels/MVGOLD-EN-010.annotator_b.json",
+    "adjudicated_label_file": "data/gold/labels/MVGOLD-EN-010.adjudicated.json"
+  },
+  "metadata": {
+    "session_id": "MVGOLD-EN-010",
+    "participant_id": "315",
+    "language": "en",
+    "age_years": "",
+    "age_band": "adult_unknown_from_source",
+    "occupation": "unknown_from_source",
+    "living_situation": "unknown_from_source",
+    "support_system": "unknown_from_source",
+    "consent_recorded": "public_dataset_license",
+    "collection_source": "e_daic_public_2019",
+    "audio_file": "data/gold/audio/en/MVGOLD-EN-010.wav",
+    "transcript_file": "data/gold/transcripts/en/MVGOLD-EN-010.json",
+    "annotator_a_file": "data/gold/labels/MVGOLD-EN-010.annotator_a.json",
+    "annotator_b_file": "data/gold/labels/MVGOLD-EN-010.annotator_b.json",
+    "adjudicated_label_file": "data/gold/labels/MVGOLD-EN-010.adjudicated.json",
+    "split": "expansion",
+    "notes": "Imported from E-DAIC public participant archive; PHQ8 items from public labels, remaining items machine-inferred and require clinician review for strict claims."
+  },
+  "transcript": {
+    "session_id": "MVGOLD-EN-010",
+    "language": "en",
+    "cohort": "expansion",
+    "is_placeholder": false,
+    "collection_status": "collected_public_dataset",
+    "notes": "Imported from E-DAIC public participant archive.",
+    "profile": {
+      "age_years": null,
+      "age_band": "adult_unknown_from_source",
+      "occupation": "unknown_from_source",
+      "living_situation": "unknown_from_source",
+      "support_system": "unknown_from_source",
+      "gender": "male"
+    },
+    "source": {
+      "dataset": "e_daic_public",
+      "participant_id": "315",
+      "split": "train",
+      "phq_binary": "0",
+      "phq_score": "2",
+      "source_audio_path": "315_P/315_AUDIO.wav",
+      "source_transcript_path": "315_P/315_Transcript.csv"
+    },
+    "turns": [
+      {
+        "turn_id": "u1",
+        "speaker": "user",
+        "text": "okay",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "0.30000000000000004",
+        "end_time_sec": "4.7",
+        "asr_confidence": "0.964323878288269"
+      },
+      {
+        "turn_id": "u2",
+        "speaker": "user",
+        "text": "okay alright",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "53.9",
+        "end_time_sec": "55.4",
+        "asr_confidence": "0.8931512236595154"
+      },
+      {
+        "turn_id": "u3",
+        "speaker": "user",
+        "text": "okay you",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "82.0",
+        "end_time_sec": "83.0",
+        "asr_confidence": "0.8291042447090149"
+      },
+      {
+        "turn_id": "u4",
+        "speaker": "user",
+        "text": "Inglewood California",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "88.4",
+        "end_time_sec": "89.3",
+        "asr_confidence": "0.9850063323974609"
+      },
+      {
+        "turn_id": "u5",
+        "speaker": "user",
+        "text": "yeah",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "92.3",
+        "end_time_sec": "93.7",
+        "asr_confidence": "0.8968493938446045"
+      },
+      {
+        "turn_id": "u6",
+        "speaker": "user",
+        "text": "no",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "95.1",
+        "end_time_sec": "95.6",
+        "asr_confidence": "0.9606063365936279"
+      },
+      {
+        "turn_id": "u7",
+        "speaker": "user",
+        "text": "that's okay",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "97.9",
+        "end_time_sec": "99.7",
+        "asr_confidence": "0.9575886726379395"
+      },
+      {
+        "turn_id": "u8",
+        "speaker": "user",
+        "text": "give me my girlfriend and my daughter",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "104.5",
+        "end_time_sec": "108.0",
+        "asr_confidence": "0.8964060544967651"
+      },
+      {
+        "turn_id": "u9",
+        "speaker": "user",
+        "text": "yes",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "110.4",
+        "end_time_sec": "111.0",
+        "asr_confidence": "0.9733132123947144"
+      },
+      {
+        "turn_id": "u10",
+        "speaker": "user",
+        "text": "are OKC okay cool",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "112.2",
+        "end_time_sec": "114.4",
+        "asr_confidence": "0.7544729113578796"
+      },
+      {
+        "turn_id": "u11",
+        "speaker": "user",
+        "text": "yes I do",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "121.8",
+        "end_time_sec": "123.5",
+        "asr_confidence": "0.9865028262138367"
+      },
+      {
+        "turn_id": "u12",
+        "speaker": "user",
+        "text": "well I'm football recruiter so I travel all around the world to to sign different football players for sports management company",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "129.1",
+        "end_time_sec": "139.5",
+        "asr_confidence": "0.8844587802886963"
+      },
+      {
+        "turn_id": "u13",
+        "speaker": "user",
+        "text": "I'm just the Independence about it being alone being able to be free and not tied down to one to one thing you know it's great",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "145.9",
+        "end_time_sec": "155.9",
+        "asr_confidence": "0.9175686836242676"
+      },
+      {
+        "turn_id": "u14",
+        "speaker": "user",
+        "text": "I'm I remember traveling to",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "160.6",
+        "end_time_sec": "163.8",
+        "asr_confidence": "0.9467535018920898"
+      },
+      {
+        "turn_id": "u15",
+        "speaker": "user",
+        "text": "and take them to clubs and this and that and we're not that type of organization",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "177.2",
+        "end_time_sec": "182.2",
+        "asr_confidence": "0.9365334510803223"
+      },
+      {
+        "turn_id": "u16",
+        "speaker": "user",
+        "text": "dishonesty I don't like when people are dishonest that really really really bothers me and not true not on its not real that that upsets me a lot",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "197.9",
+        "end_time_sec": "212.2",
+        "asr_confidence": "0.9292488098144531"
+      },
+      {
+        "turn_id": "u17",
+        "speaker": "user",
+        "text": "I tend to just",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "217.6",
+        "end_time_sec": "220.7",
+        "asr_confidence": "0.9479349851608276"
+      },
+      {
+        "turn_id": "u18",
+        "speaker": "user",
+        "text": "try to free myself from the situation to clear my mind when usually take a walk or something like that or just just just go in the room by myself and just try to clear my head in my head",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "221.7",
+        "end_time_sec": "231.8",
+        "asr_confidence": "0.9191039204597473"
+      },
+      {
+        "turn_id": "u19",
+        "speaker": "user",
+        "text": "I'm okay with it at times but I can definitely be better",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "238.5",
+        "end_time_sec": "244.8",
+        "asr_confidence": "0.9872418642044067"
+      },
+      {
+        "turn_id": "u20",
+        "speaker": "user",
+        "text": "oh I already argued with my my lady a couple days ago and it was about our daughter in summer thing she's doing at school and she she wants to raise her one way and I think I want a razor a kind of a different way and discipline her a little more on certain situation so I think different discipline is a big key in a kid's life and she she she was raised a little differently",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "250.8",
+        "end_time_sec": "281.9",
+        "asr_confidence": "0.9482001662254333"
+      },
+      {
+        "turn_id": "u21",
+        "speaker": "user",
+        "text": "I don't know just angry upset you know when you're an argument that's what you feel so you do and say things that that that bother you and you just go on with it",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "289.5",
+        "end_time_sec": "304.9",
+        "asr_confidence": "0.907416582107544"
+      },
+      {
+        "turn_id": "u22",
+        "speaker": "user",
+        "text": "yeah a little bit",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "310.9",
+        "end_time_sec": "314.6",
+        "asr_confidence": "0.9520397186279297"
+      },
+      {
+        "turn_id": "u23",
+        "speaker": "user",
+        "text": "I don't know I just",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "318.4",
+        "end_time_sec": "320.5",
+        "asr_confidence": "0.9855186343193054"
+      },
+      {
+        "turn_id": "u24",
+        "speaker": "user",
+        "text": "that's the way I feel I don't know I can't really say this way I feel",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "324.1",
+        "end_time_sec": "327.7",
+        "asr_confidence": "0.8988086581230164"
+      },
+      {
+        "turn_id": "u25",
+        "speaker": "user",
+        "text": "a little a little",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "331.9",
+        "end_time_sec": "336.4",
+        "asr_confidence": "0.9849432706832886"
+      },
+      {
+        "turn_id": "u26",
+        "speaker": "user",
+        "text": "I don't know just",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "340.8",
+        "end_time_sec": "345.0",
+        "asr_confidence": "0.9813345074653625"
+      },
+      {
+        "turn_id": "u27",
+        "speaker": "user",
+        "text": "realness",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "349.6",
+        "end_time_sec": "350.4",
+        "asr_confidence": "0.9876290559768677"
+      },
+      {
+        "turn_id": "u28",
+        "speaker": "user",
+        "text": "honesty truth to spend straight out front",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "357.6",
+        "end_time_sec": "363.4",
+        "asr_confidence": "0.9505107998847961"
+      },
+      {
+        "turn_id": "u29",
+        "speaker": "user",
+        "text": "I'm pretty clothes pretty clothes for my family",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "368.6",
+        "end_time_sec": "374.8",
+        "asr_confidence": "0.7750127911567688"
+      },
+      {
+        "turn_id": "u30",
+        "speaker": "user",
+        "text": "Oh Holy Night the subjective",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "379.5",
+        "end_time_sec": "382.5",
+        "asr_confidence": "0.6870737671852112"
+      },
+      {
+        "turn_id": "u31",
+        "speaker": "user",
+        "text": "they're raised different societies going to become even Wilder what the way the kids are raised and no discipline and and the things they're doing everything we we stay live and everything's inflated so much to where it's a skin to a point where it's getting out of hand I think kids these days to a certain extent are or much wilder than I was and and generations before me and just able to do and say and the lack of respect and in all just education-wise is this I think it's just tough times for kids and in the way they act it's it's it's ridiculous to me",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "383.9",
+        "end_time_sec": "429.3",
+        "asr_confidence": "0.9622858166694641"
+      },
+      {
+        "turn_id": "u32",
+        "speaker": "user",
+        "text": "I definitely like to watch sports I like to gamble I I like to travel but I can skate I like kind of like a a guy that likes to see different sites and go different places like that I'm a big movie person so I like going to theater stuff like that",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "440.3",
+        "end_time_sec": "463.9",
+        "asr_confidence": "0.925243616104126"
+      },
+      {
+        "turn_id": "u33",
+        "speaker": "user",
+        "text": "I'm actually living it I always wanted to be in in some kind of sports industry and that's what I'm doing now I just my goal was to get a little higher and a ladder and you know my own sports management company but I'm doing pretty well for myself so I am happy yeah",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "469.6",
+        "end_time_sec": "494.4",
+        "asr_confidence": "0.9451121091842651"
+      },
+      {
+        "turn_id": "u34",
+        "speaker": "user",
+        "text": "no",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "496.5",
+        "end_time_sec": "498.2",
+        "asr_confidence": "0.9359655380249023"
+      },
+      {
+        "turn_id": "u35",
+        "speaker": "user",
+        "text": "no",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "501.5",
+        "end_time_sec": "501.9",
+        "asr_confidence": "0.9504603147506714"
+      },
+      {
+        "turn_id": "u36",
+        "speaker": "user",
+        "text": "no",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "504.6",
+        "end_time_sec": "505.0",
+        "asr_confidence": "0.943570613861084"
+      },
+      {
+        "turn_id": "u37",
+        "speaker": "user",
+        "text": "it's okay that's it's pretty easy",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "509.3",
+        "end_time_sec": "512.5",
+        "asr_confidence": "0.8588317036628723"
+      },
+      {
+        "turn_id": "u38",
+        "speaker": "user",
+        "text": "irritated",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "516.9",
+        "end_time_sec": "517.8",
+        "asr_confidence": "0.9876290559768677"
+      },
+      {
+        "turn_id": "u39",
+        "speaker": "user",
+        "text": "Tire",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "519.2",
+        "end_time_sec": "520.3",
+        "asr_confidence": "0.8798258304595947"
+      },
+      {
+        "turn_id": "u40",
+        "speaker": "user",
+        "text": "I don't know it's been awhile it's been awhile couple weeks ago",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "525.8",
+        "end_time_sec": "529.5",
+        "asr_confidence": "0.9479946494102478"
+      },
+      {
+        "turn_id": "u41",
+        "speaker": "user",
+        "text": "how would you say",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "534.6",
+        "end_time_sec": "537.4",
+        "asr_confidence": "0.9282668828964233"
+      },
+      {
+        "turn_id": "u42",
+        "speaker": "user",
+        "text": "no not really",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "541.7",
+        "end_time_sec": "542.8",
+        "asr_confidence": "0.932124674320221"
+      },
+      {
+        "turn_id": "u43",
+        "speaker": "user",
+        "text": "I think he would describe me as a stand-up guy I try to be a good loyal friend and",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "551.5",
+        "end_time_sec": "560.1",
+        "asr_confidence": "0.9377565383911133"
+      },
+      {
+        "turn_id": "u44",
+        "speaker": "user",
+        "text": "and I don't think you would describe me like that",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "560.6",
+        "end_time_sec": "564.1",
+        "asr_confidence": "0.8261368274688721"
+      },
+      {
+        "turn_id": "u45",
+        "speaker": "user",
+        "text": "school went to school grew up together I've been knowing all my friends for 3 months on my life",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "568.4",
+        "end_time_sec": "574.9",
+        "asr_confidence": "0.8863402605056763"
+      },
+      {
+        "turn_id": "u46",
+        "speaker": "user",
+        "text": "there",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "577.9",
+        "end_time_sec": "578.3",
+        "asr_confidence": "0.6605278253555298"
+      },
+      {
+        "turn_id": "u47",
+        "speaker": "user",
+        "text": "a very close with my friends and I are very close together still at this age",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "582.4",
+        "end_time_sec": "591.7",
+        "asr_confidence": "0.8876662850379944"
+      },
+      {
+        "turn_id": "u48",
+        "speaker": "user",
+        "text": "I'm honest loyal very loyal",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "599.7",
+        "end_time_sec": "604.7",
+        "asr_confidence": "0.9597200751304626"
+      },
+      {
+        "turn_id": "u49",
+        "speaker": "user",
+        "text": "I am a hard worker I think I am",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "609.0",
+        "end_time_sec": "611.8",
+        "asr_confidence": "0.9822271466255188"
+      },
+      {
+        "turn_id": "u50",
+        "speaker": "user",
+        "text": "tooth hurts and I'm just not the average guy I'm pretty much I'm a different different breed I just carry myself and act a little different from a normal guy",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "614.4",
+        "end_time_sec": "623.6",
+        "asr_confidence": "0.9107097387313843"
+      },
+      {
+        "turn_id": "u51",
+        "speaker": "user",
+        "text": "I don't know I just saw it but I was raised and high on my dad was kind of different and he didn't go with the In Crowd and I think I learned that from me and my Lawton and it's just it's it's kind of",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "628.3",
+        "end_time_sec": "644.3",
+        "asr_confidence": "0.8877328038215637"
+      },
+      {
+        "turn_id": "u52",
+        "speaker": "user",
+        "text": "same path I took",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "646.2",
+        "end_time_sec": "647.5",
+        "asr_confidence": "0.9550865888595581"
+      },
+      {
+        "turn_id": "u53",
+        "speaker": "user",
+        "text": "yes a lot of things I regret I regret",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "654.7",
+        "end_time_sec": "661.1",
+        "asr_confidence": "0.9303666353225708"
+      },
+      {
+        "turn_id": "u54",
+        "speaker": "user",
+        "text": "a lot of dishes in my life",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "662.8",
+        "end_time_sec": "664.7",
+        "asr_confidence": "0.9114715456962585"
+      },
+      {
+        "turn_id": "u55",
+        "speaker": "user",
+        "text": "yeah one",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "667.6",
+        "end_time_sec": "669.9",
+        "asr_confidence": "0.7827029228210449"
+      },
+      {
+        "turn_id": "u56",
+        "speaker": "user",
+        "text": "I actually let a a lady in my life goal years ago that I thought was my soulmate and we had a big argument and one thing led to another and we decided to take a break and then not in that break I I start dating somebody else and I told her I'm going to go my way and she go away I think that was a big a bad decision very bad decision",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "672.0",
+        "end_time_sec": "698.1",
+        "asr_confidence": "0.9438717365264893"
+      },
+      {
+        "turn_id": "u57",
+        "speaker": "user",
+        "text": "you've done anything to avoid you have totally I think I should have took a step back and really just thought about the situation a little more instead of a",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "700.9",
+        "end_time_sec": "710.9",
+        "asr_confidence": "0.9288691282272339"
+      },
+      {
+        "turn_id": "u58",
+        "speaker": "user",
+        "text": "being so upset and moving forward",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "712.5",
+        "end_time_sec": "714.7",
+        "asr_confidence": "0.6032933592796326"
+      },
+      {
+        "turn_id": "u59",
+        "speaker": "user",
+        "text": "I just upset I tend to get upset and then my thoughts get clouded so I need to think a little more when I'm upset",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "718.9",
+        "end_time_sec": "728.8",
+        "asr_confidence": "0.9204155802726746"
+      },
+      {
+        "turn_id": "u60",
+        "speaker": "user",
+        "text": "I don't know just",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "734.6",
+        "end_time_sec": "736.5",
+        "asr_confidence": "0.9780494570732117"
+      },
+      {
+        "turn_id": "u61",
+        "speaker": "user",
+        "text": "experience a Time been do you know making it making up for your mistakes and and then in",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "738.9",
+        "end_time_sec": "745.4",
+        "asr_confidence": "0.7838437557220459"
+      },
+      {
+        "turn_id": "u62",
+        "speaker": "user",
+        "text": "being better about different decisions after you made the mistakes",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "747.5",
+        "end_time_sec": "752.0",
+        "asr_confidence": "0.9645326733589172"
+      },
+      {
+        "turn_id": "u63",
+        "speaker": "user",
+        "text": "think a little harder by situation about situations and and things and the decisions that you make us think a lot longer and harder before you may come and I think the outcome will be in a little different today",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "762.3",
+        "end_time_sec": "777.1",
+        "asr_confidence": "0.914774477481842"
+      },
+      {
+        "turn_id": "u64",
+        "speaker": "user",
+        "text": "my grandmother she's always been a positive influence she's a great black woman with old school",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "785.9",
+        "end_time_sec": "795.0",
+        "asr_confidence": "0.9611912965774536"
+      },
+      {
+        "turn_id": "u65",
+        "speaker": "user",
+        "text": "the ways of living so I think I have a bad at that to my life is a great woman",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "797.7",
+        "end_time_sec": "803.5",
+        "asr_confidence": "0.8873246312141418"
+      },
+      {
+        "turn_id": "u66",
+        "speaker": "user",
+        "text": "and baseball and yeah",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "816.3",
+        "end_time_sec": "820.7",
+        "asr_confidence": "0.9035375714302063"
+      },
+      {
+        "turn_id": "u67",
+        "speaker": "user",
+        "text": "I was a pretty good player I was a pretty good athlete growing up I was one of the top",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "827.7",
+        "end_time_sec": "833.8",
+        "asr_confidence": "0.8764910697937012"
+      },
+      {
+        "turn_id": "u68",
+        "speaker": "user",
+        "text": "and that started a future event and Athletics and that's what I wanted to do so I accomplished my girls who at the time was a great a great thing and still is a great thing it's a great accomplishment of my life",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "838.8",
+        "end_time_sec": "852.7",
+        "asr_confidence": "0.9073686003684998"
+      },
+      {
+        "turn_id": "u69",
+        "speaker": "user",
+        "text": "accomplishments being able to fry or if I'm",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "866.3",
+        "end_time_sec": "871.0",
+        "asr_confidence": "0.9323577880859375"
+      },
+      {
+        "turn_id": "u70",
+        "speaker": "user",
+        "text": "have a goal or something I'm supposed to do that week or that day and I compliment it always puts me in a good mood or getting my job done and out the way I'm supposed to do it in this in a timely fashion always with mega ball",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "872.1",
+        "end_time_sec": "885.1",
+        "asr_confidence": "0.9344316720962524"
+      },
+      {
+        "turn_id": "u71",
+        "speaker": "user",
+        "text": "being a positive role model right now for younger kids that's in our Sports Academy program I think as I got an older the thought process and the way I look at life is totally changed and I think I got a lot of kids can look up to me that I deal with now and say you know that somebody that that is is a pot of positive of going to my life",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "892.5",
+        "end_time_sec": "923.2",
+        "asr_confidence": "0.952772319316864"
+      },
+      {
+        "turn_id": "u72",
+        "speaker": "user",
+        "text": "oh",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "930.2",
+        "end_time_sec": "931.1",
+        "asr_confidence": "0.7554507255554199"
+      },
+      {
+        "turn_id": "u73",
+        "speaker": "user",
+        "text": "couple days ago my football team where in the playoffs make the playoffs so I always makes me happy",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "935.0",
+        "end_time_sec": "941.9",
+        "asr_confidence": "0.8941608667373657"
+      },
+      {
+        "turn_id": "u74",
+        "speaker": "user",
+        "text": "thank you",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "950.7",
+        "end_time_sec": "951.4",
+        "asr_confidence": "0.9778375029563904"
+      },
+      {
+        "turn_id": "u75",
+        "speaker": "user",
+        "text": "I get by",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "952.9",
+        "end_time_sec": "954.8",
+        "asr_confidence": "0.8377407193183899"
+      },
+      {
+        "turn_id": "u76",
+        "speaker": "user",
+        "text": "finished",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "0.30000000000000004",
+        "end_time_sec": "974.2",
+        "asr_confidence": "0.8180524706840515"
+      }
+    ]
+  },
+  "instructions": "Label independently using the transcript, metadata, and annotation guidelines. Do not inspect annotator B."
+}

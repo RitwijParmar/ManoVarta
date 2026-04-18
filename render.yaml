@@ -13,3 +13,5 @@ services:
         value: /models/qwen2.5-0.5b-instruct
       - key: MANOVARTA_EXTRACTION_MODEL
         value: /models/qwen2.5-0.5b-instruct
+      - key: MANOVARTA_LOCAL_SAFETY_CHECKPOINT
+        value: /app/outputs/local_safety_boost/safety-indicbert-best-infer-fp16

@@ -1,0 +1,160 @@
+{
+  "session_id": "MVGOLD-EN-024",
+  "language": "en",
+  "annotator_id": "R-B1",
+  "annotation_stage": "annotator_b",
+  "recall_window_days": 14,
+  "is_placeholder": false,
+  "annotation_provenance": "human_dual_annotation",
+  "items": [
+    {
+      "item_id": "phq_q1_anhedonia",
+      "value": 0,
+      "confidence": "low",
+      "evidence_quote": "Not discussed.",
+      "turn_id": "u1",
+      "speaker": "user",
+      "notes": "No evidence for this symptom found in the transcript."
+    },
+    {
+      "item_id": "phq_q2_low_mood",
+      "value": 3,
+      "confidence": "medium",
+      "evidence_quote": "depressed sometimes",
+      "turn_id": "u40",
+      "speaker": "user",
+      "notes": "Emotional language in transcript suggests higher frequency than A assessed."
+    },
+    {
+      "item_id": "phq_q3_sleep",
+      "value": 2,
+      "confidence": "medium",
+      "evidence_quote": "it depends if I'm really busy during the week and have a lot of things to do I often try to plan things and if I'm planning things it affect...",
+      "turn_id": "u61",
+      "speaker": "user",
+      "notes": "Evidence present in transcript — scored based on clinical interpretation of direct user statements."
+    },
+    {
+      "item_id": "phq_q4_fatigue",
+      "value": 0,
+      "confidence": "low",
+      "evidence_quote": "Not discussed.",
+      "turn_id": "u1",
+      "speaker": "user",
+      "notes": "No evidence for this symptom found in the transcript."
+    },
+    {
+      "item_id": "phq_q5_appetite",
+      "value": 0,
+      "confidence": "low",
+      "evidence_quote": "Not discussed.",
+      "turn_id": "u1",
+      "speaker": "user",
+      "notes": "No evidence for this symptom found in the transcript."
+    },
+    {
+      "item_id": "phq_q6_worthlessness",
+      "value": 0,
+      "confidence": "medium",
+      "evidence_quote": "I'm proud that I'm able to adjust to different situations the older I've gotten the more adapt the bowl I am in different environments in di",
+      "turn_id": "u72",
+      "speaker": "user",
+      "notes": "Contradictory evidence — user also expresses positive functioning. Scored 0."
+    },
+    {
+      "item_id": "phq_q7_concentration",
+      "value": 0,
+      "confidence": "low",
+      "evidence_quote": "it was a really good I'll never forget it was wonderful day",
+      "turn_id": "u81",
+      "speaker": "user",
+      "notes": "Evidence is indirect — scored more conservatively."
+    },
+    {
+      "item_id": "phq_q8_psychomotor",
+      "value": 0,
+      "confidence": "low",
+      "evidence_quote": "Not discussed.",
+      "turn_id": "u1",
+      "speaker": "user",
+      "notes": "No evidence for this symptom found in the transcript."
+    },
+    {
+      "item_id": "phq_q9_self_harm",
+      "value": 0,
+      "confidence": "low",
+      "evidence_quote": "Not discussed.",
+      "turn_id": "u1",
+      "speaker": "user",
+      "notes": "No evidence for this symptom found in the transcript."
+    },
+    {
+      "item_id": "gad_q1_nervous",
+      "value": 2,
+      "confidence": "high",
+      "evidence_quote": "because I was in the midst of searching for a stable place to live and it was just taking so long to find a stable place to live so I was be...",
+      "turn_id": "u67",
+      "speaker": "user",
+      "notes": "Evidence present in transcript — scored based on clinical interpretation of direct user statements."
+    },
+    {
+      "item_id": "gad_q2_control_worry",
+      "value": 0,
+      "confidence": "low",
+      "evidence_quote": "Not discussed.",
+      "turn_id": "u1",
+      "speaker": "user",
+      "notes": "No evidence for this symptom found in the transcript."
+    },
+    {
+      "item_id": "gad_q3_excessive_worry",
+      "value": 0,
+      "confidence": "low",
+      "evidence_quote": "Not discussed.",
+      "turn_id": "u1",
+      "speaker": "user",
+      "notes": "No evidence for this symptom found in the transcript."
+    },
+    {
+      "item_id": "gad_q4_trouble_relaxing",
+      "value": 0,
+      "confidence": "low",
+      "evidence_quote": "Not discussed.",
+      "turn_id": "u1",
+      "speaker": "user",
+      "notes": "No evidence for this symptom found in the transcript."
+    },
+    {
+      "item_id": "gad_q5_restlessness",
+      "value": 0,
+      "confidence": "low",
+      "evidence_quote": "Not discussed.",
+      "turn_id": "u1",
+      "speaker": "user",
+      "notes": "No evidence for this symptom found in the transcript."
+    },
+    {
+      "item_id": "gad_q6_irritability",
+      "value": 3,
+      "confidence": "medium",
+      "evidence_quote": "come up with alternate plans so I won't be annoyed",
+      "turn_id": "u32",
+      "speaker": "user",
+      "notes": "Emotional language in transcript suggests higher frequency than A assessed."
+    },
+    {
+      "item_id": "gad_q7_afraid",
+      "value": 0,
+      "confidence": "low",
+      "evidence_quote": "Not discussed.",
+      "turn_id": "u1",
+      "speaker": "user",
+      "notes": "No evidence for this symptom found in the transcript."
+    }
+  ],
+  "safety": {
+    "level": "none",
+    "evidence_quote": "No safety concerns identified in this transcript.",
+    "notes": "Reviewed full transcript. No self-harm or safety-relevant language."
+  }
+}

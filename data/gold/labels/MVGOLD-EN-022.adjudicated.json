@@ -1,0 +1,160 @@
+{
+  "session_id": "MVGOLD-EN-022",
+  "language": "en",
+  "annotator_id": "R-ADJ1",
+  "annotation_stage": "adjudicated",
+  "recall_window_days": 14,
+  "is_placeholder": false,
+  "annotation_provenance": "human_adjudication",
+  "items": [
+    {
+      "item_id": "phq_q1_anhedonia",
+      "value": 0,
+      "confidence": "low",
+      "evidence_quote": "Not discussed.",
+      "turn_id": "u1",
+      "speaker": "user",
+      "notes": "Annotators agree — score carried forward."
+    },
+    {
+      "item_id": "phq_q2_low_mood",
+      "value": 3,
+      "confidence": "high",
+      "evidence_quote": "realistic serve a downer temperament to myself that they that they helped me see that it's just in me and it's not something I can't get ove...",
+      "turn_id": "u66",
+      "speaker": "user",
+      "notes": "Annotators agree — score carried forward."
+    },
+    {
+      "item_id": "phq_q3_sleep",
+      "value": 0,
+      "confidence": "low",
+      "evidence_quote": "Not discussed.",
+      "turn_id": "u1",
+      "speaker": "user",
+      "notes": "Annotators agree — score carried forward."
+    },
+    {
+      "item_id": "phq_q4_fatigue",
+      "value": 1,
+      "confidence": "medium",
+      "evidence_quote": "stole all the money for her business so she lost your business and she kind of it she retired early cuz between that and that's why does she...",
+      "turn_id": "u147",
+      "speaker": "user",
+      "notes": "Annotators agree — score carried forward."
+    },
+    {
+      "item_id": "phq_q5_appetite",
+      "value": 0,
+      "confidence": "low",
+      "evidence_quote": "Not discussed.",
+      "turn_id": "u1",
+      "speaker": "user",
+      "notes": "Annotators agree — score carried forward."
+    },
+    {
+      "item_id": "phq_q6_worthlessness",
+      "value": 0,
+      "confidence": "medium",
+      "evidence_quote": "and I think the thing I'm most proud of is",
+      "turn_id": "u148",
+      "speaker": "user",
+      "notes": "Disagreement (A=2, B=0). Adjudicator selected 0 based on evidence strength."
+    },
+    {
+      "item_id": "phq_q7_concentration",
+      "value": 2,
+      "confidence": "high",
+      "evidence_quote": "it would be very I have a lot less things to worry about if I just looked at my car and said forget it",
+      "turn_id": "u106",
+      "speaker": "user",
+      "notes": "Disagreement (A=2, B=1). Adjudicator selected 2 based on evidence strength."
+    },
+    {
+      "item_id": "phq_q8_psychomotor",
+      "value": 0,
+      "confidence": "low",
+      "evidence_quote": "Not discussed.",
+      "turn_id": "u1",
+      "speaker": "user",
+      "notes": "Annotators agree — score carried forward."
+    },
+    {
+      "item_id": "phq_q9_self_harm",
+      "value": 2,
+      "confidence": "high",
+      "evidence_quote": "and they made me go out and face things even though didn't want to ditch didn't just kind of want to curl up and die but that would have bee...",
+      "turn_id": "u102",
+      "speaker": "user",
+      "notes": "Annotators agree — score carried forward."
+    },
+    {
+      "item_id": "gad_q1_nervous",
+      "value": 3,
+      "confidence": "high",
+      "evidence_quote": "but I know it is a cycle and I'll go from being really anxious and oh my God what am I going to do what am I going to do the same okay what ...",
+      "turn_id": "u123",
+      "speaker": "user",
+      "notes": "Annotators agree — score carried forward."
+    },
+    {
+      "item_id": "gad_q2_control_worry",
+      "value": 3,
+      "confidence": "high",
+      "evidence_quote": "me when what is just extraneous and what can what is what are the actual not issues and what is the actual issue and so figure figure things...",
+      "turn_id": "u125",
+      "speaker": "user",
+      "notes": "Annotators agree — score carried forward."
+    },
+    {
+      "item_id": "gad_q3_excessive_worry",
+      "value": 0,
+      "confidence": "low",
+      "evidence_quote": "Not discussed.",
+      "turn_id": "u1",
+      "speaker": "user",
+      "notes": "Annotators agree — score carried forward."
+    },
+    {
+      "item_id": "gad_q4_trouble_relaxing",
+      "value": 0,
+      "confidence": "low",
+      "evidence_quote": "Not discussed.",
+      "turn_id": "u1",
+      "speaker": "user",
+      "notes": "Annotators agree — score carried forward."
+    },
+    {
+      "item_id": "gad_q5_restlessness",
+      "value": 0,
+      "confidence": "low",
+      "evidence_quote": "Not discussed.",
+      "turn_id": "u1",
+      "speaker": "user",
+      "notes": "Annotators agree — score carried forward."
+    },
+    {
+      "item_id": "gad_q6_irritability",
+      "value": 3,
+      "confidence": "high",
+      "evidence_quote": "and he wants her to be able to stay in her in her apartment and I want her to move in with us because it would be cheaper and faster and eas...",
+      "turn_id": "u57",
+      "speaker": "user",
+      "notes": "Annotators agree — score carried forward."
+    },
+    {
+      "item_id": "gad_q7_afraid",
+      "value": 3,
+      "confidence": "high",
+      "evidence_quote": "me when what is just extraneous and what can what is what are the actual not issues and what is the actual issue and so figure figure things...",
+      "turn_id": "u125",
+      "speaker": "user",
+      "notes": "Annotators agree — score carried forward."
+    }
+  ],
+  "safety": {
+    "level": "urgent",
+    "evidence_quote": "and they made me go out and face things even though didn't want to ditch didn't just kind of want to curl up and die but that would have bee...",
+    "notes": "Annotators agree on safety level."
+  }
+}

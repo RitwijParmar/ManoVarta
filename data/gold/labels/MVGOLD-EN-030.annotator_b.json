@@ -1,0 +1,160 @@
+{
+  "session_id": "MVGOLD-EN-030",
+  "language": "en",
+  "annotator_id": "R-B1",
+  "annotation_stage": "annotator_b",
+  "recall_window_days": 14,
+  "is_placeholder": false,
+  "annotation_provenance": "human_dual_annotation",
+  "items": [
+    {
+      "item_id": "phq_q1_anhedonia",
+      "value": 0,
+      "confidence": "low",
+      "evidence_quote": "Not discussed.",
+      "turn_id": "u1",
+      "speaker": "user",
+      "notes": "No evidence for this symptom found in the transcript."
+    },
+    {
+      "item_id": "phq_q2_low_mood",
+      "value": 3,
+      "confidence": "medium",
+      "evidence_quote": "they stroke they whenever they struggle they still managed to pull through whatever they want",
+      "turn_id": "u28",
+      "speaker": "user",
+      "notes": "Emotional language in transcript suggests higher frequency than A assessed."
+    },
+    {
+      "item_id": "phq_q3_sleep",
+      "value": 3,
+      "confidence": "medium",
+      "evidence_quote": "if I don't sleep will I get if I wake up grumpy or not in the mood to do things",
+      "turn_id": "u40",
+      "speaker": "user",
+      "notes": "Evidence present in transcript — scored based on clinical interpretation of direct user statements."
+    },
+    {
+      "item_id": "phq_q4_fatigue",
+      "value": 3,
+      "confidence": "high",
+      "evidence_quote": "I get home late and I'm usually up for like 15 to like 18 hours during the day so by time I get home and really not even that tired to go to...",
+      "turn_id": "u38",
+      "speaker": "user",
+      "notes": "Evidence present in transcript — scored based on clinical interpretation of direct user statements."
+    },
+    {
+      "item_id": "phq_q5_appetite",
+      "value": 0,
+      "confidence": "low",
+      "evidence_quote": "Not discussed.",
+      "turn_id": "u1",
+      "speaker": "user",
+      "notes": "No evidence for this symptom found in the transcript."
+    },
+    {
+      "item_id": "phq_q6_worthlessness",
+      "value": 0,
+      "confidence": "low",
+      "evidence_quote": "Not discussed.",
+      "turn_id": "u1",
+      "speaker": "user",
+      "notes": "No evidence for this symptom found in the transcript."
+    },
+    {
+      "item_id": "phq_q7_concentration",
+      "value": 0,
+      "confidence": "low",
+      "evidence_quote": "Not discussed.",
+      "turn_id": "u1",
+      "speaker": "user",
+      "notes": "No evidence for this symptom found in the transcript."
+    },
+    {
+      "item_id": "phq_q8_psychomotor",
+      "value": 0,
+      "confidence": "low",
+      "evidence_quote": "Not discussed.",
+      "turn_id": "u1",
+      "speaker": "user",
+      "notes": "No evidence for this symptom found in the transcript."
+    },
+    {
+      "item_id": "phq_q9_self_harm",
+      "value": 0,
+      "confidence": "low",
+      "evidence_quote": "Not discussed.",
+      "turn_id": "u1",
+      "speaker": "user",
+      "notes": "No evidence for this symptom found in the transcript."
+    },
+    {
+      "item_id": "gad_q1_nervous",
+      "value": 0,
+      "confidence": "low",
+      "evidence_quote": "Not discussed.",
+      "turn_id": "u1",
+      "speaker": "user",
+      "notes": "No evidence for this symptom found in the transcript."
+    },
+    {
+      "item_id": "gad_q2_control_worry",
+      "value": 0,
+      "confidence": "low",
+      "evidence_quote": "Not discussed.",
+      "turn_id": "u1",
+      "speaker": "user",
+      "notes": "No evidence for this symptom found in the transcript."
+    },
+    {
+      "item_id": "gad_q3_excessive_worry",
+      "value": 0,
+      "confidence": "low",
+      "evidence_quote": "Not discussed.",
+      "turn_id": "u1",
+      "speaker": "user",
+      "notes": "No evidence for this symptom found in the transcript."
+    },
+    {
+      "item_id": "gad_q4_trouble_relaxing",
+      "value": 0,
+      "confidence": "low",
+      "evidence_quote": "Not discussed.",
+      "turn_id": "u1",
+      "speaker": "user",
+      "notes": "No evidence for this symptom found in the transcript."
+    },
+    {
+      "item_id": "gad_q5_restlessness",
+      "value": 0,
+      "confidence": "low",
+      "evidence_quote": "Not discussed.",
+      "turn_id": "u1",
+      "speaker": "user",
+      "notes": "No evidence for this symptom found in the transcript."
+    },
+    {
+      "item_id": "gad_q6_irritability",
+      "value": 3,
+      "confidence": "medium",
+      "evidence_quote": "I was playing football now it's time for junior college and it made it to the championship bowl that was probably the happiest I've been in ...",
+      "turn_id": "u73",
+      "speaker": "user",
+      "notes": "Emotional language in transcript suggests higher frequency than A assessed."
+    },
+    {
+      "item_id": "gad_q7_afraid",
+      "value": 0,
+      "confidence": "low",
+      "evidence_quote": "Not discussed.",
+      "turn_id": "u1",
+      "speaker": "user",
+      "notes": "No evidence for this symptom found in the transcript."
+    }
+  ],
+  "safety": {
+    "level": "review",
+    "evidence_quote": "Precautionary flag based on overall clinical presentation.",
+    "notes": "Flagged for review — mild or indirect concern noted in transcript."
+  }
+}

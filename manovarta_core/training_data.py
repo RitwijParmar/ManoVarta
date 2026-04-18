@@ -6,7 +6,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-from manovarta_core.questionnaires import ITEM_INDEX
+from manovarta_core.questionnaires import all_items
 
 
 SYSTEM_EXTRACTION = (
@@ -236,7 +236,7 @@ def _extractor_prompt(conversation: dict[str, Any], *, schema_style: str = "comp
     transcript = _transcript_text(conversation.get("conversation_turns", []))
     item_lines = "\n".join(
         f"- {item_id}: {item.label} ({item.focus})"
-        for item_id, item in ITEM_INDEX.items()
+        for item_id, item in ((item.item_id, item) for item in all_items())
     )
     schema_instructions = (
         "Return JSON with keys: items, safety_level.\n"

@@ -1,0 +1,711 @@
+{
+  "session_id": "MVGOLD-EN-006",
+  "language": "en",
+  "cohort": "expansion",
+  "is_placeholder": false,
+  "collection_status": "collected_public_dataset",
+  "notes": "Imported from E-DAIC public participant archive.",
+  "profile": {
+    "age_years": null,
+    "age_band": "adult_unknown_from_source",
+    "occupation": "unknown_from_source",
+    "living_situation": "unknown_from_source",
+    "support_system": "unknown_from_source",
+    "gender": "male"
+  },
+  "source": {
+    "dataset": "e_daic_public",
+    "participant_id": "310",
+    "split": "train",
+    "phq_binary": "0",
+    "phq_score": "4",
+    "source_audio_path": "310_P/310_AUDIO.wav",
+    "source_transcript_path": "310_P/310_Transcript.csv"
+  },
+  "turns": [
+    {
+      "turn_id": "u1",
+      "speaker": "user",
+      "text": "yes it's okay",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "55.5",
+      "end_time_sec": "56.5",
+      "asr_confidence": "0.9706876277923584"
+    },
+    {
+      "turn_id": "u2",
+      "speaker": "user",
+      "text": "Vine",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "61.0",
+      "end_time_sec": "62.6",
+      "asr_confidence": "0.611075222492218"
+    },
+    {
+      "turn_id": "u3",
+      "speaker": "user",
+      "text": "I live in Hollywood",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "69.7",
+      "end_time_sec": "71.8",
+      "asr_confidence": "0.7698786854743958"
+    },
+    {
+      "turn_id": "u4",
+      "speaker": "user",
+      "text": "Seattle",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "77.1",
+      "end_time_sec": "78.2",
+      "asr_confidence": "0.987623929977417"
+    },
+    {
+      "turn_id": "u5",
+      "speaker": "user",
+      "text": "it's kind of a vague question",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "86.2",
+      "end_time_sec": "88.2",
+      "asr_confidence": "0.9752150774002075"
+    },
+    {
+      "turn_id": "u6",
+      "speaker": "user",
+      "text": "the exchange of scenery",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "92.3",
+      "end_time_sec": "95.1",
+      "asr_confidence": "0.8887372016906738"
+    },
+    {
+      "turn_id": "u7",
+      "speaker": "user",
+      "text": "I like traveling by train that's on my favorite thing",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "102.5",
+      "end_time_sec": "106.0",
+      "asr_confidence": "0.8780523538589478"
+    },
+    {
+      "turn_id": "u8",
+      "speaker": "user",
+      "text": "because I don't fly I can't stand airplane so I prefer trains",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "108.3",
+      "end_time_sec": "112.9",
+      "asr_confidence": "0.9151413440704346"
+    },
+    {
+      "turn_id": "u9",
+      "speaker": "user",
+      "text": "what the fly on an airplane",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "118.2",
+      "end_time_sec": "121.5",
+      "asr_confidence": "0.9629026055335999"
+    },
+    {
+      "turn_id": "u10",
+      "speaker": "user",
+      "text": "probably December of 1986 or 87",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "125.8",
+      "end_time_sec": "128.6",
+      "asr_confidence": "0.8881504535675049"
+    },
+    {
+      "turn_id": "u11",
+      "speaker": "user",
+      "text": "nothing much to tell really my news I just go from La up to Seattle in 02 Vancouver that's probably the main thing I do train",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "134.5",
+      "end_time_sec": "149.3",
+      "asr_confidence": "0.9425954818725586"
+    },
+    {
+      "turn_id": "u12",
+      "speaker": "user",
+      "text": "not very often once every 5 years or so",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "155.3",
+      "end_time_sec": "159.2",
+      "asr_confidence": "0.9261736869812012"
+    },
+    {
+      "turn_id": "u13",
+      "speaker": "user",
+      "text": "oh yeah sure absolutely",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "167.4",
+      "end_time_sec": "168.9",
+      "asr_confidence": "0.940021812915802"
+    },
+    {
+      "turn_id": "u14",
+      "speaker": "user",
+      "text": "depends on what it is that I'm annoyed by give me anything in defense",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "177.4",
+      "end_time_sec": "181.1",
+      "asr_confidence": "0.7997868061065674"
+    },
+    {
+      "turn_id": "u15",
+      "speaker": "user",
+      "text": "depends on whether it's",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "186.2",
+      "end_time_sec": "188.1",
+      "asr_confidence": "0.9172754287719727"
+    },
+    {
+      "turn_id": "u16",
+      "speaker": "user",
+      "text": "at something or someone you know if it's a someone I mean I don't I don't I don't get physical towards me but I mean I mean that what they've done to piss me off I'm not above shouting at them for whatever reason so",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "189.4",
+      "end_time_sec": "203.9",
+      "asr_confidence": "0.9333273768424988"
+    },
+    {
+      "turn_id": "u17",
+      "speaker": "user",
+      "text": "depends",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "204.7",
+      "end_time_sec": "205.8",
+      "asr_confidence": "0.9511586427688599"
+    },
+    {
+      "turn_id": "u18",
+      "speaker": "user",
+      "text": "in terms of lashing out at other people physically I don't do that but in order to let off some aggression different if need be all I'm not above you know",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "210.8",
+      "end_time_sec": "218.6",
+      "asr_confidence": "0.894802987575531"
+    },
+    {
+      "turn_id": "u19",
+      "speaker": "user",
+      "text": "punching a wall or punching something nearby I mean I'm not trying to",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "221.0",
+      "end_time_sec": "224.7",
+      "asr_confidence": "0.9452187418937683"
+    },
+    {
+      "turn_id": "u20",
+      "speaker": "user",
+      "text": "this is love doesn't physically hurt me but you don't just get some steamed Red Lobster lost email that's normal for me",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "225.8",
+      "end_time_sec": "232.5",
+      "asr_confidence": "0.8900961875915527"
+    },
+    {
+      "turn_id": "u21",
+      "speaker": "user",
+      "text": "face to face",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "245.0",
+      "end_time_sec": "247.0",
+      "asr_confidence": "0.8254102468490601"
+    },
+    {
+      "turn_id": "u22",
+      "speaker": "user",
+      "text": "can remember it's been a long time",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "249.5",
+      "end_time_sec": "252.4",
+      "asr_confidence": "0.9396171569824219"
+    },
+    {
+      "turn_id": "u23",
+      "speaker": "user",
+      "text": "but I mean I argue about with people online about stupid shit Tina that's that's normal ship as far as like face-to-face chance for a long time",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "254.5",
+      "end_time_sec": "262.9",
+      "asr_confidence": "0.9050119519233704"
+    },
+    {
+      "turn_id": "u24",
+      "speaker": "user",
+      "text": "currently or overall",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "271.9",
+      "end_time_sec": "273.9",
+      "asr_confidence": "0.9254027605056763"
+    },
+    {
+      "turn_id": "u25",
+      "speaker": "user",
+      "text": "which one means someone I'm in contact with now or someone from maybe for my pastor which is it",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "280.1",
+      "end_time_sec": "285.1",
+      "asr_confidence": "0.8796902894973755"
+    },
+    {
+      "turn_id": "u26",
+      "speaker": "user",
+      "text": "okay my mom had a",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "290.1",
+      "end_time_sec": "292.5",
+      "asr_confidence": "0.9354880452156067"
+    },
+    {
+      "turn_id": "u27",
+      "speaker": "user",
+      "text": "boyfriend I was a teenager he was like a father figure out when I was about 14 so he was pretty positive influence",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "294.9",
+      "end_time_sec": "301.0",
+      "asr_confidence": "0.9279466271400452"
+    },
+    {
+      "turn_id": "u28",
+      "speaker": "user",
+      "text": "not at all",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "305.8",
+      "end_time_sec": "306.4",
+      "asr_confidence": "0.9931640028953552"
+    },
+    {
+      "turn_id": "u29",
+      "speaker": "user",
+      "text": "to open up a record shop",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "317.7",
+      "end_time_sec": "319.8",
+      "asr_confidence": "0.9771113395690918"
+    },
+    {
+      "turn_id": "u30",
+      "speaker": "user",
+      "text": "unemployed office worker right now",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "327.9",
+      "end_time_sec": "330.1",
+      "asr_confidence": "0.9754608273506165"
+    },
+    {
+      "turn_id": "u31",
+      "speaker": "user",
+      "text": "as in what doing what you must Pacific",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "340.9",
+      "end_time_sec": "343.7",
+      "asr_confidence": "0.9335218071937561"
+    },
+    {
+      "turn_id": "u32",
+      "speaker": "user",
+      "text": "going on a first date with a girlfriend back in the 2007 Emmy first met",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "359.9",
+      "end_time_sec": "364.7",
+      "asr_confidence": "0.8888779282569885"
+    },
+    {
+      "turn_id": "u33",
+      "speaker": "user",
+      "text": "Smead arrangements to meet her and her daughter and her daughters friends at the Queen Mary Long Beach and you'll have spent the evening this time of the day to evening together and hanging out and eat dinner and stayed at the hotel one I got to know each other that way",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "372.0",
+      "end_time_sec": "386.1",
+      "asr_confidence": "0.8761943578720093"
+    },
+    {
+      "turn_id": "u34",
+      "speaker": "user",
+      "text": "it wasn't",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "388.9",
+      "end_time_sec": "389.7",
+      "asr_confidence": "0.6146008372306824"
+    },
+    {
+      "turn_id": "u35",
+      "speaker": "user",
+      "text": "well we were that was beginning of a relationship at the time so it was that's how I knew where my girlfriend at the time so",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "394.7",
+      "end_time_sec": "402.5",
+      "asr_confidence": "0.9087954163551331"
+    },
+    {
+      "turn_id": "u36",
+      "speaker": "user",
+      "text": "currently yeah I do here",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "409.9",
+      "end_time_sec": "411.5",
+      "asr_confidence": "0.8096380829811096"
+    },
+    {
+      "turn_id": "u37",
+      "speaker": "user",
+      "text": "I don't it sucks balls I hate having roommates sucks",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "415.5",
+      "end_time_sec": "419.0",
+      "asr_confidence": "0.903071403503418"
+    },
+    {
+      "turn_id": "u38",
+      "speaker": "user",
+      "text": "in some ways it's okay cuz I don't see me that much as I'm not really around them and the other times I need I need to have my own space and also difficult for me that way we get we get along but I don't really see them that much that's by Design so",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "431.9",
+      "end_time_sec": "446.8",
+      "asr_confidence": "0.9419373869895935"
+    },
+    {
+      "turn_id": "u39",
+      "speaker": "user",
+      "text": "like to be alone sometimes I read that this mean that I'd like to be alone",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "456.5",
+      "end_time_sec": "460.1",
+      "asr_confidence": "0.8633507490158081"
+    },
+    {
+      "turn_id": "u40",
+      "speaker": "user",
+      "text": "hey ladies doing nothing since defense",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "461.8",
+      "end_time_sec": "464.2",
+      "asr_confidence": "0.7005565762519836"
+    },
+    {
+      "turn_id": "u41",
+      "speaker": "user",
+      "text": "no",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "470.1",
+      "end_time_sec": "470.5",
+      "asr_confidence": "0.8991013765335083"
+    },
+    {
+      "turn_id": "u42",
+      "speaker": "user",
+      "text": "no",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "474.8",
+      "end_time_sec": "475.2",
+      "asr_confidence": "0.8773303031921387"
+    },
+    {
+      "turn_id": "u43",
+      "speaker": "user",
+      "text": "no",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "478.6",
+      "end_time_sec": "480.4",
+      "asr_confidence": "0.8855770826339722"
+    },
+    {
+      "turn_id": "u44",
+      "speaker": "user",
+      "text": "sorry you repeat that",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "483.4",
+      "end_time_sec": "486.5",
+      "asr_confidence": "0.8624864816665649"
+    },
+    {
+      "turn_id": "u45",
+      "speaker": "user",
+      "text": "no not necessarily",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "493.4",
+      "end_time_sec": "494.7",
+      "asr_confidence": "0.9579704403877258"
+    },
+    {
+      "turn_id": "u46",
+      "speaker": "user",
+      "text": "very I'm a heavy sleeper",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "500.1",
+      "end_time_sec": "501.1",
+      "asr_confidence": "0.7371681332588196"
+    },
+    {
+      "turn_id": "u47",
+      "speaker": "user",
+      "text": "I don't know that would call it down but I'm not necessarily what you would called",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "513.4",
+      "end_time_sec": "517.9",
+      "asr_confidence": "0.9194589257240295"
+    },
+    {
+      "turn_id": "u48",
+      "speaker": "user",
+      "text": "Siri but I don't know what I miss the way down",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "521.1",
+      "end_time_sec": "523.9",
+      "asr_confidence": "0.7866328358650208"
+    },
+    {
+      "turn_id": "u49",
+      "speaker": "user",
+      "text": "yeah all the time",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "526.9",
+      "end_time_sec": "527.8",
+      "asr_confidence": "0.953356146812439"
+    },
+    {
+      "turn_id": "u50",
+      "speaker": "user",
+      "text": "how to say I don't know I'm not sure",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "542.8",
+      "end_time_sec": "548.3",
+      "asr_confidence": "0.8033822774887085"
+    },
+    {
+      "turn_id": "u51",
+      "speaker": "user",
+      "text": "I don't know that I really want the one to ask a guy to get his ass someone else about that I have a difficult time answering that question",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "560.4",
+      "end_time_sec": "566.9",
+      "asr_confidence": "0.8942937850952148"
+    },
+    {
+      "turn_id": "u52",
+      "speaker": "user",
+      "text": "out of",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "572.9",
+      "end_time_sec": "574.1",
+      "asr_confidence": "0.9100069403648376"
+    },
+    {
+      "turn_id": "u53",
+      "speaker": "user",
+      "text": "I didn't didn't fall the drugs like a lot of other people that I know",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "582.7",
+      "end_time_sec": "587.2",
+      "asr_confidence": "0.8966121077537537"
+    },
+    {
+      "turn_id": "u54",
+      "speaker": "user",
+      "text": "listening Music On Vinyl",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "596.1",
+      "end_time_sec": "599.2",
+      "asr_confidence": "0.8341816067695618"
+    },
+    {
+      "turn_id": "u55",
+      "speaker": "user",
+      "text": "being around dogs",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "602.1",
+      "end_time_sec": "602.8",
+      "asr_confidence": "0.9204128980636597"
+    },
+    {
+      "turn_id": "u56",
+      "speaker": "user",
+      "text": "spend New Year's Eve with a friend real close friend",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "614.5",
+      "end_time_sec": "617.7",
+      "asr_confidence": "0.9195393919944763"
+    },
+    {
+      "turn_id": "u57",
+      "speaker": "user",
+      "text": "not really",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "621.1",
+      "end_time_sec": "622.5",
+      "asr_confidence": "0.9275614619255066"
+    },
+    {
+      "turn_id": "u58",
+      "speaker": "user",
+      "text": "I'm glad I don't have any I think they're especially here in Los Angeles they drive me nuts I can't stand them",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "635.2",
+      "end_time_sec": "642.3",
+      "asr_confidence": "0.9582647085189819"
+    },
+    {
+      "turn_id": "u59",
+      "speaker": "user",
+      "text": "I assume you mean post High School",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "655.3",
+      "end_time_sec": "658.6",
+      "asr_confidence": "0.9586019515991211"
+    },
+    {
+      "turn_id": "u60",
+      "speaker": "user",
+      "text": "I briefly just sick basica General Studies I from I remember I actually didn't finish that quit to play the band so I did I skipped a lot of school so I didn't really",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "662.7",
+      "end_time_sec": "678.5",
+      "asr_confidence": "0.930923581123352"
+    },
+    {
+      "turn_id": "u61",
+      "speaker": "user",
+      "text": "so nothing you're the Junior College Community College says I didn't go to university so I was just",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "680.9",
+      "end_time_sec": "686.8",
+      "asr_confidence": "0.8720933198928833"
+    },
+    {
+      "turn_id": "u62",
+      "speaker": "user",
+      "text": "do what",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "689.0",
+      "end_time_sec": "689.7",
+      "asr_confidence": "0.9876253008842468"
+    },
+    {
+      "turn_id": "u63",
+      "speaker": "user",
+      "text": "stop going",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "691.0",
+      "end_time_sec": "691.7",
+      "asr_confidence": "0.9236612915992737"
+    },
+    {
+      "turn_id": "u64",
+      "speaker": "user",
+      "text": "I just wasn't interested in my interests were elsewhere so I just I just going",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "694.0",
+      "end_time_sec": "698.9",
+      "asr_confidence": "0.8383628129959106"
+    },
+    {
+      "turn_id": "u65",
+      "speaker": "user",
+      "text": "in terms of what",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "706.3",
+      "end_time_sec": "707.1",
+      "asr_confidence": "0.7981680631637573"
+    },
+    {
+      "turn_id": "u66",
+      "speaker": "user",
+      "text": "I'm sure everyone has a right or something you know I'm not going to get specific but yeah sure things I regret year",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "711.5",
+      "end_time_sec": "718.0",
+      "asr_confidence": "0.8640950322151184"
+    },
+    {
+      "turn_id": "u67",
+      "speaker": "user",
+      "text": "20 years ago what was that",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "736.2",
+      "end_time_sec": "738.0",
+      "asr_confidence": "0.8936076164245605"
+    },
+    {
+      "turn_id": "u68",
+      "speaker": "user",
+      "text": "93",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "740.4",
+      "end_time_sec": "741.3",
+      "asr_confidence": "0.655448317527771"
+    },
+    {
+      "turn_id": "u69",
+      "speaker": "user",
+      "text": "well 10 years ago 2003",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "749.4",
+      "end_time_sec": "753.4",
+      "asr_confidence": "0.915747344493866"
+    },
+    {
+      "turn_id": "u70",
+      "speaker": "user",
+      "text": "it's hard to say it's hard to say",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "759.3",
+      "end_time_sec": "761.3",
+      "asr_confidence": "0.870914876461029"
+    },
+    {
+      "turn_id": "u71",
+      "speaker": "user",
+      "text": "pick up the comeback to that with maybe",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "762.8",
+      "end_time_sec": "765.5",
+      "asr_confidence": "0.7595083713531494"
+    },
+    {
+      "turn_id": "u72",
+      "speaker": "user",
+      "text": "I don't have a best friend these days",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "771.6",
+      "end_time_sec": "773.2",
+      "asr_confidence": "0.9650266170501709"
+    },
+    {
+      "turn_id": "u73",
+      "speaker": "user",
+      "text": "volume depends on your definition of friend that I don't I don't hang out with me people you know it I had best I had a so-called best friend you out but that was like",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "779.1",
+      "end_time_sec": "788.1",
+      "asr_confidence": "0.9222700595855713"
+    },
+    {
+      "turn_id": "u74",
+      "speaker": "user",
+      "text": "20 years 20 some odd years ago and I don't really I'm very much a loner these day so that I don't really have what you would consider a tester a really close friend you know I just don't have that",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "791.4",
+      "end_time_sec": "803.3",
+      "asr_confidence": "0.9005483984947205"
+    },
+    {
+      "turn_id": "u75",
+      "speaker": "user",
+      "text": "okay",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "809.5",
+      "end_time_sec": "809.9",
+      "asr_confidence": "0.7138283252716064"
+    },
+    {
+      "turn_id": "u76",
+      "speaker": "user",
+      "text": "Sia",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "814.3",
+      "end_time_sec": "815.4",
+      "asr_confidence": "0.6364005208015442"
+    }
+  ]
+}

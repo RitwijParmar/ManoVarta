@@ -1,6 +1,8 @@
 from dataclasses import dataclass
 from typing import Dict, Iterable, List
 
+from manovarta_core.item_ids import ITEM_ID_ALIASES
+
 
 @dataclass(frozen=True)
 class QuestionnaireItem:
@@ -30,16 +32,21 @@ GAD7_ITEMS: List[QuestionnaireItem] = [
     QuestionnaireItem("gad_q4_trouble_relaxing", "GAD7", "Relaxing", "difficulty relaxing or settling down", 2),
     QuestionnaireItem("gad_q5_restlessness", "GAD7", "Restlessness", "restlessness or pacing", 2),
     QuestionnaireItem("gad_q6_irritability", "GAD7", "Irritability", "being more irritable or snappy", 1),
-    QuestionnaireItem("gad_q7_fear_awful", "GAD7", "Something awful", "fear that something bad will happen", 2),
+    QuestionnaireItem("gad_q7_afraid", "GAD7", "Something awful", "fear that something bad will happen", 2),
 ]
 
-ITEM_INDEX: Dict[str, QuestionnaireItem] = {
+CANONICAL_ITEM_INDEX: Dict[str, QuestionnaireItem] = {
     item.item_id: item for item in [*PHQ9_ITEMS, *GAD7_ITEMS]
 }
 
+ITEM_INDEX: Dict[str, QuestionnaireItem] = dict(CANONICAL_ITEM_INDEX)
+for alias, canonical in ITEM_ID_ALIASES.items():
+    if canonical in CANONICAL_ITEM_INDEX:
+        ITEM_INDEX[alias] = CANONICAL_ITEM_INDEX[canonical]
+
 
 def all_items() -> Iterable[QuestionnaireItem]:
-    return ITEM_INDEX.values()
+    return CANONICAL_ITEM_INDEX.values()
 
 
 def grouped_items() -> Dict[str, List[QuestionnaireItem]]:

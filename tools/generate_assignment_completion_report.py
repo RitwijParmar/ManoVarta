@@ -4,12 +4,15 @@ from __future__ import annotations
 import importlib
 import json
 import os
+import sys
 import time
 from pathlib import Path
 from statistics import mean, median
 from urllib.request import Request, urlopen
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
 REPORTS_DIR = PROJECT_ROOT / "reports"
 LIVE_RUNTIME_EVAL_PATH = REPORTS_DIR / "live_runtime_eval_20260404.json"
 HYBRID_REPORT_PATH = REPORTS_DIR / "hybrid_runtime_validation_colab_20260404.json"
@@ -17,6 +20,7 @@ SHIP_NOTE_PATH = REPORTS_DIR / "ship_note_2026-04-04.md"
 BEST_SYSTEM_PATH = REPORTS_DIR / "best_current_system_report.json"
 OUTPUT_JSON_PATH = REPORTS_DIR / "final_assignment_completion_report.json"
 OUTPUT_MD_PATH = REPORTS_DIR / "final_assignment_completion_report.md"
+GOLD_STATUS_PATH = REPORTS_DIR / "gold_dataset_status.json"
 DEFAULT_PUBLIC_URL = os.getenv("MANOVARTA_PUBLIC_BASE_URL", "https://manovarta-runtime-122722888597.us-east4.run.app")
 
 LATENCY_SAMPLES = [
@@ -33,6 +37,15 @@ def load_json(path: Path) -> dict:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
+def load_previous_report() -> dict[str, object]:
+    if OUTPUT_JSON_PATH.exists():
+        try:
+            return load_json(OUTPUT_JSON_PATH)
+        except Exception:
+            return {}
+    return {}
+
+
 def runtime_eval_report_path() -> Path:
     return LIVE_RUNTIME_EVAL_PATH if LIVE_RUNTIME_EVAL_PATH.exists() else HYBRID_REPORT_PATH
 
@@ -46,6 +59,15 @@ def detect_voice_layer(project_root: Path = PROJECT_ROOT) -> dict[str, object]:
     app_js = (project_root / "manovarta_core" / "web" / "app.js").read_text(encoding="utf-8")
     api_code = (project_root / "manovarta_core" / "api.py").read_text(encoding="utf-8")
     voice_code = (project_root / "manovarta_core" / "voice.py").read_text(encoding="utf-8")
+    transcript_before_submit = all(
+        token in index_html + app_js
+        for token in (
+            "id=\"voicePreview\"",
+            "id=\"voiceUseButton\"",
+            "Review before sending",
+            "messageInput.value = pendingVoiceTranscript;",
+        )
+    )
     return {
         "status": "complete"
         if all(
@@ -58,7 +80,7 @@ def detect_voice_layer(project_root: Path = PROJECT_ROOT) -> dict[str, object]:
         "browser_text_to_speech": "speechSynthesisApi" in app_js,
         "cloud_speech_to_text": "/voice/transcribe" in api_code and "transcribe_audio" in voice_code,
         "cloud_text_to_speech": "/voice/speak" in api_code and "synthesize_speech" in voice_code,
-        "transcript_before_submit": "Transcript captured." in app_js and "messageInput.value = transcript;" in app_js,
+        "transcript_before_submit": transcript_before_submit,
         "note": "Voice now supports backend Google Cloud STT/TTS for English, Hindi, and Hinglish-oriented use, with browser speech kept as a fallback wrapper.",
     }
 
@@ -71,20 +93,32 @@ def fetch_live_runtime(public_url: str = DEFAULT_PUBLIC_URL) -> dict[str, object
 
 
 def detect_deployment_assets(project_root: Path = PROJECT_ROOT) -> dict[str, object]:
+    shipped_candidates = sorted((project_root / "artifacts").glob("manovarta_shipped_baseline_*.zip"))
+    shipped_bundle = shipped_candidates[-1] if shipped_candidates else project_root / "artifacts" / "manovarta_shipped_baseline_20260413.zip"
     assets = {
         "dockerfile": project_root / "Dockerfile",
         "docker_compose_demo": project_root / "docker-compose.demo.yml",
         "render_blueprint": project_root / "render.yaml",
-        "shipped_bundle": project_root / "artifacts" / "manovarta_shipped_baseline_20260404.zip",
+        "shipped_bundle": shipped_bundle,
     }
     present = {name: path.exists() for name, path in assets.items()}
     live_runtime = fetch_live_runtime()
+    runtime_alignment_issues = []
+    if live_runtime.get("provider") != "local":
+        runtime_alignment_issues.append("live provider is not local")
+    if not live_runtime.get("self_hosted_inference_enabled", False):
+        runtime_alignment_issues.append("live self-hosted inference is disabled")
+    if not live_runtime.get("hybrid_safety_enabled", False):
+        runtime_alignment_issues.append("live hybrid safety is disabled")
+    if not live_runtime.get("local_safety_checkpoint_enabled", False):
+        runtime_alignment_issues.append("live local safety checkpoint is disabled")
     return {
         "status": "complete" if all(present.values()) else "partial",
         "assets": {name: str(path.relative_to(project_root)) for name, path in assets.items()},
         "present": present,
         "public_runtime_url": DEFAULT_PUBLIC_URL,
         "live_runtime": live_runtime,
+        "runtime_alignment_issues": runtime_alignment_issues,
         "note": "Repo includes local container deployment, cloud deployment configuration, and a live public runtime whose config is mirrored here.",
     }
 
@@ -119,6 +153,14 @@ def detect_bonus_features(project_root: Path = PROJECT_ROOT) -> dict[str, object
         "missing": missing,
         "note": "The product now combines adaptive nudges with backend feedback tracking, continuity-aware context, and steering that adapts to pacing, openness, burden, and code-mix.",
     }
+
+
+def append_fallback_note(note: str, exc: Exception) -> str:
+    fallback = f"[fallback: reused previous report block because live dependencies were unavailable: {type(exc).__name__}]"
+    normalized = " ".join(str(note or "").split()).strip()
+    while "[fallback:" in normalized:
+        normalized = normalized.partition("[fallback:")[0].strip()
+    return f"{normalized} {fallback}".strip()
 
 
 def build_disclosure_efficiency_sample(sample_size: int = 30) -> dict[str, object]:
@@ -163,8 +205,85 @@ def build_disclosure_efficiency_sample(sample_size: int = 30) -> dict[str, objec
         "stable_item_traces": len(stable_turns),
         "avg_turns_to_stable_score": round(mean(stable_turns), 3) if stable_turns else None,
         "median_turns_to_stable_score": round(median(stable_turns), 3) if stable_turns else None,
+        "source": "seed conversations",
         "note": "This is computed by replaying seed conversations turn by turn and finding the earliest user-turn prefix where an item score matches the conversation-final value and stays there.",
     }
+
+
+def load_gold_dataset_status() -> dict[str, object]:
+    from tools.validate_gold_dataset import load_registry as load_gold_registry, summarize_gold_dataset
+
+    gold_root = PROJECT_ROOT / "data" / "gold"
+    registry_path = gold_root / "session_registry.csv"
+    if not registry_path.exists():
+        return {
+            "status": "missing",
+            "total_sessions": 0,
+            "fully_complete": 0,
+            "audio_present": 0,
+            "transcripts_present": 0,
+            "transcript_placeholders": 0,
+            "label_placeholders": 0,
+            "require_human_labels": True,
+            "human_annotator_a_present": 0,
+            "human_annotator_b_present": 0,
+            "human_adjudicated_present": 0,
+            "sessions_with_human_label_stack": 0,
+            "machine_generated_label_files": 0,
+            "structural_fully_complete": 0,
+            "note": "Gold session registry is missing, so strict dataset compliance cannot be evaluated.",
+        }
+
+    rows = load_gold_registry(registry_path)
+    structural = summarize_gold_dataset(rows, gold_root=gold_root, require_human_labels=False)
+    strict = summarize_gold_dataset(rows, gold_root=gold_root, require_human_labels=True)
+    strict["english_gold_core_sessions"] = int(structural.get("by_language", {}).get("en", 0))
+    strict["hindi_repurposed_pilot_audio_sessions"] = int(structural.get("by_language", {}).get("hi", 0))
+    strict["status"] = (
+        "complete"
+        if int(strict.get("total_sessions", 0)) > 0
+        and int(strict.get("fully_complete", 0)) == int(strict.get("total_sessions", 0))
+        else "partial"
+    )
+    strict["structural_fully_complete"] = int(structural.get("fully_complete", 0))
+    strict["note"] = (
+        "This report enforces human-label strict mode. English is the stronger clinically matched labeled core. "
+        "Hindi is a repurposed real-audio pilot set with local DSM-5-TR-aligned dual annotation and adjudication, "
+        "which is valid under the assignment's transcript-grading path even though it is not a native Hindi screening corpus. "
+        f"Structural completeness is tracked separately via structural_fully_complete={strict['structural_fully_complete']}."
+    )
+    return strict
+
+
+def compute_remaining_external_steps(report: dict[str, object]) -> list[str]:
+    req = report["requirement_status"]
+    deployment = req["deployment"]
+    voice = req["voice_capable_agent"]
+    gold = req["gold_dataset_and_labels"]
+    steps: list[str] = []
+    if gold["status"] != "complete":
+        if gold.get("require_human_labels", False):
+            steps.append(
+                "Complete dual human annotation + adjudication provenance for all gold sessions and rerun the strict human-label validator."
+            )
+        elif gold.get("transcript_placeholders", 0) or gold.get("label_placeholders", 0):
+            steps.append(
+                "Replace the placeholder bilingual gold-data pack with real English and Hindi audio, transcripts, dual annotations, and adjudicated labels."
+            )
+        elif gold.get("machine_generated_label_files", 0):
+            steps.append(
+                "Replace machine-bootstrap labels with dual human annotations and adjudicated labels for strict clinical-label claims."
+            )
+        else:
+            steps.append("Complete remaining gold dataset requirements and rerun the strict validator.")
+    if not deployment["present"]["shipped_bundle"]:
+        steps.append("Generate the shipped baseline bundle under artifacts/.")
+    if not voice["transcript_before_submit"]:
+        steps.append("Keep the voice flow in transcript-review mode before submit.")
+    if deployment.get("runtime_alignment_issues"):
+        issues = "; ".join(deployment["runtime_alignment_issues"])
+        steps.append(f"Redeploy the public runtime so it matches the intended local hybrid deployment ({issues}).")
+    return steps
 
 
 def build_bonus_validation_sample() -> dict[str, object]:
@@ -322,14 +441,33 @@ def build_assignment_report() -> dict[str, object]:
         3,
     )
 
+    previous_report = load_previous_report()
+    previous_evals = previous_report.get("evaluation_validation", {}) if isinstance(previous_report, dict) else {}
+
     voice = detect_voice_layer()
     deployment = detect_deployment_assets()
     bonus = detect_bonus_features()
-    bonus_validation = build_bonus_validation_sample()
+    try:
+        bonus_validation = build_bonus_validation_sample()
+    except Exception as exc:
+        bonus_validation = previous_evals.get("bonus_validation", {})
+        if not bonus_validation:
+            raise RuntimeError("Bonus validation sample could not be rebuilt and no previous fallback is available.") from exc
+        bonus_validation = dict(bonus_validation)
+        bonus_validation["note"] = append_fallback_note(bonus_validation.get("note", ""), exc)
     disclosure = build_disclosure_efficiency_sample()
-    latency = measure_latency_template_path()
+    try:
+        latency = measure_latency_template_path()
+    except Exception as exc:
+        latency = previous_evals.get("latency", {})
+        if not latency:
+            raise RuntimeError("Latency block could not be rebuilt and no previous fallback is available.") from exc
+        latency = dict(latency)
+        latency["note"] = append_fallback_note(latency.get("note", ""), exc)
+    gold_status = load_gold_dataset_status()
 
-    return {
+    shipped_bundle = deployment["assets"]["shipped_bundle"]
+    report = {
         "generated_at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
         "source_reports": {
             "hybrid_runtime_validation": str(hybrid_report_path.relative_to(PROJECT_ROOT)),
@@ -381,6 +519,26 @@ def build_assignment_report() -> dict[str, object]:
                     "Urgent human-review routing",
                 ],
             },
+            "gold_dataset_and_labels": {
+                "status": gold_status["status"],
+                "total_sessions": gold_status.get("total_sessions", 0),
+                "fully_complete": gold_status.get("fully_complete", 0),
+                "structural_fully_complete": gold_status.get("structural_fully_complete", 0),
+                "english_gold_core_sessions": gold_status.get("english_gold_core_sessions", 0),
+                "hindi_repurposed_pilot_audio_sessions": gold_status.get("hindi_repurposed_pilot_audio_sessions", 0),
+                "audio_present": gold_status.get("audio_present", 0),
+                "metadata_rows_present": gold_status.get("metadata_rows_present", 0),
+                "transcripts_present": gold_status.get("transcripts_present", 0),
+                "transcript_placeholders": gold_status.get("transcript_placeholders", 0),
+                "label_placeholders": gold_status.get("label_placeholders", 0),
+                "require_human_labels": bool(gold_status.get("require_human_labels", False)),
+                "human_annotator_a_present": gold_status.get("human_annotator_a_present", 0),
+                "human_annotator_b_present": gold_status.get("human_annotator_b_present", 0),
+                "human_adjudicated_present": gold_status.get("human_adjudicated_present", 0),
+                "sessions_with_human_label_stack": gold_status.get("sessions_with_human_label_stack", 0),
+                "machine_generated_label_files": gold_status.get("machine_generated_label_files", 0),
+                "note": gold_status["note"],
+            },
             "deployment": deployment,
             "bonus": bonus,
         },
@@ -404,13 +562,20 @@ def build_assignment_report() -> dict[str, object]:
             },
         },
         "shipped_baseline": {
-            "tag": "shipped-baseline-2026-04-04",
+            "tag": "shipped-baseline-2026-04-13",
             "default_runtime": best_system_report.get("recommended_default_runtime")
             or best_system_report.get("recommendation", {}).get("ship_default", "hybrid_runtime"),
-            "bundle": "artifacts/manovarta_shipped_baseline_20260404.zip",
+            "bundle": shipped_bundle,
         },
-        "remaining_external_step": f"None. The public runtime is live at {DEFAULT_PUBLIC_URL}.",
+        "remaining_external_step": "",
     }
+    steps = compute_remaining_external_steps(report)
+    report["remaining_external_step"] = (
+        "None required for assignment compliance. The public runtime and report pack are aligned; replacing the Hindi pilot corpus with a native Hindi screening corpus would strengthen source-match quality, not baseline completion."
+        if not steps
+        else " | ".join(steps)
+    )
+    return report
 
 
 def render_markdown(report: dict[str, object]) -> str:
@@ -424,6 +589,7 @@ def render_markdown(report: dict[str, object]) -> str:
     safety = evals["safety_accuracy"]
     bonus_validation = evals["bonus_validation"]
     discourse = evals["discourse_effectiveness"]
+    gold = req["gold_dataset_and_labels"]
 
     lines = [
         "# Final Assignment Completion Report",
@@ -440,8 +606,29 @@ def render_markdown(report: dict[str, object]) -> str:
         f"- Task 1 smart screening: `{req['task_1_smart_screening']['status']}`",
         f"- Task 2 LLM inference engine: `{req['task_2_llm_inference_engine']['status']}`",
         f"- Task 3 safety trigger system: `{req['task_3_safety_trigger_system']['status']}`",
+        f"- Gold dataset and labels: `{gold['status']}`",
         f"- Deployment assets in repo: `{deployment['status']}`",
         f"- Bonus implemented: `{', '.join(bonus['implemented']) if bonus['implemented'] else 'none'}`",
+        "",
+        "## Gold Dataset",
+        "",
+        f"- Planned sessions: `{gold['total_sessions']}`",
+        f"- Fully complete sessions: `{gold['fully_complete']}`",
+        f"- Structural complete sessions (non-human strict): `{gold.get('structural_fully_complete', 'n/a')}`",
+        f"- English gold-core sessions: `{gold.get('english_gold_core_sessions', 'n/a')}`",
+        f"- Hindi repurposed pilot audio sessions: `{gold.get('hindi_repurposed_pilot_audio_sessions', 'n/a')}`",
+        f"- Audio present: `{gold['audio_present']}`",
+        f"- Metadata rows present: `{gold.get('metadata_rows_present', 'n/a')}`",
+        f"- Transcripts present: `{gold['transcripts_present']}`",
+        f"- Transcript placeholders remaining: `{gold['transcript_placeholders']}`",
+        f"- Label placeholders remaining: `{gold['label_placeholders']}`",
+        f"- Human-label strict mode: `{gold.get('require_human_labels', False)}`",
+        f"- Human annotator A files: `{gold.get('human_annotator_a_present', 0)}`",
+        f"- Human annotator B files: `{gold.get('human_annotator_b_present', 0)}`",
+        f"- Human adjudicated files: `{gold.get('human_adjudicated_present', 0)}`",
+        f"- Sessions with full human label stack: `{gold.get('sessions_with_human_label_stack', 0)}`",
+        f"- Machine-generated label files: `{gold.get('machine_generated_label_files', 0)}`",
+        f"- Note: {gold['note']}",
         "",
         "## Voice Capability",
         "",
@@ -460,6 +647,7 @@ def render_markdown(report: dict[str, object]) -> str:
         f"- Stable item traces measured: `{disclosure['stable_item_traces']}`",
         f"- Average user turns to stable score: `{disclosure['avg_turns_to_stable_score']}`",
         f"- Median user turns to stable score: `{disclosure['median_turns_to_stable_score']}`",
+        f"- Source: `{disclosure['source']}`",
         "",
         "### Safety Accuracy",
         "",
@@ -502,6 +690,7 @@ def render_markdown(report: dict[str, object]) -> str:
         f"- Public runtime URL: `{deployment['public_runtime_url']}`",
         f"- Live hybrid safety enabled: `{deployment['live_runtime']['hybrid_safety_enabled']}`",
         f"- Live cloud voice enabled: `{deployment['live_runtime']['cloud_voice_enabled']}`",
+        f"- Runtime alignment issues: `{deployment['runtime_alignment_issues']}`",
         f"- Note: {deployment['note']}",
         "",
         "## Bonus",

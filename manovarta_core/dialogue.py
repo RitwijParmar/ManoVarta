@@ -75,6 +75,12 @@ POST_CLOSE_CHOOSER_MESSAGES = {
     "hinglish": "Agar aap chahein, to jo ek missing detail sabse important lag rahi ho woh bol sakte ho, ya hum ise current summary maan kar yahin chhod sakte hain.",
 }
 
+POST_CLOSE_IDLE_MESSAGES = {
+    "en": "Understood. We can pause here for now. If you want to continue later, share one concrete detail and we’ll pick it up from there.",
+    "hi": "समझ गया। हम अभी यहीं विराम रख सकते हैं। जब आगे बढ़ना चाहें, एक ठोस बात बताइए और हम वहीं से शुरू करेंगे।",
+    "hinglish": "Samajh gaya. Hum abhi yahin pause rakh sakte hain. Jab continue karna ho, ek concrete detail bolo aur hum wahin se start karenge.",
+}
+
 ANXIETY_LOOP_BREAK_PROMPTS = {
     "en": "Let me pause and reflect what I’m hearing: this anxiety seems to build at certain times, affect both mind and body, and feel heavier on stressful days. If that fits, tell me just one last thing: does it mostly stay around work or responsibilities, or does it spread into other parts of life too?",
     "hi": "मैं थोड़ा रुककर जो समझ आ रहा है उसे पकड़ना चाहता हूँ: यह चिंता कुछ खास समय पर बढ़ती है, दिमाग और शरीर दोनों पर असर डालती है, और तनाव वाले दिनों में ज्यादा लग सकती है। अगर यह सही लग रहा है, तो बस एक आख़िरी बात बताइए: यह ज़्यादा काम या जिम्मेदारियों तक रहती है, या दूसरी बातों में भी फैल जाती है?",
@@ -109,15 +115,15 @@ REFLECTION_PREFIXES = {
 }
 
 SOFTENING_SUFFIXES = {
-    "en": "Whichever part feels easier to answer is okay.",
-    "hi": "जो हिस्सा जवाब देना आसान लगे, उसी से शुरू करना ठीक है।",
-    "hinglish": "Jo part answer karna easier lage, usse start karna bilkul fine hai.",
+    "en": "Whichever part feels easiest to answer is okay.",
+    "hi": "जो हिस्सा जवाब देना सबसे आसान लगे, उसी से शुरू करना ठीक है।",
+    "hinglish": "Jo part answer karna sabse easier lage, usse start karna bilkul fine hai.",
 }
 
 BRIEF_DETAIL_SUFFIXES = {
-    "en": "One recent example or one timing detail is enough.",
-    "hi": "एक हाल का उदाहरण या समय का एक संकेत भी काफ़ी है।",
-    "hinglish": "Ek recent example ya ek timing detail bhi enough hai.",
+    "en": "One recent example, one timing detail, or a quick 0 to 10 is enough.",
+    "hi": "एक हाल का उदाहरण, समय का एक संकेत, या 0 से 10 का छोटा अंदाज़ा भी काफ़ी है।",
+    "hinglish": "Ek recent example, ek timing detail, ya 0 se 10 ka quick estimate bhi enough hai.",
 }
 
 OPEN_STORY_SUFFIXES = {
@@ -178,7 +184,7 @@ UNDERCOVERED_ITEM_BOOSTS: Dict[str, int] = {
     "gad_q3_excessive_worry": 2,
     "gad_q4_trouble_relaxing": 3,
     "gad_q6_irritability": 2,
-    "gad_q7_fear_awful": 3,
+    "gad_q7_afraid": 3,
 }
 
 TOPIC_LABELS = {
@@ -600,7 +606,7 @@ CLOSE_ACK_MARKERS = (
 SENSITIVE_ITEM_IDS = (
     "phq_q6_worthlessness",
     "phq_q9_self_harm",
-    "gad_q7_fear_awful",
+    "gad_q7_afraid",
 )
 
 TOPIC_REFLECTIONS = {
@@ -687,7 +693,7 @@ ITEM_REFLECTIONS = {
         "hi": "लगता है चिंता एक बात तक सीमित न रहकर दूसरी बातों में भी फैल सकती है।",
         "hinglish": "Lag raha hai worry ek hi cheez tak limited nahi rehkar life ke aur parts mein bhi spread ho sakti hai.",
     },
-    "gad_q7_fear_awful": {
+    "gad_q7_afraid": {
         "en": "It sounds like the anxiety can start pointing toward what might go wrong next.",
         "hi": "लगता है चिंता आगे क्या गलत हो सकता है, उस तरफ़ भी खिंचने लगती है।",
         "hinglish": "Lag raha hai anxiety agla kya galat ho sakta hai us direction mein bhi kheenchne lagti hai.",
@@ -884,7 +890,7 @@ ITEM_FOLLOW_UPS: Dict[str, Dict[str, Dict[str, str]]] = {
             "hinglish": "Isse samajh aa raha hai ki yeh kitni baar hota hai. Jab yeh hit karta hai, kya yeh zyada busy mind jaisa lagta hai, tense body jaisa, ya dono saath mein?",
         },
     },
-    "gad_q7_fear_awful": {
+    "gad_q7_afraid": {
         "default": {
             "en": "When the anxiety peaks, does it feel more like something specific might go wrong, that you may get bad news, or that things could spiral out of control?",
             "hi": "जब चिंता सबसे तेज़ होती है, क्या ज़्यादा लगता है कि कुछ खास गलत हो सकता है, कोई बुरी खबर मिल सकती है, या चीज़ें हाथ से निकल सकती हैं?",
@@ -1002,7 +1008,7 @@ TOPIC_GRAPH: Dict[str, TopicNode] = {
             "gad_q4_trouble_relaxing",
             "gad_q5_restlessness",
             "gad_q6_irritability",
-            "gad_q7_fear_awful",
+            "gad_q7_afraid",
         ),
         priority=5,
         transitions=("sleep", "focus", "mood", "safety"),
@@ -1068,7 +1074,6 @@ class DialoguePlanner:
         plan = snapshot.coverage.dialogue
         language = session.language
         latest_user_text = self._latest_user_text(session)
-        last_assistant_text = self._last_assistant_text(session)
 
         if snapshot.safety.level == "urgent" or plan.next_action == "handoff":
             return SAFETY_MESSAGES[language], plan.target_item
@@ -1078,17 +1083,19 @@ class DialoguePlanner:
         if post_close_reply is not None:
             return post_close_reply, None
         if self._should_break_after_relax_duration_answer(session):
+            if self._has_recent_break_prompt(session, language):
+                return ANXIETY_LOOP_CLOSE_PROMPTS[language], None
             return ANXIETY_LOOP_BREAK_PROMPTS[language], None
         if self._should_close_anxiety_after_scope_answer(plan, session):
             return ANXIETY_LOOP_CLOSE_PROMPTS[language], None
         if self._should_break_after_anxiety_core_rotation(session):
-            if self._already_used_segment(last_assistant_text, ANXIETY_LOOP_BREAK_PROMPTS[language]):
+            if self._has_recent_break_prompt(session, language):
                 return ANXIETY_LOOP_CLOSE_PROMPTS[language], None
             return ANXIETY_LOOP_BREAK_PROMPTS[language], None
         if self._should_close_after_relax_duration_answer(session):
             return ANXIETY_LOOP_CLOSE_PROMPTS[language], None
         if self._should_use_anxiety_loop_break(plan, session):
-            if self._already_used_segment(last_assistant_text, ANXIETY_LOOP_BREAK_PROMPTS[language]) or self._should_close_anxiety_loop(plan, session):
+            if self._has_recent_break_prompt(session, language) or self._should_close_anxiety_loop(plan, session):
                 return ANXIETY_LOOP_CLOSE_PROMPTS[language], None
             return ANXIETY_LOOP_BREAK_PROMPTS[language], None
         if plan.next_action == "summarize":
@@ -1215,6 +1222,15 @@ class DialoguePlanner:
     def _has_recent_anxiety_core_coverage(self, session: ChatSession) -> bool:
         recent_core = set(self._recent_anxiety_core_items(session))
         return {"gad_q2_control_worry", "gad_q3_excessive_worry", "gad_q4_trouble_relaxing"}.issubset(recent_core)
+
+    def _has_recent_break_prompt(self, session: ChatSession, language: str, lookback: int = 6) -> bool:
+        normalized_break = self._normalize(ANXIETY_LOOP_BREAK_PROMPTS[language])
+        recent_assistant_turns = [
+            self._normalize(turn.text)
+            for turn in session.turns
+            if turn.speaker == "assistant"
+        ][-lookback:]
+        return any(normalized_break in turn for turn in recent_assistant_turns)
 
     def _should_break_after_anxiety_core_rotation(self, session: ChatSession) -> bool:
         if not session.asked_items:
@@ -1865,8 +1881,8 @@ class DialoguePlanner:
                 return "gad_q4_trouble_relaxing"
             if "gad_q5_restlessness" in recent_signal_items and available("gad_q5_restlessness"):
                 return "gad_q5_restlessness"
-            if self._has_awful_outcome_signal(latest_user_text) and available("gad_q7_fear_awful"):
-                return "gad_q7_fear_awful"
+            if self._has_awful_outcome_signal(latest_user_text) and available("gad_q7_afraid"):
+                return "gad_q7_afraid"
             if self._has_persistent_worry_signal(latest_user_text) and available("gad_q3_excessive_worry"):
                 return "gad_q3_excessive_worry"
             if available("gad_q3_excessive_worry"):
@@ -1906,10 +1922,10 @@ class DialoguePlanner:
             if recent_relax_count >= 2 and not self._has_timing_or_frequency_answer(latest_user_text) and available("gad_q2_control_worry"):
                 return "gad_q2_control_worry"
 
-        if last_item == "gad_q7_fear_awful":
+        if last_item == "gad_q7_afraid":
             if self._has_worry_domain_signal(latest_user_text) and available("gad_q3_excessive_worry"):
                 return "gad_q3_excessive_worry"
-            if session.asked_items[-2:].count("gad_q7_fear_awful") >= 1 and available("gad_q3_excessive_worry"):
+            if session.asked_items[-2:].count("gad_q7_afraid") >= 1 and available("gad_q3_excessive_worry"):
                 return "gad_q3_excessive_worry"
 
         if not self._has_timing_or_frequency_answer(latest_user_text):
@@ -2111,7 +2127,7 @@ class DialoguePlanner:
         latest_user_text = self._latest_user_text(session)
         if item_id == "gad_q3_excessive_worry" and self._has_worry_domain_signal(latest_user_text):
             score += 14
-        if item_id == "gad_q7_fear_awful" and not self._has_awful_outcome_signal(latest_user_text):
+        if item_id == "gad_q7_afraid" and not self._has_awful_outcome_signal(latest_user_text):
             score -= 14
         if session.asked_items[-1:] == [item_id] and self._has_timing_or_frequency_answer(self._latest_user_text(session)):
             prompt_bank = ITEM_FOLLOW_UPS.get(item_id, {})
@@ -2148,7 +2164,7 @@ class DialoguePlanner:
             return len(user_turns) < 3 and not mood_signal
         if item_id == "phq_q6_worthlessness":
             return len(user_turns) < 2 and not (mood_signal or self_view_signal or snapshot.safety.level == "review")
-        if item_id == "gad_q7_fear_awful":
+        if item_id == "gad_q7_afraid":
             return len(user_turns) < 2 and snapshot.coverage.touched_items < 3
         return False
 
@@ -2421,8 +2437,18 @@ class DialoguePlanner:
             CLOSING_MESSAGES[language],
             POST_CLOSE_CHOOSER_MESSAGES[language],
             FINAL_REST_MESSAGES[language],
+            POST_CLOSE_IDLE_MESSAGES[language],
             *FINAL_HOLD_VARIANTS[language],
         )
+
+    def _recent_post_close_turn_count(self, session: ChatSession, language: str, lookback: int = 6) -> int:
+        segments = tuple(self._normalize(segment) for segment in self._post_close_segments(language))
+        count = 0
+        for turn in [turn for turn in session.turns if turn.speaker == "assistant"][-lookback:]:
+            normalized_turn = self._normalize(turn.text)
+            if any(segment in normalized_turn for segment in segments):
+                count += 1
+        return count
 
     def _post_close_followup_reply(
         self,
@@ -2440,12 +2466,16 @@ class DialoguePlanner:
         if self._is_post_close_echo(session, latest_user_text, language):
             return FINAL_REST_MESSAGES[language]
         if self._is_close_acknowledgement(latest_user_text):
-            if self._already_used_segment(last_assistant_text, FINAL_REST_MESSAGES[language]):
-                return FINAL_REST_MESSAGES[language]
+            if self._already_used_segment(last_assistant_text, FINAL_REST_MESSAGES[language]) or self._already_used_segment(last_assistant_text, POST_CLOSE_IDLE_MESSAGES[language]):
+                return POST_CLOSE_IDLE_MESSAGES[language]
+            if self._recent_post_close_turn_count(session, language) >= 2:
+                return POST_CLOSE_IDLE_MESSAGES[language]
             return self._select_post_close_hold_message(session, language)
         if self._is_nonexpansive_followup(latest_user_text):
-            if self._already_used_segment(last_assistant_text, FINAL_REST_MESSAGES[language]):
-                return FINAL_REST_MESSAGES[language]
+            if self._already_used_segment(last_assistant_text, FINAL_REST_MESSAGES[language]) or self._already_used_segment(last_assistant_text, POST_CLOSE_IDLE_MESSAGES[language]):
+                return POST_CLOSE_IDLE_MESSAGES[language]
+            if self._recent_post_close_turn_count(session, language) >= 2:
+                return POST_CLOSE_IDLE_MESSAGES[language]
             if self._already_used_segment(last_assistant_text, POST_CLOSE_CHOOSER_MESSAGES[language]):
                 return self._select_post_close_hold_message(session, language)
             return POST_CLOSE_CHOOSER_MESSAGES[language]
@@ -2833,21 +2863,40 @@ class DialoguePlanner:
         fatigue: FatigueLevel,
     ) -> list[str]:
         order: list[str] = []
+        has_recent_checkin = bool(getattr(session.profile, "recent_checkins", None))
+        if fatigue == "high" or user_style.openness == "guarded" or user_style.verbosity == "brief":
+            order.append("choice")
         if stage == "safety" or target_topic == "safety":
-            order.append("safety")
-        if target_topic in {"mood", "sleep", "anxiety"}:
+            order.extend(["safety", "support", "choice"])
+        if target_topic in {"mood", "sleep", "anxiety", "focus", "self_view", "energy"}:
             order.append(target_topic)
+        if target_topic == "anxiety":
+            order.extend(["body", "scale"])
+        elif target_topic == "sleep":
+            order.extend(["timing", "sleep", "impact"])
+        elif target_topic == "mood":
+            order.extend(["impact", "compare", "support"])
+        elif target_topic == "self_view":
+            order.extend(["compare", "support", "impact"])
+        elif target_topic == "focus":
+            order.extend(["example", "impact", "coping"])
+        elif target_topic == "energy":
+            order.extend(["impact", "timing", "example"])
+        if has_recent_checkin:
+            order.append("compare")
 
         if fatigue == "high":
-            order.extend(["impact", "example"])
+            order.extend(["choice", "scale", "impact"])
         elif user_style.openness == "guarded":
-            order.extend(["example", "impact", "timing"])
+            order.extend(["choice", "example", "impact", "support"])
         elif user_style.verbosity == "brief":
-            order.extend(["example", "timing", "impact"])
+            order.extend(["example", "timing", "scale", "impact"])
+        elif user_style.verbosity == "detailed":
+            order.extend(["compare", "coping", "impact", "example"])
         elif user_style.steering_preference == "user_led":
-            order.extend(["impact", "example", "timing"])
+            order.extend(["compare", "coping", "impact", "example"])
         else:
-            order.extend(["example", "impact", "timing"])
+            order.extend(["example", "impact", "timing", "coping"])
 
         helpful = [event.strategy for event in session.nudge_events[-2:] if event.outcome == "helpful"]
         unhelpful = [event.strategy for event in session.nudge_events[-2:] if event.outcome == "unhelpful"]

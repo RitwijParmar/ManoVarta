@@ -1,0 +1,139 @@
+# MVGOLD-EN-009 adjudication packet
+
+- Language: `en`
+- Cohort: `expansion`
+- Target primary domain: `trouble_relaxing`
+- Target risk band: `none`
+- Target output file: `data/gold/labels/MVGOLD-EN-009.adjudicated.json`
+
+## Metadata
+
+- Participant ID: `314`
+- Age years: ``
+- Age band: `adult_unknown_from_source`
+- Occupation: `unknown_from_source`
+- Living situation: `unknown_from_source`
+- Support system: `unknown_from_source`
+- Consent recorded: `public_dataset_license`
+- Collection source: `e_daic_public_2019`
+
+## Instructions
+
+Resolve disagreements between annotator A and annotator B, justify the decision, and save one final adjudicated label file.
+
+## Transcript
+
+- `u1` user: don't I look gorgeous you straighten up a little bit here
+- `u2` user: okay now you're going to chat with her for a bit
+- `u3` user: okay
+- `u4` user: yes
+- `u5` user: quite well I feel good
+- `u6` user: Los Angeles California here
+- `u7` user: one of the few native-born Los angele ins
+- `u8` user: I homeschool my ten-year-old son and I'm a homemaker I have five children and married 22 years
+- `u9` user: about the full-time job
+- `u10` user: somewhat we can we went to Israel about two months ago for a pilgrimage with our church yeah so I would say yes I've traveled a bit
+- `u11` user: I will most recently we like 2 months ago we went to Israel for a pilgrimage we were gone about nine days and was fabulous it was we spent the first five days in Corazon which is near the Galilee and in a place called I mean the name of the area is causing but we stayed in place called The domus galilaeae which is
+- `u12` user: a house for that welcomes Christian pilgrims as well as Jewish pilgrims
+- `u13` user: I enjoy like really the most important I dress like meeting the people and and of course seeing that the history especially Israel amidst the totally ancient but most dangerous is the the people I think to get a better understanding of how different cultures
+- `u14` user: live
+- `u15` user: no not at all
+- `u16` user: just don't I have all my life I've always been
+- `u17` user: open and and willing to socialize and I remember my younger brother I was joking saying that I would talk to anybody and I will I'll talk to just about anybody just because I enjoyed learning about other people
+- `u18` user: most of the top five by the end of the day after I've cooked dinner and we've had dinner together as a family I there's a word game on the computer that I like to play for a little while and then watch TV have a cocktail with my husband and just relax that's what we do and you know because we have a lot going on we don't stay up too late song
+- `u19` user: like to watch crime dramas
+- `u20` user: really mad probably not a lot
+- `u21` user: I get frustrated with for example my daughter does not clean up her room almost ever so that that gets me angry but
+- `u22` user: in terms of like really getting like heated Langer I mean other than like little things that my children do you know especially my oldest child is 21 you know he can be confrontational cell
+- `u23` user: other than that nothing really gets me like really angry
+- `u24` user: haven't I have haven't felt that
+- `u25` user: contributing to society helping
+- `u26` user: helping to raise responsible people I guess
+- `u27` user: and of course the love and affection in the the sun and the excitement that goes with it and all the stages that go I mean like really right now I'm in a stage where my children are either adults or teenagers I only had I have one 11 year old and the rest are all teenagers and adults so it's really fun because we're able to talk about current events and all kinds of stuff that's going on in the world and you know have to have a challenging discussions and that sort of thing so it's it's a different level than when you're taking care of babies and you know changing diapers and that kind of stuff
+- `u28` user: the hardest thing is that it's 24/7
+- `u29` user: you never not a parent you know it's and so you have to accept that and that's I remember when I first with my first child thinking you know when I brought him home from the hospital this is it I mean there's no going back you cannot change I mean I guess you could if you did something horrible but I mean the normal circumstances you can't change that and it's a permanent thing and
+- `u30` user: it is in some ways it takes away your freedom but in other ways it gives you a different sort of freedom
+- `u31` user: always
+- `u32` user: I'm sorry I didn't get what you said
+- `u33` user: some of the things that have been a positive influence in my life most importantly my church and my face but also my husband he's been a really
+- `u34` user: he's kind of his very like logical thinking and very grounded so if I get emotional or I get upset about something he's always we balance each other out likewise if he gets upset about something I'm able to balance him out so it's been it's been a great gift in my life
+- `u35` user: I don't think I'd be categorized as somebody with a temper occasionally I occasionally I get angry but I don't like have like rarely do I have outbursts I'm more more likely to you know to say what I feel not let it build up so you don't like my husband and I don't
+- `u36` user: rarely fight like have arguments that are yelling and screaming or anything like that it almost never happens because I like I said I'm more of a type of person that communicates on the spot self I'm thinking something I usually communicate it right away instead of letting it build up
+- `u37` user: usually I'm arguing with my older son because he you know he thinks he knows everything he's 21 years old so he has the know-it-all mentality and I'm just telling him that he doesn't know it all and you know I was like was on Hiller and more and he's very confident and very self
+- `u38` user: cell phone with the ra self-assured and so he thinks that you know everything he does is correct and he still has a lot of learning to do that's all
+- `u39` user: it is a can be
+- `u40` user: I think that many of them are spoiled and living environment of
+- `u41` user: of instant gratification which I think is going to be detrimental to the to the future of this country but
+- `u42` user: in a given that with all the technology we have is really not any way to go back so I I have hope that they will I mean I think this country was built on hard work and an ethics and hopefully our art the Next Generation and the generations after that can maintain that that standard of living I don't know if it's possible
+- `u43` user: as loving nurturing funny
+- `u44` user: we laugh a lot and
+- `u45` user: caring honest
+- `u46` user: things that I mean my best I have will actually my best friend is it's two people it's two sisters that I grew up with and we for some years took care of their mother was Alzheimer's before my parents got sick so I would had a very close have a very close relationship with them still do and so I'm considered the fourth sister so I would say that those are my best friends and and
+- `u47` user: we love each other very much is a good relationship
+- `u48` user: no
+- `u49` user: no
+- `u50` user: yes
+- `u51` user: most mostly mine early depression it was more anxiety probably it's probably been five or six years I mean I've had it off and on all my life but it was never diagnosed originally like as a teenager I think is when I first had started with anxiety but
+- `u52` user: other than that I let you know so depression kind of goes with anxiety if it's not under control but now it's under control so I have a great huh
+- `u53` user: no I think it was what they call fleece free floating anxiety more of a organic reason for it in other words that there was a chemical imbalance
+- `u54` user: in my brain
+- `u55` user: I've been feeling pretty good actually the holidays were great good family gatherings a little stressed because we're making a big decision right now to help my parents out my dad is really sick and we've offered to move in with them they have a big home but we would have to do a lot of
+- `u56` user: some renovation and some to help and some obviously moving around and so we're in the throes of that and so that's a big big change but I'm looking forward to it because I really don't want my parents to be alone as they get their in their 80s
+- `u57` user: so as I get closer to death I want to have my family there with them
+- `u58` user: not easy usually all my life I think I've always I mean I've always had at least I wake up at least once in the middle of the night to go to the bathroom basically
+- `u59` user: other than that I mean no not sleep well I mean other than that I sleep well but sometimes if I wake up like really early in the morning then I can't go back to sleep I'll get up and maybe do some work on the computer and then go back to bed and go back to sleep because I want my schedule is when if the kids are have to be at the school early and there's a lot of factors
+- `u60` user: sometimes it does
+- `u61` user: probably basically the same I think I might complain the bit like oh I'm tired or my body hurts or whatever you know but I think overall I'm probably the same
+- `u62` user: my kids know I'll be there I'll tell my get though I'm really tired and they'll understand like my older daughter will be really helpful and letting my the. I will try to cook dinner or something like that so that you know
+- `u63` user: then they put you in a little bit more
+- `u64` user: not really not not no
+- `u65` user: not really. I think significant
+- `u66` user: actually yes I do I do feel like therapy is useful
+- `u67` user: well we had a situation with my daughter
+- `u68` user: she also suffers from anxiety and we have had her in therapy for some time and we just recently our we're about to finish a group with her it was a 6 months
+- `u69` user: group for DVT it's called and it's like a the first time that is the first time they're documenting using it with teenagers and it's been really good it's been very helpful it's just all about how to live in the moment and how do you know the actual physical and mental strategies to keep you or keep you from your mind from going crazy you know worrying about things or we know
+- `u70` user: in this case some of the kids have tried to harm themselves or whatever so that's the focus of the therapy and it's been really good my husband and I both have been going with our daughter and it's been really really informational and really helpful I think
+- `u71` user: oh my God I was she was in a bad way she was being all suffering a lot and we knew it and we acted on it that's all
+- `u72` user: like
+- `u73` user: really joyful and happy I would say probably
+- `u74` user: probably would be in Israel when we renewed our marriage vows in the the ethic in Cana
+- `u75` user: so you know where the wedding of Cana took place that was really moving and beautiful and it was it happened that our anniversary was we left on our anniversary day we flew to Israel on so it was right at the same time it was beautiful
+- `u76` user: find meaningful and other than that I would say you know like other joyful occasions have been you don't like Christmas and you know family gatherings and you know my dad's birthday turned 83 on Christmas Eve you know that kind of think so
+- `u77` user: that's an interesting question I would say
+- `u78` user: once I get like things done that I need to do like if I'm have a lot of a lot of either work to do around the house or
+- `u79` user: answer one once I get them done I feel like I could sense of accomplishment
+- `u80` user: you know much like I mean I worked for many years in it as an administrative manager at UCLA and
+- `u81` user: you don't want to get a project done or you get your whatever month-end stuff done or there's a lot of different things that have to meet deadlines or so that feeling of like yeah I got it done you know so I think that would be a no for me the most
+- `u82` user: most recent way of feeling good and feeling you know like feeling accomplished
+- `u83` user: dream job
+- `u84` user: I think I've already lived it I'm also a birth Doula and yeah and so I've attended a lot of Earth and now I really only do it for family and friends and it's the most rewarding thing you could possibly ask to be involved in is the birth of bringing a new life into this world so I would say that's probably was my was a dream job and I didn't know what I trained much after you know I did my managerial stuff and
+- `u85` user: with all it is and was awesome so I don't work at a hospital anymore actually the hospital that I work at is now closed but
+- `u86` user: but like I said it for family and friends
+- `u87` user: I attended a friend of mine's Birth by accident she up she happen to have the same old BS I did with all my children and I came to bring food for her husband when she was in labor we were freaking out close friends and you know her labor picked up quite a bit when I got there she wanted me to say she didn't want me to leave I hadn't planned on it so that was the first birthday I attended outside of it you know myself giving birth which is a whole different experience so after that it was really interesting and interested in possibly setting nurse-midwifery
+- `u88` user: but then I discovered this thing called being a doula which is really gives you even a lot more Hands-On one-on-one contact with the patient which is what I like
+- `u89` user: so I tried to do that at the hospital in Inglewood about 15 years ago cuz my son is 15 and he was a year Old Mill 16 years ago so
+- `u90` user: yeah and I've been
+- `u91` user: well it can be challenging in terms of hours it depends on how long the woman is in labor but and you know also like for me I always tell my friends and family if they want me to be there dual that I cannot guarantee 100% I'm not doing it for business and that way and because of that I don't have like backup doulas that in case I'm sick or I'm not available somebody else could fill in for me so but so far it's been that all the women that have asked me I've been able to be there for some reason still there
+- `u92` user: the the only one that I missed was one A friend of mine from church who wanted me to go with her second baby I was with her for her first but her labor went so fast you didn't call me in the middle of the night and she was like two hours of Labor she would even if it called me I would have been there in time so I went really fast but other than that you know
+- `u93` user: yeah I've been I've been able to attend all the verse of people that have asked me to do
+- `u94` user: all of life or in your job
+- `u95` user: probably might my own births I mean my the birth of my own children
+- `u96` user: like there's an extreme
+- `u97` user: sense of Joy excitement relief because of course you're out of the pain and then like it's just it's just a matter of you know going forward from there but it's it's like something you can explain it's just it's awesome after you give birth so
+- `u98` user: and I've experienced both ways I've done both natural and I at my last job was a spy a C-section so I've had both both experiences
+- `u99` user: all right with my Fairchild had kind of a crazy nurse she was a little psychotic but other than that we laugh about it now but when I was in labor it wasn't funny and she
+- `u100` user: she was not there when the doctor I mean it was my third child was
+- `u101` user: born very quickly after he broke the water and wolf my husband was there but she was not in there with the doctor and she got in a lot of trouble because I only had like two contractions after that and my daughter was born in the bed so for me it was great cuz I didn't have to go through any of the labor but I'm sure they weren't happy that you fill out a lot of paperwork after that
+- `u102` user: so
+- `u103` user: now what I get myself for 10 or 20 years ago
+- `u104` user: 10 or 20 years ago is probably more not as some relaxed not as
+- `u105` user: like I feeling out my age that
+- `u106` user: I don't have the same concerns that I did then it's I don't worry about I don't worry at all about what people think about me I don't worry at all about what you know you know like why I noticed my daughters on Mom you can't wear that because people are going to say this I said I don't care you know but they do because it's still in their frame of mind that owe mom you have to dress like this or just like that or whatever so that would probably be at the wisdom that you you achieve with AIDs that you do see how life there's so many things that are more important in life than worrying about little things
+- `u107` user: most proud of
+- `u108` user: probably my family like my husband and my my children I mean the fact that we've stayed married that we weren't intact family that my kids see every day how their friends suffer who who come from divorced families or single parents and they they actually Express gratitude sometimes that we are married and we still you know we are still a family so I would say that's probably it
+- `u109` user: probably the one of my best qualities is being able to listen to people and being able to not be judgemental through the years I've had a lot of experience with
+- `u110` user: people with problems lot of friends with problems people I know from church and it's just taught me that everybody has weaknesses everybody has problems and I don't think I'm better than someone else if you think you're better than someone else and that's usually to me a sign that you don't know yourself well enough
+- `u111` user: okay
+- `u112` user: okay
+- `u113` user: goodbye
+- `u114` user: real quick

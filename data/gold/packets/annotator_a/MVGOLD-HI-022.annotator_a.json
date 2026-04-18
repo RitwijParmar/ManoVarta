@@ -1,0 +1,71 @@
+{
+  "session_id": "MVGOLD-HI-022",
+  "language": "hi",
+  "cohort": "expansion",
+  "target_primary_domain": "anxiety_control",
+  "target_risk_band": "none",
+  "packet_stage": "annotator_a",
+  "target_output_file": "data/gold/labels/MVGOLD-HI-022.annotator_a.json",
+  "related_files": {
+    "audio_file": "data/gold/audio/hi/MVGOLD-HI-022.wav",
+    "transcript_file": "data/gold/transcripts/hi/MVGOLD-HI-022.json",
+    "annotator_a_file": "data/gold/labels/MVGOLD-HI-022.annotator_a.json",
+    "annotator_b_file": "data/gold/labels/MVGOLD-HI-022.annotator_b.json",
+    "adjudicated_label_file": "data/gold/labels/MVGOLD-HI-022.adjudicated.json"
+  },
+  "metadata": {
+    "session_id": "MVGOLD-HI-022",
+    "participant_id": "S4257999900326009",
+    "language": "hi",
+    "age_years": "",
+    "age_band": "30-45",
+    "occupation": "Sopkipar",
+    "living_situation": "Urban",
+    "support_system": "not_provided_in_source",
+    "consent_recorded": "public_dataset_license",
+    "collection_source": "indicvoices_hindi_v1_valid_public",
+    "audio_file": "data/gold/audio/hi/MVGOLD-HI-022.wav",
+    "transcript_file": "data/gold/transcripts/hi/MVGOLD-HI-022.json",
+    "annotator_a_file": "data/gold/labels/MVGOLD-HI-022.annotator_a.json",
+    "annotator_b_file": "data/gold/labels/MVGOLD-HI-022.annotator_b.json",
+    "adjudicated_label_file": "data/gold/labels/MVGOLD-HI-022.adjudicated.json",
+    "split": "expansion",
+    "notes": "Imported from IndicVoices Hindi valid split; locally dual-annotated and adjudicated for PHQ-9/GAD-7 as a repurposed Hindi pilot audio set for multilingual voice extension, not a native mental-health screening corpus."
+  },
+  "transcript": {
+    "session_id": "MVGOLD-HI-022",
+    "language": "hi",
+    "cohort": "expansion",
+    "is_placeholder": false,
+    "collection_status": "collected_public_dataset",
+    "notes": "Imported from IndicVoices Hindi valid split; repurposed as a Hindi pilot audio set for multilingual voice extension. This source was locally dual-annotated and adjudicated for PHQ-9/GAD-7, but it is not a native mental-health screening corpus.",
+    "profile": {
+      "age_years": null,
+      "age_band": "30-45",
+      "occupation": "Sopkipar",
+      "living_situation": "Urban",
+      "support_system": "not_provided_in_source",
+      "state": "Rajasthan",
+      "district": "Jodhpur",
+      "gender": "Female"
+    },
+    "source": {
+      "dataset": "indicvoices",
+      "split": "Hindi/v1/valid",
+      "source_json_path": "Hindi/v1/valid/5348024557541937.json",
+      "source_wav_path": "Hindi/v1/valid/5348024557541937.wav",
+      "speaker_id": "S4257999900326009",
+      "scenario": "Extempore",
+      "task_name": "KYP - Dancing"
+    },
+    "turns": [
+      {
+        "turn_id": "u1",
+        "speaker": "user",
+        "text": "डांस हमार को कई प्र कई प्रकार के डांस हम करते हैं जिससे हमें [uhh] हमार को अच्छे अच्छा फील होता है और हमें डांस डांस हमारे जैसे हमारी हॉबी है मुझे डांस बहुत ज़्यादा अच्छा लगता है मुझे डांस करने में बहुत ज़्यादा इंटरेस्ट है मैं डांस डांस को अपने दिल से करती हूँ डांस डांस एकदम दिल से किया जाता है और दम खुल के होता है उससे मन शांत रहता है उससे खुशी मिलती है और डांस के स्टेप कई प्रकार के होते हैं उससे हमारा थोड़ा वज़न है वो भी वेट लूज भी हो जाता है उससे एक्सरसाइज हो जाती है काफी मतलब काफी डांस का प्रयोग करने से काफी प्रकार की चीज़ें चीज़ें हमारे साथ अच्छे से होती है",
+        "source_type": "read_or_prompted_utterance"
+      }
+    ]
+  },
+  "instructions": "Label independently using the transcript, metadata, and annotation guidelines. Do not inspect annotator B."
+}

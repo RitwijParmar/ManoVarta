@@ -238,7 +238,7 @@ def nuance_scenarios() -> list[dict]:
                 "gad_q3_excessive_worry": 2,
                 "gad_q4_trouble_relaxing": 2,
                 "gad_q6_irritability": 2,
-                "gad_q7_fear_awful": 2,
+                "gad_q7_afraid": 2,
             },
             "evidence": [
                 {
@@ -277,7 +277,7 @@ def nuance_scenarios() -> list[dict]:
                     "rationale": "Concentration impairment in daily reading.",
                 },
                 {
-                    "item_id": "gad_q7_fear_awful",
+                    "item_id": "gad_q7_afraid",
                     "turn_id": 8,
                     "text_span": "not be able to cover rent",
                     "score_hint": 2,
@@ -287,7 +287,7 @@ def nuance_scenarios() -> list[dict]:
             "safety": {"level": "none", "cues": []},
             "annotator_notes": "Helpful for somatic anxiety language and practical fear framing.",
             "confidence": {
-                "high": ["gad_q1_nervous", "gad_q4_trouble_relaxing", "gad_q7_fear_awful"],
+                "high": ["gad_q1_nervous", "gad_q4_trouble_relaxing", "gad_q7_afraid"],
                 "low": ["phq_q3_sleep"],
             },
             "meta": {
@@ -589,7 +589,7 @@ def nuance_scenarios() -> list[dict]:
             "gad": {
                 "gad_q1_nervous": 3,
                 "gad_q3_excessive_worry": 2,
-                "gad_q7_fear_awful": 3,
+                "gad_q7_afraid": 3,
             },
             "evidence": [
                 {
@@ -679,11 +679,11 @@ def nuance_scenarios() -> list[dict]:
             "gad": {
                 "gad_q1_nervous": 2,
                 "gad_q4_trouble_relaxing": 2,
-                "gad_q7_fear_awful": 1,
+                "gad_q7_afraid": 1,
             },
             "evidence": [
                 {
-                    "item_id": "gad_q7_fear_awful",
+                    "item_id": "gad_q7_afraid",
                     "turn_id": 2,
                     "text_span": "मैं कुछ न कुछ गलत कर दूँगी",
                     "score_hint": 1,
@@ -722,7 +722,7 @@ def nuance_scenarios() -> list[dict]:
             "annotator_notes": "Postpartum-related distress is real here, but safety is not directly elevated in this sample.",
             "confidence": {
                 "high": ["phq_q2_low_mood", "phq_q6_worthlessness", "gad_q1_nervous"],
-                "low": ["gad_q7_fear_awful"],
+                "low": ["gad_q7_afraid"],
             },
             "meta": {
                 "guardedness": "moderate",
@@ -765,7 +765,7 @@ def nuance_scenarios() -> list[dict]:
             "gad": {
                 "gad_q2_control_worry": 2,
                 "gad_q3_excessive_worry": 2,
-                "gad_q7_fear_awful": 2,
+                "gad_q7_afraid": 2,
             },
             "evidence": [
                 {
@@ -797,7 +797,7 @@ def nuance_scenarios() -> list[dict]:
                     "rationale": "Concentration difficulty.",
                 },
                 {
-                    "item_id": "gad_q7_fear_awful",
+                    "item_id": "gad_q7_afraid",
                     "turn_id": 8,
                     "text_span": "sab log age nikal jayenge",
                     "score_hint": 2,

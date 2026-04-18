@@ -1,0 +1,71 @@
+{
+  "session_id": "MVGOLD-HI-014",
+  "language": "hi",
+  "cohort": "expansion",
+  "target_primary_domain": "burden",
+  "target_risk_band": "review_candidate",
+  "packet_stage": "annotator_b",
+  "target_output_file": "data/gold/labels/MVGOLD-HI-014.annotator_b.json",
+  "related_files": {
+    "audio_file": "data/gold/audio/hi/MVGOLD-HI-014.wav",
+    "transcript_file": "data/gold/transcripts/hi/MVGOLD-HI-014.json",
+    "annotator_a_file": "data/gold/labels/MVGOLD-HI-014.annotator_a.json",
+    "annotator_b_file": "data/gold/labels/MVGOLD-HI-014.annotator_b.json",
+    "adjudicated_label_file": "data/gold/labels/MVGOLD-HI-014.adjudicated.json"
+  },
+  "metadata": {
+    "session_id": "MVGOLD-HI-014",
+    "participant_id": "S4259671000340700",
+    "language": "hi",
+    "age_years": "",
+    "age_band": "18-30",
+    "occupation": "Student",
+    "living_situation": "Urban",
+    "support_system": "not_provided_in_source",
+    "consent_recorded": "public_dataset_license",
+    "collection_source": "indicvoices_hindi_v1_valid_public",
+    "audio_file": "data/gold/audio/hi/MVGOLD-HI-014.wav",
+    "transcript_file": "data/gold/transcripts/hi/MVGOLD-HI-014.json",
+    "annotator_a_file": "data/gold/labels/MVGOLD-HI-014.annotator_a.json",
+    "annotator_b_file": "data/gold/labels/MVGOLD-HI-014.annotator_b.json",
+    "adjudicated_label_file": "data/gold/labels/MVGOLD-HI-014.adjudicated.json",
+    "split": "expansion",
+    "notes": "Imported from IndicVoices Hindi valid split; locally dual-annotated and adjudicated for PHQ-9/GAD-7 as a repurposed Hindi pilot audio set for multilingual voice extension, not a native mental-health screening corpus."
+  },
+  "transcript": {
+    "session_id": "MVGOLD-HI-014",
+    "language": "hi",
+    "cohort": "expansion",
+    "is_placeholder": false,
+    "collection_status": "collected_public_dataset",
+    "notes": "Imported from IndicVoices Hindi valid split; repurposed as a Hindi pilot audio set for multilingual voice extension. This source was locally dual-annotated and adjudicated for PHQ-9/GAD-7, but it is not a native mental-health screening corpus.",
+    "profile": {
+      "age_years": null,
+      "age_band": "18-30",
+      "occupation": "Student",
+      "living_situation": "Urban",
+      "support_system": "not_provided_in_source",
+      "state": "Rajasthan",
+      "district": "Jodhpur",
+      "gender": "Female"
+    },
+    "source": {
+      "dataset": "indicvoices",
+      "split": "Hindi/v1/valid",
+      "source_json_path": "Hindi/v1/valid/5348024557538855.json",
+      "source_wav_path": "Hindi/v1/valid/5348024557538855.wav",
+      "speaker_id": "S4259671000340700",
+      "scenario": "Extempore",
+      "task_name": "District Specific"
+    },
+    "turns": [
+      {
+        "turn_id": "u1",
+        "speaker": "user",
+        "text": "जोधपुर जो जिला है इसके ये इतिहास है के सबसे पहले तो यहाँ का जो राजा महराज थे और जो चलता आ रहा है जोधपुर के किले के बारे में अगर आप देखें तो [uhh] फोर्टीन सेंचुरी के अंदर जोधपुर का जो फोर्ट है वो बना हुआ है जिसके अंदर एक ये कहानी है कि जब जयपुर के महाराजा ने हमारे यहाँ पे गोले बरसाए तो जो काली माता थी उन्होंने [uhh] गोले अपने हाथ में ले लिए थे और हमारा जो किला है उसपे एक भी आंच नहीं आयी थी [stammers] जोधपुर की जो गणगौर है वो चुरा कर लायी हुई है जिसकी जो कि जिसकी जो यात्रा है वो सिर्फ रात में निकलती है यहाँ पे सूर्य की पहली किरण आती है इस वजह से जोधपुर को सन सिटी के नाम से बहोत ज़्यादा जाना जाता है जोधपुर एक ऐसी जगह है जहाँ पे खा जहाँ का खाना और जहाँ की बहोत सारी चीजें बहोत ज़्यादा प्रसिद्ध हैं जैसे की यहाँ के मिर्च बड़े और बहुत सारी चीजें है जो यहाँ पे बहोत [clinking] टेस्टी बनती है देखा जाए तो जोधपुर के अंदर [uhh] जो रावण की पत्नि थी मंदोदरी उनका पीहर भी है जिस उद्यान का नाम मंडोर है [uhh] उसके अंदर उसका पूरी [uhh] स्टोरी भी दिखायी जाती है तीस रुपए लगते हैं और फिर वो पूरा स्टोरी दिखाते हैं कि किस तरह [uhh] जो मंडोर है उसका किला पलट गया था क्योंकि मंदोदरी को श्राप लगा था जो भी है और जैसे की यहाँ की गज सिंह महाराज हैं हमारे जो हेरिटेज है आप जाके देखिए वहाँ पे इतना सुन्दर है हमारे यहाँ पे जसवंत थड़ा है बहोत सारे जो राजाएं हैं उनकी बहोत सारी बातें उनका बहोत नॉलेज हमारे जब हम फोर्ट में जाते है तो ऐसा कहते है कि माता जी ने मंदिर जो है हमारी माता का वो माताजी ने अपना मुँह फेर लिया था क्योंकि पहले यहाँ पे नर बली दी जाती थी पर उसके बाद में पशु बली देना स्टार्ट कर दिया तो माता जी रुष्ट हो गयी और उन्होंने अपना मुँह फेर लिया कुछ राजपूत [uhh] जोधपुर के ऐसे हैं जो [uhh] किले से अपनी कुल देवी को घर पे बुलाते हैं धूम धाम से उनका स्वागत और करते हैं उनका खाना पीना करते हैं मोस्टली यहाँ पे देखा जाए तो [buzz] [uhh] राजपूतों की जितनी भी[uhh] राज घराने की जितनी भी [uhh] प्रोस्पेरिटीज़ होती हैं और जो रिचुअल जो होते हैं लोग वो फॉलो करते हैं यहाँ पे सातम मनाई जाती है जिसके अंदर जो महाकाली ने जो अपने हाथो में [uhh] गोले ले लिए थे तो उनके हाथो को ठंडक देने के लिए सभी औरतें रात को एक दिन पहले खाना बना के रखती है अपने हाथ में मेहंदी लगाती हैं ताकि माता जी को ठंडक मिले इस दिन चीलों को गुलगुले हमारे यहाँ पे मीठे पकोड़े बनाए जाते हैं वो दिए जाते हैं जिससे माता रानी खुश होती हैं जो बासी खाना होता है वो खाया जाता है सातम के दिन उसके अंदर लोग अच्छे अच्छे पकवान बनाते है बाहर से फोरेननर्स घूमने आते हैं जो बासी खाना होता है वो तीन दिन तक खाया जाता है जैसे ही आप मंदिर के अंदर जैसे यहाँ पे शादी व्याह होता है तो लोग बाकी जो राजस्थान से बाहर जो हैं वहाँ पे अपने फोर्ट के अंदर [uhh] जा कर वो लोग [uhh] क्या बोलते हैं उसको जो पूजा पाठ होते हैं नए जो [uhh] जैसे राजपूत होते हैं जो नए [uhh] मैरिड कपल्स होते हैं वो जाके माता रानी की परिक्रमा करते हैं बहोत से रिचुअल्स होते हैं फोर्ट के अंदर घुसते ही वहाँ पे गाएपाल बैठे होते हैं जो माता बहोत अच्छे गाने गाते हैं [noise] वहाँ पे जाके देखेंगे तो आपको पता चलेगा कि जोधपुर का इतिहास कितना ज़्यादा बड़ा",
+        "source_type": "read_or_prompted_utterance"
+      }
+    ]
+  },
+  "instructions": "Label independently using the transcript, metadata, and annotation guidelines. Do not inspect annotator A."
+}

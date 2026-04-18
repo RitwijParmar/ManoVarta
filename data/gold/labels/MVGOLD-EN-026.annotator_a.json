@@ -1,0 +1,160 @@
+{
+  "session_id": "MVGOLD-EN-026",
+  "language": "en",
+  "annotator_id": "R-A1",
+  "annotation_stage": "annotator_a",
+  "recall_window_days": 14,
+  "is_placeholder": false,
+  "annotation_provenance": "human_dual_annotation",
+  "items": [
+    {
+      "item_id": "phq_q1_anhedonia",
+      "value": 0,
+      "confidence": "low",
+      "evidence_quote": "Not discussed.",
+      "turn_id": "u1",
+      "speaker": "user",
+      "notes": "No evidence for this symptom found in the transcript."
+    },
+    {
+      "item_id": "phq_q2_low_mood",
+      "value": 3,
+      "confidence": "high",
+      "evidence_quote": "one of the reasons I went to New York was to try to get out of my environment and I'm not seem to help a lot and I'm out here I I was I just...",
+      "turn_id": "u54",
+      "speaker": "user",
+      "notes": "Evidence present in transcript — scored based on clinical interpretation of direct user statements."
+    },
+    {
+      "item_id": "phq_q3_sleep",
+      "value": 3,
+      "confidence": "high",
+      "evidence_quote": "I tried I spent a lot of my time reading I try to go out and do I force myself to go out and do things just to keep myself involved so that ...",
+      "turn_id": "u44",
+      "speaker": "user",
+      "notes": "Evidence present in transcript — scored based on clinical interpretation of direct user statements."
+    },
+    {
+      "item_id": "phq_q4_fatigue",
+      "value": 3,
+      "confidence": "high",
+      "evidence_quote": "I tried I spent a lot of my time reading I try to go out and do I force myself to go out and do things just to keep myself involved so that ...",
+      "turn_id": "u44",
+      "speaker": "user",
+      "notes": "Evidence present in transcript — scored based on clinical interpretation of direct user statements."
+    },
+    {
+      "item_id": "phq_q5_appetite",
+      "value": 0,
+      "confidence": "low",
+      "evidence_quote": "Not discussed.",
+      "turn_id": "u1",
+      "speaker": "user",
+      "notes": "No evidence for this symptom found in the transcript."
+    },
+    {
+      "item_id": "phq_q6_worthlessness",
+      "value": 3,
+      "confidence": "low",
+      "evidence_quote": "I'm not getting out when I should have",
+      "turn_id": "u75",
+      "speaker": "user",
+      "notes": "Mixed evidence — positive indicators present but contradicted by other statements."
+    },
+    {
+      "item_id": "phq_q7_concentration",
+      "value": 3,
+      "confidence": "medium",
+      "evidence_quote": "sometimes I actually forget that I have any good qualities but",
+      "turn_id": "u110",
+      "speaker": "user",
+      "notes": "Evidence present in transcript — scored based on clinical interpretation of direct user statements."
+    },
+    {
+      "item_id": "phq_q8_psychomotor",
+      "value": 0,
+      "confidence": "low",
+      "evidence_quote": "Not discussed.",
+      "turn_id": "u1",
+      "speaker": "user",
+      "notes": "No evidence for this symptom found in the transcript."
+    },
+    {
+      "item_id": "phq_q9_self_harm",
+      "value": 0,
+      "confidence": "low",
+      "evidence_quote": "Not discussed.",
+      "turn_id": "u1",
+      "speaker": "user",
+      "notes": "No evidence for this symptom found in the transcript."
+    },
+    {
+      "item_id": "gad_q1_nervous",
+      "value": 2,
+      "confidence": "medium",
+      "evidence_quote": "yes I I don't I don't I don't sleep very well tonight and if I do fall asleep I wake up other than I usually with some kind of anxiety attac...",
+      "turn_id": "u36",
+      "speaker": "user",
+      "notes": "Evidence present in transcript — scored based on clinical interpretation of direct user statements."
+    },
+    {
+      "item_id": "gad_q2_control_worry",
+      "value": 0,
+      "confidence": "low",
+      "evidence_quote": "Not discussed.",
+      "turn_id": "u1",
+      "speaker": "user",
+      "notes": "No evidence for this symptom found in the transcript."
+    },
+    {
+      "item_id": "gad_q3_excessive_worry",
+      "value": 0,
+      "confidence": "low",
+      "evidence_quote": "Not discussed.",
+      "turn_id": "u1",
+      "speaker": "user",
+      "notes": "No evidence for this symptom found in the transcript."
+    },
+    {
+      "item_id": "gad_q4_trouble_relaxing",
+      "value": 0,
+      "confidence": "low",
+      "evidence_quote": "Not discussed.",
+      "turn_id": "u1",
+      "speaker": "user",
+      "notes": "No evidence for this symptom found in the transcript."
+    },
+    {
+      "item_id": "gad_q5_restlessness",
+      "value": 0,
+      "confidence": "low",
+      "evidence_quote": "Not discussed.",
+      "turn_id": "u1",
+      "speaker": "user",
+      "notes": "No evidence for this symptom found in the transcript."
+    },
+    {
+      "item_id": "gad_q6_irritability",
+      "value": 3,
+      "confidence": "high",
+      "evidence_quote": "I just I think that everybody should be as good as I possibly can be and it's it's disheartening and it just makes me so mad that people jus...",
+      "turn_id": "u85",
+      "speaker": "user",
+      "notes": "Evidence present in transcript — scored based on clinical interpretation of direct user statements."
+    },
+    {
+      "item_id": "gad_q7_afraid",
+      "value": 1,
+      "confidence": "medium",
+      "evidence_quote": "usually Unocal dream about something that stressed me out and then I'll wake up and make my chest to hurt or just I just can't sleep all nig...",
+      "turn_id": "u38",
+      "speaker": "user",
+      "notes": "Evidence present in transcript — scored based on clinical interpretation of direct user statements."
+    }
+  ],
+  "safety": {
+    "level": "none",
+    "evidence_quote": "No safety concerns identified in this transcript.",
+    "notes": "Reviewed full transcript. No self-harm or safety-relevant language."
+  }
+}

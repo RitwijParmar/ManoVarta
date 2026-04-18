@@ -1,0 +1,34 @@
+{"items": [{"item_id": "phq_q1_anhedonia", "value": 1}, {"item_id": "phq_q2_low_mood", "value": 1}, {"item_id": "phq_q3_sleep", "value": 1}, {"item_id": "phq_q4_fatigue", "value": 1}, {"item_id": "phq_q7_concentration", "value": 2}, {"item_id": "gad_q1_nervous", "value": 2}, {"item_id": "gad_q2_control_worry", "value": 2}, {"item_id": "gad_q3_excessive_worry", "value": 2}, {"item_id": "gad_q4_trouble_relaxing", "value": 2}, {"item_id": "gad_q6_irritability", "value": 2}, {"item_id": "gad_q7_fear_awful", "value": 2}], "safety_level": "none"}
+<|user|>
+Language: marathi
+Use these item ids:
+- phq_q1_anhedonia: Reduced interest (loss of interest or pleasure)
+- phq_q2_low_mood: Low mood (sadness, hopelessness, or emptiness)
+- phq_q3_sleep: Sleep (sleep disturbance or oversleeping)
+- phq_q4_fatigue: Fatigue (low energy or tiredness)
+- phq_q5_appetite: Appetite (eating too much or too little)
+- phq_q6_worthlessness: Worthlessness (guilt, shame, or feeling like a burden)
+- phq_q7_concentration: Concentration (focus or decision trouble)
+- phq_q8_psychomotor: Psychomotor (moving or speaking too slowly or feeling keyed up)
+- phq_q9_self_harm: Self-harm (self-harm or suicidal thinking)
+- gad_q1_nervous: Nervousness (feeling anxious, on edge, or uneasy)
+- gad_q2_control_worry: Control worry (difficulty stopping or controlling worry)
+- gad_q3_excessive_worry: Excessive worry (worrying about many things)
+- gad_q4_trouble_relaxing: Relaxing (difficulty relaxing or settling down)
+- gad_q5_restlessness: Restlessness (restlessness or pacing)
+- gad_q6_irritability: Irritability (being more irritable or snappy)
+- gad_q7_fear_awful: Something awful (fear that something bad will happen)
+
+Return JSON with keys: items, safety_level.
+items must be a list of objects with item_id and value only.
+Only include supported items in items.
+Only include items with value 1, 2, or 3.
+safety_level must be one of none, review, urgent.
+Transcript:
+assistant: Exam ke naam par aara rehta hoon, to kaunsi cheezein aas paas rehti hain?
+user: Exam ke naam par aara rehta hoon, to lagta hai main khud ko bolta rehta hoon ki sab theek hai, but body tension aur mind wandering hota rehta hai.
+assistant: Tum khud ko usually kaise samajhate ho jab pressure hota hai?
+user: Phir main zyada kaam kar leta hoon, and baad mein hi manana aata hai ki yeh issue real hai.
+assistant: Reading, memory aur rest ka pattern kaisa hota hai?
+user: Page khola to lagta hai main isko bhi manage kar raha hoon, but actually body tired hota rehta hai aur sleep bhi break hoti rehti hai.
+assistant: Apne aap ke baare mein inner voice kya bolti re

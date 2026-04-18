@@ -1,0 +1,792 @@
+{
+  "session_id": "MVGOLD-EN-014",
+  "language": "en",
+  "cohort": "expansion",
+  "is_placeholder": false,
+  "collection_status": "collected_public_dataset",
+  "notes": "Imported from E-DAIC public participant archive.",
+  "profile": {
+    "age_years": null,
+    "age_band": "adult_unknown_from_source",
+    "occupation": "unknown_from_source",
+    "living_situation": "unknown_from_source",
+    "support_system": "unknown_from_source",
+    "gender": "female"
+  },
+  "source": {
+    "dataset": "e_daic_public",
+    "participant_id": "323",
+    "split": "train",
+    "phq_binary": "0",
+    "phq_score": "1",
+    "source_audio_path": "323_P/323_AUDIO.wav",
+    "source_transcript_path": "323_P/323_Transcript.csv"
+  },
+  "turns": [
+    {
+      "turn_id": "u1",
+      "speaker": "user",
+      "text": "the ritual human chat with you for a bit and then when she's done she'll let you know I'm going to give you the doorbell and you can ring my bell",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "32.1",
+      "end_time_sec": "39.6",
+      "asr_confidence": "0.9184364080429077"
+    },
+    {
+      "turn_id": "u2",
+      "speaker": "user",
+      "text": "are you okay",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "71.7",
+      "end_time_sec": "72.4",
+      "asr_confidence": "0.9780482053756714"
+    },
+    {
+      "turn_id": "u3",
+      "speaker": "user",
+      "text": "sure",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "73.0",
+      "end_time_sec": "73.5",
+      "asr_confidence": "0.9466997385025024"
+    },
+    {
+      "turn_id": "u4",
+      "speaker": "user",
+      "text": "good",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "77.6",
+      "end_time_sec": "78.1",
+      "asr_confidence": "0.9518970251083374"
+    },
+    {
+      "turn_id": "u5",
+      "speaker": "user",
+      "text": "Chicago",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "82.2",
+      "end_time_sec": "83.0",
+      "asr_confidence": "0.9876290559768677"
+    },
+    {
+      "turn_id": "u6",
+      "speaker": "user",
+      "text": "it's cold in Chicago",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "86.7",
+      "end_time_sec": "87.7",
+      "asr_confidence": "0.9826357960700989"
+    },
+    {
+      "turn_id": "u7",
+      "speaker": "user",
+      "text": "I think in 90 1989 actually",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "94.9",
+      "end_time_sec": "98.5",
+      "asr_confidence": "0.9326944351196289"
+    },
+    {
+      "turn_id": "u8",
+      "speaker": "user",
+      "text": "very simple where is he",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "104.1",
+      "end_time_sec": "105.9",
+      "asr_confidence": "0.8559864163398743"
+    },
+    {
+      "turn_id": "u9",
+      "speaker": "user",
+      "text": "weather of course I'm so easily located to San Diego Palm Springs Las Vegas San Francisco and things I like to do",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "111.2",
+      "end_time_sec": "121.8",
+      "asr_confidence": "0.9401817917823792"
+    },
+    {
+      "turn_id": "u10",
+      "speaker": "user",
+      "text": "smog of course is bad crime rate higher than it should be",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "126.9",
+      "end_time_sec": "130.5",
+      "asr_confidence": "0.8291819095611572"
+    },
+    {
+      "turn_id": "u11",
+      "speaker": "user",
+      "text": "and financial economics problems here",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "133.5",
+      "end_time_sec": "135.8",
+      "asr_confidence": "0.8288774490356445"
+    },
+    {
+      "turn_id": "u12",
+      "speaker": "user",
+      "text": "every year Thanksgiving",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "140.6",
+      "end_time_sec": "141.9",
+      "asr_confidence": "0.9876290559768677"
+    },
+    {
+      "turn_id": "u13",
+      "speaker": "user",
+      "text": "very very much so very big family",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "147.1",
+      "end_time_sec": "149.3",
+      "asr_confidence": "0.5521594285964966"
+    },
+    {
+      "turn_id": "u14",
+      "speaker": "user",
+      "text": "yes I do very much in fact",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "154.3",
+      "end_time_sec": "156.5",
+      "asr_confidence": "0.9644894003868103"
+    },
+    {
+      "turn_id": "u15",
+      "speaker": "user",
+      "text": "I love flying on airplanes I love visiting new places I even like the setting different airports everyone's different",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "158.9",
+      "end_time_sec": "165.3",
+      "asr_confidence": "0.917824923992157"
+    },
+    {
+      "turn_id": "u16",
+      "speaker": "user",
+      "text": "what's the I start off in pre-med haha I ended up in physics",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "170.8",
+      "end_time_sec": "179.0",
+      "asr_confidence": "0.9084178805351257"
+    },
+    {
+      "turn_id": "u17",
+      "speaker": "user",
+      "text": "yes I'm a cheese physics",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "186.2",
+      "end_time_sec": "188.0",
+      "asr_confidence": "0.7816550731658936"
+    },
+    {
+      "turn_id": "u18",
+      "speaker": "user",
+      "text": "and math and high liver math",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "189.2",
+      "end_time_sec": "190.8",
+      "asr_confidence": "0.8993707299232483"
+    },
+    {
+      "turn_id": "u19",
+      "speaker": "user",
+      "text": "well I enjoy working with kids",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "194.0",
+      "end_time_sec": "196.0",
+      "asr_confidence": "0.9534583687782288"
+    },
+    {
+      "turn_id": "u20",
+      "speaker": "user",
+      "text": "I enjoy teaching my mother was a teacher my dad was a truant officer and I've enjoyed",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "197.2",
+      "end_time_sec": "204.1",
+      "asr_confidence": "0.9589269161224365"
+    },
+    {
+      "turn_id": "u21",
+      "speaker": "user",
+      "text": "keeps you young",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "206.4",
+      "end_time_sec": "207.1",
+      "asr_confidence": "0.7881131172180176"
+    },
+    {
+      "turn_id": "u22",
+      "speaker": "user",
+      "text": "my dream job",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "212.3",
+      "end_time_sec": "213.2",
+      "asr_confidence": "0.9705756306648254"
+    },
+    {
+      "turn_id": "u23",
+      "speaker": "user",
+      "text": "my dream job would be to be a judge",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "214.5",
+      "end_time_sec": "216.6",
+      "asr_confidence": "0.9298017621040344"
+    },
+    {
+      "turn_id": "u24",
+      "speaker": "user",
+      "text": "yes and NBA Youth Court. Be fantastic brush your thumb at sooner than mail so I'm not going to be able to do that",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "218.3",
+      "end_time_sec": "228.2",
+      "asr_confidence": "0.9144665598869324"
+    },
+    {
+      "turn_id": "u25",
+      "speaker": "user",
+      "text": "no not at all",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "236.1",
+      "end_time_sec": "238.5",
+      "asr_confidence": "0.7579666376113892"
+    },
+    {
+      "turn_id": "u26",
+      "speaker": "user",
+      "text": "I enjoy people being around people I'm very talkative at times",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "240.0",
+      "end_time_sec": "244.6",
+      "asr_confidence": "0.9261548519134521"
+    },
+    {
+      "turn_id": "u27",
+      "speaker": "user",
+      "text": "I like to do a lot of things and I'm very social I do them",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "246.5",
+      "end_time_sec": "251.3",
+      "asr_confidence": "0.8833114504814148"
+    },
+    {
+      "turn_id": "u28",
+      "speaker": "user",
+      "text": "I believe or not I play bridge I play chess and I watch a good old old movie",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "256.6",
+      "end_time_sec": "262.7",
+      "asr_confidence": "0.9287901520729065"
+    },
+    {
+      "turn_id": "u29",
+      "speaker": "user",
+      "text": "bad drivers",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "272.4",
+      "end_time_sec": "273.6",
+      "asr_confidence": "0.9871456027030945"
+    },
+    {
+      "turn_id": "u30",
+      "speaker": "user",
+      "text": "bad laws",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "274.8",
+      "end_time_sec": "276.1",
+      "asr_confidence": "0.9561894536018372"
+    },
+    {
+      "turn_id": "u31",
+      "speaker": "user",
+      "text": "politics often",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "277.7",
+      "end_time_sec": "278.8",
+      "asr_confidence": "0.9595867991447449"
+    },
+    {
+      "turn_id": "u32",
+      "speaker": "user",
+      "text": "I'm annoyed",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "282.2",
+      "end_time_sec": "283.1",
+      "asr_confidence": "0.8671652674674988"
+    },
+    {
+      "turn_id": "u33",
+      "speaker": "user",
+      "text": "don't get annoyed that much I just let it go it's not worth the pain and probably could cause",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "284.9",
+      "end_time_sec": "290.5",
+      "asr_confidence": "0.9091410636901855"
+    },
+    {
+      "turn_id": "u34",
+      "speaker": "user",
+      "text": "I can't straighten out a problem let it go",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "291.5",
+      "end_time_sec": "293.8",
+      "asr_confidence": "0.9613334536552429"
+    },
+    {
+      "turn_id": "u35",
+      "speaker": "user",
+      "text": "go somewhere else",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "295.0",
+      "end_time_sec": "295.8",
+      "asr_confidence": "0.9654170274734497"
+    },
+    {
+      "turn_id": "u36",
+      "speaker": "user",
+      "text": "always my bridge partner but that's different as far as anything else I don't really argue with people",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "305.6",
+      "end_time_sec": "311.5",
+      "asr_confidence": "0.9811860918998718"
+    },
+    {
+      "turn_id": "u37",
+      "speaker": "user",
+      "text": "I don't argue I don't like confrontation",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "313.1",
+      "end_time_sec": "314.9",
+      "asr_confidence": "0.9398815631866455"
+    },
+    {
+      "turn_id": "u38",
+      "speaker": "user",
+      "text": "my parents of course very very much so",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "322.9",
+      "end_time_sec": "325.1",
+      "asr_confidence": "0.980274498462677"
+    },
+    {
+      "turn_id": "u39",
+      "speaker": "user",
+      "text": "I had great parents",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "327.7",
+      "end_time_sec": "328.6",
+      "asr_confidence": "0.9723617434501648"
+    },
+    {
+      "turn_id": "u40",
+      "speaker": "user",
+      "text": "reminder of my parents were at Tuskegee which is a black college they always want me to go to a black college with course I didn't want to do that annoy",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "334.2",
+      "end_time_sec": "343.1",
+      "asr_confidence": "0.9006518125534058"
+    },
+    {
+      "turn_id": "u41",
+      "speaker": "user",
+      "text": "they're very positive role model for me the certain things that I don't do today because of them I don't drink I don't curse I don't look down people do but I don't have as much respect for people who do a lot of either one of those things I love to drive I love to travel and my dad's always take us someplace every weekend he was up we go somewhere to Chicago Indiana Michigan how much the area we go up the machine pick fruit or we got all our dogs from puppy farms in Indiana that kind of thing I had Uncle lived in Wisconsin who was up very far, so my daddy said love to drive and I love to travel",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "345.3",
+      "end_time_sec": "384.3",
+      "asr_confidence": "0.9584115147590637"
+    },
+    {
+      "turn_id": "u42",
+      "speaker": "user",
+      "text": "that's a hard one",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "393.9",
+      "end_time_sec": "395.1",
+      "asr_confidence": "0.986075222492218"
+    },
+    {
+      "turn_id": "u43",
+      "speaker": "user",
+      "text": "I've had a lot of great experiences I think the best one was that we went awry anniversary we went to Europe we went to Paris and we wrote The Orient Express we went from luengo always stand by we went from London to Venice and then flew back to Paris that was probably the best friend I ever had in my life I never really cared for Europe because it's so much here United States to do in Social America and I've been to Alaska and Hawaii but we said it was something different and we always watch it on the Orient Express and we did that expensive but phenomenal drip God wants the one strip mat once-in-a-lifetime just once",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "396.2",
+      "end_time_sec": "437.3",
+      "asr_confidence": "0.9417242407798767"
+    },
+    {
+      "turn_id": "u44",
+      "speaker": "user",
+      "text": "not traveling more sooner we did a lot when the kids were younger but",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "445.1",
+      "end_time_sec": "450.3",
+      "asr_confidence": "0.9590808153152466"
+    },
+    {
+      "turn_id": "u45",
+      "speaker": "user",
+      "text": "but I think we should have probably done we didn't do I wish I'd gone because we always have Chicago on Thanksgiving but I think we should have gotten more than just on Thanksgiving my parents come here at Christmas time by the equation of a line. A lot more when it comes to that",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "452.7",
+      "end_time_sec": "468.2",
+      "asr_confidence": "0.921917736530304"
+    },
+    {
+      "turn_id": "u46",
+      "speaker": "user",
+      "text": "yes that's that's that's why I threw regret because it could have been avoided the things we could have done and we spend their time working and more concerned about getting ahead then actually family what's closest to us",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "472.7",
+      "end_time_sec": "484.7",
+      "asr_confidence": "0.9343097805976868"
+    },
+    {
+      "turn_id": "u47",
+      "speaker": "user",
+      "text": "oh yes they definitely",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "488.3",
+      "end_time_sec": "489.6",
+      "asr_confidence": "0.9466570615768433"
+    },
+    {
+      "turn_id": "u48",
+      "speaker": "user",
+      "text": "that's a good question today 20 years ago",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "498.3",
+      "end_time_sec": "500.3",
+      "asr_confidence": "0.8650721907615662"
+    },
+    {
+      "turn_id": "u49",
+      "speaker": "user",
+      "text": "I will set up",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "501.7",
+      "end_time_sec": "503.0",
+      "asr_confidence": "0.8991971015930176"
+    },
+    {
+      "turn_id": "u50",
+      "speaker": "user",
+      "text": "don't take things too seriously but don't be too relaxed over my either",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "504.6",
+      "end_time_sec": "509.3",
+      "asr_confidence": "0.9262133240699768"
+    },
+    {
+      "turn_id": "u51",
+      "speaker": "user",
+      "text": "sometimes you cannot take things for granted or Granite nothing is promised",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "510.3",
+      "end_time_sec": "516.0",
+      "asr_confidence": "0.8509894013404846"
+    },
+    {
+      "turn_id": "u52",
+      "speaker": "user",
+      "text": "oh heaven forbid",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "520.2",
+      "end_time_sec": "521.2",
+      "asr_confidence": "0.9728710055351257"
+    },
+    {
+      "turn_id": "u53",
+      "speaker": "user",
+      "text": "no I have that",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "522.3",
+      "end_time_sec": "523.5",
+      "asr_confidence": "0.8684333562850952"
+    },
+    {
+      "turn_id": "u54",
+      "speaker": "user",
+      "text": "no no",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "529.8",
+      "end_time_sec": "530.4",
+      "asr_confidence": "0.9352498054504395"
+    },
+    {
+      "turn_id": "u55",
+      "speaker": "user",
+      "text": "no",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "533.4",
+      "end_time_sec": "534.1",
+      "asr_confidence": "0.939093828201294"
+    },
+    {
+      "turn_id": "u56",
+      "speaker": "user",
+      "text": "very very easy I really have no problem with that once in awhile if I am anxious about something I have things coming up through or projects to then I get kind of anxious a little bit I don't like to be late I don't like to make mistakes so therefore I do have some anxiety issues which will cause yourself all night to get things done this to make sure that everything right",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "538.1",
+      "end_time_sec": "561.9",
+      "asr_confidence": "0.9569074511528015"
+    },
+    {
+      "turn_id": "u57",
+      "speaker": "user",
+      "text": "tired",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "567.4",
+      "end_time_sec": "568.2",
+      "asr_confidence": "0.9683457612991333"
+    },
+    {
+      "turn_id": "u58",
+      "speaker": "user",
+      "text": "I don't get irritable I think I just",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "569.0",
+      "end_time_sec": "570.7",
+      "asr_confidence": "0.890095055103302"
+    },
+    {
+      "turn_id": "u59",
+      "speaker": "user",
+      "text": "massage Maybe",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "572.1",
+      "end_time_sec": "573.3",
+      "asr_confidence": "0.7010006308555603"
+    },
+    {
+      "turn_id": "u60",
+      "speaker": "user",
+      "text": "very good I was up late last night so I'm kind of tired now but I usually have no problem sleeping",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "580.8",
+      "end_time_sec": "587.4",
+      "asr_confidence": "0.9543096423149109"
+    },
+    {
+      "turn_id": "u61",
+      "speaker": "user",
+      "text": "and I get a good night sleep",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "588.5",
+      "end_time_sec": "591.3",
+      "asr_confidence": "0.9343326687812805"
+    },
+    {
+      "turn_id": "u62",
+      "speaker": "user",
+      "text": "no I have not know but it came back out for Christmas break very relaxed now",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "597.5",
+      "end_time_sec": "606.6",
+      "asr_confidence": "0.8436243534088135"
+    },
+    {
+      "turn_id": "u63",
+      "speaker": "user",
+      "text": "I have great kids",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "615.1",
+      "end_time_sec": "616.3",
+      "asr_confidence": "0.9456876516342163"
+    },
+    {
+      "turn_id": "u64",
+      "speaker": "user",
+      "text": "I have a son at USC",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "617.3",
+      "end_time_sec": "619.4",
+      "asr_confidence": "0.9819163084030151"
+    },
+    {
+      "turn_id": "u65",
+      "speaker": "user",
+      "text": "and I have a son at UCLA",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "621.5",
+      "end_time_sec": "622.9",
+      "asr_confidence": "0.9829812049865723"
+    },
+    {
+      "turn_id": "u66",
+      "speaker": "user",
+      "text": "and my daughter just got married",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "625.2",
+      "end_time_sec": "626.5",
+      "asr_confidence": "0.9520758390426636"
+    },
+    {
+      "turn_id": "u67",
+      "speaker": "user",
+      "text": "so I'm a proud of my really proud of my kids",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "627.5",
+      "end_time_sec": "629.5",
+      "asr_confidence": "0.8315341472625732"
+    },
+    {
+      "turn_id": "u68",
+      "speaker": "user",
+      "text": "did they're going to have a good life",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "630.9",
+      "end_time_sec": "632.2",
+      "asr_confidence": "0.9085667133331299"
+    },
+    {
+      "turn_id": "u69",
+      "speaker": "user",
+      "text": "oh yes I enjoyed it I still enjoy it being a parent forever so",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "635.1",
+      "end_time_sec": "643.1",
+      "asr_confidence": "0.8952999114990234"
+    },
+    {
+      "turn_id": "u70",
+      "speaker": "user",
+      "text": "taking care of someone else and getting started off to have a good life",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "653.1",
+      "end_time_sec": "657.5",
+      "asr_confidence": "0.9042499661445618"
+    },
+    {
+      "turn_id": "u71",
+      "speaker": "user",
+      "text": "I think that that's rewarding",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "659.1",
+      "end_time_sec": "660.7",
+      "asr_confidence": "0.9871549606323242"
+    },
+    {
+      "turn_id": "u72",
+      "speaker": "user",
+      "text": "making sure everything is covered that needs to be kept with your kids weather if they're eating their sleeping their clothes adjusted for their content that you have no problems at school or at home or at the safe",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "664.1",
+      "end_time_sec": "679.2",
+      "asr_confidence": "0.9198108911514282"
+    },
+    {
+      "turn_id": "u73",
+      "speaker": "user",
+      "text": "physically mentally spiritually everything",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "680.4",
+      "end_time_sec": "682.3",
+      "asr_confidence": "0.981938362121582"
+    },
+    {
+      "turn_id": "u74",
+      "speaker": "user",
+      "text": "my best friend was said she has not changed since high school",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "691.5",
+      "end_time_sec": "693.9",
+      "asr_confidence": "0.890403151512146"
+    },
+    {
+      "turn_id": "u75",
+      "speaker": "user",
+      "text": "level-headed but great sense of humor",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "695.3",
+      "end_time_sec": "700.5",
+      "asr_confidence": "0.9085385203361511"
+    },
+    {
+      "turn_id": "u76",
+      "speaker": "user",
+      "text": "relaxed I don't take things too seriously",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "701.4",
+      "end_time_sec": "704.1",
+      "asr_confidence": "0.9006961584091187"
+    },
+    {
+      "turn_id": "u77",
+      "speaker": "user",
+      "text": "I love the holidays I love Christmas I love everything about it I love preparing the house for it I loved baking cooking specialty baking I love experimenting with new recipes until the last couple of weeks because of holiday season was just here I feel fantastic everything is quiet I'm not at work I'm not stressed out in any way at all I have no project do I have to think about anyway",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "712.8",
+      "end_time_sec": "737.7",
+      "asr_confidence": "0.936999499797821"
+    },
+    {
+      "turn_id": "u78",
+      "speaker": "user",
+      "text": "so Christmas time holiday time",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "738.6",
+      "end_time_sec": "741.3",
+      "asr_confidence": "0.8248395323753357"
+    },
+    {
+      "turn_id": "u79",
+      "speaker": "user",
+      "text": "really enjoyed recently of course we went to Las Vegas 27th of December that was Fantasia I stay for two days we had a really good time we saw a great show we have some great food we drove that we don't need to drive I don't like to drive a lot but we drove there and just took our time",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "751.0",
+      "end_time_sec": "772.9",
+      "asr_confidence": "0.9505574703216553"
+    },
+    {
+      "turn_id": "u80",
+      "speaker": "user",
+      "text": "it was good it was nice",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "778.8",
+      "end_time_sec": "780.7",
+      "asr_confidence": "0.9834626317024231"
+    },
+    {
+      "turn_id": "u81",
+      "speaker": "user",
+      "text": "goodbye thanks for listening house at 1 okay",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "789.2",
+      "end_time_sec": "792.0",
+      "asr_confidence": "0.8352288603782654"
+    },
+    {
+      "turn_id": "u82",
+      "speaker": "user",
+      "text": "I have to ring the bell",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "802.9",
+      "end_time_sec": "804.0",
+      "asr_confidence": "0.9458861947059631"
+    },
+    {
+      "turn_id": "u83",
+      "speaker": "user",
+      "text": "my mind is wandering here we go",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "805.2",
+      "end_time_sec": "807.0",
+      "asr_confidence": "0.9797468185424805"
+    },
+    {
+      "turn_id": "u84",
+      "speaker": "user",
+      "text": "okay",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "820.8",
+      "end_time_sec": "821.4",
+      "asr_confidence": "0.975234866142273"
+    },
+    {
+      "turn_id": "u85",
+      "speaker": "user",
+      "text": "actually",
+      "source_type": "dataset_utterance",
+      "start_time_sec": "823.7",
+      "end_time_sec": "824.3",
+      "asr_confidence": "0.8133306503295898"
+    }
+  ]
+}

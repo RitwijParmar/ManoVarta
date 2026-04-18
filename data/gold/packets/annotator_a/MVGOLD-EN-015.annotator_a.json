@@ -1,0 +1,891 @@
+{
+  "session_id": "MVGOLD-EN-015",
+  "language": "en",
+  "cohort": "expansion",
+  "target_primary_domain": "safety",
+  "target_risk_band": "urgent_candidate",
+  "packet_stage": "annotator_a",
+  "target_output_file": "data/gold/labels/MVGOLD-EN-015.annotator_a.json",
+  "related_files": {
+    "audio_file": "data/gold/audio/en/MVGOLD-EN-015.wav",
+    "transcript_file": "data/gold/transcripts/en/MVGOLD-EN-015.json",
+    "annotator_a_file": "data/gold/labels/MVGOLD-EN-015.annotator_a.json",
+    "annotator_b_file": "data/gold/labels/MVGOLD-EN-015.annotator_b.json",
+    "adjudicated_label_file": "data/gold/labels/MVGOLD-EN-015.adjudicated.json"
+  },
+  "metadata": {
+    "session_id": "MVGOLD-EN-015",
+    "participant_id": "324",
+    "language": "en",
+    "age_years": "",
+    "age_band": "adult_unknown_from_source",
+    "occupation": "unknown_from_source",
+    "living_situation": "unknown_from_source",
+    "support_system": "unknown_from_source",
+    "consent_recorded": "public_dataset_license",
+    "collection_source": "e_daic_public_2019",
+    "audio_file": "data/gold/audio/en/MVGOLD-EN-015.wav",
+    "transcript_file": "data/gold/transcripts/en/MVGOLD-EN-015.json",
+    "annotator_a_file": "data/gold/labels/MVGOLD-EN-015.annotator_a.json",
+    "annotator_b_file": "data/gold/labels/MVGOLD-EN-015.annotator_b.json",
+    "adjudicated_label_file": "data/gold/labels/MVGOLD-EN-015.adjudicated.json",
+    "split": "expansion",
+    "notes": "Imported from E-DAIC public participant archive; PHQ8 items from public labels, remaining items machine-inferred and require clinician review for strict claims."
+  },
+  "transcript": {
+    "session_id": "MVGOLD-EN-015",
+    "language": "en",
+    "cohort": "expansion",
+    "is_placeholder": false,
+    "collection_status": "collected_public_dataset",
+    "notes": "Imported from E-DAIC public participant archive.",
+    "profile": {
+      "age_years": null,
+      "age_band": "adult_unknown_from_source",
+      "occupation": "unknown_from_source",
+      "living_situation": "unknown_from_source",
+      "support_system": "unknown_from_source",
+      "gender": "male"
+    },
+    "source": {
+      "dataset": "e_daic_public",
+      "participant_id": "324",
+      "split": "train",
+      "phq_binary": "0",
+      "phq_score": "5",
+      "source_audio_path": "324_P/324_AUDIO.wav",
+      "source_transcript_path": "324_P/324_Transcript.csv"
+    },
+    "turns": [
+      {
+        "turn_id": "u1",
+        "speaker": "user",
+        "text": "okay great everything looks",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "0.7000000000000001",
+        "end_time_sec": "2.0",
+        "asr_confidence": "0.9674395322799683"
+      },
+      {
+        "turn_id": "u2",
+        "speaker": "user",
+        "text": "was it supposed to be",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "16.6",
+        "end_time_sec": "17.5",
+        "asr_confidence": "0.7203168869018555"
+      },
+      {
+        "turn_id": "u3",
+        "speaker": "user",
+        "text": "does here",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "42.7",
+        "end_time_sec": "43.8",
+        "asr_confidence": "0.8462983965873718"
+      },
+      {
+        "turn_id": "u4",
+        "speaker": "user",
+        "text": "okay thank you",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "49.1",
+        "end_time_sec": "50.2",
+        "asr_confidence": "0.9833911657333374"
+      },
+      {
+        "turn_id": "u5",
+        "speaker": "user",
+        "text": "yeah yes",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "76.5",
+        "end_time_sec": "78.0",
+        "asr_confidence": "0.87562495470047"
+      },
+      {
+        "turn_id": "u6",
+        "speaker": "user",
+        "text": "but how are you",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "81.6",
+        "end_time_sec": "82.5",
+        "asr_confidence": "0.6699569225311279"
+      },
+      {
+        "turn_id": "u7",
+        "speaker": "user",
+        "text": "the bar and raised right here on the West side",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "87.4",
+        "end_time_sec": "89.5",
+        "asr_confidence": "0.822173535823822"
+      },
+      {
+        "turn_id": "u8",
+        "speaker": "user",
+        "text": "Venice Beach",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "90.6",
+        "end_time_sec": "91.5",
+        "asr_confidence": "0.9876291155815125"
+      },
+      {
+        "turn_id": "u9",
+        "speaker": "user",
+        "text": "everything",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "97.1",
+        "end_time_sec": "97.8",
+        "asr_confidence": "0.9938145279884338"
+      },
+      {
+        "turn_id": "u10",
+        "speaker": "user",
+        "text": "the beach the weather",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "99.4",
+        "end_time_sec": "100.5",
+        "asr_confidence": "0.8387742042541504"
+      },
+      {
+        "turn_id": "u11",
+        "speaker": "user",
+        "text": "are the beach the weather",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "101.5",
+        "end_time_sec": "102.8",
+        "asr_confidence": "0.9335055947303772"
+      },
+      {
+        "turn_id": "u12",
+        "speaker": "user",
+        "text": "everything",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "105.1",
+        "end_time_sec": "105.8",
+        "asr_confidence": "0.9828120470046997"
+      },
+      {
+        "turn_id": "u13",
+        "speaker": "user",
+        "text": "the girls",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "107.3",
+        "end_time_sec": "107.9",
+        "asr_confidence": "0.9757788777351379"
+      },
+      {
+        "turn_id": "u14",
+        "speaker": "user",
+        "text": "nothing nothing",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "110.1",
+        "end_time_sec": "112.8",
+        "asr_confidence": "0.9876291155815125"
+      },
+      {
+        "turn_id": "u15",
+        "speaker": "user",
+        "text": "traffic movie",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "116.0",
+        "end_time_sec": "117.1",
+        "asr_confidence": "0.9209973216056824"
+      },
+      {
+        "turn_id": "u16",
+        "speaker": "user",
+        "text": "my family",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "124.9",
+        "end_time_sec": "126.1",
+        "asr_confidence": "0.9557601809501648"
+      },
+      {
+        "turn_id": "u17",
+        "speaker": "user",
+        "text": "I'd love to hear all of",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "128.8",
+        "end_time_sec": "130.1",
+        "asr_confidence": "0.9755858182907104"
+      },
+      {
+        "turn_id": "u18",
+        "speaker": "user",
+        "text": "my mother",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "132.3",
+        "end_time_sec": "133.8",
+        "asr_confidence": "0.9353129267692566"
+      },
+      {
+        "turn_id": "u19",
+        "speaker": "user",
+        "text": "she's in a very good-hearted person gives me good advice",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "135.5",
+        "end_time_sec": "139.7",
+        "asr_confidence": "0.8666024804115295"
+      },
+      {
+        "turn_id": "u20",
+        "speaker": "user",
+        "text": "all pretty girls family comes first time is number one",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "145.6",
+        "end_time_sec": "150.0",
+        "asr_confidence": "0.836669385433197"
+      },
+      {
+        "turn_id": "u21",
+        "speaker": "user",
+        "text": "go to the gym you know exercise go to the beach",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "155.3",
+        "end_time_sec": "159.6",
+        "asr_confidence": "0.9217989444732666"
+      },
+      {
+        "turn_id": "u22",
+        "speaker": "user",
+        "text": "party every once in awhile watch basketball football",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "161.4",
+        "end_time_sec": "164.2",
+        "asr_confidence": "0.9247538447380066"
+      },
+      {
+        "turn_id": "u23",
+        "speaker": "user",
+        "text": "day trips go to Vegas",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "166.3",
+        "end_time_sec": "168.0",
+        "asr_confidence": "0.8795574307441711"
+      },
+      {
+        "turn_id": "u24",
+        "speaker": "user",
+        "text": "which one went to the gym last night have friends who live in Vegas so I go there often",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "172.2",
+        "end_time_sec": "179.0",
+        "asr_confidence": "0.9329113960266113"
+      },
+      {
+        "turn_id": "u25",
+        "speaker": "user",
+        "text": "I just take a trip get out",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "183.2",
+        "end_time_sec": "185.0",
+        "asr_confidence": "0.9495424032211304"
+      },
+      {
+        "turn_id": "u26",
+        "speaker": "user",
+        "text": "he was from the city for a minute",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "186.1",
+        "end_time_sec": "187.6",
+        "asr_confidence": "0.8531249761581421"
+      },
+      {
+        "turn_id": "u27",
+        "speaker": "user",
+        "text": "but I'm a city boy so I can be way too long and I'll head of the city",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "188.5",
+        "end_time_sec": "192.0",
+        "asr_confidence": "0.8507575988769531"
+      },
+      {
+        "turn_id": "u28",
+        "speaker": "user",
+        "text": "go to the beach",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "201.5",
+        "end_time_sec": "202.5",
+        "asr_confidence": "0.897458553314209"
+      },
+      {
+        "turn_id": "u29",
+        "speaker": "user",
+        "text": "that's been a problem over the years",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "207.5",
+        "end_time_sec": "210.2",
+        "asr_confidence": "0.9483898282051086"
+      },
+      {
+        "turn_id": "u30",
+        "speaker": "user",
+        "text": "I don't know just have a little anger I guess anger anger management problem",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "213.9",
+        "end_time_sec": "220.2",
+        "asr_confidence": "0.9504806995391846"
+      },
+      {
+        "turn_id": "u31",
+        "speaker": "user",
+        "text": "probably you know only yesterday",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "228.2",
+        "end_time_sec": "229.9",
+        "asr_confidence": "0.625843346118927"
+      },
+      {
+        "turn_id": "u32",
+        "speaker": "user",
+        "text": "I forget what I was about",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "231.4",
+        "end_time_sec": "232.4",
+        "asr_confidence": "0.8337602615356445"
+      },
+      {
+        "turn_id": "u33",
+        "speaker": "user",
+        "text": "I'll go to the gym",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "238.5",
+        "end_time_sec": "240.5",
+        "asr_confidence": "0.9468936920166016"
+      },
+      {
+        "turn_id": "u34",
+        "speaker": "user",
+        "text": "people",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "250.4",
+        "end_time_sec": "251.1",
+        "asr_confidence": "0.9381479024887085"
+      },
+      {
+        "turn_id": "u35",
+        "speaker": "user",
+        "text": "I don't know just people I know",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "255.6",
+        "end_time_sec": "258.0",
+        "asr_confidence": "0.9565543532371521"
+      },
+      {
+        "turn_id": "u36",
+        "speaker": "user",
+        "text": "just the way they are I guess",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "260.4",
+        "end_time_sec": "262.0",
+        "asr_confidence": "0.9781965613365173"
+      },
+      {
+        "turn_id": "u37",
+        "speaker": "user",
+        "text": "they get on my nerves sometimes",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "263.4",
+        "end_time_sec": "264.9",
+        "asr_confidence": "0.9484847187995911"
+      },
+      {
+        "turn_id": "u38",
+        "speaker": "user",
+        "text": "dream job of all I was working at LAX I built this city right here playing this to where we're at and I'm pretty much built all of it that's been built so far the past 10 years and then I will always wanted to work at the airport LAX and I finally accomplish that goal have to getting my GED two years ago I'm at LAX",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "271.4",
+        "end_time_sec": "289.9",
+        "asr_confidence": "0.9397802948951721"
+      },
+      {
+        "turn_id": "u39",
+        "speaker": "user",
+        "text": "that's what I'm working at LAX right now LA Airport",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "292.0",
+        "end_time_sec": "295.3",
+        "asr_confidence": "0.8848035335540771"
+      },
+      {
+        "turn_id": "u40",
+        "speaker": "user",
+        "text": "but working at the airport",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "301.3",
+        "end_time_sec": "302.4",
+        "asr_confidence": "0.8721702694892883"
+      },
+      {
+        "turn_id": "u41",
+        "speaker": "user",
+        "text": "I guess during the holidays there was some girl that work there and had a crush on her but she turned out to be a lesbian she's beautiful",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "305.6",
+        "end_time_sec": "314.2",
+        "asr_confidence": "0.9163756966590881"
+      },
+      {
+        "turn_id": "u42",
+        "speaker": "user",
+        "text": "no",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "322.9",
+        "end_time_sec": "323.4",
+        "asr_confidence": "0.9161853790283203"
+      },
+      {
+        "turn_id": "u43",
+        "speaker": "user",
+        "text": "no",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "326.8",
+        "end_time_sec": "327.3",
+        "asr_confidence": "0.8459843397140503"
+      },
+      {
+        "turn_id": "u44",
+        "speaker": "user",
+        "text": "I think when I was a Youngster like a teenager",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "330.6",
+        "end_time_sec": "333.6",
+        "asr_confidence": "0.9714639186859131"
+      },
+      {
+        "turn_id": "u45",
+        "speaker": "user",
+        "text": "1450 no",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "337.4",
+        "end_time_sec": "339.6",
+        "asr_confidence": "0.6769406199455261"
+      },
+      {
+        "turn_id": "u46",
+        "speaker": "user",
+        "text": "I just I just stopped",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "342.4",
+        "end_time_sec": "345.5",
+        "asr_confidence": "0.9430535435676575"
+      },
+      {
+        "turn_id": "u47",
+        "speaker": "user",
+        "text": "I went like to like a rehab replacement in Mel's 15/16 after I did a little bit of time and then from there I like I scaped and then I went back to jail so I turn it stopped",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "346.5",
+        "end_time_sec": "357.6",
+        "asr_confidence": "0.9275835752487183"
+      },
+      {
+        "turn_id": "u48",
+        "speaker": "user",
+        "text": "I know problems not your fault",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "360.4",
+        "end_time_sec": "362.0",
+        "asr_confidence": "0.8469047546386719"
+      },
+      {
+        "turn_id": "u49",
+        "speaker": "user",
+        "text": "I wasn't when I was headed when I was a teenager",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "370.0",
+        "end_time_sec": "373.4",
+        "asr_confidence": "0.8903977274894714"
+      },
+      {
+        "turn_id": "u50",
+        "speaker": "user",
+        "text": "but when I was a teenager",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "378.4",
+        "end_time_sec": "379.4",
+        "asr_confidence": "0.8582401275634766"
+      },
+      {
+        "turn_id": "u51",
+        "speaker": "user",
+        "text": "the teenager I just thought I was very restless I was very destructive you know",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "381.6",
+        "end_time_sec": "387.6",
+        "asr_confidence": "0.8651155233383179"
+      },
+      {
+        "turn_id": "u52",
+        "speaker": "user",
+        "text": "like I'm not going forward as fast as I want to",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "394.7",
+        "end_time_sec": "398.8",
+        "asr_confidence": "0.7591745853424072"
+      },
+      {
+        "turn_id": "u53",
+        "speaker": "user",
+        "text": "and it's kind of hard but you know it is what it is you know",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "404.9",
+        "end_time_sec": "410.2",
+        "asr_confidence": "0.9329721927642822"
+      },
+      {
+        "turn_id": "u54",
+        "speaker": "user",
+        "text": "to avoid what going forward",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "414.6",
+        "end_time_sec": "417.5",
+        "asr_confidence": "0.9635193943977356"
+      },
+      {
+        "turn_id": "u55",
+        "speaker": "user",
+        "text": "I guess I could try to move faster but I've accomplished my goals in life so far I just want to accomplish more but it's taking longer than I thought it was you",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "420.5",
+        "end_time_sec": "431.4",
+        "asr_confidence": "0.9546254277229309"
+      },
+      {
+        "turn_id": "u56",
+        "speaker": "user",
+        "text": "she's me",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "437.3",
+        "end_time_sec": "438.6",
+        "asr_confidence": "0.9400936961174011"
+      },
+      {
+        "turn_id": "u57",
+        "speaker": "user",
+        "text": "yeah I guess",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "442.5",
+        "end_time_sec": "443.4",
+        "asr_confidence": "0.9083257913589478"
+      },
+      {
+        "turn_id": "u58",
+        "speaker": "user",
+        "text": "are there",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "445.2",
+        "end_time_sec": "445.8",
+        "asr_confidence": "0.8532276749610901"
+      },
+      {
+        "turn_id": "u59",
+        "speaker": "user",
+        "text": "and it's like mood swings I guess",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "450.2",
+        "end_time_sec": "452.0",
+        "asr_confidence": "0.9323752522468567"
+      },
+      {
+        "turn_id": "u60",
+        "speaker": "user",
+        "text": "mood swings",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "454.5",
+        "end_time_sec": "455.3",
+        "asr_confidence": "0.9508804678916931"
+      },
+      {
+        "turn_id": "u61",
+        "speaker": "user",
+        "text": "it could be something small and I'll just snap you know",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "459.4",
+        "end_time_sec": "464.1",
+        "asr_confidence": "0.9481717944145203"
+      },
+      {
+        "turn_id": "u62",
+        "speaker": "user",
+        "text": "all the time yesterday maybe today",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "467.3",
+        "end_time_sec": "470.5",
+        "asr_confidence": "0.7932546734809875"
+      },
+      {
+        "turn_id": "u63",
+        "speaker": "user",
+        "text": "hangry",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "476.2",
+        "end_time_sec": "476.9",
+        "asr_confidence": "0.8765328526496887"
+      },
+      {
+        "turn_id": "u64",
+        "speaker": "user",
+        "text": "I guess it's kind of hard to control anger when you're going through a couple of a few things in your life that aren't very pleasant to know",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "484.9",
+        "end_time_sec": "492.9",
+        "asr_confidence": "0.929123044013977"
+      },
+      {
+        "turn_id": "u65",
+        "speaker": "user",
+        "text": "my best friend",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "505.6",
+        "end_time_sec": "507.3",
+        "asr_confidence": "0.8499776124954224"
+      },
+      {
+        "turn_id": "u66",
+        "speaker": "user",
+        "text": "my best friend is just very outgoing you know a good sense of humor but you know that we all have our issues you know that they understand when I am going through something or you know I get mad about something easily or I could just laugh too right after that you know",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "510.0",
+        "end_time_sec": "533.4",
+        "asr_confidence": "0.9372986555099487"
+      },
+      {
+        "turn_id": "u67",
+        "speaker": "user",
+        "text": "very outgoing smart intelligent strong",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "534.5",
+        "end_time_sec": "537.4",
+        "asr_confidence": "0.9671668410301208"
+      },
+      {
+        "turn_id": "u68",
+        "speaker": "user",
+        "text": "the goals that I've accomplished the past few years specially",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "543.4",
+        "end_time_sec": "547.5",
+        "asr_confidence": "0.9189425110816956"
+      },
+      {
+        "turn_id": "u69",
+        "speaker": "user",
+        "text": "just the job",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "550.4",
+        "end_time_sec": "552.3",
+        "asr_confidence": "0.7315961122512817"
+      },
+      {
+        "turn_id": "u70",
+        "speaker": "user",
+        "text": "getting the GED getting the job at LAX I always wanted",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "557.0",
+        "end_time_sec": "560.7",
+        "asr_confidence": "0.9220660328865051"
+      },
+      {
+        "turn_id": "u71",
+        "speaker": "user",
+        "text": "thank you",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "563.6",
+        "end_time_sec": "564.3",
+        "asr_confidence": "0.9802024960517883"
+      },
+      {
+        "turn_id": "u72",
+        "speaker": "user",
+        "text": "yes",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "570.3",
+        "end_time_sec": "570.7",
+        "asr_confidence": "0.9764193296432495"
+      },
+      {
+        "turn_id": "u73",
+        "speaker": "user",
+        "text": "I'm just decisions I made I guess when I was younger and laugh even up to the you know you ever been up to the Past",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "573.4",
+        "end_time_sec": "581.5",
+        "asr_confidence": "0.9098681807518005"
+      },
+      {
+        "turn_id": "u74",
+        "speaker": "user",
+        "text": "few years but nothing major in the past few years it's pretty much the decision I made when I was young and you don't younger in life",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "582.4",
+        "end_time_sec": "588.7",
+        "asr_confidence": "0.915549099445343"
+      },
+      {
+        "turn_id": "u75",
+        "speaker": "user",
+        "text": "to stay in school and",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "595.9",
+        "end_time_sec": "597.6",
+        "asr_confidence": "0.919104278087616"
+      },
+      {
+        "turn_id": "u76",
+        "speaker": "user",
+        "text": "I don't know it's not doing the game",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "600.2",
+        "end_time_sec": "601.9",
+        "asr_confidence": "0.862689733505249"
+      },
+      {
+        "turn_id": "u77",
+        "speaker": "user",
+        "text": "just to stay in school pretty much into",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "604.0",
+        "end_time_sec": "607.0",
+        "asr_confidence": "0.9149020314216614"
+      },
+      {
+        "turn_id": "u78",
+        "speaker": "user",
+        "text": "control the anger issues I had back then",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "608.4",
+        "end_time_sec": "610.8",
+        "asr_confidence": "0.9797536134719849"
+      },
+      {
+        "turn_id": "u79",
+        "speaker": "user",
+        "text": "to do what",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "614.8",
+        "end_time_sec": "615.7",
+        "asr_confidence": "0.9841002225875854"
+      },
+      {
+        "turn_id": "u80",
+        "speaker": "user",
+        "text": "to do it",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "618.9",
+        "end_time_sec": "619.7",
+        "asr_confidence": "0.8931341171264648"
+      },
+      {
+        "turn_id": "u81",
+        "speaker": "user",
+        "text": "today",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "628.2",
+        "end_time_sec": "629.7",
+        "asr_confidence": "0.9396401643753052"
+      },
+      {
+        "turn_id": "u82",
+        "speaker": "user",
+        "text": "happy to be here",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "631.1",
+        "end_time_sec": "632.0",
+        "asr_confidence": "0.9925773739814758"
+      },
+      {
+        "turn_id": "u83",
+        "speaker": "user",
+        "text": "going exercising going to the gym and working out",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "643.3",
+        "end_time_sec": "646.6",
+        "asr_confidence": "0.9653400182723999"
+      },
+      {
+        "turn_id": "u84",
+        "speaker": "user",
+        "text": "going to the beach Hangouts",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "648.3",
+        "end_time_sec": "650.2",
+        "asr_confidence": "0.8987138271331787"
+      },
+      {
+        "turn_id": "u85",
+        "speaker": "user",
+        "text": "family members of mine",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "651.7",
+        "end_time_sec": "652.9",
+        "asr_confidence": "0.7602471113204956"
+      },
+      {
+        "turn_id": "u86",
+        "speaker": "user",
+        "text": "friends",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "655.3",
+        "end_time_sec": "656.0",
+        "asr_confidence": "0.854796290397644"
+      },
+      {
+        "turn_id": "u87",
+        "speaker": "user",
+        "text": "my best qualities qualities just that I'm a neat person I'm not going you know I don't know qualities qualities meaning what",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "661.9",
+        "end_time_sec": "672.3",
+        "asr_confidence": "0.9049162864685059"
+      },
+      {
+        "turn_id": "u88",
+        "speaker": "user",
+        "text": "what do you mean by qualities what comes to your mind",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "678.1",
+        "end_time_sec": "680.3",
+        "asr_confidence": "0.9803935885429382"
+      },
+      {
+        "turn_id": "u89",
+        "speaker": "user",
+        "text": "give me a definition of qualities",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "681.7",
+        "end_time_sec": "683.3",
+        "asr_confidence": "0.9774302840232849"
+      },
+      {
+        "turn_id": "u90",
+        "speaker": "user",
+        "text": "have a nice day",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "692.2",
+        "end_time_sec": "693.8",
+        "asr_confidence": "0.9275639653205872"
+      },
+      {
+        "turn_id": "u91",
+        "speaker": "user",
+        "text": "okay bye",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "695.9",
+        "end_time_sec": "696.5",
+        "asr_confidence": "0.9617437720298767"
+      },
+      {
+        "turn_id": "u92",
+        "speaker": "user",
+        "text": "I can take her home with me is she",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "705.8",
+        "end_time_sec": "708.9",
+        "asr_confidence": "0.9123055338859558"
+      }
+    ]
+  },
+  "instructions": "Label independently using the transcript, metadata, and annotation guidelines. Do not inspect annotator B."
+}

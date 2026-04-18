@@ -1,0 +1,738 @@
+{
+  "session_id": "MVGOLD-EN-030",
+  "language": "en",
+  "cohort": "expansion",
+  "target_primary_domain": "safety",
+  "target_risk_band": "urgent_candidate",
+  "packet_stage": "annotator_b",
+  "target_output_file": "data/gold/labels/MVGOLD-EN-030.annotator_b.json",
+  "related_files": {
+    "audio_file": "data/gold/audio/en/MVGOLD-EN-030.wav",
+    "transcript_file": "data/gold/transcripts/en/MVGOLD-EN-030.json",
+    "annotator_a_file": "data/gold/labels/MVGOLD-EN-030.annotator_a.json",
+    "annotator_b_file": "data/gold/labels/MVGOLD-EN-030.annotator_b.json",
+    "adjudicated_label_file": "data/gold/labels/MVGOLD-EN-030.adjudicated.json"
+  },
+  "metadata": {
+    "session_id": "MVGOLD-EN-030",
+    "participant_id": "354",
+    "language": "en",
+    "age_years": "",
+    "age_band": "adult_unknown_from_source",
+    "occupation": "unknown_from_source",
+    "living_situation": "unknown_from_source",
+    "support_system": "unknown_from_source",
+    "consent_recorded": "public_dataset_license",
+    "collection_source": "e_daic_public_2019",
+    "audio_file": "data/gold/audio/en/MVGOLD-EN-030.wav",
+    "transcript_file": "data/gold/transcripts/en/MVGOLD-EN-030.json",
+    "annotator_a_file": "data/gold/labels/MVGOLD-EN-030.annotator_a.json",
+    "annotator_b_file": "data/gold/labels/MVGOLD-EN-030.annotator_b.json",
+    "adjudicated_label_file": "data/gold/labels/MVGOLD-EN-030.adjudicated.json",
+    "split": "expansion",
+    "notes": "Imported from E-DAIC public participant archive; PHQ8 items from public labels, remaining items machine-inferred and require clinician review for strict claims."
+  },
+  "transcript": {
+    "session_id": "MVGOLD-EN-030",
+    "language": "en",
+    "cohort": "expansion",
+    "is_placeholder": false,
+    "collection_status": "collected_public_dataset",
+    "notes": "Imported from E-DAIC public participant archive.",
+    "profile": {
+      "age_years": null,
+      "age_band": "adult_unknown_from_source",
+      "occupation": "unknown_from_source",
+      "living_situation": "unknown_from_source",
+      "support_system": "unknown_from_source",
+      "gender": "male"
+    },
+    "source": {
+      "dataset": "e_daic_public",
+      "participant_id": "354",
+      "split": "train",
+      "phq_binary": "1",
+      "phq_score": "18",
+      "source_audio_path": "354_P/354_AUDIO.wav",
+      "source_transcript_path": "354_P/354_Transcript.csv"
+    },
+    "turns": [
+      {
+        "turn_id": "u1",
+        "speaker": "user",
+        "text": "and please",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "32.2",
+        "end_time_sec": "32.9",
+        "asr_confidence": "0.7384102940559387"
+      },
+      {
+        "turn_id": "u2",
+        "speaker": "user",
+        "text": "are you okay",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "37.4",
+        "end_time_sec": "38.2",
+        "asr_confidence": "0.9823282957077026"
+      },
+      {
+        "turn_id": "u3",
+        "speaker": "user",
+        "text": "yes I'm alright with this",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "39.0",
+        "end_time_sec": "40.1",
+        "asr_confidence": "0.8126291632652283"
+      },
+      {
+        "turn_id": "u4",
+        "speaker": "user",
+        "text": "doing pretty good little bit tired",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "44.0",
+        "end_time_sec": "45.8",
+        "asr_confidence": "0.9025386571884155"
+      },
+      {
+        "turn_id": "u5",
+        "speaker": "user",
+        "text": "I'm from Los Angeles",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "50.7",
+        "end_time_sec": "52.0",
+        "asr_confidence": "0.9190033078193665"
+      },
+      {
+        "turn_id": "u6",
+        "speaker": "user",
+        "text": "the weather and sports",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "57.9",
+        "end_time_sec": "59.6",
+        "asr_confidence": "0.8719035983085632"
+      },
+      {
+        "turn_id": "u7",
+        "speaker": "user",
+        "text": "you can't find jobs right now",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "66.7",
+        "end_time_sec": "68.2",
+        "asr_confidence": "0.9638810157775879"
+      },
+      {
+        "turn_id": "u8",
+        "speaker": "user",
+        "text": "I know",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "75.4",
+        "end_time_sec": "76.0",
+        "asr_confidence": "0.9561712145805359"
+      },
+      {
+        "turn_id": "u9",
+        "speaker": "user",
+        "text": "not really",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "77.8",
+        "end_time_sec": "79.0",
+        "asr_confidence": "0.9708787798881531"
+      },
+      {
+        "turn_id": "u10",
+        "speaker": "user",
+        "text": "I studied architecture and Chicano studies in a little bit of History",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "82.4",
+        "end_time_sec": "87.1",
+        "asr_confidence": "0.9195572137832642"
+      },
+      {
+        "turn_id": "u11",
+        "speaker": "user",
+        "text": "I would like to draw and then I'd like to learn about history",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "92.1",
+        "end_time_sec": "97.2",
+        "asr_confidence": "0.8710640072822571"
+      },
+      {
+        "turn_id": "u12",
+        "speaker": "user",
+        "text": "I'm trying to I'm going I'm working and going to school I'm trying to get my finish getting my degree in",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "103.1",
+        "end_time_sec": "107.9",
+        "asr_confidence": "0.91815584897995"
+      },
+      {
+        "turn_id": "u13",
+        "speaker": "user",
+        "text": "playing in the NFL",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "110.9",
+        "end_time_sec": "112.1",
+        "asr_confidence": "0.6922726035118103"
+      },
+      {
+        "turn_id": "u14",
+        "speaker": "user",
+        "text": "what was that",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "119.3",
+        "end_time_sec": "119.9",
+        "asr_confidence": "0.9714095592498779"
+      },
+      {
+        "turn_id": "u15",
+        "speaker": "user",
+        "text": "I don't know what that is",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "123.3",
+        "end_time_sec": "125.3",
+        "asr_confidence": "0.9876289963722229"
+      },
+      {
+        "turn_id": "u16",
+        "speaker": "user",
+        "text": "eat or sleep",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "131.5",
+        "end_time_sec": "132.7",
+        "asr_confidence": "0.9637762904167175"
+      },
+      {
+        "turn_id": "u17",
+        "speaker": "user",
+        "text": "people not doing their jobs",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "138.4",
+        "end_time_sec": "139.9",
+        "asr_confidence": "0.9834793210029602"
+      },
+      {
+        "turn_id": "u18",
+        "speaker": "user",
+        "text": "walkaway",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "144.8",
+        "end_time_sec": "145.5",
+        "asr_confidence": "0.821892261505127"
+      },
+      {
+        "turn_id": "u19",
+        "speaker": "user",
+        "text": "pretty good",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "150.1",
+        "end_time_sec": "151.2",
+        "asr_confidence": "0.8952608108520508"
+      },
+      {
+        "turn_id": "u20",
+        "speaker": "user",
+        "text": "3 days ago couple days ago and over some family issues",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "158.2",
+        "end_time_sec": "162.8",
+        "asr_confidence": "0.9057562351226807"
+      },
+      {
+        "turn_id": "u21",
+        "speaker": "user",
+        "text": "can you tell me about",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "166.3",
+        "end_time_sec": "167.0",
+        "asr_confidence": "0.9422739148139954"
+      },
+      {
+        "turn_id": "u22",
+        "speaker": "user",
+        "text": "sure",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "168.3",
+        "end_time_sec": "169.1",
+        "asr_confidence": "0.9084222316741943"
+      },
+      {
+        "turn_id": "u23",
+        "speaker": "user",
+        "text": "well",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "176.2",
+        "end_time_sec": "176.9",
+        "asr_confidence": "0.8320379257202148"
+      },
+      {
+        "turn_id": "u24",
+        "speaker": "user",
+        "text": "back to work out play football and ride my bike",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "179.1",
+        "end_time_sec": "182.8",
+        "asr_confidence": "0.8454792499542236"
+      },
+      {
+        "turn_id": "u25",
+        "speaker": "user",
+        "text": "walking on at UCLA",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "193.1",
+        "end_time_sec": "194.7",
+        "asr_confidence": "0.8354700207710266"
+      },
+      {
+        "turn_id": "u26",
+        "speaker": "user",
+        "text": "I feel biglane actually that was doing something with myself",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "202.3",
+        "end_time_sec": "205.8",
+        "asr_confidence": "0.8832635283470154"
+      },
+      {
+        "turn_id": "u27",
+        "speaker": "user",
+        "text": "my parents",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "213.7",
+        "end_time_sec": "214.8",
+        "asr_confidence": "0.9667713046073914"
+      },
+      {
+        "turn_id": "u28",
+        "speaker": "user",
+        "text": "they stroke they whenever they struggle they still managed to pull through whatever they want",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "220.2",
+        "end_time_sec": "226.5",
+        "asr_confidence": "0.8726271390914917"
+      },
+      {
+        "turn_id": "u29",
+        "speaker": "user",
+        "text": "and",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "227.9",
+        "end_time_sec": "229.6",
+        "asr_confidence": "0.9012041091918945"
+      },
+      {
+        "turn_id": "u30",
+        "speaker": "user",
+        "text": "I'm pretty close real close",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "232.1",
+        "end_time_sec": "233.9",
+        "asr_confidence": "0.8495912551879883"
+      },
+      {
+        "turn_id": "u31",
+        "speaker": "user",
+        "text": "quiet",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "242.7",
+        "end_time_sec": "243.5",
+        "asr_confidence": "0.9876290559768677"
+      },
+      {
+        "turn_id": "u32",
+        "speaker": "user",
+        "text": "my height and strength",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "250.0",
+        "end_time_sec": "252.4",
+        "asr_confidence": "0.9377349615097046"
+      },
+      {
+        "turn_id": "u33",
+        "speaker": "user",
+        "text": "okay",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "256.6",
+        "end_time_sec": "257.2",
+        "asr_confidence": "0.975234866142273"
+      },
+      {
+        "turn_id": "u34",
+        "speaker": "user",
+        "text": "have you ever served in the military",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "258.8",
+        "end_time_sec": "259.9",
+        "asr_confidence": "0.947084367275238"
+      },
+      {
+        "turn_id": "u35",
+        "speaker": "user",
+        "text": "no",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "265.2",
+        "end_time_sec": "265.6",
+        "asr_confidence": "0.9526723623275757"
+      },
+      {
+        "turn_id": "u36",
+        "speaker": "user",
+        "text": "no Google",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "268.6",
+        "end_time_sec": "269.4",
+        "asr_confidence": "0.6743238568305969"
+      },
+      {
+        "turn_id": "u37",
+        "speaker": "user",
+        "text": "that's pretty hard",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "273.8",
+        "end_time_sec": "274.8",
+        "asr_confidence": "0.8461099863052368"
+      },
+      {
+        "turn_id": "u38",
+        "speaker": "user",
+        "text": "I get home late and I'm usually up for like 15 to like 18 hours during the day so by time I get home and really not even that tired to go to sleep",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "279.3",
+        "end_time_sec": "289.6",
+        "asr_confidence": "0.9190414547920227"
+      },
+      {
+        "turn_id": "u39",
+        "speaker": "user",
+        "text": "are",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "291.7",
+        "end_time_sec": "292.1",
+        "asr_confidence": "0.729812741279602"
+      },
+      {
+        "turn_id": "u40",
+        "speaker": "user",
+        "text": "if I don't sleep will I get if I wake up grumpy or not in the mood to do things",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "298.8",
+        "end_time_sec": "304.0",
+        "asr_confidence": "0.9191786646842957"
+      },
+      {
+        "turn_id": "u41",
+        "speaker": "user",
+        "text": "just like",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "309.5",
+        "end_time_sec": "311.2",
+        "asr_confidence": "0.6592977046966553"
+      },
+      {
+        "turn_id": "u42",
+        "speaker": "user",
+        "text": "under pressure a little bit",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "312.1",
+        "end_time_sec": "314.1",
+        "asr_confidence": "0.9296345710754395"
+      },
+      {
+        "turn_id": "u43",
+        "speaker": "user",
+        "text": "how hard is that",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "316.7",
+        "end_time_sec": "317.5",
+        "asr_confidence": "0.9767521023750305"
+      },
+      {
+        "turn_id": "u44",
+        "speaker": "user",
+        "text": "not that hard I just",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "318.4",
+        "end_time_sec": "320.6",
+        "asr_confidence": "0.9826728701591492"
+      },
+      {
+        "turn_id": "u45",
+        "speaker": "user",
+        "text": "stress pretty much",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "321.3",
+        "end_time_sec": "322.7",
+        "asr_confidence": "0.9222224950790405"
+      },
+      {
+        "turn_id": "u46",
+        "speaker": "user",
+        "text": "sometimes",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "327.0",
+        "end_time_sec": "327.9",
+        "asr_confidence": "0.9801573753356934"
+      },
+      {
+        "turn_id": "u47",
+        "speaker": "user",
+        "text": "just working I really don't like working in but I have to so",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "333.1",
+        "end_time_sec": "337.4",
+        "asr_confidence": "0.9163329005241394"
+      },
+      {
+        "turn_id": "u48",
+        "speaker": "user",
+        "text": "a little bit",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "346.9",
+        "end_time_sec": "349.7",
+        "asr_confidence": "0.8012579679489136"
+      },
+      {
+        "turn_id": "u49",
+        "speaker": "user",
+        "text": "like",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "354.2",
+        "end_time_sec": "354.8",
+        "asr_confidence": "0.9001986384391785"
+      },
+      {
+        "turn_id": "u50",
+        "speaker": "user",
+        "text": "it's not like a little bit more violent",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "356.2",
+        "end_time_sec": "359.4",
+        "asr_confidence": "0.9618959426879883"
+      },
+      {
+        "turn_id": "u51",
+        "speaker": "user",
+        "text": "this is just a side effect from not playing football for a while",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "360.2",
+        "end_time_sec": "363.9",
+        "asr_confidence": "0.9119001030921936"
+      },
+      {
+        "turn_id": "u52",
+        "speaker": "user",
+        "text": "okay",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "369.5",
+        "end_time_sec": "370.1",
+        "asr_confidence": "0.975234866142273"
+      },
+      {
+        "turn_id": "u53",
+        "speaker": "user",
+        "text": "what are some things that usually",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "373.0",
+        "end_time_sec": "374.5",
+        "asr_confidence": "0.9006754755973816"
+      },
+      {
+        "turn_id": "u54",
+        "speaker": "user",
+        "text": "music",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "376.5",
+        "end_time_sec": "377.4",
+        "asr_confidence": "0.9631170034408569"
+      },
+      {
+        "turn_id": "u55",
+        "speaker": "user",
+        "text": "eating or and working out",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "379.4",
+        "end_time_sec": "382.1",
+        "asr_confidence": "0.8661318421363831"
+      },
+      {
+        "turn_id": "u56",
+        "speaker": "user",
+        "text": "I don't know",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "394.5",
+        "end_time_sec": "395.2",
+        "asr_confidence": "0.9907218217849731"
+      },
+      {
+        "turn_id": "u57",
+        "speaker": "user",
+        "text": "raising my son in a while still in school and high school",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "405.4",
+        "end_time_sec": "408.6",
+        "asr_confidence": "0.9276450276374817"
+      },
+      {
+        "turn_id": "u58",
+        "speaker": "user",
+        "text": "no",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "415.7",
+        "end_time_sec": "416.3",
+        "asr_confidence": "0.9346993565559387"
+      },
+      {
+        "turn_id": "u59",
+        "speaker": "user",
+        "text": "patience",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "420.4",
+        "end_time_sec": "421.2",
+        "asr_confidence": "0.8935701251029968"
+      },
+      {
+        "turn_id": "u60",
+        "speaker": "user",
+        "text": "watching your son girl",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "428.1",
+        "end_time_sec": "429.4",
+        "asr_confidence": "0.9622837901115417"
+      },
+      {
+        "turn_id": "u61",
+        "speaker": "user",
+        "text": "I have a 5 1/2 year old boy",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "433.8",
+        "end_time_sec": "436.1",
+        "asr_confidence": "0.9044243097305298"
+      },
+      {
+        "turn_id": "u62",
+        "speaker": "user",
+        "text": "only see him on the weekend",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "438.1",
+        "end_time_sec": "440.6",
+        "asr_confidence": "0.8550748229026794"
+      },
+      {
+        "turn_id": "u63",
+        "speaker": "user",
+        "text": "a pretty close",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "444.6",
+        "end_time_sec": "445.4",
+        "asr_confidence": "0.7669714093208313"
+      },
+      {
+        "turn_id": "u64",
+        "speaker": "user",
+        "text": "spoiled",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "454.2",
+        "end_time_sec": "454.8",
+        "asr_confidence": "0.7678351998329163"
+      },
+      {
+        "turn_id": "u65",
+        "speaker": "user",
+        "text": "they're they're so Advanced with everything that it makes the like their grandparents feel like dinosaurs why they already they just born and they already know how to use everything around their house",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "459.6",
+        "end_time_sec": "473.0",
+        "asr_confidence": "0.9443251490592957"
+      },
+      {
+        "turn_id": "u66",
+        "speaker": "user",
+        "text": "can treat them like kids anymore",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "474.1",
+        "end_time_sec": "476.4",
+        "asr_confidence": "0.8298343420028687"
+      },
+      {
+        "turn_id": "u67",
+        "speaker": "user",
+        "text": "so you pretty much treated like adults sometimes it works and it doesn't it doesn't really work",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "478.9",
+        "end_time_sec": "483.7",
+        "asr_confidence": "0.8535100817680359"
+      },
+      {
+        "turn_id": "u68",
+        "speaker": "user",
+        "text": "no",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "489.7",
+        "end_time_sec": "490.2",
+        "asr_confidence": "0.8905606269836426"
+      },
+      {
+        "turn_id": "u69",
+        "speaker": "user",
+        "text": "I should just stay don't want pair",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "499.0",
+        "end_time_sec": "501.0",
+        "asr_confidence": "0.7995460629463196"
+      },
+      {
+        "turn_id": "u70",
+        "speaker": "user",
+        "text": "follow my dreams, I'll just follow what I wanted to do",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "502.7",
+        "end_time_sec": "506.2",
+        "asr_confidence": "0.8798500895500183"
+      },
+      {
+        "turn_id": "u71",
+        "speaker": "user",
+        "text": "Maserati",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "507.6",
+        "end_time_sec": "509.6",
+        "asr_confidence": "0.679101288318634"
+      },
+      {
+        "turn_id": "u72",
+        "speaker": "user",
+        "text": "couple months ago",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "519.2",
+        "end_time_sec": "520.1",
+        "asr_confidence": "0.9483634829521179"
+      },
+      {
+        "turn_id": "u73",
+        "speaker": "user",
+        "text": "I was playing football now it's time for junior college and it made it to the championship bowl that was probably the happiest I've been in a while",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "523.9",
+        "end_time_sec": "534.3",
+        "asr_confidence": "0.9070451855659485"
+      },
+      {
+        "turn_id": "u74",
+        "speaker": "user",
+        "text": "girl",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "539.4",
+        "end_time_sec": "540.1",
+        "asr_confidence": "0.9764228463172913"
+      },
+      {
+        "turn_id": "u75",
+        "speaker": "user",
+        "text": "thank you",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "547.7",
+        "end_time_sec": "549.5",
+        "asr_confidence": "0.9704947471618652"
+      }
+    ]
+  },
+  "instructions": "Label independently using the transcript, metadata, and annotation guidelines. Do not inspect annotator A."
+}

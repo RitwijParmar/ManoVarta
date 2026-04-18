@@ -1,0 +1,160 @@
+{
+  "session_id": "MVGOLD-EN-014",
+  "language": "en",
+  "annotator_id": "R-ADJ1",
+  "annotation_stage": "adjudicated",
+  "recall_window_days": 14,
+  "is_placeholder": false,
+  "annotation_provenance": "human_adjudication",
+  "items": [
+    {
+      "item_id": "phq_q1_anhedonia",
+      "value": 0,
+      "confidence": "low",
+      "evidence_quote": "Not discussed.",
+      "turn_id": "u1",
+      "speaker": "user",
+      "notes": "Annotators agree — score carried forward."
+    },
+    {
+      "item_id": "phq_q2_low_mood",
+      "value": 2,
+      "confidence": "high",
+      "evidence_quote": "they're very positive role model for me the certain things that I don't do today because of them I don't drink I don't curse I don't look do...",
+      "turn_id": "u41",
+      "speaker": "user",
+      "notes": "Disagreement (A=2, B=3). Adjudicator selected 2 based on evidence strength."
+    },
+    {
+      "item_id": "phq_q3_sleep",
+      "value": 0,
+      "confidence": "low",
+      "evidence_quote": "Not discussed.",
+      "turn_id": "u1",
+      "speaker": "user",
+      "notes": "Annotators agree — score carried forward."
+    },
+    {
+      "item_id": "phq_q4_fatigue",
+      "value": 2,
+      "confidence": "high",
+      "evidence_quote": "very good I was up late last night so I'm kind of tired now but I usually have no problem sleeping",
+      "turn_id": "u60",
+      "speaker": "user",
+      "notes": "Annotators agree — score carried forward."
+    },
+    {
+      "item_id": "phq_q5_appetite",
+      "value": 0,
+      "confidence": "low",
+      "evidence_quote": "Not discussed.",
+      "turn_id": "u1",
+      "speaker": "user",
+      "notes": "Annotators agree — score carried forward."
+    },
+    {
+      "item_id": "phq_q6_worthlessness",
+      "value": 0,
+      "confidence": "medium",
+      "evidence_quote": "so I'm a proud of my really proud of my kids",
+      "turn_id": "u67",
+      "speaker": "user",
+      "notes": "Disagreement (A=1, B=0). Adjudicator selected 0 based on evidence strength."
+    },
+    {
+      "item_id": "phq_q7_concentration",
+      "value": 0,
+      "confidence": "low",
+      "evidence_quote": "Not discussed.",
+      "turn_id": "u1",
+      "speaker": "user",
+      "notes": "Annotators agree — score carried forward."
+    },
+    {
+      "item_id": "phq_q8_psychomotor",
+      "value": 0,
+      "confidence": "low",
+      "evidence_quote": "Not discussed.",
+      "turn_id": "u1",
+      "speaker": "user",
+      "notes": "Annotators agree — score carried forward."
+    },
+    {
+      "item_id": "phq_q9_self_harm",
+      "value": 0,
+      "confidence": "low",
+      "evidence_quote": "Not discussed.",
+      "turn_id": "u1",
+      "speaker": "user",
+      "notes": "Annotators agree — score carried forward."
+    },
+    {
+      "item_id": "gad_q1_nervous",
+      "value": 1,
+      "confidence": "medium",
+      "evidence_quote": "very very easy I really have no problem with that once in awhile if I am anxious about something I have things coming up through or projects...",
+      "turn_id": "u56",
+      "speaker": "user",
+      "notes": "Annotators agree — score carried forward."
+    },
+    {
+      "item_id": "gad_q2_control_worry",
+      "value": 0,
+      "confidence": "low",
+      "evidence_quote": "Not discussed.",
+      "turn_id": "u1",
+      "speaker": "user",
+      "notes": "Annotators agree — score carried forward."
+    },
+    {
+      "item_id": "gad_q3_excessive_worry",
+      "value": 0,
+      "confidence": "low",
+      "evidence_quote": "Not discussed.",
+      "turn_id": "u1",
+      "speaker": "user",
+      "notes": "Annotators agree — score carried forward."
+    },
+    {
+      "item_id": "gad_q4_trouble_relaxing",
+      "value": 0,
+      "confidence": "low",
+      "evidence_quote": "Not discussed.",
+      "turn_id": "u1",
+      "speaker": "user",
+      "notes": "Annotators agree — score carried forward."
+    },
+    {
+      "item_id": "gad_q5_restlessness",
+      "value": 0,
+      "confidence": "low",
+      "evidence_quote": "Not discussed.",
+      "turn_id": "u1",
+      "speaker": "user",
+      "notes": "Annotators agree — score carried forward."
+    },
+    {
+      "item_id": "gad_q6_irritability",
+      "value": 2,
+      "confidence": "high",
+      "evidence_quote": "don't get annoyed that much I just let it go it's not worth the pain and probably could cause",
+      "turn_id": "u33",
+      "speaker": "user",
+      "notes": "Disagreement (A=2, B=3). Adjudicator selected 2 based on evidence strength."
+    },
+    {
+      "item_id": "gad_q7_afraid",
+      "value": 0,
+      "confidence": "low",
+      "evidence_quote": "Not discussed.",
+      "turn_id": "u1",
+      "speaker": "user",
+      "notes": "Annotators agree — score carried forward."
+    }
+  ],
+  "safety": {
+    "level": "review",
+    "evidence_quote": "Precautionary flag based on overall clinical presentation.",
+    "notes": "Annotators agree on safety level."
+  }
+}

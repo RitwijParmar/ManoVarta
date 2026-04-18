@@ -4,6 +4,8 @@ import json
 import re
 from typing import Any
 
+from manovarta_core.item_ids import canonicalize_item_id
+
 SAFETY_LEVEL_ALIASES = {
     "none": "none",
     "safe": "none",
@@ -102,7 +104,7 @@ def normalize_extractor_payload(payload: dict[str, Any]) -> dict[str, Any] | Non
     for item in payload.get("items", []):
         if not isinstance(item, dict):
             continue
-        item_id = str(item.get("item_id", "")).strip()
+        item_id = canonicalize_item_id(item.get("item_id", ""))
         if not item_id or item_id in seen:
             continue
         try:

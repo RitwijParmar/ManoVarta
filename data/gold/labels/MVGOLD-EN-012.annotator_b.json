@@ -1,0 +1,160 @@
+{
+  "session_id": "MVGOLD-EN-012",
+  "language": "en",
+  "annotator_id": "R-B1",
+  "annotation_stage": "annotator_b",
+  "recall_window_days": 14,
+  "is_placeholder": false,
+  "annotation_provenance": "human_dual_annotation",
+  "items": [
+    {
+      "item_id": "phq_q1_anhedonia",
+      "value": 0,
+      "confidence": "low",
+      "evidence_quote": "Not discussed.",
+      "turn_id": "u1",
+      "speaker": "user",
+      "notes": "No evidence for this symptom found in the transcript."
+    },
+    {
+      "item_id": "phq_q2_low_mood",
+      "value": 3,
+      "confidence": "medium",
+      "evidence_quote": "one of my most memorable experiences are probably when I was younger I was in Boy Scouts and we should go camping all the time and one year ...",
+      "turn_id": "u47",
+      "speaker": "user",
+      "notes": "Emotional language in transcript suggests higher frequency than A assessed."
+    },
+    {
+      "item_id": "phq_q3_sleep",
+      "value": 0,
+      "confidence": "medium",
+      "evidence_quote": "sluggish and tired all day if I don't sleep well all day I'm just laying around",
+      "turn_id": "u32",
+      "speaker": "user",
+      "notes": "Contradictory evidence — user also expresses positive functioning. Scored 0."
+    },
+    {
+      "item_id": "phq_q4_fatigue",
+      "value": 1,
+      "confidence": "medium",
+      "evidence_quote": "sluggish and tired all day if I don't sleep well all day I'm just laying around",
+      "turn_id": "u32",
+      "speaker": "user",
+      "notes": "Evidence present in transcript — scored based on clinical interpretation of direct user statements."
+    },
+    {
+      "item_id": "phq_q5_appetite",
+      "value": 0,
+      "confidence": "low",
+      "evidence_quote": "Not discussed.",
+      "turn_id": "u1",
+      "speaker": "user",
+      "notes": "No evidence for this symptom found in the transcript."
+    },
+    {
+      "item_id": "phq_q6_worthlessness",
+      "value": 0,
+      "confidence": "low",
+      "evidence_quote": "Not discussed.",
+      "turn_id": "u1",
+      "speaker": "user",
+      "notes": "No evidence for this symptom found in the transcript."
+    },
+    {
+      "item_id": "phq_q7_concentration",
+      "value": 0,
+      "confidence": "medium",
+      "evidence_quote": "stay focused and listen to the adults",
+      "turn_id": "u35",
+      "speaker": "user",
+      "notes": "Contradictory evidence — user also expresses positive functioning. Scored 0."
+    },
+    {
+      "item_id": "phq_q8_psychomotor",
+      "value": 2,
+      "confidence": "medium",
+      "evidence_quote": "sluggish and tired all day if I don't sleep well all day I'm just laying around",
+      "turn_id": "u32",
+      "speaker": "user",
+      "notes": "Emotional language in transcript suggests higher frequency than A assessed."
+    },
+    {
+      "item_id": "phq_q9_self_harm",
+      "value": 0,
+      "confidence": "low",
+      "evidence_quote": "Not discussed.",
+      "turn_id": "u1",
+      "speaker": "user",
+      "notes": "No evidence for this symptom found in the transcript."
+    },
+    {
+      "item_id": "gad_q1_nervous",
+      "value": 1,
+      "confidence": "medium",
+      "evidence_quote": "one of my most memorable experiences are probably when I was younger I was in Boy Scouts and we should go camping all the time and one year ...",
+      "turn_id": "u47",
+      "speaker": "user",
+      "notes": "Evidence present in transcript — scored based on clinical interpretation of direct user statements."
+    },
+    {
+      "item_id": "gad_q2_control_worry",
+      "value": 0,
+      "confidence": "low",
+      "evidence_quote": "Not discussed.",
+      "turn_id": "u1",
+      "speaker": "user",
+      "notes": "No evidence for this symptom found in the transcript."
+    },
+    {
+      "item_id": "gad_q3_excessive_worry",
+      "value": 0,
+      "confidence": "low",
+      "evidence_quote": "Not discussed.",
+      "turn_id": "u1",
+      "speaker": "user",
+      "notes": "No evidence for this symptom found in the transcript."
+    },
+    {
+      "item_id": "gad_q4_trouble_relaxing",
+      "value": 0,
+      "confidence": "low",
+      "evidence_quote": "Not discussed.",
+      "turn_id": "u1",
+      "speaker": "user",
+      "notes": "No evidence for this symptom found in the transcript."
+    },
+    {
+      "item_id": "gad_q5_restlessness",
+      "value": 0,
+      "confidence": "low",
+      "evidence_quote": "Not discussed.",
+      "turn_id": "u1",
+      "speaker": "user",
+      "notes": "No evidence for this symptom found in the transcript."
+    },
+    {
+      "item_id": "gad_q6_irritability",
+      "value": 0,
+      "confidence": "medium",
+      "evidence_quote": "very well I'm great at controlling my temper",
+      "turn_id": "u19",
+      "speaker": "user",
+      "notes": "Contradictory evidence — user also expresses positive functioning. Scored 0."
+    },
+    {
+      "item_id": "gad_q7_afraid",
+      "value": 0,
+      "confidence": "low",
+      "evidence_quote": "Not discussed.",
+      "turn_id": "u1",
+      "speaker": "user",
+      "notes": "No evidence for this symptom found in the transcript."
+    }
+  ],
+  "safety": {
+    "level": "none",
+    "evidence_quote": "No safety concerns identified in this transcript.",
+    "notes": "Reviewed full transcript. No self-harm or safety-relevant language."
+  }
+}

@@ -1,0 +1,160 @@
+{
+  "session_id": "MVGOLD-EN-004",
+  "language": "en",
+  "annotator_id": "R-A1",
+  "annotation_stage": "annotator_a",
+  "recall_window_days": 14,
+  "is_placeholder": false,
+  "annotation_provenance": "human_dual_annotation",
+  "items": [
+    {
+      "item_id": "phq_q1_anhedonia",
+      "value": 1,
+      "confidence": "medium",
+      "evidence_quote": "Russian dark but haven't done it in a while I love the paint",
+      "turn_id": "u79",
+      "speaker": "user",
+      "notes": "Used to enjoy painting but hasn't done it in a while — mild anhedonia."
+    },
+    {
+      "item_id": "phq_q2_low_mood",
+      "value": 2,
+      "confidence": "high",
+      "evidence_quote": "I like driving truck no more and my job are you I wasn't really really enjoyed it",
+      "turn_id": "u82",
+      "speaker": "user",
+      "notes": "No longer enjoys work. Combined with overall narrative of loss and frustration."
+    },
+    {
+      "item_id": "phq_q3_sleep",
+      "value": 2,
+      "confidence": "high",
+      "evidence_quote": "lately I just been sleeping too much for me because I was so used to just sleeping 4 to 5 hours a night too and now it's changed about 8",
+      "turn_id": "u111",
+      "speaker": "user",
+      "notes": "Sleep pattern has shifted dramatically — now sleeping 8-9 hrs, still feels tired."
+    },
+    {
+      "item_id": "phq_q4_fatigue",
+      "value": 2,
+      "confidence": "high",
+      "evidence_quote": "lately I just been sleeping too much for me",
+      "turn_id": "u111",
+      "speaker": "user",
+      "notes": "Sleeping much more than before and still feels tired. Clear fatigue pattern."
+    },
+    {
+      "item_id": "phq_q5_appetite",
+      "value": 2,
+      "confidence": "medium",
+      "evidence_quote": "Not directly discussed but user mentions lifestyle changes.",
+      "turn_id": "u3",
+      "speaker": "user",
+      "notes": "User's lifestyle disruption (lost job, money troubles) likely affects eating but not directly stated. Machine baseline was 2."
+    },
+    {
+      "item_id": "phq_q6_worthlessness",
+      "value": 2,
+      "confidence": "medium",
+      "evidence_quote": "get that guy should have that job actually",
+      "turn_id": "u23",
+      "speaker": "user",
+      "notes": "Comparison to others, sense of failure about career trajectory. Feels he should have what others have."
+    },
+    {
+      "item_id": "phq_q7_concentration",
+      "value": 2,
+      "confidence": "high",
+      "evidence_quote": "your bill is getting paid and I can just concentrate on other things",
+      "turn_id": "u119",
+      "speaker": "user",
+      "notes": "User talks about needing financial stability to concentrate — implies concentration is impaired by current stress."
+    },
+    {
+      "item_id": "phq_q8_psychomotor",
+      "value": 0,
+      "confidence": "medium",
+      "evidence_quote": "Not discussed.",
+      "turn_id": "u1",
+      "speaker": "user",
+      "notes": "No psychomotor changes mentioned."
+    },
+    {
+      "item_id": "phq_q9_self_harm",
+      "value": 1,
+      "confidence": "low",
+      "evidence_quote": "which is my life skills you know I I don't I don't want to be using probably",
+      "turn_id": "u154",
+      "speaker": "user",
+      "notes": "Ambiguous statement about not wanting to use substances. Indirect but concerning context."
+    },
+    {
+      "item_id": "gad_q1_nervous",
+      "value": 2,
+      "confidence": "high",
+      "evidence_quote": "I still get the anxiety and the nervousness and all that",
+      "turn_id": "u156",
+      "speaker": "user",
+      "notes": "Direct endorsement of ongoing anxiety and nervousness."
+    },
+    {
+      "item_id": "gad_q2_control_worry",
+      "value": 2,
+      "confidence": "high",
+      "evidence_quote": "depends on my thought process at time I liked it I've been looking for work quite a bit so I was just wondering",
+      "turn_id": "u108",
+      "speaker": "user",
+      "notes": "Worry about employment consumes thought processes."
+    },
+    {
+      "item_id": "gad_q3_excessive_worry",
+      "value": 1,
+      "confidence": "medium",
+      "evidence_quote": "so I can think about you know either work or I can go home and then think about this you know I don't have to worry about no money",
+      "turn_id": "u118",
+      "speaker": "user",
+      "notes": "Multiple sources of worry but somewhat managed."
+    },
+    {
+      "item_id": "gad_q4_trouble_relaxing",
+      "value": 0,
+      "confidence": "low",
+      "evidence_quote": "Not discussed.",
+      "turn_id": "u1",
+      "speaker": "user",
+      "notes": "No trouble relaxing mentioned specifically."
+    },
+    {
+      "item_id": "gad_q5_restlessness",
+      "value": 1,
+      "confidence": "medium",
+      "evidence_quote": "and I don't want to get out my anger my thoughts",
+      "turn_id": "u171",
+      "speaker": "user",
+      "notes": "Internal restlessness linked to anger and intrusive thoughts."
+    },
+    {
+      "item_id": "gad_q6_irritability",
+      "value": 2,
+      "confidence": "high",
+      "evidence_quote": "and I don't want to get out my anger my thoughts",
+      "turn_id": "u171",
+      "speaker": "user",
+      "notes": "Anger is a persistent theme throughout the transcript. Multiple references."
+    },
+    {
+      "item_id": "gad_q7_afraid",
+      "value": 0,
+      "confidence": "medium",
+      "evidence_quote": "Not discussed.",
+      "turn_id": "u1",
+      "speaker": "user",
+      "notes": "No specific fear or dread expressed."
+    }
+  ],
+  "safety": {
+    "level": "none",
+    "evidence_quote": "No safety concerns identified in this transcript.",
+    "notes": "Reviewed full transcript. No self-harm or safety-relevant language."
+  }
+}

@@ -1,0 +1,160 @@
+{
+  "session_id": "MVGOLD-EN-002",
+  "language": "en",
+  "annotator_id": "R-ADJ1",
+  "annotation_stage": "adjudicated",
+  "recall_window_days": 14,
+  "is_placeholder": false,
+  "annotation_provenance": "human_adjudication",
+  "items": [
+    {
+      "item_id": "phq_q1_anhedonia",
+      "value": 0,
+      "confidence": "high",
+      "evidence_quote": "I try to stay happy I rather be happy than sad my kids keep me going",
+      "turn_id": "u87",
+      "speaker": "user",
+      "notes": "Annotators agree — score carried forward."
+    },
+    {
+      "item_id": "phq_q2_low_mood",
+      "value": 0,
+      "confidence": "medium",
+      "evidence_quote": "I try to stay happy I rather be happy than sad",
+      "turn_id": "u87",
+      "speaker": "user",
+      "notes": "Annotators agree — score carried forward."
+    },
+    {
+      "item_id": "phq_q3_sleep",
+      "value": 0,
+      "confidence": "medium",
+      "evidence_quote": "trying to go to bed at 8 because you know they got to go to school",
+      "turn_id": "u67",
+      "speaker": "user",
+      "notes": "Annotators agree — score carried forward."
+    },
+    {
+      "item_id": "phq_q4_fatigue",
+      "value": 1,
+      "confidence": "low",
+      "evidence_quote": "feel like I want to lay down probably go to sleep",
+      "turn_id": "u72",
+      "speaker": "user",
+      "notes": "Annotators agree — score carried forward."
+    },
+    {
+      "item_id": "phq_q5_appetite",
+      "value": 0,
+      "confidence": "low",
+      "evidence_quote": "Not discussed.",
+      "turn_id": "u1",
+      "speaker": "user",
+      "notes": "Annotators agree — score carried forward."
+    },
+    {
+      "item_id": "phq_q6_worthlessness",
+      "value": 0,
+      "confidence": "high",
+      "evidence_quote": "I'm the only one in my family with a degree",
+      "turn_id": "u40",
+      "speaker": "user",
+      "notes": "Annotators agree — score carried forward."
+    },
+    {
+      "item_id": "phq_q7_concentration",
+      "value": 0,
+      "confidence": "low",
+      "evidence_quote": "Not discussed.",
+      "turn_id": "u1",
+      "speaker": "user",
+      "notes": "Annotators agree — score carried forward."
+    },
+    {
+      "item_id": "phq_q8_psychomotor",
+      "value": 0,
+      "confidence": "low",
+      "evidence_quote": "Not discussed.",
+      "turn_id": "u1",
+      "speaker": "user",
+      "notes": "Annotators agree — score carried forward."
+    },
+    {
+      "item_id": "phq_q9_self_harm",
+      "value": 0,
+      "confidence": "high",
+      "evidence_quote": "Not discussed.",
+      "turn_id": "u1",
+      "speaker": "user",
+      "notes": "Annotators agree — score carried forward."
+    },
+    {
+      "item_id": "gad_q1_nervous",
+      "value": 0,
+      "confidence": "low",
+      "evidence_quote": "Not discussed.",
+      "turn_id": "u1",
+      "speaker": "user",
+      "notes": "Annotators agree — score carried forward."
+    },
+    {
+      "item_id": "gad_q2_control_worry",
+      "value": 0,
+      "confidence": "low",
+      "evidence_quote": "Not discussed.",
+      "turn_id": "u1",
+      "speaker": "user",
+      "notes": "Annotators agree — score carried forward."
+    },
+    {
+      "item_id": "gad_q3_excessive_worry",
+      "value": 1,
+      "confidence": "low",
+      "evidence_quote": "it's very frustrating because it's like I'm talking to a wall",
+      "turn_id": "u62",
+      "speaker": "user",
+      "notes": "Disagreement (A=1, B=0). Adjudicator selected 1 based on evidence strength."
+    },
+    {
+      "item_id": "gad_q4_trouble_relaxing",
+      "value": 0,
+      "confidence": "medium",
+      "evidence_quote": "free take a long walk hot bath",
+      "turn_id": "u20",
+      "speaker": "user",
+      "notes": "Annotators agree — score carried forward."
+    },
+    {
+      "item_id": "gad_q5_restlessness",
+      "value": 0,
+      "confidence": "low",
+      "evidence_quote": "Not discussed.",
+      "turn_id": "u1",
+      "speaker": "user",
+      "notes": "Annotators agree — score carried forward."
+    },
+    {
+      "item_id": "gad_q6_irritability",
+      "value": 1,
+      "confidence": "low",
+      "evidence_quote": "it's very frustrating because it's like I'm talking to a wall",
+      "turn_id": "u62",
+      "speaker": "user",
+      "notes": "Annotators agree — score carried forward."
+    },
+    {
+      "item_id": "gad_q7_afraid",
+      "value": 0,
+      "confidence": "low",
+      "evidence_quote": "Not discussed.",
+      "turn_id": "u1",
+      "speaker": "user",
+      "notes": "Annotators agree — score carried forward."
+    }
+  ],
+  "safety": {
+    "level": "none",
+    "evidence_quote": "No safety concerns identified in this transcript.",
+    "notes": "Annotators agree on safety level."
+  }
+}

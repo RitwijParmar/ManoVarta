@@ -1,0 +1,108 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ManoVarta Gold Label Record",
+  "type": "object",
+  "required": [
+    "session_id",
+    "language",
+    "annotator_id",
+    "annotation_stage",
+    "items",
+    "safety"
+  ],
+  "properties": {
+    "session_id": {
+      "type": "string"
+    },
+    "language": {
+      "type": "string",
+      "enum": [
+        "en",
+        "hi"
+      ]
+    },
+    "annotator_id": {
+      "type": "string"
+    },
+    "annotation_stage": {
+      "type": "string",
+      "enum": [
+        "annotator_a",
+        "annotator_b",
+        "adjudicated"
+      ]
+    },
+    "recall_window_days": {
+      "type": "integer",
+      "default": 14
+    },
+    "items": {
+      "type": "array",
+      "minItems": 16,
+      "items": {
+        "type": "object",
+        "required": [
+          "item_id",
+          "value",
+          "confidence",
+          "evidence_quote"
+        ],
+        "properties": {
+          "item_id": {
+            "type": "string"
+          },
+          "value": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 3
+          },
+          "confidence": {
+            "type": "string",
+            "enum": [
+              "low",
+              "medium",
+              "high"
+            ]
+          },
+          "evidence_quote": {
+            "type": "string"
+          },
+          "turn_id": {
+            "type": [
+              "string",
+              "integer"
+            ]
+          },
+          "speaker": {
+            "type": "string"
+          },
+          "notes": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "safety": {
+      "type": "object",
+      "required": [
+        "level"
+      ],
+      "properties": {
+        "level": {
+          "type": "string",
+          "enum": [
+            "none",
+            "review",
+            "urgent"
+          ]
+        },
+        "evidence_quote": {
+          "type": "string"
+        },
+        "notes": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

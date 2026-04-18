@@ -1,0 +1,549 @@
+{
+  "session_id": "MVGOLD-EN-023",
+  "language": "en",
+  "cohort": "expansion",
+  "target_primary_domain": "anxiety_scope",
+  "target_risk_band": "none",
+  "packet_stage": "annotator_b",
+  "target_output_file": "data/gold/labels/MVGOLD-EN-023.annotator_b.json",
+  "related_files": {
+    "audio_file": "data/gold/audio/en/MVGOLD-EN-023.wav",
+    "transcript_file": "data/gold/transcripts/en/MVGOLD-EN-023.json",
+    "annotator_a_file": "data/gold/labels/MVGOLD-EN-023.annotator_a.json",
+    "annotator_b_file": "data/gold/labels/MVGOLD-EN-023.annotator_b.json",
+    "adjudicated_label_file": "data/gold/labels/MVGOLD-EN-023.adjudicated.json"
+  },
+  "metadata": {
+    "session_id": "MVGOLD-EN-023",
+    "participant_id": "338",
+    "language": "en",
+    "age_years": "",
+    "age_band": "adult_unknown_from_source",
+    "occupation": "unknown_from_source",
+    "living_situation": "unknown_from_source",
+    "support_system": "unknown_from_source",
+    "consent_recorded": "public_dataset_license",
+    "collection_source": "e_daic_public_2019",
+    "audio_file": "data/gold/audio/en/MVGOLD-EN-023.wav",
+    "transcript_file": "data/gold/transcripts/en/MVGOLD-EN-023.json",
+    "annotator_a_file": "data/gold/labels/MVGOLD-EN-023.annotator_a.json",
+    "annotator_b_file": "data/gold/labels/MVGOLD-EN-023.annotator_b.json",
+    "adjudicated_label_file": "data/gold/labels/MVGOLD-EN-023.adjudicated.json",
+    "split": "expansion",
+    "notes": "Imported from E-DAIC public participant archive; PHQ8 items from public labels, remaining items machine-inferred and require clinician review for strict claims."
+  },
+  "transcript": {
+    "session_id": "MVGOLD-EN-023",
+    "language": "en",
+    "cohort": "expansion",
+    "is_placeholder": false,
+    "collection_status": "collected_public_dataset",
+    "notes": "Imported from E-DAIC public participant archive.",
+    "profile": {
+      "age_years": null,
+      "age_band": "adult_unknown_from_source",
+      "occupation": "unknown_from_source",
+      "living_situation": "unknown_from_source",
+      "support_system": "unknown_from_source",
+      "gender": "female"
+    },
+    "source": {
+      "dataset": "e_daic_public",
+      "participant_id": "338",
+      "split": "train",
+      "phq_binary": "1",
+      "phq_score": "15",
+      "source_audio_path": "338_P/338_AUDIO.wav",
+      "source_transcript_path": "338_P/338_Transcript.csv"
+    },
+    "turns": [
+      {
+        "turn_id": "u1",
+        "speaker": "user",
+        "text": "some just answering questions",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "0.0",
+        "end_time_sec": "1.8",
+        "asr_confidence": "0.8152633905410767"
+      },
+      {
+        "turn_id": "u2",
+        "speaker": "user",
+        "text": "okay",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "18.3",
+        "end_time_sec": "18.8",
+        "asr_confidence": "0.9269381165504456"
+      },
+      {
+        "turn_id": "u3",
+        "speaker": "user",
+        "text": "thank you",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "20.0",
+        "end_time_sec": "20.7",
+        "asr_confidence": "0.8996478915214539"
+      },
+      {
+        "turn_id": "u4",
+        "speaker": "user",
+        "text": "yes",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "47.1",
+        "end_time_sec": "47.7",
+        "asr_confidence": "0.864640474319458"
+      },
+      {
+        "turn_id": "u5",
+        "speaker": "user",
+        "text": "I'm doing fine",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "52.0",
+        "end_time_sec": "52.9",
+        "asr_confidence": "0.9876290559768677"
+      },
+      {
+        "turn_id": "u6",
+        "speaker": "user",
+        "text": "I from Los Angeles California",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "56.8",
+        "end_time_sec": "58.5",
+        "asr_confidence": "0.8449036478996277"
+      },
+      {
+        "turn_id": "u7",
+        "speaker": "user",
+        "text": "wow wonderful weather outdoor activities all the time",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "63.2",
+        "end_time_sec": "69.4",
+        "asr_confidence": "0.9770825505256653"
+      },
+      {
+        "turn_id": "u8",
+        "speaker": "user",
+        "text": "too crowded solution",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "73.3",
+        "end_time_sec": "75.0",
+        "asr_confidence": "0.9436197280883789"
+      },
+      {
+        "turn_id": "u9",
+        "speaker": "user",
+        "text": "the norm",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "76.3",
+        "end_time_sec": "77.1",
+        "asr_confidence": "0.9652128219604492"
+      },
+      {
+        "turn_id": "u10",
+        "speaker": "user",
+        "text": "I study child Communications",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "83.0",
+        "end_time_sec": "85.8",
+        "asr_confidence": "0.8688119649887085"
+      },
+      {
+        "turn_id": "u11",
+        "speaker": "user",
+        "text": "recently I just",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "88.6",
+        "end_time_sec": "90.7",
+        "asr_confidence": "0.9506880640983582"
+      },
+      {
+        "turn_id": "u12",
+        "speaker": "user",
+        "text": "I will say yes",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "91.8",
+        "end_time_sec": "92.6",
+        "asr_confidence": "0.9320029020309448"
+      },
+      {
+        "turn_id": "u13",
+        "speaker": "user",
+        "text": "preschool teacher",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "95.9",
+        "end_time_sec": "96.9",
+        "asr_confidence": "0.9785728454589844"
+      },
+      {
+        "turn_id": "u14",
+        "speaker": "user",
+        "text": "well I've always work with children ever since I was 18 years old so I figured doing something helping someone it doesn't pay well but you're investing in the future",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "102.6",
+        "end_time_sec": "114.4",
+        "asr_confidence": "0.9637081623077393"
+      },
+      {
+        "turn_id": "u15",
+        "speaker": "user",
+        "text": "wow some job that I could get paid to be outside all day get paid well to be outside all day",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "119.7",
+        "end_time_sec": "127.1",
+        "asr_confidence": "0.9322566986083984"
+      },
+      {
+        "turn_id": "u16",
+        "speaker": "user",
+        "text": "yes",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "132.5",
+        "end_time_sec": "133.1",
+        "asr_confidence": "0.9938145279884338"
+      },
+      {
+        "turn_id": "u17",
+        "speaker": "user",
+        "text": "I'm kind of quiet but I also like I probably would say borderline I like outside activities but I mainly kind of do activities probably by myself so yeah I'm introvert slightly",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "136.3",
+        "end_time_sec": "150.6",
+        "asr_confidence": "0.9568069577217102"
+      },
+      {
+        "turn_id": "u18",
+        "speaker": "user",
+        "text": "oh wow just maybe a races are disrespectful person",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "156.6",
+        "end_time_sec": "162.3",
+        "asr_confidence": "0.8484724760055542"
+      },
+      {
+        "turn_id": "u19",
+        "speaker": "user",
+        "text": "I kind of shut down in and re-evaluate how I am as a person how I'm coming off to other people I can't change anyone else's personality but I can work on my own",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "168.0",
+        "end_time_sec": "179.0",
+        "asr_confidence": "0.9552188515663147"
+      },
+      {
+        "turn_id": "u20",
+        "speaker": "user",
+        "text": "I'm pretty good",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "183.5",
+        "end_time_sec": "184.2",
+        "asr_confidence": "0.9858114123344421"
+      },
+      {
+        "turn_id": "u21",
+        "speaker": "user",
+        "text": "are you going to argue with people I usually walk away I mean argument doesn't settle anything",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "190.5",
+        "end_time_sec": "194.7",
+        "asr_confidence": "0.9534952640533447"
+      },
+      {
+        "turn_id": "u22",
+        "speaker": "user",
+        "text": "wow that's a lot of things I regret but it's not anything that I can control probably the biggest regret was losing my mother",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "201.2",
+        "end_time_sec": "208.5",
+        "asr_confidence": "0.9611944556236267"
+      },
+      {
+        "turn_id": "u23",
+        "speaker": "user",
+        "text": "thank you",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "211.4",
+        "end_time_sec": "212.1",
+        "asr_confidence": "0.9831576347351074"
+      },
+      {
+        "turn_id": "u24",
+        "speaker": "user",
+        "text": "I was extremely close to my mother that was who I am as a person who made me as a person",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "215.2",
+        "end_time_sec": "221.4",
+        "asr_confidence": "0.9866518378257751"
+      },
+      {
+        "turn_id": "u25",
+        "speaker": "user",
+        "text": "wow 2010 years ago I would tell myself not to be so angry so",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "228.2",
+        "end_time_sec": "234.5",
+        "asr_confidence": "0.9453575015068054"
+      },
+      {
+        "turn_id": "u26",
+        "speaker": "user",
+        "text": "upset all the time about things I can't control I would tell myself to relax and not be so hard on myself",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "236.2",
+        "end_time_sec": "243.9",
+        "asr_confidence": "0.9767619967460632"
+      },
+      {
+        "turn_id": "u27",
+        "speaker": "user",
+        "text": "that's pretty cool I think you should have different Avenues to deal with different people",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "249.1",
+        "end_time_sec": "253.5",
+        "asr_confidence": "0.9619370102882385"
+      },
+      {
+        "turn_id": "u28",
+        "speaker": "user",
+        "text": "no I have not",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "261.6",
+        "end_time_sec": "262.5",
+        "asr_confidence": "0.9796131253242493"
+      },
+      {
+        "turn_id": "u29",
+        "speaker": "user",
+        "text": "no I have not",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "265.9",
+        "end_time_sec": "266.7",
+        "asr_confidence": "0.969079315662384"
+      },
+      {
+        "turn_id": "u30",
+        "speaker": "user",
+        "text": "yes",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "269.4",
+        "end_time_sec": "270.0",
+        "asr_confidence": "0.9859249591827393"
+      },
+      {
+        "turn_id": "u31",
+        "speaker": "user",
+        "text": "less than a month",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "273.3",
+        "end_time_sec": "274.5",
+        "asr_confidence": "0.9568430185317993"
+      },
+      {
+        "turn_id": "u32",
+        "speaker": "user",
+        "text": "I realize I have to evaluate myself as a person so I can't really look to anyone else to help me unless I I start with myself",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "280.6",
+        "end_time_sec": "289.5",
+        "asr_confidence": "0.9682497978210449"
+      },
+      {
+        "turn_id": "u33",
+        "speaker": "user",
+        "text": "no I don't",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "292.6",
+        "end_time_sec": "293.3",
+        "asr_confidence": "0.9521671533584595"
+      },
+      {
+        "turn_id": "u34",
+        "speaker": "user",
+        "text": "I feel like as a person as individual I feel like I should be able to control things myself I feel like to go seek out help is good for someone else it probably is very good for other people I work with that population of PTSD veterans before so I know that it helps a lot of people but I feel like it's for me",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "296.1",
+        "end_time_sec": "318.0",
+        "asr_confidence": "0.96766597032547"
+      },
+      {
+        "turn_id": "u35",
+        "speaker": "user",
+        "text": "it's not difficult at all I've always been in like a loner someone who tries to to handle my own problems and situations",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "321.8",
+        "end_time_sec": "329.2",
+        "asr_confidence": "0.9566192030906677"
+      },
+      {
+        "turn_id": "u36",
+        "speaker": "user",
+        "text": "a little depressed but I think everyone is it has a little bit of sadness in them at some point",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "334.1",
+        "end_time_sec": "341.3",
+        "asr_confidence": "0.9768999814987183"
+      },
+      {
+        "turn_id": "u37",
+        "speaker": "user",
+        "text": "day by day day by day I just started to exercise program so I'm trying to look at myself",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "344.2",
+        "end_time_sec": "350.3",
+        "asr_confidence": "0.9686617851257324"
+      },
+      {
+        "turn_id": "u38",
+        "speaker": "user",
+        "text": "for the solution",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "351.7",
+        "end_time_sec": "353.0",
+        "asr_confidence": "0.9575455784797668"
+      },
+      {
+        "turn_id": "u39",
+        "speaker": "user",
+        "text": "always known ever since I was a child things move me differently than other kids so I felt like I was always different I feel like if I was going to ever",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "360.1",
+        "end_time_sec": "370.0",
+        "asr_confidence": "0.9397571682929993"
+      },
+      {
+        "turn_id": "u40",
+        "speaker": "user",
+        "text": "understand me as a person then I would have to work on myself so yes",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "371.0",
+        "end_time_sec": "376.9",
+        "asr_confidence": "0.9651660919189453"
+      },
+      {
+        "turn_id": "u41",
+        "speaker": "user",
+        "text": "today I got to see my best friend after a long time so I mean happiness comes and goes but I felt happy today",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "383.6",
+        "end_time_sec": "392.1",
+        "asr_confidence": "0.945792555809021"
+      },
+      {
+        "turn_id": "u42",
+        "speaker": "user",
+        "text": "wow he would say really silly",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "397.0",
+        "end_time_sec": "399.3",
+        "asr_confidence": "0.9756249189376831"
+      },
+      {
+        "turn_id": "u43",
+        "speaker": "user",
+        "text": "but still when I'm around him I try to be happy I try to present a situation where we're both going to be happy no one wants to be around a depressed person",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "401.3",
+        "end_time_sec": "411.1",
+        "asr_confidence": "0.9696099758148193"
+      },
+      {
+        "turn_id": "u44",
+        "speaker": "user",
+        "text": "wow I mean on certain days everything could be my best quality but I would say I'm loyal and dependable",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "427.3",
+        "end_time_sec": "435.3",
+        "asr_confidence": "0.9304178357124329"
+      },
+      {
+        "turn_id": "u45",
+        "speaker": "user",
+        "text": "I would just say I try to be there in the moment I'm not a person who who is really fat flashy or into materialistic things so I feel like I'm very grounded",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "438.5",
+        "end_time_sec": "450.4",
+        "asr_confidence": "0.945880651473999"
+      },
+      {
+        "turn_id": "u46",
+        "speaker": "user",
+        "text": "tell my mother by far my sisters",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "454.6",
+        "end_time_sec": "457.8",
+        "asr_confidence": "0.882442057132721"
+      },
+      {
+        "turn_id": "u47",
+        "speaker": "user",
+        "text": "my mom was a school teacher which made me want to become a school teacher and that's basically what I have been doing my sister has been at her job for forty years so I've always had a stable influence in my life",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "460.3",
+        "end_time_sec": "473.7",
+        "asr_confidence": "0.967588484287262"
+      },
+      {
+        "turn_id": "u48",
+        "speaker": "user",
+        "text": "wow I would say just sitting on a sunny nice day talking to my mother I would say that would bring a smile to my face immediately",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "481.7",
+        "end_time_sec": "492.4",
+        "asr_confidence": "0.97760009765625"
+      },
+      {
+        "turn_id": "u49",
+        "speaker": "user",
+        "text": "wonderful wonderful",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "495.1",
+        "end_time_sec": "497.5",
+        "asr_confidence": "0.9876291155815125"
+      },
+      {
+        "turn_id": "u50",
+        "speaker": "user",
+        "text": "I like to get out and play sports I played four or five different sports and I like to go for a walk I like to ride my bike I like to get out and be active",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "505.7",
+        "end_time_sec": "514.1",
+        "asr_confidence": "0.9364728331565857"
+      },
+      {
+        "turn_id": "u51",
+        "speaker": "user",
+        "text": "having such a wonderful mother I mean I have to keep going back to that subject because we're introduced into this life and that's our first teacher that's our first teacher and it's going to be our teacher for a very long time and I'm just very thankful I'm very proud to have had such a wonderful woman as my mother",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "522.6",
+        "end_time_sec": "542.0",
+        "asr_confidence": "0.966486394405365"
+      },
+      {
+        "turn_id": "u52",
+        "speaker": "user",
+        "text": "riding my bike simple things going for a walk with my sister exercising",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "549.7",
+        "end_time_sec": "554.3",
+        "asr_confidence": "0.9530138373374939"
+      },
+      {
+        "turn_id": "u53",
+        "speaker": "user",
+        "text": "I just last Sunday",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "557.9",
+        "end_time_sec": "559.3",
+        "asr_confidence": "0.8352975845336914"
+      },
+      {
+        "turn_id": "u54",
+        "speaker": "user",
+        "text": "well thank you",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "568.6",
+        "end_time_sec": "569.7",
+        "asr_confidence": "0.8333165645599365"
+      }
+    ]
+  },
+  "instructions": "Label independently using the transcript, metadata, and annotation guidelines. Do not inspect annotator A."
+}

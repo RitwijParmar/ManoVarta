@@ -3,6 +3,8 @@ from __future__ import annotations
 from collections import defaultdict
 from typing import Any
 
+from manovarta_core.item_ids import canonicalize_label_map
+
 
 SAFETY_POSITIVE = {"review", "urgent"}
 
@@ -18,9 +20,9 @@ def evaluate_item_predictions(
     for gold in gold_records:
         prediction = predicted_index.get(gold["conversation_id"], {"predictions": {}, "safety_level": "none"})
         gold_labels = {}
-        gold_labels.update(gold.get("phq9_item_labels", {}))
-        gold_labels.update(gold.get("gad7_item_labels", {}))
-        predicted_labels = prediction.get("predictions", {})
+        gold_labels.update(canonicalize_label_map(gold.get("phq9_item_labels", {})))
+        gold_labels.update(canonicalize_label_map(gold.get("gad7_item_labels", {})))
+        predicted_labels = canonicalize_label_map(prediction.get("predictions", {}))
         bucket = per_language[gold["language"]]
 
         for item_id, gold_value in gold_labels.items():

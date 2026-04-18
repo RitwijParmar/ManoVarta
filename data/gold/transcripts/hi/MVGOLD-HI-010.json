@@ -1,0 +1,35 @@
+{
+  "session_id": "MVGOLD-HI-010",
+  "language": "hi",
+  "cohort": "expansion",
+  "is_placeholder": false,
+  "collection_status": "collected_public_dataset",
+  "notes": "Imported from IndicVoices Hindi valid split; repurposed as a Hindi pilot audio set for multilingual voice extension. This source was locally dual-annotated and adjudicated for PHQ-9/GAD-7, but it is not a native mental-health screening corpus.",
+  "profile": {
+    "age_years": null,
+    "age_band": "30-45",
+    "occupation": "Compounder( CHO)",
+    "living_situation": "Rural",
+    "support_system": "not_provided_in_source",
+    "state": "Rajasthan",
+    "district": "Karauli",
+    "gender": "Male"
+  },
+  "source": {
+    "dataset": "indicvoices",
+    "split": "Hindi/v1/valid",
+    "source_json_path": "Hindi/v1/valid/5348024557538009.json",
+    "source_wav_path": "Hindi/v1/valid/5348024557538009.wav",
+    "speaker_id": "S4258354000329548",
+    "scenario": "Extempore",
+    "task_name": "Ola/Uber Prompts"
+  },
+  "turns": [
+    {
+      "turn_id": "u1",
+      "speaker": "user",
+      "text": "मैं एक गाड़ी बुक कर के और अपने स्थान पर पहुचा वहाँ मैंने ड्राइवर से पूछा क्या मैं आपको नगद रुपए दे सकता हूँ और या आपके पास कोई और उपाय है मेरे पास ऑनलाइन रुपे नही है तो मैं आपको नगद भुक्तान कर सकता हूँ",
+      "source_type": "read_or_prompted_utterance"
+    }
+  ]
+}

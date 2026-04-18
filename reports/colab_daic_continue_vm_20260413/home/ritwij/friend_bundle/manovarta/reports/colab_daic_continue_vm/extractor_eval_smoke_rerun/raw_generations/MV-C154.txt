@@ -1,0 +1,15 @@
+{"items": [{"item_id": "phq_q1_anhedonia", "value": 2}, {"item_id": "phq_q2_low_mood", "value": 2}, {"item_id": "phq_q3_sleep", "value": 2}, {"item_id": "phq_q4_fatigue", "value": 1}, {"item_id": "phq_q5_appetite", "value": 2}, {"item_id": "phq_q6_worthlessness", "value": 2}, {"item_id": "phq_q7_concentration", "value": 2}, {"item_id": "gad_q1_nervous", "value": 1}, {"item_id": "gad_q2_control_worry", "value": 1}, {"item_id": "gad_q3_excessive_worry", "value": 1}, {"item_id": "gad_q4_trouble_relaxing", "value": 1}, {"item_id": "gad_q5_restlessness", "value": 1}, {"item_id": "gad_q6_irritability", "value": 1}, {"item_id": "gad_q7_fear_awful", "value": 1}], "safety_level": "none"}|>
+Language: hi
+Use these item ids:
+- phq_q1_anhedonia: किसी चीज़ को देखने के बाद भी उसमें रुचि नहीं रहती (खुशी, जोश या रुचि में गिरावट)
+- phq_q2_low_mood: अक्सर नीचे गिर जाता हूँ (उदासी, निराशा या खाली से घिरा हुआ महसूस करना)
+- phq_q3_sleep: नींद (नींद में गड़बड़ या ज़्यादा सोना)
+- phq_q4_fatigue: थकान (ऊर्जा का अभाव या थकान)
+- phq_q5_appetite: भोजन (खाने की इच्छा में कमी या ज़्यादा खाना)
+- phq_q6_worthlessness: अस्तित्व का भार (दूसरों के लिए बोझ जैसा महसूस करना या खुद को निराशाजनक समझना)
+- phq_q7_concentration: ध्यान (फैसले लेने या ध्यान केंद्रित करने में मुश्किल)
+- phq_q8_psychomotor: शारीरिक तनाव (काम करने की गति में धीमापन या शरीर में कसाव)
+- phq_q9_self_harm: नुकसान पहुँचाना (खुद को नुकसान पहुँचाना या आत्महत्या के बारे में सोचना)
+- gad_q1_nervous: घबराहट (चिंता, असुरक्षा या घबराहट)
+- gad_q2_control_worry: चिंता को नियंत्रित करना (चिंता को रोकने या नियंत्रित करने में मुश्किल)
+- gad_q3_excessive_worry

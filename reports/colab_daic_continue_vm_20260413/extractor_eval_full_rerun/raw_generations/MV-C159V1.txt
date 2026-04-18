@@ -1,0 +1,3 @@
+{"items": [{"item_id": "phq_q1_anhedonia", "value": 1}, {"item_id": "phq_q2_low_mood", "value": 2}, {"item_id": "phq_q3_sleep", "value": 2}, {"item_id": "phq_q4_fatigue", "value": 1}, {"item_id": "phq_q5_appetite", "value": 1}, {"item_id": "phq_q6_worthlessness", "value": 1}, {"item_id": "phq_q7_concentration", "value": 1}, {"item_id": "gad_q1_nervous", "value": 1}, {"item_id": "gad_q2_control_worry", "value": 2}, {"item_id": "gad_q3_excessive_worry", "value": 2}, {"item_id": "gad_q4_trouble_relaxing", "value": 2}, {"item_id": "gad_q5_restlessness", "value": 1}, {"item_id": "gad_q6_irritability", "value": 1}, {"item_id": "gad_q7_fear_awful", "value": 1}], "safety_level": "review"}
+Only include supported items in items.
+Only include items with value 1, 2, or 3.

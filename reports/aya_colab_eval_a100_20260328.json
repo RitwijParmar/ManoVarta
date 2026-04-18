@@ -1,0 +1,54 @@
+{
+  "overall": {
+    "covered_items": 336,
+    "coverage_completeness": 0.913,
+    "mae": 0.443,
+    "exact_match_rate": 0.562,
+    "macro_f1": 0.272,
+    "safety_precision": 0.0,
+    "safety_recall": 0.0
+  },
+  "languages": {
+    "en": {
+      "covered_items": 118,
+      "coverage_completeness": 0.922,
+      "mae": 0.407,
+      "exact_match_rate": 0.593,
+      "macro_f1": 0.281,
+      "safety_precision": 0.0,
+      "safety_recall": 0.0
+    },
+    "hi": {
+      "covered_items": 109,
+      "coverage_completeness": 0.852,
+      "mae": 0.532,
+      "exact_match_rate": 0.486,
+      "macro_f1": 0.236,
+      "safety_precision": 0.0,
+      "safety_recall": 0.0
+    },
+    "hinglish": {
+      "covered_items": 109,
+      "coverage_completeness": 0.973,
+      "mae": 0.394,
+      "exact_match_rate": 0.606,
+      "macro_f1": 0.297,
+      "safety_precision": 0.0,
+      "safety_recall": 0.0
+    }
+  },
+  "example_count": 48,
+  "completed_count": 48,
+  "offset": 0,
+  "parse_failures": 0,
+  "parse_failure_ids": [],
+  "last_completed_id": "MV-C165V3",
+  "status": "archived_mirror",
+  "evaluation_mode": "offline_extractor_eval",
+  "model_path": "CohereLabs/aya-expanse-32b",
+  "provenance": {
+    "rebuilt_on": "2026-04-12",
+    "source_artifact": "reports/best_current_system_report.json#extractor_baseline",
+    "note": "Restored artifact to satisfy report source references and keep repository evidence paths self-consistent."
+  }
+}

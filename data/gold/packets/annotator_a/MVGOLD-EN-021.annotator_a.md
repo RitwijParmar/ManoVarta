@@ -1,0 +1,136 @@
+# MVGOLD-EN-021 annotator_a packet
+
+- Language: `en`
+- Cohort: `expansion`
+- Target primary domain: `focus`
+- Target risk band: `none`
+- Target output file: `data/gold/labels/MVGOLD-EN-021.annotator_a.json`
+
+## Metadata
+
+- Participant ID: `332`
+- Age years: ``
+- Age band: `adult_unknown_from_source`
+- Occupation: `unknown_from_source`
+- Living situation: `unknown_from_source`
+- Support system: `unknown_from_source`
+- Consent recorded: `public_dataset_license`
+- Collection source: `e_daic_public_2019`
+
+## Instructions
+
+Label independently using the transcript, metadata, and annotation guidelines. Do not inspect annotator B.
+
+## Transcript
+
+- `u1` user: import and I wonder if people really like understand it you know what I mean like a people do judge yeah bizarre
+- `u2` user: I did like The Ricki Lake Show with my friend and I saw myself I TV oh my God yeah but I was speeding I was I was eating candy and I was gone
+- `u3` user: it's like that
+- `u4` user: and and then I was looking at Ricki Lake like there must be some around my eyes cuz I was like she was like right there I don't know why it's so I had to actually like act you know I'm in the audience but I have to like pretend like I was interested in what you have to say but it looks so I kept looking at her like that like there's something wrong in my eyes no I just thought I was in a doctor's office and they had it on and it's like God it was funny cuz there's these guys like winking at me on the way I like that celebrity 8 dividing sitting there it's like I hated every minute of it but we got sewing machines free sewing machines $200 sewing machines that day it was yeah so it was worth it was worth it but I was so embarrassed yeah only if you get stuff it's worth it otherwise are so stupid shows are so I can't believe that's what I want to television
+- `u5` user: so embarrassing
+- `u6` user: oh okay
+- `u7` user: right on okay this is so weird oh gosh I hope she's nice to me I hope so okay hello
+- `u8` user: are you okay
+- `u9` user: yes
+- `u10` user: fine just tired
+- `u11` user: California
+- `u12` user: from Hollywood
+- `u13` user: not too much
+- `u14` user: talk to me things I like about it
+- `u15` user: the people
+- `u16` user: it's not clean
+- `u17` user: too much crime too many drugs
+- `u18` user: eye makeup and hair
+- `u19` user: a little bit
+- `u20` user: not too much I just arrived
+- `u21` user: very difficult
+- `u22` user: I'm getting a little old to be thinking of a career but
+- `u23` user: I just want probably get married and have a little security that's all just be a wife again
+- `u24` user: a little bit close but everybody's pretty much passed away
+- `u25` user: I play FarmVille on Facebook
+- `u26` user: I'm good I don't really have a temper
+- `u27` user: with my ex-husband about money
+- `u28` user: people lying cheating conniving drug addicts you know just ugly people people that are
+- `u29` user: hideous and inside you know
+- `u30` user: Jesus Christ that's about it
+- `u31` user: my mother when she was alive when she still a positive influence but
+- `u32` user: nobody really but
+- `u33` user: Jesus
+- `u34` user: memorable experiences
+- `u35` user: I don't know I can't really think of one right now
+- `u36` user: gosh
+- `u37` user: experiences
+- `u38` user: all I guess like maybe modeling that was pretty cool yeah
+- `u39` user: yeah
+- `u40` user: I was just kind of
+- `u41` user: thrill like to see yourself in magazines and pictures and stuff you know I didn't understand how it could have been me but then my photographer told me he was like well someone has to do to might as well be you so oh well and it's true so that was cool
+- `u42` user: just kind of fell into it by accident
+- `u43` user: I've always yeah yeah I wish I did it I took it further but I couldn't
+- `u44` user: really happy
+- `u45` user: I don't remember
+- `u46` user: I really don't
+- `u47` user: I really have a best friend but I'm sure
+- `u48` user: there anybody would describe me as outgoing
+- `u49` user: no
+- `u50` user: yes
+- `u51` user: how was the 1984
+- `u52` user: yeah
+- `u53` user: I can deal with it
+- `u54` user: so I had to see a psychiatrist
+- `u55` user: horrified couldn't sleep
+- `u56` user: panicked
+- `u57` user: major anxiety
+- `u58` user: oh yeah
+- `u59` user: yes I do
+- `u60` user: it could be if you see the right doctor
+- `u61` user: it gives you the opportunity to talk to somebody and
+- `u62` user: hopefully they can give you answers must have him don't they try to find the answers and side of you get it out of you but it's just good to be able to talk to somebody that's kind of biased neutral
+- `u63` user: really depressed
+- `u64` user: extremely depressed
+- `u65` user: poverty
+- `u66` user: yeah
+- `u67` user: yeah I'm a lot more tired I sleep longer and
+- `u68` user: I am
+- `u69` user: I just don't have the drive motivation that I did before
+- `u70` user: just try to be strong just have to get through it and now
+- `u71` user: yes
+- `u72` user: there are
+- `u73` user: not really
+- `u74` user: I'm an open book
+- `u75` user: well I would say perfection is but that's not really good quality cuz it can get dangerous
+- `u76` user: I'm just artistic I'm good at a lot of things
+- `u77` user: I'm really good at a lot of things but
+- `u78` user: well I'm good I'm a good hairdresser makeup artist I crochet and knit really well make jewelry
+- `u79` user: not good with computers or phones though Electronics
+- `u80` user: yeah
+- `u81` user: okay perfect house or well when I'm not depressed like this I was a perfect wife the perfect wife
+- `u82` user: hell yeah
+- `u83` user: but not anymore cuz I'm divorced now but it wasn't me it was him
+- `u84` user: he was on drugs so he chose the drugs were too much problems
+- `u85` user: yeah it does
+- `u86` user: it's really hard because it's like the drugs are his mistress
+- `u87` user: how do I what
+- `u88` user: who
+- `u89` user: yes
+- `u90` user: now
+- `u91` user: well I don't really consider myself an introvert
+- `u92` user: yeah
+- `u93` user: I have a lot of regrets but there really wasn't anything I could do about it so there's really no point in regretting it
+- `u94` user: cuz you do what you do and you make a decision and then
+- `u95` user: it's already done so why I regret it why bother you no
+- `u96` user: make sure that when you marry a man that you ask him if he does drugs or alcohol
+- `u97` user: that's one for sure that was the only question I didn't answer ask I I didn't know
+- `u98` user: first lot of things
+- `u99` user: a lot of stuff
+- `u100` user: I don't know
+- `u101` user: just the things that I can do
+- `u102` user: that my talents that's it
+- `u103` user: well if I can have my Starbucks
+- `u104` user: and my orange Gina I drink orange juice everyday and I smoke cigarettes and fortunately but it's always good to have those because you know I'm addicted to them and then it's like it's something really
+- `u105` user: good and healthy at night time and it will basically if I have something to do if I have a goal of somewhere to go something to do like today then
+- `u106` user: let's meet a good man yeah otherwise I'd be afraid that I'd stay home and just lay in bed or perform all day I could form for 8 hours on FarmVille
+- `u107` user: you're welcome nice to meet you
+- `u108` user: so I pressed the button
+- `u109` user: you're good
+- `u110` user: she's good except for you know it's like the one I can she hear me by the way the one I always come is weird and distracting other than now the one
+- `u111` user: yeah she kind of made a mistake on one part

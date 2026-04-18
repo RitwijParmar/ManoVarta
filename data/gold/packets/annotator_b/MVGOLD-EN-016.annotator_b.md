@@ -1,0 +1,174 @@
+# MVGOLD-EN-016 annotator_b packet
+
+- Language: `en`
+- Cohort: `expansion`
+- Target primary domain: `mood`
+- Target risk band: `none`
+- Target output file: `data/gold/labels/MVGOLD-EN-016.annotator_b.json`
+
+## Metadata
+
+- Participant ID: `308`
+- Age years: ``
+- Age band: `adult_unknown_from_source`
+- Occupation: `unknown_from_source`
+- Living situation: `unknown_from_source`
+- Support system: `unknown_from_source`
+- Consent recorded: `public_dataset_license`
+- Collection source: `e_daic_public_2019`
+
+## Instructions
+
+Label independently using the transcript, metadata, and annotation guidelines. Do not inspect annotator A.
+
+## Transcript
+
+- `u1` user: okay perfect so we just want to move around a little bit this is going to pick up the Xbox Kinect and once the green skeleton appears we'll know that it's activated
+- `u2` user: all right now you got perfect
+- `u3` user: okay
+- `u4` user: good to go now
+- `u5` user: when she's done talking to you when you go ahead and press this button to let the mood is that she'll let you know thank you thank you
+- `u6` user: hi I know thanks for coming in today I was created to talk to people in a safe and secure environment think of me as a friend I don't judge I can I'm a computer I'm here to learn about people and would love to learn about you I'll ask a few questions to get us started and please feel
+- `u7` user: where are you from originally
+- `u8` user: Los Angeles California
+- `u9` user: the Southern California Lifestyle the beaches active lifestyle okay
+- `u10` user: what are some things you don't really like about that life to traffic
+- `u11` user: pretentious people
+- `u12` user: yeah
+- `u13` user: Houston has been a positive influence in your life
+- `u14` user: tell me more about that
+- `u15` user: teachers
+- `u16` user: got the
+- `u17` user: spiritual teachers that died
+- `u18` user: find a lot of guidance from
+- `u19` user: what are things you like to do for fun
+- `u20` user: awesome
+- `u21` user: and just stay active stay healthy
+- `u22` user: anything at some
+- `u23` user: outdoors in active and healthy
+- `u24` user: hiking biking rollerblading skateboarding
+- `u25` user: do you travel a lot
+- `u26` user: why
+- `u27` user: not really in a position to travel financially
+- `u28` user: I understand
+- `u29` user: what do you enjoy about traveling
+- `u30` user: if I could I'm sure I would enjoy seeing all the different cultures and places and meeting all the different people and all the interesting structures
+- `u31` user: the food song
+- `u32` user: what do you do to relax and meditate
+- `u33` user: and I skateboard
+- `u34` user: are you meditating on my board
+- `u35` user: Chris a little more about that
+- `u36` user: I'm going to take it helps me relax
+- `u37` user: because if I don't really feel like skating hard I'll just go for a nice Sunset skate and meditate nice to our skate and just relax
+- `u38` user: that sounds like a great situation
+- `u39` user: how hard is that
+- `u40` user: not that hard you just got to get to the skate spots you know I usually like skating or some good good sweet skate spots in La streets in LA
+- `u41` user: are the beaches always good
+- `u42` user: nice
+- `u43` user: just really not that hard at all
+- `u44` user: okay
+- `u45` user: what are some things that make you really mad
+- `u46` user: the situation with my life right now
+- `u47` user: can't find a fucking job
+- `u48` user: it can be tough to find a good job these days I don't even care about it
+- `u49` user: anything that pays
+- `u50` user: it's
+- `u51` user: guitar doctor wall
+- `u52` user: yeah
+- `u53` user: can you tell me about that
+- `u54` user: I applied from anywhere and everywhere
+- `u55` user: from entry-level to management
+- `u56` user: anywhere in between and
+- `u57` user: I can't find a job I can't get a job so
+- `u58` user: I try I'm trying I'm trying I'm trying I'm trying I'm trying I'm trying
+- `u59` user: do you feel down
+- `u60` user: depressing
+- `u61` user: hard sucks
+- `u62` user: yeah
+- `u63` user: how easy is it for you to get a good night sleep
+- `u64` user: desert way often
+- `u65` user: when was the last time that happened
+- `u66` user: last night I couldn't sleep
+- `u67` user: why
+- `u68` user: just thinking about my situation
+- `u69` user: car payment was due yesterday
+- `u70` user: I just I don't know if I have what it takes to continue to do
+- `u71` user: I survived day by day
+- `u72` user: TriNet
+- `u73` user: if I can
+- `u74` user: have you been diagnosed with depression
+- `u75` user: how long ago were you diagnosed
+- `u76` user: 4 years ago
+- `u77` user: 4 years ago couple years ago
+- `u78` user: what got you to seek help
+- `u79` user: my mood was just not right
+- `u80` user: I was always feeling down and depressed and lack of energy always wanted
+- `u81` user: lack of Interest
+- `u82` user: I've gone to therapy it has been useful for me in the past is it useful for me now I don't
+- `u83` user: I would love to talk to someone I just feel like I don't have anyone
+- `u84` user: I don't depend on anyone
+- `u85` user: yeah I'm sorry
+- `u86` user: did you think you had a problem before you found out
+- `u87` user: oh yeah I've always felt depressed on my life
+- `u88` user: what were your symptoms
+- `u89` user: dr. Banerjee
+- `u90` user: why is sleep a lot lack of Interest
+- `u91` user: my appetite was uncontrollable either lack of or I will should mean gluttonous and eating the wrong things
+- `u92` user: have you noticed any changes in your behavior or thoughts lately
+- `u93` user: can you give me an example of that
+- `u94` user: my sister just passed away
+- `u95` user: I'm sorry to hear that all right to go
+- `u96` user: Robbie Keane
+- `u97` user: homeless and jobless 2 weeks ago
+- `u98` user: I got to a point where
+- `u99` user: I just missed her and I want to be with her
+- `u100` user: yeah
+- `u101` user: how close are you to your family
+- `u102` user: pretty Dysfunctional Family
+- `u103` user: really cat depend on them
+- `u104` user: I just depend on myself
+- `u105` user: that sounds really hard
+- `u106` user: it is what it is what are you going to do
+- `u107` user: yeah
+- `u108` user: I'd like to give up but
+- `u109` user: my parents just buried their daughter six months ago they don't want to bury their other daughter
+- `u110` user: what advice would you give yourself 10 or 20 years ago
+- `u111` user: I just haven't had good luck
+- `u112` user: the corporate manager for 20 years
+- `u113` user: who would have known 20 years ago what advice I would have given myself again
+- `u114` user: try to commit suicide to return back to work
+- `u115` user: no it's just too rough trying to pick up all the pieces
+- `u116` user: together
+- `u117` user: I don't know what advice I would give myself
+- `u118` user: when I started with my corporate job.
+- `u119` user: I didn't know I'd be here
+- `u120` user: yeah
+- `u121` user: when is the last time you felt really happy
+- `u122` user: really
+- `u123` user: a couple days ago this week
+- `u124` user: I've been trying to make ends meet
+- `u125` user: got a lot of things sprouting
+- `u126` user: got a lot of things
+- `u127` user: that are happening for me but I need like two more weeks here in LA
+- `u128` user: I can connect the dots but
+- `u129` user: I'm actually I don't have what it takes to stay here for two more weeks
+- `u130` user: so
+- `u131` user: I was happy because I was getting all back
+- `u132` user: things are starting to look up for me but it's just time again is it on
+- `u133` user: my car is packed and I'm hitting the road
+- `u134` user: how do your best friend describe you
+- `u135` user: Royal
+- `u136` user: emotional
+- `u137` user: you consider yourself an introvert
+- `u138` user: I have been lately
+- `u139` user: I was an extrovert
+- `u140` user: 20 years
+- `u141` user: what made you decide to do that
+- `u142` user: circumstances in my life I don't feel is confit
+- `u143` user: okay
+- `u144` user: which one of your most memorable experiences
+- `u145` user: I don't know it's hard to say
+- `u146` user: can't really answer that one
+- `u147` user: okay
+- `u148` user: okay I think I've asked everything I need to
+- `u149` user: thanks for sharing your thoughts with me thank you goodbye

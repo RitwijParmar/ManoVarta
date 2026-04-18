@@ -1,0 +1,693 @@
+{
+  "session_id": "MVGOLD-EN-028",
+  "language": "en",
+  "cohort": "expansion",
+  "target_primary_domain": "mixed",
+  "target_risk_band": "none",
+  "packet_stage": "annotator_a",
+  "target_output_file": "data/gold/labels/MVGOLD-EN-028.annotator_a.json",
+  "related_files": {
+    "audio_file": "data/gold/audio/en/MVGOLD-EN-028.wav",
+    "transcript_file": "data/gold/transcripts/en/MVGOLD-EN-028.json",
+    "annotator_a_file": "data/gold/labels/MVGOLD-EN-028.annotator_a.json",
+    "annotator_b_file": "data/gold/labels/MVGOLD-EN-028.annotator_b.json",
+    "adjudicated_label_file": "data/gold/labels/MVGOLD-EN-028.adjudicated.json"
+  },
+  "metadata": {
+    "session_id": "MVGOLD-EN-028",
+    "participant_id": "351",
+    "language": "en",
+    "age_years": "",
+    "age_band": "adult_unknown_from_source",
+    "occupation": "unknown_from_source",
+    "living_situation": "unknown_from_source",
+    "support_system": "unknown_from_source",
+    "consent_recorded": "public_dataset_license",
+    "collection_source": "e_daic_public_2019",
+    "audio_file": "data/gold/audio/en/MVGOLD-EN-028.wav",
+    "transcript_file": "data/gold/transcripts/en/MVGOLD-EN-028.json",
+    "annotator_a_file": "data/gold/labels/MVGOLD-EN-028.annotator_a.json",
+    "annotator_b_file": "data/gold/labels/MVGOLD-EN-028.annotator_b.json",
+    "adjudicated_label_file": "data/gold/labels/MVGOLD-EN-028.adjudicated.json",
+    "split": "expansion",
+    "notes": "Imported from E-DAIC public participant archive; PHQ8 items from public labels, remaining items machine-inferred and require clinician review for strict claims."
+  },
+  "transcript": {
+    "session_id": "MVGOLD-EN-028",
+    "language": "en",
+    "cohort": "expansion",
+    "is_placeholder": false,
+    "collection_status": "collected_public_dataset",
+    "notes": "Imported from E-DAIC public participant archive.",
+    "profile": {
+      "age_years": null,
+      "age_band": "adult_unknown_from_source",
+      "occupation": "unknown_from_source",
+      "living_situation": "unknown_from_source",
+      "support_system": "unknown_from_source",
+      "gender": "female"
+    },
+    "source": {
+      "dataset": "e_daic_public",
+      "participant_id": "351",
+      "split": "train",
+      "phq_binary": "1",
+      "phq_score": "14",
+      "source_audio_path": "351_P/351_AUDIO.wav",
+      "source_transcript_path": "351_P/351_Transcript.csv"
+    },
+    "turns": [
+      {
+        "turn_id": "u1",
+        "speaker": "user",
+        "text": "baby girl",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "22.4",
+        "end_time_sec": "23.3",
+        "asr_confidence": "0.7686490416526794"
+      },
+      {
+        "turn_id": "u2",
+        "speaker": "user",
+        "text": "are you okay",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "48.4",
+        "end_time_sec": "49.2",
+        "asr_confidence": "0.9839853644371033"
+      },
+      {
+        "turn_id": "u3",
+        "speaker": "user",
+        "text": "yes",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "49.9",
+        "end_time_sec": "50.5",
+        "asr_confidence": "0.9938145279884338"
+      },
+      {
+        "turn_id": "u4",
+        "speaker": "user",
+        "text": "okay",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "54.4",
+        "end_time_sec": "54.9",
+        "asr_confidence": "0.9752300977706909"
+      },
+      {
+        "turn_id": "u5",
+        "speaker": "user",
+        "text": "New York",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "58.3",
+        "end_time_sec": "59.8",
+        "asr_confidence": "0.9901286959648132"
+      },
+      {
+        "turn_id": "u6",
+        "speaker": "user",
+        "text": "The Pursuit music industry job in the music industry",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "62.9",
+        "end_time_sec": "66.9",
+        "asr_confidence": "0.823388397693634"
+      },
+      {
+        "turn_id": "u7",
+        "speaker": "user",
+        "text": "oh yes",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "69.9",
+        "end_time_sec": "70.6",
+        "asr_confidence": "0.9195567965507507"
+      },
+      {
+        "turn_id": "u8",
+        "speaker": "user",
+        "text": "I'm self-employed",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "73.0",
+        "end_time_sec": "73.8",
+        "asr_confidence": "0.9477055072784424"
+      },
+      {
+        "turn_id": "u9",
+        "speaker": "user",
+        "text": "what's your dream job",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "76.5",
+        "end_time_sec": "77.3",
+        "asr_confidence": "0.9270285367965698"
+      },
+      {
+        "turn_id": "u10",
+        "speaker": "user",
+        "text": "how to become a music producer",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "78.1",
+        "end_time_sec": "79.9",
+        "asr_confidence": "0.8945608139038086"
+      },
+      {
+        "turn_id": "u11",
+        "speaker": "user",
+        "text": "awesome",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "81.2",
+        "end_time_sec": "82.0",
+        "asr_confidence": "0.9779703617095947"
+      },
+      {
+        "turn_id": "u12",
+        "speaker": "user",
+        "text": "it's pretty hard as a lot of competition",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "83.9",
+        "end_time_sec": "86.3",
+        "asr_confidence": "0.8645713329315186"
+      },
+      {
+        "turn_id": "u13",
+        "speaker": "user",
+        "text": "to pursue a job",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "93.7",
+        "end_time_sec": "95.9",
+        "asr_confidence": "0.9631320238113403"
+      },
+      {
+        "turn_id": "u14",
+        "speaker": "user",
+        "text": "owain about a year ago last February",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "98.1",
+        "end_time_sec": "102.2",
+        "asr_confidence": "0.9526746273040771"
+      },
+      {
+        "turn_id": "u15",
+        "speaker": "user",
+        "text": "it was pretty difficult East Coast is a lot different than the West Coast",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "105.7",
+        "end_time_sec": "109.7",
+        "asr_confidence": "0.93841153383255"
+      },
+      {
+        "turn_id": "u16",
+        "speaker": "user",
+        "text": "I think I've been there twice in the past year",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "116.4",
+        "end_time_sec": "119.3",
+        "asr_confidence": "0.9834293723106384"
+      },
+      {
+        "turn_id": "u17",
+        "speaker": "user",
+        "text": "no more creature of habit",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "124.5",
+        "end_time_sec": "126.8",
+        "asr_confidence": "0.8623307347297668"
+      },
+      {
+        "turn_id": "u18",
+        "speaker": "user",
+        "text": "yes",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "133.2",
+        "end_time_sec": "134.2",
+        "asr_confidence": "0.9180843830108643"
+      },
+      {
+        "turn_id": "u19",
+        "speaker": "user",
+        "text": "sometimes I feel like I don't fit into the crowd so it's better sometimes to be more quiet and view everything instead of going in and actively pursue things",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "136.9",
+        "end_time_sec": "149.0",
+        "asr_confidence": "0.963739812374115"
+      },
+      {
+        "turn_id": "u20",
+        "speaker": "user",
+        "text": "probably listen to music and spend time with my dogs",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "152.9",
+        "end_time_sec": "162.1",
+        "asr_confidence": "0.9128419756889343"
+      },
+      {
+        "turn_id": "u21",
+        "speaker": "user",
+        "text": "probably people being in",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "170.5",
+        "end_time_sec": "174.0",
+        "asr_confidence": "0.9561998248100281"
+      },
+      {
+        "turn_id": "u22",
+        "speaker": "user",
+        "text": "not very very nice to me or seeing in justices or",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "175.9",
+        "end_time_sec": "182.1",
+        "asr_confidence": "0.815824031829834"
+      },
+      {
+        "turn_id": "u23",
+        "speaker": "user",
+        "text": "I think that's about it",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "183.5",
+        "end_time_sec": "185.2",
+        "asr_confidence": "0.9819769263267517"
+      },
+      {
+        "turn_id": "u24",
+        "speaker": "user",
+        "text": "pretty good",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "190.2",
+        "end_time_sec": "191.3",
+        "asr_confidence": "0.9352361559867859"
+      },
+      {
+        "turn_id": "u25",
+        "speaker": "user",
+        "text": "probably a couple of days ago one of my friends was saying that they were making a comment about how I am and I got kind of upset about that",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "197.4",
+        "end_time_sec": "207.8",
+        "asr_confidence": "0.9828190207481384"
+      },
+      {
+        "turn_id": "u26",
+        "speaker": "user",
+        "text": "yeah it does",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "210.3",
+        "end_time_sec": "211.2",
+        "asr_confidence": "0.9390154480934143"
+      },
+      {
+        "turn_id": "u27",
+        "speaker": "user",
+        "text": "pretty close",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "214.7",
+        "end_time_sec": "215.4",
+        "asr_confidence": "0.8466682434082031"
+      },
+      {
+        "turn_id": "u28",
+        "speaker": "user",
+        "text": "my best friend so I will just one of my friends",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "218.0",
+        "end_time_sec": "223.3",
+        "asr_confidence": "0.9228096008300781"
+      },
+      {
+        "turn_id": "u29",
+        "speaker": "user",
+        "text": "and quiet about it and when a person pushes me to a certain point that's when I overreact usually",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "228.4",
+        "end_time_sec": "237.9",
+        "asr_confidence": "0.9075859189033508"
+      },
+      {
+        "turn_id": "u30",
+        "speaker": "user",
+        "text": "it's pretty hard I rather the person notice that I'm kind of getting withdrawn and actively engaging me instead of getting to the point where it's like it comes to a point where it blows out of proportion",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "240.6",
+        "end_time_sec": "256.1",
+        "asr_confidence": "0.9321893453598022"
+      },
+      {
+        "turn_id": "u31",
+        "speaker": "user",
+        "text": "probably spending time with my family",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "265.9",
+        "end_time_sec": "267.6",
+        "asr_confidence": "0.9240447282791138"
+      },
+      {
+        "turn_id": "u32",
+        "speaker": "user",
+        "text": "a New York",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "269.4",
+        "end_time_sec": "270.0",
+        "asr_confidence": "0.8413372039794922"
+      },
+      {
+        "turn_id": "u33",
+        "speaker": "user",
+        "text": "very close",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "271.5",
+        "end_time_sec": "272.3",
+        "asr_confidence": "0.9563307762145996"
+      },
+      {
+        "turn_id": "u34",
+        "speaker": "user",
+        "text": "my sister and my brother",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "281.1",
+        "end_time_sec": "282.7",
+        "asr_confidence": "0.9849562048912048"
+      },
+      {
+        "turn_id": "u35",
+        "speaker": "user",
+        "text": "I know they're just great people",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "285.6",
+        "end_time_sec": "288.3",
+        "asr_confidence": "0.8887633085250854"
+      },
+      {
+        "turn_id": "u36",
+        "speaker": "user",
+        "text": "and I love them a lot and they're a lot like me so I feel like I have people that understand me",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "289.5",
+        "end_time_sec": "297.6",
+        "asr_confidence": "0.9585673213005066"
+      },
+      {
+        "turn_id": "u37",
+        "speaker": "user",
+        "text": "probably",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "303.5",
+        "end_time_sec": "305.8",
+        "asr_confidence": "0.9805415868759155"
+      },
+      {
+        "turn_id": "u38",
+        "speaker": "user",
+        "text": "Castle oil sensitive I don't know it's kind of hard to hard question",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "309.0",
+        "end_time_sec": "318.9",
+        "asr_confidence": "0.8176537752151489"
+      },
+      {
+        "turn_id": "u39",
+        "speaker": "user",
+        "text": "no",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "323.1",
+        "end_time_sec": "323.6",
+        "asr_confidence": "0.9219223260879517"
+      },
+      {
+        "turn_id": "u40",
+        "speaker": "user",
+        "text": "no",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "326.8",
+        "end_time_sec": "327.3",
+        "asr_confidence": "0.95656418800354"
+      },
+      {
+        "turn_id": "u41",
+        "speaker": "user",
+        "text": "yes",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "329.8",
+        "end_time_sec": "330.4",
+        "asr_confidence": "0.904847264289856"
+      },
+      {
+        "turn_id": "u42",
+        "speaker": "user",
+        "text": "gosh I think probably 1997 so a long time ago",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "333.4",
+        "end_time_sec": "339.2",
+        "asr_confidence": "0.9232165217399597"
+      },
+      {
+        "turn_id": "u43",
+        "speaker": "user",
+        "text": "I'm just during that time I was just going through a lot of issues and I was feeling unsafe to myself so I ended up going to the doctor can you get meds and have therapy and stuff",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "343.7",
+        "end_time_sec": "360.4",
+        "asr_confidence": "0.9639002680778503"
+      },
+      {
+        "turn_id": "u44",
+        "speaker": "user",
+        "text": "not currently ended about like 6 months ago",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "363.6",
+        "end_time_sec": "367.2",
+        "asr_confidence": "0.9468483328819275"
+      },
+      {
+        "turn_id": "u45",
+        "speaker": "user",
+        "text": "almost filled the therapist wasn't really helping me I thought we kept on talking about the same things over and over and she wasn't really challenging me and I've been in therapy for a really long time so I just knew it was a change",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "369.6",
+        "end_time_sec": "383.8",
+        "asr_confidence": "0.948392927646637"
+      },
+      {
+        "turn_id": "u46",
+        "speaker": "user",
+        "text": "yes I do actually when I feel connected to a therapist and I feel like it's a really great way for me to talk about what I'm going through so yes I do",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "389.9",
+        "end_time_sec": "405.1",
+        "asr_confidence": "0.9675310850143433"
+      },
+      {
+        "turn_id": "u47",
+        "speaker": "user",
+        "text": "I'm better at describing my emotions and feelings I think the biggest thing is when I'm in situations I can see myself reacting one way and I take a step back and see how it can react normally almost in a way also I tend to take a lot of my emotions and feelings and kind of bury them and make them feel like really bad about myself those nice to talk to someone that's not judging that doesn't really tell me like you know they tell me it's okay basically",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "408.5",
+        "end_time_sec": "441.4",
+        "asr_confidence": "0.9541427493095398"
+      },
+      {
+        "turn_id": "u48",
+        "speaker": "user",
+        "text": "feeling hopeless all the time not having enough energy to do things I used to like I had a little bit of concentration issues having weird disturbing thoughts sometime just pop into my mind and just overall just feeling kind of crummy about life",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "447.1",
+        "end_time_sec": "466.6",
+        "asr_confidence": "0.954693615436554"
+      },
+      {
+        "turn_id": "u49",
+        "speaker": "user",
+        "text": "sometimes they are like random moments that if there's like a problem with like my interpersonal life or something like that or if I sometimes even seen something on television like sometimes affects me",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "469.3",
+        "end_time_sec": "485.0",
+        "asr_confidence": "0.9550508856773376"
+      },
+      {
+        "turn_id": "u50",
+        "speaker": "user",
+        "text": "listening to music or trying to distract myself trying like my therapist told me for the longest time to journal to record things",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "487.9",
+        "end_time_sec": "498.9",
+        "asr_confidence": "0.9482183456420898"
+      },
+      {
+        "turn_id": "u51",
+        "speaker": "user",
+        "text": "it's been a tough transition to come here so we'll be being here so kind of half-and-half okay and not okay",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "502.8",
+        "end_time_sec": "513.1",
+        "asr_confidence": "0.9428550601005554"
+      },
+      {
+        "turn_id": "u52",
+        "speaker": "user",
+        "text": "I feel like I've been a little bit with more withdrawn lately but that's about it",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "518.1",
+        "end_time_sec": "525.2",
+        "asr_confidence": "0.9527039527893066"
+      },
+      {
+        "turn_id": "u53",
+        "speaker": "user",
+        "text": "some days it's great some days it's not more recently it's been a little bit more difficult",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "530.6",
+        "end_time_sec": "537.7",
+        "asr_confidence": "0.9672127962112427"
+      },
+      {
+        "turn_id": "u54",
+        "speaker": "user",
+        "text": "I don't know why I have like a lot of thoughts on my mind at night so I tend not to sleep very well and I wake up quite frequently during the night",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "540.1",
+        "end_time_sec": "549.6",
+        "asr_confidence": "0.9763137698173523"
+      },
+      {
+        "turn_id": "u55",
+        "speaker": "user",
+        "text": "very groggy in the morning and",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "552.9",
+        "end_time_sec": "556.0",
+        "asr_confidence": "0.9798796772956848"
+      },
+      {
+        "turn_id": "u56",
+        "speaker": "user",
+        "text": "that's about it like during the day I tend to yawn a lot and my friends always are like why are yawning so much are you just interested in what we're doing and I'm trying to tell them it's not that at all",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "557.2",
+        "end_time_sec": "568.0",
+        "asr_confidence": "0.9648004770278931"
+      },
+      {
+        "turn_id": "u57",
+        "speaker": "user",
+        "text": "play Christmas time when I was with my family",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "574.3",
+        "end_time_sec": "577.9",
+        "asr_confidence": "0.8591145277023315"
+      },
+      {
+        "turn_id": "u58",
+        "speaker": "user",
+        "text": "just really happy and feeling like everything is alright in my life",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "582.9",
+        "end_time_sec": "590.1",
+        "asr_confidence": "0.8733227252960205"
+      },
+      {
+        "turn_id": "u59",
+        "speaker": "user",
+        "text": "have a good sense of Lake where I was at that moment being present with myself",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "591.5",
+        "end_time_sec": "596.4",
+        "asr_confidence": "0.923187792301178"
+      },
+      {
+        "turn_id": "u60",
+        "speaker": "user",
+        "text": "play you know it's a hard question I think probably I can tend to read people kind of wall sometime",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "606.6",
+        "end_time_sec": "618.5",
+        "asr_confidence": "0.8874884843826294"
+      },
+      {
+        "turn_id": "u61",
+        "speaker": "user",
+        "text": "I like to say I'm good at being a good friend to people being a good family member",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "621.0",
+        "end_time_sec": "628.1",
+        "asr_confidence": "0.9314813017845154"
+      },
+      {
+        "turn_id": "u62",
+        "speaker": "user",
+        "text": "I'm a hard worker when I do have a job so",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "630.3",
+        "end_time_sec": "633.2",
+        "asr_confidence": "0.9586073756217957"
+      },
+      {
+        "turn_id": "u63",
+        "speaker": "user",
+        "text": "sure I mean that's life so of course there's regrets one that comes to mind is the wish that I don't eat as much so I can be a lot more healthy",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "639.2",
+        "end_time_sec": "652.7",
+        "asr_confidence": "0.9339598417282104"
+      },
+      {
+        "turn_id": "u64",
+        "speaker": "user",
+        "text": "don't take things so seriously enjoy being useful and I think that's it",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "657.6",
+        "end_time_sec": "668.1",
+        "asr_confidence": "0.9808667302131653"
+      },
+      {
+        "turn_id": "u65",
+        "speaker": "user",
+        "text": "I don't know ask you a question probably my previous job in my employment I worked really well with kids so I did a great job I thought I was a researcher at a hospital and I helped a lot of kids out for about six years so seven years",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "678.8",
+        "end_time_sec": "700.1",
+        "asr_confidence": "0.9444897174835205"
+      },
+      {
+        "turn_id": "u66",
+        "speaker": "user",
+        "text": "yeah who's awesome",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "703.4",
+        "end_time_sec": "704.8",
+        "asr_confidence": "0.9683222770690918"
+      },
+      {
+        "turn_id": "u67",
+        "speaker": "user",
+        "text": "I was really kind of like reading people and so I decided to major in Psychology so then I went and worked in the a.m.",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "708.3",
+        "end_time_sec": "721.1",
+        "asr_confidence": "0.9106150269508362"
+      },
+      {
+        "turn_id": "u68",
+        "speaker": "user",
+        "text": "mental health facility and did research with them with the most drugs and depression and things like that so I found a good Niche for me",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "722.1",
+        "end_time_sec": "733.5",
+        "asr_confidence": "0.931053876876831"
+      },
+      {
+        "turn_id": "u69",
+        "speaker": "user",
+        "text": "no problem goodbye",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "743.4",
+        "end_time_sec": "745.3",
+        "asr_confidence": "0.9270130395889282"
+      },
+      {
+        "turn_id": "u70",
+        "speaker": "user",
+        "text": "hi",
+        "source_type": "dataset_utterance",
+        "start_time_sec": "22.4",
+        "end_time_sec": "759.8",
+        "asr_confidence": "0.8937351703643799"
+      }
+    ]
+  },
+  "instructions": "Label independently using the transcript, metadata, and annotation guidelines. Do not inspect annotator B."
+}

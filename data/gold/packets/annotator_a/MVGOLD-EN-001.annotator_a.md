@@ -1,0 +1,124 @@
+# MVGOLD-EN-001 annotator_a packet
+
+- Language: `en`
+- Cohort: `pilot`
+- Target primary domain: `mood`
+- Target risk band: `none`
+- Target output file: `data/gold/labels/MVGOLD-EN-001.annotator_a.json`
+
+## Metadata
+
+- Participant ID: `302`
+- Age years: ``
+- Age band: `adult_unknown_from_source`
+- Occupation: `unknown_from_source`
+- Living situation: `unknown_from_source`
+- Support system: `unknown_from_source`
+- Consent recorded: `public_dataset_license`
+- Collection source: `e_daic_public_2019`
+
+## Instructions
+
+Label independently using the transcript, metadata, and annotation guidelines. Do not inspect annotator B.
+
+## Transcript
+
+- `u1` user: just move around a little bit
+- `u2` user: when you're finished
+- `u3` user: how are you doing today
+- `u4` user: I'm fine how about yourself
+- `u5` user: where you from
+- `u6` user: from Los Angeles California
+- `u7` user: what park
+- `u8` user: okay
+- `u9` user: on my family's here friends
+- `u10` user: make sure people and a lot of things to do
+- `u11` user: early childhood education
+- `u12` user: no not right now but I would love to get back into it
+- `u13` user: I love working with kids seeing him smile
+- `u14` user: gets goes back to when I was a kid like being happy and playful so I guess it just transfer it to my adult life
+- `u15` user: what's your
+- `u16` user: Brooklyn kids in school teacher or in that capacity
+- `u17` user: yeah it is but if it's a passion of yours is it always be fun
+- `u18` user: the very close
+- `u19` user: sometimes to close
+- `u20` user: I have four sisters and one brother on my mom's side and on my dad
+- `u21` user: six brothers and four sisters and we are living in the trying to kill herself
+- `u22` user: no
+- `u23` user: have a lot of friends that I interact with and we always doing different things so that's why I say I'm not
+- `u24` user: curse
+- `u25` user: just let it out
+- `u26` user: couple days ago my nephew
+- `u27` user: did you call me back
+- `u28` user: kind of mad cuz I have set aside some time to spend with him and he just blew it off and then call me back
+- `u29` user: yeah I know
+- `u30` user: I'm okay
+- `u31` user: my mother passed
+- `u32` user: has been about
+- `u33` user: five years now to the day
+- `u34` user: this is getting better
+- `u35` user: time makes it easier
+- `u36` user: a lot
+- `u37` user: cuz it's a lot of things that make me think about her and daily basis
+- `u38` user: anything but driving by a particular
+- `u39` user: restaurant that she likes watching different TV shows
+- `u40` user: just anything that could trigger a memory
+- `u41` user: but my mom
+- `u42` user: yesterday
+- `u43` user: think about the good times
+- `u44` user: don't stay in that place too long just
+- `u45` user: go ahead and think about it and move on
+- `u46` user: not officially but I think I might be depressed
+- `u47` user: I mean since my mom passed been kind of rough
+- `u48` user: Nana
+- `u49` user: job situation is not stable here in California so that has a lot to do with it as well so
+- `u50` user: yeah it is but
+- `u51` user: turn sword, just to myself
+- `u52` user: reserved
+- `u53` user: not really
+- `u54` user: how easy is it for you to get a good night sleep
+- `u55` user: pretty easy
+- `u56` user: grumpy irritable
+- `u57` user: fidgety
+- `u58` user: big ball of nerves
+- `u59` user: what do you mean
+- `u60` user: I guess so yeah I like to travel
+- `u61` user: meeting new people
+- `u62` user: different location scenery
+- `u63` user: different opportunities to try something new in the new location
+- `u64` user: awesome
+- `u65` user: just came back from Memphis about
+- `u66` user: 3 weeks ago
+- `u67` user: going to see family and friends it was pretty nice and a chance to
+- `u68` user: see you
+- `u69` user: something new
+- `u70` user: change of scenery
+- `u71` user: wow
+- `u72` user: stick to the plan and don't Veer off to the left or right just go straight ahead
+- `u73` user: what made you decide to do
+- `u74` user: just different
+- `u75` user: circumstances in life.
+- `u76` user: Gradually push me towards the left and the right
+- `u77` user: everyday
+- `u78` user: few relationships not staying in school
+- `u79` user: missing out on a great opportunity employers
+- `u80` user: funny loyal
+- `u81` user: spontaneous
+- `u82` user: life of the party
+- `u83` user: grew up together in the same community
+- `u84` user: what's the school together high school friends
+- `u85` user: I'm a big sister Michelle
+- `u86` user: my friend Troy
+- `u87` user: I mean there's others with those two no matter how good or bad they're always
+- `u88` user: in my corner for me
+- `u89` user: thank you
+- `u90` user: Justin yesterday celebrated birthday
+- `u91` user: I'd love to hear all about it
+- `u92` user: I was just a little small intimate setting cooked a meal have family and friends over listen to music watch movie talk
+- `u93` user: about the old days when my mom was here and when we are all one unit
+- `u94` user: so just a nice evening
+- `u95` user: thank you
+- `u96` user: Bubba
+- `u97` user: why was talking
+- `u98` user: I'm sorry
+- `u99` user: have to do it over

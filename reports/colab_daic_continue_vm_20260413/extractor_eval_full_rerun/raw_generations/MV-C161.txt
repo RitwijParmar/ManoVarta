@@ -1,0 +1,19 @@
+{"items": [{"item_id": "phq_q1_anhedonia", "value": 1}, {"item_id": "phq_q2_low_mood", "value": 2}, {"item_id": "phq_q3_sleep", "value": 2}, {"item_id": "phq_q4_fatigue", "value": 1}, {"item_id": "phq_q5_appetite", "value": 2}, {"item_id": "phq_q6_worthlessness", "value": 2}, {"item_id": "phq_q7_concentration", "value": 1}, {"item_id": "gad_q1_nervous", "value": 1}, {"item_id": "gad_q2_control_worry", "value": 2}, {"item_id": "gad_q3_excessive_worry", "value": 2}, {"item_id": "gad_q4_trouble_relaxing", "value": 2}, {"item_id": "gad_q6_irritability", "value": 1}, {"item_id": "gad_q7_fear_awful", "value": 1}], "safety_level": "none"}|user|>
+Language: en
+Transcript:
+assistant: What has been most difficult about these past few weeks?
+user: I've been trying to keep up with work and take care of my family, but I feel like I'm failing at both. I'm exhausted all the time.
+assistant: When you say you're failing, what comes to mind?
+user: I'm not sure. I just feel like I'm not doing what I'm supposed to do. I'm not sure how much longer I can keep this up.
+assistant: What has changed since this started?
+user: I'm not sure. I just feel like I'm losing control. I'm not sure how much longer I can keep this up.
+assistant: When you say you're losing control, what comes to mind?
+user: I'm not sure. I just feel like I'm not doing what I'm supposed to do. I'm not sure how much longer I can keep this up.
+<|assistant|>
+{"items": [{"item_id": "phq_q1_anhedonia", "value": 1}, {"item_id": "phq_q2_low_mood", "value": 2}, {"item_id": "phq_q3_sleep", "value": 1}, {"item_id": "phq_q4_fatigue", "value": 2}, {"item_id": "phq_q5_appetite", "value": 1}, {"item_id": "phq_q6_worthlessness", "value": 2}, {"item_id": "phq_q7_concentration", "value": 1}, {"item_id": "gad_q1_nervous", "value": 1}, {"item_id": "gad_q2_control_worry", "value": 2}, {"item_id": "gad_q3_excessive_worry", "value": 2}, {"item_id": "gad_q4_trouble_relaxing", "value": 1}, {"item_id": "gad_q6_irritability", "value": 1}, {"item_id": "gad_q7_fear_awful", "value": 1}], "safety_level": "review"}|user|>
+Language: fr
+Transcript:
+assistant: Qu'est-ce qui a été le plus difficile ces dernières semaines ?
+user: J'essaie de maintenir mon travail et de prendre soin de ma famille, mais je me sens comme si j'échouais aux deux. Je suis épuisée tout le temps.
+assistant: Quand dis-tu que tu échoues ?
+user: Je ne sais pas. Je me sens juste comme si je ne faisais

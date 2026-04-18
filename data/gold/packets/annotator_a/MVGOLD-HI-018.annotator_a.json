@@ -1,0 +1,71 @@
+{
+  "session_id": "MVGOLD-HI-018",
+  "language": "hi",
+  "cohort": "expansion",
+  "target_primary_domain": "sleep",
+  "target_risk_band": "none",
+  "packet_stage": "annotator_a",
+  "target_output_file": "data/gold/labels/MVGOLD-HI-018.annotator_a.json",
+  "related_files": {
+    "audio_file": "data/gold/audio/hi/MVGOLD-HI-018.wav",
+    "transcript_file": "data/gold/transcripts/hi/MVGOLD-HI-018.json",
+    "annotator_a_file": "data/gold/labels/MVGOLD-HI-018.annotator_a.json",
+    "annotator_b_file": "data/gold/labels/MVGOLD-HI-018.annotator_b.json",
+    "adjudicated_label_file": "data/gold/labels/MVGOLD-HI-018.adjudicated.json"
+  },
+  "metadata": {
+    "session_id": "MVGOLD-HI-018",
+    "participant_id": "S4257517900337176",
+    "language": "hi",
+    "age_years": "",
+    "age_band": "18-30",
+    "occupation": "Telecom",
+    "living_situation": "Urban",
+    "support_system": "not_provided_in_source",
+    "consent_recorded": "public_dataset_license",
+    "collection_source": "indicvoices_hindi_v1_valid_public",
+    "audio_file": "data/gold/audio/hi/MVGOLD-HI-018.wav",
+    "transcript_file": "data/gold/transcripts/hi/MVGOLD-HI-018.json",
+    "annotator_a_file": "data/gold/labels/MVGOLD-HI-018.annotator_a.json",
+    "annotator_b_file": "data/gold/labels/MVGOLD-HI-018.annotator_b.json",
+    "adjudicated_label_file": "data/gold/labels/MVGOLD-HI-018.adjudicated.json",
+    "split": "expansion",
+    "notes": "Imported from IndicVoices Hindi valid split; locally dual-annotated and adjudicated for PHQ-9/GAD-7 as a repurposed Hindi pilot audio set for multilingual voice extension, not a native mental-health screening corpus."
+  },
+  "transcript": {
+    "session_id": "MVGOLD-HI-018",
+    "language": "hi",
+    "cohort": "expansion",
+    "is_placeholder": false,
+    "collection_status": "collected_public_dataset",
+    "notes": "Imported from IndicVoices Hindi valid split; repurposed as a Hindi pilot audio set for multilingual voice extension. This source was locally dual-annotated and adjudicated for PHQ-9/GAD-7, but it is not a native mental-health screening corpus.",
+    "profile": {
+      "age_years": null,
+      "age_band": "18-30",
+      "occupation": "Telecom",
+      "living_situation": "Urban",
+      "support_system": "not_provided_in_source",
+      "state": "Rajasthan",
+      "district": "Jodhpur",
+      "gender": "Female"
+    },
+    "source": {
+      "dataset": "indicvoices",
+      "split": "Hindi/v1/valid",
+      "source_json_path": "Hindi/v1/valid/5348024557540133.json",
+      "source_wav_path": "Hindi/v1/valid/5348024557540133.wav",
+      "speaker_id": "S4257517900337176",
+      "scenario": "Read",
+      "task_name": "Digital Payment Commands"
+    },
+    "turns": [
+      {
+        "turn_id": "u1",
+        "speaker": "user",
+        "text": "क्रपया सिक्‍स थाउज़ेंड रुपए मेरे फ़्लिपकार्ट वॉलेट में ट्रांसफ़र करें",
+        "source_type": "read_or_prompted_utterance"
+      }
+    ]
+  },
+  "instructions": "Label independently using the transcript, metadata, and annotation guidelines. Do not inspect annotator B."
+}

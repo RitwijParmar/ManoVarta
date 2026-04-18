@@ -1,0 +1,133 @@
+# MVGOLD-EN-013 annotator_a packet
+
+- Language: `en`
+- Cohort: `expansion`
+- Target primary domain: `mixed`
+- Target risk band: `none`
+- Target output file: `data/gold/labels/MVGOLD-EN-013.annotator_a.json`
+
+## Metadata
+
+- Participant ID: `322`
+- Age years: ``
+- Age band: `adult_unknown_from_source`
+- Occupation: `unknown_from_source`
+- Living situation: `unknown_from_source`
+- Support system: `unknown_from_source`
+- Consent recorded: `public_dataset_license`
+- Collection source: `e_daic_public_2019`
+
+## Instructions
+
+Label independently using the transcript, metadata, and annotation guidelines. Do not inspect annotator B.
+
+## Transcript
+
+- `u1` user: okay this looks good great
+- `u2` user: start at the virtual human and she's going to chat with you for a bit okay
+- `u3` user: okay
+- `u4` user: yes
+- `u5` user: fine thank you
+- `u6` user: I'm originally from India
+- `u7` user: yeah
+- `u8` user: I'm sorry
+- `u9` user: why do I miss
+- `u10` user: sorry
+- `u11` user: why do I miss la
+- `u12` user: about 20 years ago
+- `u13` user: once every 3-4 years
+- `u14` user: I mean the first 6 months it was a little difficult but then I got used to it and then until I feel very comfortable now
+- `u15` user: yes
+- `u16` user: the food of actually I enjoyed flying then you know meeting different people different scenes
+- `u17` user: you know then it right try to achieve my goals
+- `u18` user: I'm sorry
+- `u19` user: I used to run a business I used to travel to meet people to get orders and that traveling involved and going to Northeast Vienna Ohio and Pennsylvania places like that meet top people to get my to get orders for my business and you know why I enjoyed listening to that problem so used to take them out for dinner and you know I really enjoyed genuinely enjoyed talking to talking to them and many of them we're opening up to tell me about their problems and you know but my main goal main main objective was to get the orders for the business
+- `u20` user: you don't cook watch movies make friends throw a party
+- `u21` user: I'm talking to you
+- `u22` user: I'm an engineer I did mechanical engineering I'm also in NBA
+- `u23` user: actually I Bradshaw to finance I trade stocks now
+- `u24` user: A friend of mine was you know making a lot of money in stocks and you know I was
+- `u25` user: first I used to you know we interact with him will also be with him when he was trading stocks and I realized he was making a lot of money than I did a form of course in that attended a lot of seminars then you know
+- `u26` user: lost a lot of money and before I started making money
+- `u27` user: so it's the same thing that I said you don't watch movies go visit people
+- `u28` user: play basketball
+- `u29` user: then do shopping cooking
+- `u30` user: I'm very good at that you know
+- `u31` user: even when I'm irritated and I'm very good at controlling my temper
+- `u32` user: the last time I argue with
+- `u33` user: was with my brother it was about my dad peanut but you was getting old I mean he's getting old and he lives in India and I was planning on bringing it here my dad's I mean my brother said it's going to be very expensive to
+- `u34` user: you know it's going to be very expensive with respect to health bills and I was arguing with him that we should all pull in the money and get them here because they are quite old I have a mom to you know they're both old
+- `u35` user: I'm very close to my parents not so closed with my brother and their family
+- `u36` user: it's deep I mean like
+- `u37` user: I tend to be judgmental and I think sometimes that the my niece and nephew should have been brought up in a different way and you know
+- `u38` user: and you know my my brother doesn't seem to think along the same lines and you know but we have disagreements and you know that's the reason
+- `u39` user: it is
+- `u40` user: no not at this time
+- `u41` user: what do I think of wife
+- `u42` user: can you can you repeat that one more time
+- `u43` user: can I still couldn't follow you
+- `u44` user: okay
+- `u45` user: no
+- `u46` user: no
+- `u47` user: oh yes
+- `u48` user: Wanted 2 years ago
+- `u49` user: I was feeling down and I was not interested in things that are that I would normally interested in
+- `u50` user: and you know I was sort of withdrawn and the it was I was not able to focus on my things so I thought maybe I should go see a doctor and I ended up doing that
+- `u51` user: no
+- `u52` user: how many died last appetite I was not sleeping well and
+- `u53` user: I had difficulty concentrating you know and focusing and I would not getting my assignments done on time these were some of the problems
+- `u54` user: I've been feeling good
+- `u55` user: but
+- `u56` user: no I don't
+- `u57` user: I started doing yoga and you know I've been doing that for about a year and that's and meditation and that's helped a lot
+- `u58` user: so it's just that you know when I was diagnosed with depression I thought I should be taking any medication for it and I was looking at it other ways to get over the problem and then I realized some of my friends we're doing meditation and
+- `u59` user: oh you know I ain't got into in Spider-Man
+- `u60` user: it's a little difficult but after I've been able to sleep with in half an hour there are days when it takes almost 1/2 hours to go to sleep
+- `u61` user: are they what can you repeat that
+- `u62` user: oh no
+- `u63` user: I just been open
+- `u64` user: just switch off the light and Binoo keep tossing around then
+- `u65` user: try to focus on things that makes me feel good
+- `u66` user: and the snap
+- `u67` user: but three days ago
+- `u68` user: what am I proud of
+- `u69` user: I wasn't out I was among the top 2% in my MBA class and
+- `u70` user: and when I used to run my business I designed a product that was working really well
+- `u71` user: and I was happy that I was able to design something that was so useful for my business
+- `u72` user: my
+- `u73` user: I'm thinking my friends would describe me as very friendly very easy to get along with
+- `u74` user: very focused very intelligent
+- `u75` user: and a good cook
+- `u76` user: Albert Einstein
+- `u77` user: of
+- `u78` user: summer summer summer full stories
+- `u79` user: you know he obviously didn't it involves lot of deep thinking and are the the first few times I write about him about his theories I had difficulty in really understanding that and that it over
+- `u80` user: I mean when when when there are things that I really try to understand and I am not able to
+- `u81` user: and you know they're out there all the type of people I admire
+- `u82` user: listen to other people
+- `u83` user: are its diverse and I like the the entertainment industry
+- `u84` user: and
+- `u85` user: I like a
+- `u86` user: the other fact that there are more women than men here
+- `u87` user: there are certain areas where Wendy's where only Spanish is spoken you know I would like for all people who come to America to be able to understand English and be able to speak in English
+- `u88` user: so that everybody can participate
+- `u89` user: in LA
+- `u90` user: me like I
+- `u91` user: some of the things the political leaders do really makes me mad sometimes I think they're wasting their wasting their time our time and other countries are advancing and you know what these guys don't get things done and you know I feel very bad about it and sometimes it makes me angry
+- `u92` user: yeah I mean the first four years of Obama administration now I think it was wasted because if the
+- `u93` user: if Congress had acted together and got things done then you know
+- `u94` user: maybe we could have made it much more difficult for China to catch up with us and you know the fact that China is able to do things and get things done much faster and these people steal you know arguing
+- `u95` user: you know follow-up find fault with each other and not get things done. They don't seem to realize that you don't you know that clock keeps ticking you know they have to get things done
+- `u96` user: I mean like you know well
+- `u97` user: one thing that comes to my mind is well you know I made a lot of money while we know once in Los Angeles and you know I thought it happened during Christmas some 10 years ago
+- `u98` user: and that's that made me very happy
+- `u99` user: good music good food
+- `u100` user: I mean the party with friends that I like
+- `u101` user: hand
+- `u102` user: and
+- `u103` user: you know I also like cooking and I enjoy cooking with groups in groups do the things that really put me in a good mood
+- `u104` user: I'm sorry clean
+- `u105` user: I listen to people
+- `u106` user: and I empathize try to solve their problems
+- `u107` user: and I'm hoping they think I'm it up my advisers and recommendations are worth their time
+- `u108` user: thank you so much to be nice by

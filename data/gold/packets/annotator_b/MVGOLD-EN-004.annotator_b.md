@@ -1,0 +1,228 @@
+# MVGOLD-EN-004 annotator_b packet
+
+- Language: `en`
+- Cohort: `pilot`
+- Target primary domain: `fatigue`
+- Target risk band: `none`
+- Target output file: `data/gold/labels/MVGOLD-EN-004.annotator_b.json`
+
+## Metadata
+
+- Participant ID: `305`
+- Age years: ``
+- Age band: `adult_unknown_from_source`
+- Occupation: `unknown_from_source`
+- Living situation: `unknown_from_source`
+- Support system: `unknown_from_source`
+- Consent recorded: `public_dataset_license`
+- Collection source: `e_daic_public_2019`
+
+## Instructions
+
+Label independently using the transcript, metadata, and annotation guidelines. Do not inspect annotator A.
+
+## Transcript
+
+- `u1` user: okay looks good so we can just move around a little bit to activate the connect him till we see a green skeleton looking thing up there around there goes okay perfect 7 to go ahead and start at the virtual human that you'll be talking to when it's over will you just go ahead and ring this Bell so I know that it's done
+- `u2` user: okay
+- `u3` user: hi I'm Ellie think I was created to talk to people in a safe and secure environment think of me as a friend I don't judge I can have a computer I'm here to learn about people and would love to learn about you I'll ask a few questions to get it started and please feel free to tell me anything your answers are totally confidential
+- `u4` user: how are you doing today that's good
+- `u5` user: where are you from originally originally I'm from California phone in Glendale
+- `u6` user: nice
+- `u7` user: how do you like your living situation I'm not too happy with it
+- `u8` user: why is unemployed at the moment but actually she can doing what I'm supposed to be doing and there's some
+- `u9` user: prospector but hopefully I'll learn something today
+- `u10` user: yeah
+- `u11` user: what's it like for you living with them why I want is a girlfriend so I can shoot her roommate
+- `u12` user: how do you know when I met her last year and
+- `u13` user: been through some troubling times but we're starting to see a light at the end it though
+- `u14` user: tell me more about that
+- `u15` user: the troubling times
+- `u16` user: I would let me see
+- `u17` user: wow I got a DUI last year and lost my job I'm a truck driver by trade so that kind of
+- `u18` user: show me way off of having a $1,400 a week job and then going to nothing, like plus losing my my license, I really threw me off and I couldn't know
+- `u19` user: haven't really
+- `u20` user: found any that was interested in so I start cooking
+- `u21` user: and our trying to see you which other route I can go as far as having some kind of a career and so
+- `u22` user: I'm truchas and going to The Culinary field but in the meanwhile I still have to work as hard to find a word with that without going to school and so but I think today I applied a trial so hopefully all
+- `u23` user: get that guy should have that job actually so
+- `u24` user: but I'm trying to see a light like citizen of that don't know a little by little
+- `u25` user: what's your dream job
+- `u26` user: my dream job would be probably forestry service on the wilderness
+- `u27` user: hiking alone
+- `u28` user: well know I have a lot of RAM on I'm an exotic animal trainer by trade and so and I like being I don't like people too much. So being outdoors and I've always enjoyed being outdoors that's how I like being a truck driver I've traveled the world I don't necessarily like being in a warehouse or an office I'm more of a
+- `u29` user: outdoors type of guy show
+- `u30` user: I'd like to hear about one of your trips
+- `u31` user: one of my trips would be
+- `u32` user: I spent a year-and-a-half in Japan and on the lower Island there that they built that bridge the largest bridge in the world
+- `u33` user: I wonder to work for
+- `u34` user: for an all-white a lot and all white tiger act and working for JP circus shows interesting that a lot of people that Island hadn't really seen a lot of Americans that was one of the islands also that we that they bombed so it was a lot of negativity but I probably have a good behavior and all those times that you know I
+- `u35` user: I enjoyed my shopping out for all the traveling and meeting new people and you know different Universe foods and
+- `u36` user: can you get experience for me all that whole experience was pretty good for traveling around the circus
+- `u37` user: ingrate nice
+- `u38` user: I really like about ale
+- `u39` user: probably
+- `u40` user: I want some of things I like about that way there's not a lot that I like but I don't like but I like Hollywood I like to eat the movie industry
+- `u41` user: the huge show
+- `u42` user: different different piano different
+- `u43` user: different ethnics of people here in Ohio
+- `u44` user: I enjoy talking to you if you know a lot of foreigners so you know I'd like to see where it came from and what what it's like there
+- `u45` user: yes
+- `u46` user: traffic cirrhosis
+- `u47` user: yeah
+- `u48` user: what are some things that make you really mad
+- `u49` user: traffic ignorance
+- `u50` user: being disrespectful being disrespectful or whatever you know other people being disrespectful towards you or other people
+- `u51` user: okay or I if I'm riding my bike people tend to almost from yours or if I'm not totally paying attention to traffic and all I find myself sometimes
+- `u52` user: you don't happen to wait to see what they're going to do instead of I have in the right away or stuff like that
+- `u53` user: yeah big time
+- `u54` user: what do you do when you're annoyed
+- `u55` user: what do I do when I'm annoyed
+- `u56` user: price and third shifter and vent and speak my mind even though I myself wishing that I carried rocks in my back pocket so I can let you know what happened so much where I I just
+- `u57` user: if it makes me what people will do some time with me oh you almost get run over all you know how I fight almost get run over probably on a daily basis
+- `u58` user: and I wouldn't mind attention right
+- `u59` user: how hard is that a try not to react to your reactions
+- `u60` user: yeah
+- `u61` user: when was the last time you argue with them
+- `u62` user: it was my girlfriend and it was about being honest
+- `u63` user: I'm pretty honest with
+- `u64` user: I'm open and honest about it anything and everything and what it was about was just her lying to me telling me that she had told our landlord something and I know she done something in that in that aspect and I come to find out a week later that it it was a total why I fell and I just
+- `u65` user: damn I got it all
+- `u66` user: yeah
+- `u67` user: how did you feel in that moment
+- `u68` user: transducer the word for it
+- `u69` user: just said I don't know now that whether I can be there because it was
+- `u70` user: I felt hurt and all that you know it would have been in a relationship for a little bit and that's probably one of my biggest pet peeves is being honest
+- `u71` user: I don't like I said I don't hold back on for y'all in anything and everything that I do or say so and if you're lying about something and Wall-E just your always having to cover up
+- `u72` user: more lies with the lies that mean that you already told him I
+- `u73` user: I don't see any kind of
+- `u74` user: took a lot from me trusting her now and I'll or whatever now I'm like you know it's like truthful with it not know it was going to hurt our relationship
+- `u75` user: volume
+- `u76` user: what are some things you like to do for fun
+- `u77` user: fun
+- `u78` user: by going to the beach
+- `u79` user: Russian dark but haven't done it in a while I love the paint I got in the watercolor painting and pretty gifted at that and
+- `u80` user: I want to try some other mediums and let me see you I love fishing
+- `u81` user: I haven't gone in a while though
+- `u82` user: I like driving truck no more and my job are you I wasn't really really enjoyed it I don't like driving through cities but I usually when I'm in the middle of the night when she all the star light star gazing I'll see if I can pick out some of those astronomy start off the affair and
+- `u83` user: I'm a pretty easygoing guy so shooting pool
+- `u84` user: sunshine
+- `u85` user: most memorable experiences
+- `u86` user: good or bad
+- `u87` user: whatever comes to your mind
+- `u88` user: most memorable experiences
+- `u89` user: I'll probably
+- `u90` user: playing with lions and tigers
+- `u91` user: wrestling a baby elephant in a in a mud puddle
+- `u92` user: I just enjoy myself
+- `u93` user: awesome
+- `u94` user: not
+- `u95` user: I don't have much family as it is
+- `u96` user: at least here in the states I don't know miles from Central America so but I'm not close to I have
+- `u97` user: three brothers one sister
+- `u98` user: and I'm probably not really really close to none of my siblings I speak with one brother
+- `u99` user: quite a bit my other youngest brother and I just rather not know you're not this guy try to keep it on a professional basis my sister I don't talk to her at all my other brother underneath me I haven't spoken to him in years. I'm just close my mom my knees some of my nephews and that's about it
+- `u100` user: okay can you have done anything to avoid it
+- `u101` user: have I done anything to avoid it
+- `u102` user: to avoid them
+- `u103` user: yeah I just don't talk to my don't call my phone ask about on my you know I talked to my mom quite a bit my brother quite a bit but I just don't bring up those subjects or if they are brought up I just know that's on them and I really don't want to do it himself
+- `u104` user: how easy is it for you to get a good night sleep
+- `u105` user: it's been hard lately it's been probably hard for the last
+- `u106` user: going on a year
+- `u107` user: you know I I I
+- `u108` user: depends on my thought process at time I liked it I've been looking for work quite a bit so I was just wondering why you know I don't get called I I just have I have racing thoughts
+- `u109` user: so
+- `u110` user: or I get depressed you know cuz I are worried about things that you know that really I have no control over so you know
+- `u111` user: lately I just been sleeping too much for me because I was so used to just sleeping 4 to 5 hours a night too and now it's changed about 8 to 9 hours and I'm still tired
+- `u112` user: do you feel that way often lately I have them for about the last few months
+- `u113` user: what are you like when you don't sleep well tired
+- `u114` user: you know I don't sleep well you know that I just do all back on the same things that have been bothering me so you know I'm more of a guy and I love the work
+- `u115` user: and if I'm not then I just looked too much time for me to spend in my own head and so
+- `u116` user: you know
+- `u117` user: either I'll even if I'm busy I'm doing what I need to do know and whatever job I do like, you know get into it I enjoy it something new for me and
+- `u118` user: so I can think about you know either work or I can go home and then think about this you know I don't have to worry about no money
+- `u119` user: your bill is getting paid and I can just concentrate on other things either you know doing the things I like or maybe spending a little more time with my girlfriend or you know so
+- `u120` user: how do you cook with them
+- `u121` user: how do I cover them
+- `u122` user: I just
+- `u123` user: try not to think about it as it's not about what are coping with it or not I just do is
+- `u124` user: I'm a horrible guy that just
+- `u125` user: you know I may take me a moment to
+- `u126` user: to all
+- `u127` user: Salem cooking something but you know how it is if I have no control over it there's nothing that I can really do about it. One thing I can do is continue to do what I'm doing and that's actively looking for work. Going out on interviews talking with others about work so I can just come out and I'll get back to
+- `u128` user: back to basics you know I just don't like the loss of balme does bother me but I try not to
+- `u129` user: to let it continue bother me
+- `u130` user: yes
+- `u131` user: that got me a
+- `u132` user: if what has got me in trouble
+- `u133` user: my mood choice I mean
+- `u134` user: yeah money I mean my past I got a past history so which kind of tends to
+- `u135` user: ibobber my my hiring process I don't know them when I get hired so I got to do it a different different type of employers who are felony friendly and stuff like that and I tried you know I was out taking classes on now
+- `u136` user: oh not how to interview how to how to answer some of the questions which you know come up quite a bit and
+- `u137` user: I got to reflect back on that but I just I got to keep putting in my head if that's not who who I want to be anymore so or you know I've done
+- `u138` user: I've done now
+- `u139` user: I've done my time so to say but I took the time you know the last time I just took a lot of time in and try to work on
+- `u140` user: the issues that were bothering me LOL
+- `u141` user: positive stuff I got my GED two different things to a lot of classes thought about going to school and going to school and
+- `u142` user: anything that would cause I change my old ways and and and try to move on to more productive activities
+- `u143` user: that's good
+- `u144` user: are you still in here
+- `u145` user: that
+- `u146` user: people have been deceitful
+- `u147` user: can you repeat that one more time
+- `u148` user: have you been diagnosed with depression been diagnosed with bipolar
+- `u149` user: how hard is that
+- `u150` user: stopping me don't you know
+- `u151` user: I don't medicate so I mean I have been on medication before in the past but
+- `u152` user: I guess I try to live on while I try to live life on life's terms and I just you know I know the medical establishment always want to label something in and what I don't like about it is that they just experiment with pills and I've been on probably every magical feel that there is for that and
+- `u153` user: you know how long I've been too strong or something that's coming up and so I just try to cope with things
+- `u154` user: which is my life skills you know I I don't I don't want to be using probably I know certain drugs work for like 3 to 4 months 6 months and they go load it while I'm going to try on this phone or I'm going to try on that and it's just an ongoing process tonight probably for about the last two years ask about three years I can kind of just said you know what that's it
+- `u155` user: and I
+- `u156` user: what are the difference in whether or if I would be on meds for it I don't think so you know it's just still the same stuff I still get the same problem can I still get the same anxiety that's if I if I was on medication for it or not so I just
+- `u157` user: and I'll deal with it you know sometimes it's not good and I get irritated at people a lot I don't like people I don't like crowds I don't like I'm not just people and empty quiet so
+- `u158` user: but I got a pretty nice not that I personality but I think people can see me and just say I don't mess with this guy or you know
+- `u159` user: but she'll you know I like I all right public transportation quite a bit and
+- `u160` user: now you just get a lot of loud I'm not just people on there sometimes I got to get off the bus that's how I deal with people because I just know there's consequences if I didn't deal with it that way. Go I'd rather take the time on get off the bus wait for the next bus and hopefully it's not that bad
+- `u161` user: I understand
+- `u162` user: did you think you have a phone before you come back
+- `u163` user: did I have problem before I get out
+- `u164` user: well I don't know if I knew that I had a problem before I found out the thing is that I know other people
+- `u165` user: I have a lot of the same town so I know a lot in my younger days people would tell me you know when I told him that I was diagnosed with bipolar that
+- `u166` user: a lot of remorse for like all that's what you know that's what was wrong with you know we wish you that you would have found that out years ago
+- `u167` user: and like I said I don't think the meds really work but what I do I think time, I just getting older kind of makes it work
+- `u168` user: median with lights
+- `u169` user: how do you say therapist affected you
+- `u170` user: how do I talk to a therapist probably on a weekly basis for a while recently
+- `u171` user: and I don't want to get out my anger my thoughts
+- `u172` user: a lot of people other people may not understand
+- `u173` user: a therapist is
+- `u174` user: I think the biggest thing is that I can just get it all out whatever is problem it would be
+- `u175` user: people in Ohio
+- `u176` user: other issues you don't work or whatever the case maybe is that I just think talking about it and they're such good listener thinking, like
+- `u177` user: now that they give me the same advice I give myself or whatever that I would give to others but it's always helpful to hear from somebody else somebody who suppose we have to go to school for
+- `u178` user: I don't go anymore so I kind of miss it you know like I said
+- `u179` user: Miss Mulatto
+- `u180` user: I just one of those things you know I just deal with it you know according to let you know if I ever get a chance to go to therapy again. Charlottsville all monetary reasons and
+- `u181` user: and all I don't have health insurance and there's a lot of things that you know I like to do but I can't
+- `u182` user: the money situation is not that great right now so
+- `u183` user: I'm sorry
+- `u184` user: how does my friends describe me
+- `u185` user: they would probably describe me as a
+- `u186` user: energetic outgoing person once I get to know people
+- `u187` user: laugh I know Apple I laugh a lot
+- `u188` user: but
+- `u189` user: it would probably tell you that I'm also very serious and and
+- `u190` user: hidden person I don't reveal a lot
+- `u191` user: positive influence in your life
+- `u192` user: Domino's menu
+- `u193` user: I'll probably my boss one of my bosses when I first trailer with a
+- `u194` user: what exotic animals he was real and he was
+- `u195` user: German and
+- `u196` user: Bennigan's
+- `u197` user: he don't know what he saw in me but
+- `u198` user: he talked a lot about working with exotic animals and
+- `u199` user: show a lot of confidence in man with your engine and also build confidence in myself and
+- `u200` user: sort of let me know that you know this is nothing that I really can accomplish if I put my mind to it
+- `u201` user: okay I think I've asked everything I need to thanks for sharing your thoughts with me goodbye
+- `u202` user: she said good-bye and then
+- `u203` user: we just have a quick postcode for you

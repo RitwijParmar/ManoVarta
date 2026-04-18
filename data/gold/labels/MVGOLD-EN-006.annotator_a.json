@@ -1,0 +1,160 @@
+{
+  "session_id": "MVGOLD-EN-006",
+  "language": "en",
+  "annotator_id": "R-A1",
+  "annotation_stage": "annotator_a",
+  "recall_window_days": 14,
+  "is_placeholder": false,
+  "annotation_provenance": "human_dual_annotation",
+  "items": [
+    {
+      "item_id": "phq_q1_anhedonia",
+      "value": 1,
+      "confidence": "medium",
+      "evidence_quote": "I'm very much a loner these day",
+      "turn_id": "u74",
+      "speaker": "user",
+      "notes": "User identifies as a loner with no close friends — possible withdrawal."
+    },
+    {
+      "item_id": "phq_q2_low_mood",
+      "value": 1,
+      "confidence": "low",
+      "evidence_quote": "I don't know that would call it down but I'm not necessarily what you would called",
+      "turn_id": "u47",
+      "speaker": "user",
+      "notes": "Ambiguous self-report — not clearly up or clearly down."
+    },
+    {
+      "item_id": "phq_q3_sleep",
+      "value": 0,
+      "confidence": "high",
+      "evidence_quote": "very I'm a heavy sleeper",
+      "turn_id": "u46",
+      "speaker": "user",
+      "notes": "Reports being a heavy sleeper — no problems."
+    },
+    {
+      "item_id": "phq_q4_fatigue",
+      "value": 0,
+      "confidence": "low",
+      "evidence_quote": "Not discussed.",
+      "turn_id": "u1",
+      "speaker": "user",
+      "notes": "No fatigue."
+    },
+    {
+      "item_id": "phq_q5_appetite",
+      "value": 0,
+      "confidence": "low",
+      "evidence_quote": "Not discussed.",
+      "turn_id": "u1",
+      "speaker": "user",
+      "notes": "No appetite issues."
+    },
+    {
+      "item_id": "phq_q6_worthlessness",
+      "value": 0,
+      "confidence": "low",
+      "evidence_quote": "things I regret year",
+      "turn_id": "u66",
+      "speaker": "user",
+      "notes": "Hints of regret but no explicit worthlessness."
+    },
+    {
+      "item_id": "phq_q7_concentration",
+      "value": 0,
+      "confidence": "low",
+      "evidence_quote": "Not discussed.",
+      "turn_id": "u1",
+      "speaker": "user",
+      "notes": "No concentration issues, though he dropped out of college."
+    },
+    {
+      "item_id": "phq_q8_psychomotor",
+      "value": 1,
+      "confidence": "medium",
+      "evidence_quote": "punching a wall or punching something nearby",
+      "turn_id": "u19",
+      "speaker": "user",
+      "notes": "Admits to punching walls when angry — psychomotor agitation."
+    },
+    {
+      "item_id": "phq_q9_self_harm",
+      "value": 0,
+      "confidence": "high",
+      "evidence_quote": "Not discussed.",
+      "turn_id": "u1",
+      "speaker": "user",
+      "notes": "No self-harm."
+    },
+    {
+      "item_id": "gad_q1_nervous",
+      "value": 0,
+      "confidence": "low",
+      "evidence_quote": "Not discussed.",
+      "turn_id": "u1",
+      "speaker": "user",
+      "notes": "No nervousness described."
+    },
+    {
+      "item_id": "gad_q2_control_worry",
+      "value": 0,
+      "confidence": "low",
+      "evidence_quote": "Not discussed.",
+      "turn_id": "u1",
+      "speaker": "user",
+      "notes": "No uncontrollable worry."
+    },
+    {
+      "item_id": "gad_q3_excessive_worry",
+      "value": 0,
+      "confidence": "low",
+      "evidence_quote": "Not discussed.",
+      "turn_id": "u1",
+      "speaker": "user",
+      "notes": "No excessive worry."
+    },
+    {
+      "item_id": "gad_q4_trouble_relaxing",
+      "value": 0,
+      "confidence": "low",
+      "evidence_quote": "like to be alone sometimes",
+      "turn_id": "u39",
+      "speaker": "user",
+      "notes": "Prefers alone time but doesn't describe inability to relax."
+    },
+    {
+      "item_id": "gad_q5_restlessness",
+      "value": 0,
+      "confidence": "low",
+      "evidence_quote": "Not discussed.",
+      "turn_id": "u1",
+      "speaker": "user",
+      "notes": "No restlessness beyond anger episodes."
+    },
+    {
+      "item_id": "gad_q6_irritability",
+      "value": 1,
+      "confidence": "high",
+      "evidence_quote": "lashing out at other people physically I don't do that but in order to let off some aggression",
+      "turn_id": "u18",
+      "speaker": "user",
+      "notes": "Admits to physical aggression against objects (walls). Irritability/anger evident."
+    },
+    {
+      "item_id": "gad_q7_afraid",
+      "value": 0,
+      "confidence": "low",
+      "evidence_quote": "Not discussed.",
+      "turn_id": "u1",
+      "speaker": "user",
+      "notes": "No fear."
+    }
+  ],
+  "safety": {
+    "level": "none",
+    "evidence_quote": "No safety concerns identified in this transcript.",
+    "notes": "Reviewed full transcript. No self-harm or safety-relevant language."
+  }
+}

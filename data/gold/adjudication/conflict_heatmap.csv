@@ -1,0 +1,17 @@
+item_id,abs_diff_0,abs_diff_1,abs_diff_2,abs_diff_3
+gad_q1_nervous,60,0,0,0
+gad_q2_control_worry,59,1,0,0
+gad_q3_excessive_worry,56,4,0,0
+gad_q4_trouble_relaxing,60,0,0,0
+gad_q5_restlessness,60,0,0,0
+gad_q6_irritability,48,12,0,0
+gad_q7_afraid,60,0,0,0
+phq_q1_anhedonia,57,3,0,0
+phq_q2_low_mood,46,10,4,0
+phq_q3_sleep,54,3,2,1
+phq_q4_fatigue,60,0,0,0
+phq_q5_appetite,59,1,0,0
+phq_q6_worthlessness,43,10,4,3
+phq_q7_concentration,51,8,1,0
+phq_q8_psychomotor,57,3,0,0
+phq_q9_self_harm,60,0,0,0

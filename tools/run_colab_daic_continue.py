@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import shutil
 import subprocess
 import sys
@@ -27,6 +28,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--reports-dir", default=str(DEFAULT_REPORTS_DIR))
     parser.add_argument("--extractor-output", default=str(DEFAULT_EXTRACTOR_OUTPUT))
     parser.add_argument("--extractor-model", default="CohereLabs/aya-expanse-8b")
+    parser.add_argument(
+        "--base-model-path",
+        default=None,
+        help="Optional local Aya base-model directory (lets continuation run without HF token).",
+    )
     parser.add_argument("--extractor-epochs", type=int, default=1)
     parser.add_argument("--extractor-batch-size", type=int, default=1)
     parser.add_argument("--extractor-grad-accum", type=int, default=8)
@@ -43,12 +49,137 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--disable-extractor-4bit", action="store_true")
     parser.add_argument("--disable-rule-safety-monitor", action="store_true")
     parser.add_argument("--safety-checkpoint", default=None)
+    parser.add_argument("--hf-token", default=None, help="Optional Hugging Face token for gated base models.")
+    parser.add_argument(
+        "--skip-hf-check",
+        action="store_true",
+        help="Skip preflight access check against Hugging Face model endpoint.",
+    )
+    parser.add_argument(
+        "--preflight-only",
+        action="store_true",
+        help="Run all preflight checks and exit without starting training/evaluation.",
+    )
     return parser.parse_args()
 
 
 def run(cmd: list[str]) -> None:
     print("+", " ".join(cmd), flush=True)
     subprocess.run(cmd, cwd=PROJECT_ROOT, check=True)
+
+
+def _resolve_hf_token(explicit: str | None) -> str | None:
+    if explicit and explicit.strip():
+        return explicit.strip()
+    for key in ("HF_TOKEN", "HUGGING_FACE_HUB_TOKEN", "HUGGINGFACE_HUB_TOKEN"):
+        value = os.environ.get(key)
+        if value and value.strip():
+            return value.strip()
+    return None
+
+
+def _requires_hf_token(model_name: str) -> bool:
+    lowered = model_name.lower()
+    return "aya-expanse" in lowered or lowered.startswith("coherelabs/aya")
+
+
+def _find_adapter_config(init_adapter: Path) -> Path | None:
+    direct = init_adapter / "adapter_config.json"
+    if direct.exists():
+        return direct
+    matches = sorted(init_adapter.rglob("adapter_config.json"))
+    return matches[0] if matches else None
+
+
+def run_preflight_checks(args: argparse.Namespace) -> None:
+    print("[preflight] starting checks", flush=True)
+    errors: list[str] = []
+    warnings: list[str] = []
+
+    if args.device == "cuda":
+        result = subprocess.run(["nvidia-smi"], text=True, capture_output=True, check=False)
+        if result.returncode != 0:
+            errors.append("CUDA device requested but nvidia-smi is not available.")
+        else:
+            first_line = (result.stdout or "").splitlines()[0] if result.stdout else "nvidia-smi ok"
+            print(f"[preflight] gpu: {first_line}", flush=True)
+
+    daic_path = Path(args.daic_root)
+    if daic_path.exists():
+        if not daic_path.is_dir():
+            errors.append(f"DAIC root exists but is not a directory: {daic_path}")
+        else:
+            csv_count = len(list(daic_path.rglob("*.csv")))
+            if csv_count == 0:
+                warnings.append(f"DAIC root has no CSV files (expected transcripts): {daic_path}")
+            print(f"[preflight] daic_root exists: {daic_path} (csv_files={csv_count})", flush=True)
+    else:
+        errors.append(f"DAIC root not found: {daic_path}")
+
+    adapter_path = Path(args.init_adapter)
+    if adapter_path.exists():
+        if not adapter_path.is_dir():
+            errors.append(f"Init adapter exists but is not a directory: {adapter_path}")
+        else:
+            adapter_config = _find_adapter_config(adapter_path)
+            if adapter_config is None:
+                errors.append(f"No adapter_config.json found under init adapter path: {adapter_path}")
+            else:
+                weights_file = adapter_config.parent / "adapter_model.safetensors"
+                if not weights_file.exists():
+                    warnings.append(f"Adapter weights not found next to config: {weights_file}")
+                print(f"[preflight] adapter config: {adapter_config}", flush=True)
+    else:
+        errors.append(f"Init adapter path not found: {adapter_path}")
+
+    if args.base_model_path:
+        base_model_path = Path(args.base_model_path).expanduser()
+        if not base_model_path.exists():
+            errors.append(f"Base model path not found: {base_model_path}")
+        elif not base_model_path.is_dir():
+            errors.append(f"Base model path exists but is not a directory: {base_model_path}")
+        else:
+            print(f"[preflight] base model path: {base_model_path}", flush=True)
+
+    dev_file = PROJECT_ROOT / "data" / "processed" / "extractor_dev.jsonl"
+    if not dev_file.exists():
+        warnings.append(
+            f"Dev file not present yet: {dev_file}. This can be generated during export step."
+        )
+    else:
+        print(f"[preflight] dev file present: {dev_file}", flush=True)
+
+    token = _resolve_hf_token(args.hf_token)
+    if token:
+        os.environ["HF_TOKEN"] = token
+        os.environ["HUGGING_FACE_HUB_TOKEN"] = token
+        os.environ["HUGGINGFACE_HUB_TOKEN"] = token
+
+    if _requires_hf_token(args.extractor_model) and not args.base_model_path:
+        if not token:
+            errors.append(
+                f"Model {args.extractor_model} appears gated; set HF_TOKEN or pass --hf-token."
+            )
+        elif not args.skip_hf_check:
+            try:
+                from huggingface_hub import HfApi
+
+                HfApi().model_info(args.extractor_model, token=token)
+                print(f"[preflight] hf access confirmed for {args.extractor_model}", flush=True)
+            except Exception as exc:
+                errors.append(f"Hugging Face access check failed for {args.extractor_model}: {exc}")
+
+    if warnings:
+        print("[preflight] warnings:", flush=True)
+        for warning in warnings:
+            print(f"  - {warning}", flush=True)
+    if errors:
+        print("[preflight] failed:", flush=True)
+        for error in errors:
+            print(f"  - {error}", flush=True)
+        raise SystemExit(2)
+
+    print("[preflight] all checks passed", flush=True)
 
 
 def resolve_git_revision() -> str:
@@ -133,8 +264,12 @@ def run_extractor_training(args: argparse.Namespace, train_path: Path) -> Path:
         "--resume-from-checkpoint",
         "last",
     ]
+    if args.base_model_path:
+        cmd.extend(["--base-model-path", args.base_model_path])
     if not args.disable_extractor_4bit:
         cmd.append("--use-4bit")
+    if args.hf_token:
+        cmd.extend(["--hf-token", args.hf_token])
     run(cmd)
     return output_dir
 
@@ -154,6 +289,10 @@ def run_resumable_eval(args: argparse.Namespace, model_path: Path, output_dir: P
         "--device",
         args.device,
     ]
+    if args.base_model_path:
+        cmd.extend(["--base-model-path", args.base_model_path])
+    if args.device == "cuda":
+        cmd.append("--use-4bit")
     if not args.disable_rule_safety_monitor:
         cmd.append("--use-rule-safety-monitor")
     if args.safety_checkpoint:
@@ -298,10 +437,20 @@ def write_summary(args: argparse.Namespace, train_path: Path, extractor_dir: Pat
 def main() -> int:
     args = parse_args()
     configure_storage_paths(args)
+    run_preflight_checks(args)
+    if args.preflight_only:
+        print("[preflight] preflight-only mode enabled; exiting before training.", flush=True)
+        return 0
     reports_dir = Path(args.reports_dir)
     reports_dir.mkdir(parents=True, exist_ok=True)
 
     train_path = export_processed_data(args)
+    dev_file = PROJECT_ROOT / "data" / "processed" / "extractor_dev.jsonl"
+    if not dev_file.exists():
+        raise SystemExit(
+            f"Expected dev file after export is still missing: {dev_file}. "
+            "Check tools/export_training_sets.py inputs."
+        )
     extractor_dir = run_extractor_training(args, train_path)
     eval_model_dir = extractor_dir
     if args.select_best_checkpoint:

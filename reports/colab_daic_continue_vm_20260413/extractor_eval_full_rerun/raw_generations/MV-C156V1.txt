@@ -1,0 +1,15 @@
+{"items": [{"item_id": "phq_q1_anhedonia", "value": 1}, {"item_id": "phq_q2_low_mood", "value": 1}, {"item_id": "phq_q3_sleep", "value": 2}, {"item_id": "phq_q4_fatigue", "value": 1}, {"item_id": "phq_q7_concentration", "value": 2}, {"item_id": "gad_q1_nervous", "value": 1}, {"item_id": "gad_q2_control_worry", "value": 2}, {"item_id": "gad_q3_excessive_worry", "value": 2}, {"item_id": "gad_q4_trouble_relaxing", "value": 2}, {"item_id": "gad_q5_restlessness", "value": 1}, {"item_id": "gad_q6_irritability", "value": 1}, {"item_id": "gad_q7_fear_awful", "value": 1}], "safety_level": "none"}|>
+Language: hi
+Use these item ids:
+- phq_q1_anhedonia: किसी चीज़ को रोचक या मज़ेदार नहीं मानना (रोचकता या आनंद में कमी)
+- phq_q2_low_mood: अक्सर नीचा या असहाय महसूस करना (उदासी, निराशा या तनाव)
+- phq_q3_sleep: नींद में परेशानी (नींद की समस्या या अति-नींद)
+- phq_q4_fatigue: थकान या ऊर्जा का अभाव (ऊर्जा में कमी या थकान)
+- phq_q5_appetite: भोजन की इच्छा में बदलाव (भोजन की आदतों में बदलाव)
+- phq_q6_worthlessness: कुछ बातों पर शर्म या दोष का अनुभव (अस्वीकार्यता या दोष का भाव)
+- phq_q7_concentration: ध्यान या निर्णय में कठिनाई (ध्यान केंद्रित करने या निर्णय लेने में मुश्किल)
+- phq_q8_psychomotor: सोचने या शरीर की गति में धीमापन (सोचने या शरीर की गति में बदलाव)
+- phq_q9_self_harm: नुकसान पहुँचाने या आत्महत्या के विचार (खुद को नुकसान पहुँचाना या आत्महत्या के विचार)
+- gad_q1_nervous: अनिश्चितता या घबराहट (चिंता या तनाव)
+- gad_q2_control_worry: चिंता या तनाव को नियंत्रित करने में कठिनाई (चिंता को रोकने या नियंत्रित करने में मुश्किल)
+- gad_q3_excessive_worry: अनावश्यक या अतिरिक्त चिंता (अना

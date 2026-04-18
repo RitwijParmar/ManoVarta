@@ -4,6 +4,12 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     PIP_NO_CACHE_DIR=1 \
     PORT=8000 \
+    MANOVARTA_MODEL_PROVIDER=local \
+    MANOVARTA_CHAT_MODEL=/models/qwen2.5-0.5b-instruct \
+    MANOVARTA_EXTRACTION_MODEL=/models/qwen2.5-0.5b-instruct \
+    MANOVARTA_LIVE_CHAT_LLM_ANALYSIS=true \
+    MANOVARTA_LIVE_LLM_TURN_THRESHOLD=1 \
+    MANOVARTA_LOCAL_SAFETY_CHECKPOINT=/app/outputs/local_safety_boost/safety-indicbert-best-infer-fp16 \
     MANOVARTA_SELF_HOSTED_MODEL_DIR=/models/qwen2.5-0.5b-instruct \
     HF_HUB_DISABLE_TELEMETRY=1
 
@@ -15,6 +21,7 @@ COPY manovarta_admin ./manovarta_admin
 COPY screening ./screening
 COPY training ./training
 COPY data ./data
+COPY outputs/local_safety_boost ./outputs/local_safety_boost
 
 RUN pip install --upgrade pip \
     && pip install --index-url https://download.pytorch.org/whl/cpu "torch>=2.2" \

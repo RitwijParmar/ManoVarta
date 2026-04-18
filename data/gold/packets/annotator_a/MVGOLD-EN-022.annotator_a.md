@@ -1,0 +1,176 @@
+# MVGOLD-EN-022 annotator_a packet
+
+- Language: `en`
+- Cohort: `expansion`
+- Target primary domain: `anxiety_control`
+- Target risk band: `none`
+- Target output file: `data/gold/labels/MVGOLD-EN-022.annotator_a.json`
+
+## Metadata
+
+- Participant ID: `337`
+- Age years: ``
+- Age band: `adult_unknown_from_source`
+- Occupation: `unknown_from_source`
+- Living situation: `unknown_from_source`
+- Support system: `unknown_from_source`
+- Consent recorded: `public_dataset_license`
+- Collection source: `e_daic_public_2019`
+
+## Instructions
+
+Label independently using the transcript, metadata, and annotation guidelines. Do not inspect annotator B.
+
+## Transcript
+
+- `u1` user: virtuous
+- `u2` user: are you okay
+- `u3` user: yeah
+- `u4` user: I'm doing okay how are you doing
+- `u5` user: I'm originally from like a suburb of LA from the San Gabriel Valley
+- `u6` user: I like the diversity I like the vibe of the city I've lived other places and just not
+- `u7` user: as happy here I feel like I can really Thrive here so I just like la like all the things that are so close together and there's a lot of interesting things are totally different parts of the city 2 miles away from each other
+- `u8` user: don't like the traffic. Like all the cars but I can live with it I mean there's not that much I don't like
+- `u9` user: aesthetic music vocal performance the study music technology things like that
+- `u10` user: yes
+- `u11` user: right now I sing an opera company but my I do have a day job because it doesn't pay that much unless you're actually working for the LA Opera so I do have a day job and work at a call center that caters mostly to performers and actors and things like that and it's really good because if I get a call I can call in and change my shift very easily actually pretty good gig
+- `u12` user: they do some technology gigs sometimes yes you do some recording some live sound stuff but I'm kind of want to get away from that do some video work sometimes but again I want to get away from that don't go back to the because I find that performing more is more interesting I like being Talent where they like being crew
+- `u13` user: so I kind of want to get away from that side and start working more toward actually doing what I want to do with my life
+- `u14` user: okay
+- `u15` user: you consider yourself
+- `u16` user: sometimes mean repair my personal life yeah they do have a shell that I put out there to deal with people but if I'm at home rather just keep to myself or my husband or my cats or whatever talk to family don't really have too many close friends but yeah you know
+- `u17` user: I rather keep to myself
+- `u18` user: a moderately close to the family that I have laughed have actually lost a lot of family in the last 10 years or so but like thank you but like my gym clothes to my husband and and
+- `u19` user: I've got a couple of cousin I talk to you and my aunt that I have an aunt that I talk to you a bit but it's not like we're interacting everyday close together
+- `u20` user: but it's somewhat close
+- `u21` user: mostly I saying or I read or write or
+- `u22` user: hang out and try to clear my mind of all thoughts sometimes it doesn't work but they try to do that and try to
+- `u23` user: clear everything and see what starts coming back in and
+- `u24` user: sometimes a heart sometimes that doesn't but mostly creating things contacting my family through Facebook or whatever works but
+- `u25` user: most of my free time I create things
+- `u26` user: I like to travel more I travel by car a lot new my idea of
+- `u27` user: like having a birthday celebration would be to go on a road trip and I like to travel more
+- `u28` user: I'd like to travel for work things or whatever but I don't get as much an opportunity as I would like to travel
+- `u29` user: sea of particulate driving my car seem like the landscape change seeing people change seeing you feeling the vibrations of the area change like just seeing what's out there and I know that there's a bigger World outside of
+- `u30` user: where I am and where I live in my world and like to see that
+- `u31` user: but I like to leave that to go back to my world
+- `u32` user: a trip I'd like to take us to make the drive from here to Nevada weather I go all the way to Vegas or just go to Stateline
+- `u33` user: my cousin and I would take what we call exit one trip because once you get to the first exit of a highway you're either in another state or you're at the end of the highway so would take those we just sort of impromptu would like a day or two notice just move things around just take off so those are actually trips that I like make could take off and then just come back sometimes the same day sometimes overnight just small short trips that aren't very involved but you just get to go and you see things and see how the desert landscape looks in different seasons how people react in different times of the year in different areas
+- `u34` user: too close to home but not
+- `u35` user: but not close to home close to home but it was still a world away so that cuz I don't really have time to take like a two-week vacation or whatever little things that kind of put things back in perspective and clear my head think like that mean cuz there's sort of a sense of meditation and then that you get on a highway that you can get driving the freeway so I like doing that
+- `u36` user: the last time that happened was May of last year so I might be able to do that we actually my aunt came over with my cousin who is 10 years younger than I am and we kind of grew up like sisters and I was about to move away from the Inland Empire which is where they live so kind of took me on a last hurrah when we drove up to Vegas and looked around and came back cuz I actually lived in Vegas for a while but I don't like it so it's kind of a social to some of the locals sites around there and we came back and was an overnight trip but we are driving the entire time
+- `u37` user: it's kind of interesting
+- `u38` user: things are just inherently unfair when people are mean to the elderly or two children or the animals people who can't fight back and I mean to them just because they can't fight back
+- `u39` user: and
+- `u40` user: actually
+- `u41` user: like to see people who are
+- `u42` user: as strong as the people who are being mean standing up and being an advocate or what have you
+- `u43` user: so I think that's one thing this makes me really mad just being cruel or mean for no reason and I'm not good for people who can't fight back a few people who've done nothing to deserve it
+- `u44` user: that kind of really just makes me mad
+- `u45` user: okay
+- `u46` user: but I'm annoyed I'll try to just walk away from the situation and if the situations to start following me then I'll wind up lashing out somehow either
+- `u47` user: are verbally just
+- `u48` user: cutting them with a quipper you know really just I really will yell at somebody
+- `u49` user: but I'll try to if I try to walk away and diffuse it if that doesn't work they don't let them know that they're annoying me and get away from me
+- `u50` user: not like legal trouble or anything because usually I'll find a way to get them to leave me alone
+- `u51` user: there's not really like big trouble but cuz it cuz it's it is off-putting and it's not an expected reaction and that's actually kind of cultivated in me that it's not the expected reactions I know that will work and get people away from me so it's not really in trouble and if it's is trouble issues of trouble that is from mad that other person's perspective and doesn't affect me at all because do the situation I can get out of
+- `u52` user: so as long as they leave me alone and walk away from it
+- `u53` user: the last time I argued with somebody
+- `u54` user: Hurt Like a Prayer like a family member or an outsider or somebody not
+- `u55` user: the last thing I could think of was
+- `u56` user: a argued with my husband about the care of my mother-in-law cuz she's got dementia and so we were the reason we came out here from the Inland Empire with take care of her she won't go anywhere but LA and she is like hardcore Angelino like we know we are that wear that in our nature but we also know it's cheaper to live elsewhere but so we came out here to take care of her
+- `u57` user: and he wants her to be able to stay in her in her apartment and I want her to move in with us because it would be cheaper and faster and easier and safer for her if she lived with us but she wants to stay where she is cuz she can't see that there's inherent danger now because of the disease process but he wants her to stay where she he wants her to be able to have what you want cuz he's a mama's boy like I am I'm a mama's girl you know I lost my mom like four years ago I'm still a mama's girl and I'll standing still and I know that it brings you a sense of satisfaction to carry out their wishes because you care about them so much that's what they wants you want to get it for him and because you don't they you know that happened when you were going up with me try to give you what you want because you wanted it and you want to do that for them now they started giving back to them somebody that you care about me you feel deserves it
+- `u58` user: but it's kind of dangerous for you know I don't want this thing to happen to her yet I want her to remain who she is for as long as you can so I know it seems that she has is going to erase who she is eventually and eventually she will have to be put in a place where they can give a 24-hour medically trained care but until then we can we can handle it you know amongst ourselves it's not that bad but it's getting where she really should has no business living by herself anymore so the solution right now is he stays there most of time with her and I go back to our house and it gets stressful and it gets annoying because it's I do I handle the outside things are run the errand to take her to the store things like that he does the day-to-day things make sure she has she eats make sure she has clean clothes things like that
+- `u59` user: so me it's a partnership it to its
+- `u60` user: a dual effort is very much to do effort but I would like her to move in with us so that was that's like
+- `u61` user: a source of not really like yelling screaming argument but Lively discussion and debate
+- `u62` user: not insurmountable mean life's not going to be easy ever and if it is at when you should worry because that's when somebody can pull the rug out from under you so as long as you're on top of things in your present your life is not going to be easy you deal with it and move on
+- `u63` user: the most positive influence to think I've been probably my mother and my grandmother cuz my mom was pretty much a single mom and my grandmother helped raise me and they actually
+- `u64` user: gave me a lot of confidence and but we're realistic about it
+- `u65` user: I mean I think I have sort of a
+- `u66` user: realistic serve a downer temperament to myself that they that they helped me see that it's just in me and it's not something I can't get over and that you know life's going to go on and my mom would say to me when you're forty or fourty whether you working at McDonald's or doing what you want with your life I think that was a big influence and how it with I was like my life since she has passed
+- `u67` user: I regret not taking care of myself in the last year my mother's life because I think I may have clouded some of my decisions know it do have underlying conditions everyone in my family is diabetic I didn't take care of that when she was the last year for life because I was too busy wanting to get her home my focus was to get her home so I didn't eat ride I didn't take my insulin right on my wanted making myself insulin resistant that that you're just because my blood sugar was so high for a like a year eating just horrible Foods when I did eat so it really took it really actually made myself very sick and I'm wondering well if I didn't if I would have taken care of myself and I had my head on completely straighten my my vision in my thoughts weren't complete run clouded
+- `u68` user: what I made some better decisions on her behalf especially when she needed them when she needed me to be to step in and make this is for because she wound up having a health catastrophe she had kidney we said can you damage I want to be kidney failure and her health insurance provider miss that so she wanted having sort of this hole
+- `u69` user: catastrophe where everything at once just started breaking down she wanted having a stroke at like 51 small stroke and it just kind of went down from there something while if I didn't if I had taken care of better care of myself but I've been able to take better care of her
+- `u70` user: I know there wasn't anything I would have been able to do to prevent her death what I say if I what I've been able to make it easier on her
+- `u71` user: if I would have taken care of myself that's like one huge regret that I have
+- `u72` user: oh I know I am but it's my desire to take responsibility for everyone and everything that I care about taking responsibility for my own life and me and mine and I know other people I can't really direct them into my own Vision because they're their own
+- `u73` user: individual beings
+- `u74` user: and they can't you know be what I want them to be and I know they're not going to be
+- `u75` user: but I still have you know my ideals and I want the way I want everything to go and I want everybody that I care about to be happy and to be able to
+- `u76` user: fit into my life in a way in the best way possible but I know there are other beings and I'm not going to be able to do that for them then I can build you up for me but it still buy ideals so I have to sometimes have to look at it going well is this what I want because I want it or what is what they want and what's their is their decision or mine and she's it's theirs I know it's there so if you really care about somebody you're just going to support them and go with them but
+- `u77` user: it still
+- `u78` user: kind of hard for me and I know I got to get over it
+- `u79` user: 10 or 20 years ago
+- `u80` user: probably to have been more assertive and starting my own life because I want up taking care of my mother mean she got sick literally the weekend I graduated from college and had a job lined up and had to pull out of that because she needed me to take care of her I think would have been more aggressive about starting my own life getting a job outside the house in addition to caring for her getting my own job history of my own credit history thing like to think like that built up instead of becoming just totally her daughter for about 10 years
+- `u81` user: so I figured I probably would have done that
+- `u82` user: Potomac do that and keep who you are and learn to separate
+- `u83` user: you're who you are and what you feel you need to be doing for your family to keep a sense of yourself that's probably what I would have induced things for yourself to keep that you sent of yourself that's probably what are we giving myself 10 years ago
+- `u84` user: no
+- `u85` user: no
+- `u86` user: I know but probably cuz I haven't gone to a doctor about it cuz I don't want to know
+- `u87` user: I mean it's not I know there were times in my life where I've been severely depressed and usually circumstances and had to pull myself out of it but I'd rather pull myself out of it for resorting to treatment
+- `u88` user: after my mother had died may have been this long battle for a year that we lost and I didn't know
+- `u89` user: if I if I was to blame for that it's like logically knew I wasn't but
+- `u90` user: how can I convince myself of that
+- `u91` user: two weeks after she died I want up with
+- `u92` user: pulmonary embolisms in one in each long because I didn't take care of myself for year that they are all I'm 30 years old if you know whatever I do myself I can get over no turned out but I want up having to take more medication because of that it's been a fight to get my own house back to get to be able to get out of that depression cuz so much of my life was based on being my mother's daughter office and I didn't like
+- `u93` user: the rug was pulled out my like button fell into my world after that so that was the pretty pretty much sent me into a deep depression I'm I almost got divorced because of bad because I didn't want anything anymore so I know his ex being really distant from my husband by then at that time we were married for about two years at that point I started getting very distant from him pushing everything away.
+- `u94` user: And feel what am I going to do with the rest of my life now
+- `u95` user: and
+- `u96` user: Ben
+- `u97` user: a fight and then you be there times and no I couldn't get up
+- `u98` user: stay in bed and sleep all day but then realizing that
+- `u99` user: when my mother died I had forecast like after 2 or mine to rehearse so I went up adopting the two that were hers because they don't have a choice of whether they can go out and get their own food and get their own you want to play
+- `u100` user: I took that responsibility of doing it for them
+- `u101` user: so that was one motivating factor was that they didn't have a choice of whether or not I was going to get up and provide for them I mean I could go without eating I could go that taken care of myself but they couldn't they didn't nail so they are they actually got me up and
+- `u102` user: and they made me go out and face things even though didn't want to ditch didn't just kind of want to curl up and die but that would have been my choice not theirs and they I mean what would happen to them if I was there to take care of them they would have been sent to a shelter or whatever probably and maybe they would have not been re-adopt me home and adopted by somebody else maybe they would have been killed for for me meaning for me making a selfish decisions so it's like I need somebody to take care of to get myself a bit
+- `u103` user: nuts Acumen a motivating factor is cuz I figured out that it was just me I'd be able to live without a lot of stuff in my car if I wanted it wouldn't be big deal I wouldn't care as long as I was doing what I wanted with my life but
+- `u104` user: I have a family to look after now so I have to go out and do things and I have to go out and look for legitimate work you know dating your day job have to let you know but I'm trying to strike a balance between the two because his what I want to do with my wife but yet I have to take care of my family some homework on a balance of the two
+- `u105` user: very but it's worth it I mean
+- `u106` user: it would be very I have a lot less things to worry about if I just looked at my car and said forget it
+- `u107` user: but keeping a residence down paying bills things like that
+- `u108` user: it's difficult but you have to do it if you want you want any if you ever want anything in your life you have to go through that
+- `u109` user: I am and I know that but it gets hard sometimes you do want to give up but then it's like wall what's the alternative
+- `u110` user: I mean I don't think I can live a comfortable life
+- `u111` user: if I did I wouldn't do anything I have to be slightly uncomfortable or am I going to do anything with myself I'm just going to be content just hang out all day stay in bed hang out with Mike catherwood ever
+- `u112` user: and it wouldn't get anything done
+- `u113` user: a very anxious and nervous and mean what if
+- `u114` user: I don't find
+- `u115` user: enough you went off work to be able to pay my rent or whatever what if
+- `u116` user: yo what what if I can't
+- `u117` user: keep
+- `u118` user: a semblance of stability in my life and it's actually hard work to be stabled and I know it's hard work to be stable but
+- `u119` user: what's answers a lot of what-ifs and anything it's things that haven't happened and it's stupid and pointless to worry about things that haven't happened and I know that but it's still have it still protects that's actually
+- `u120` user: a source of
+- `u121` user: anxiety
+- `u122` user: anxiety go by getting things done figuring things out making a solid plan and going for it
+- `u123` user: but I know it is a cycle and I'll go from being really anxious and oh my God what am I going to do what am I going to do the same okay what is
+- `u124` user: the fundamental thing I need to take care of here
+- `u125` user: me when what is just extraneous and what can what is what are the actual not issues and what is the actual issue and so figure figure things out that way and then things i t shirt to go with a little bit but then something will pop up in the what if so come up again I'll have to
+- `u126` user: figure it out again but I know it's a cycle I know what seems huge on the surface when you start chipping away at it you get over it pretty quickly get through it
+- `u127` user: the last time I felt really happy
+- `u128` user: I don't know
+- `u129` user: huh could question like that actually surprisingly stumped me because I do feel happy sometimes sometimes not so much as I just cannae and the middle
+- `u130` user: really like over joyously happy I don't know
+- `u131` user: if not I can't think of when that happened
+- `u132` user: I don't know you don't know perceptions of other people mean
+- `u133` user: probably a somebody who
+- `u134` user: oddly enough somebody who is laid-back and
+- `u135` user: handle things as they come but I don't see myself as at at all
+- `u136` user: as it is
+- `u137` user: probably that I can think on my feet and I'm not afraid to
+- `u138` user: hustle my butt off and do whatever I have to do to survive and get things done
+- `u139` user: that
+- `u140` user: and I can do it creatively and I try to
+- `u141` user: strive for balance
+- `u142` user: play the best things about me
+- `u143` user: then I'm doing basically what I want with my life which even though it's not all easy it's not
+- `u144` user: I am not financially well-off or anything it's still a lot more than a lot of people can say about their lives cuz I have an aunt that I really don't talk to who and the reason why I don't talk to her because she's always miserable mean she's got a career that she
+- `u145` user: it's more of a job that she fell into cuz my older aunt loves animals but didn't want to be a veterinarian so she became a dog groomer and she was actually really good at it she had a stable business for a long time
+- `u146` user: but her know she tried to get arthritis in her hands and she had that should my cousin's father went and cut a
+- `u147` user: stole all the money for her business so she lost your business and she kind of it she retired early cuz between that and that's why does she want to retiring early she employed my younger Aunt who is still a dog groomer but she hates it and it's like change your life if you hate your life so much change it
+- `u148` user: and I think the thing I'm most proud of is
+- `u149` user: yeah I'm not as financially well-off as she is but I'm doing what I want with my life you know I can be creative I can have creative people around me people who actually like to talk to around me people actually like in my life and be happy with that and they see a lot of people who aren't and then it gives me a sense of maybe a bloated sense of Southside tracking to be able to say I'm not like that that I'm actually doing what I want even though their sacrifices I'm still fundamentally doing what I want with my life now
+- `u150` user: thank you
+- `u151` user: thank you goodbye

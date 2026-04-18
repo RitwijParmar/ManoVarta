@@ -299,10 +299,20 @@ const STARTER_LIBRARY = {
 
 const NUDGE_LIBRARY = {
   en: {
+    choice: {
+      title: "Pick the easiest anchor",
+      description: "You can answer just one of these: what happened, when it peaks, or how it changes your day.",
+      text: "The easiest part to explain is ",
+    },
     example: {
       title: "Add one recent example",
       description: "One concrete moment often gives the scorer more signal than a general statement.",
       text: "One recent moment that stands out is ",
+    },
+    scale: {
+      title: "Give a quick intensity estimate",
+      description: "If words feel hard, a quick 0 to 10 or stronger/weaker description still helps.",
+      text: "On a 0 to 10 scale, this usually feels around ",
     },
     timing: {
       title: "Add timing",
@@ -329,6 +339,26 @@ const NUDGE_LIBRARY = {
       description: "Explain whether it feels mental, physical, or both.",
       text: "The worry feels most like ",
     },
+    body: {
+      title: "Name the body signal",
+      description: "Body sensations can be easier to describe than the whole emotion.",
+      text: "In my body this mostly shows up as ",
+    },
+    compare: {
+      title: "Compare then vs now",
+      description: "A before-versus-now contrast can reveal change quickly without a long story.",
+      text: "Compared with before, the main change is ",
+    },
+    coping: {
+      title: "Say what worsens or softens it",
+      description: "What makes it spike or ease often gives cleaner signal than repeating the symptom.",
+      text: "This gets worse when ",
+    },
+    support: {
+      title: "Add one support anchor",
+      description: "One person, routine, or anchor that notices or helps is enough.",
+      text: "The one person, routine, or anchor that matters here is ",
+    },
     safety: {
       title: "Answer briefly if easier",
       description: "A short yes/no plus one line is enough when the question feels sensitive.",
@@ -336,10 +366,20 @@ const NUDGE_LIBRARY = {
     },
   },
   hi: {
+    choice: {
+      title: "सबसे आसान आधार चुनिए",
+      description: "बस एक चीज़ बताइए: क्या हुआ, कब बढ़ता है, या दिनचर्या पर क्या असर पड़ता है।",
+      text: "जिस हिस्से को समझाना सबसे आसान है, वह यह है कि ",
+    },
     example: {
       title: "एक हाल का उदाहरण दीजिए",
       description: "सिर्फ़ एक हाल की घटना बताने से भी काफ़ी संकेत मिल जाते हैं।",
       text: "एक हाल का उदाहरण जो याद आ रहा है, वह यह है कि ",
+    },
+    scale: {
+      title: "तीव्रता का छोटा अंदाज़ा दीजिए",
+      description: "अगर शब्द कम पड़ रहे हों, तो 0 से 10 का छोटा अंदाज़ा भी मदद करता है।",
+      text: "0 से 10 के पैमाने पर यह आम तौर पर ",
     },
     timing: {
       title: "कब ज़्यादा होता है, बताइए",
@@ -366,6 +406,26 @@ const NUDGE_LIBRARY = {
       description: "दिमाग की चिंता, शरीर का तनाव, या दोनों साथ में महसूस होते हैं, वह लिखिए।",
       text: "चिंता मुझे ज़्यादा इस तरह महसूस होती है कि ",
     },
+    body: {
+      title: "शरीर का संकेत बताइए",
+      description: "कई बार पूरे भाव की बजाय शरीर का संकेत बताना आसान होता है।",
+      text: "मेरे शरीर में यह ज़्यादा इस तरह महसूस होता है कि ",
+    },
+    compare: {
+      title: "पहले और अब की तुलना कीजिए",
+      description: "पहले की तुलना से बदलाव जल्दी साफ़ हो सकता है, बिना लंबा पैराग्राफ़ लिखे।",
+      text: "पहले की तुलना में सबसे बड़ा बदलाव यह है कि ",
+    },
+    coping: {
+      title: "क्या बढ़ाता या कम करता है, बताइए",
+      description: "क्या चीज़ इसे बढ़ाती है या थोड़ा कम करती है, उससे साफ़ संकेत मिलते हैं।",
+      text: "यह ज़्यादा बढ़ता है जब ",
+    },
+    support: {
+      title: "एक सहारा जोड़िए",
+      description: "बस एक व्यक्ति, आदत, या सहारा बताइए जो इस समय मायने रखता है।",
+      text: "इस समय जो एक सहारा सबसे ज़्यादा मायने रखता है, वह है ",
+    },
     safety: {
       title: "छोटा जवाब भी ठीक है",
       description: "संवेदनशील सवाल पर हाँ/नहीं और एक छोटी पंक्ति भी काफ़ी है।",
@@ -373,10 +433,20 @@ const NUDGE_LIBRARY = {
     },
   },
   hinglish: {
+    choice: {
+      title: "Sabse easy anchor choose karo",
+      description: "Bas ek cheez batao: kya hua, kab spike hota hai, ya daily life par kya effect hai.",
+      text: "Jo part explain karna sabse easy lag raha hai woh yeh hai ki ",
+    },
     example: {
       title: "One recent scene add karo",
       description: "Ek real recent scene batane se conversation zyada useful ho jati hai.",
       text: "Ek recent scene jo stick hua woh yeh tha ki ",
+    },
+    scale: {
+      title: "Quick intensity batao",
+      description: "Agar words kam pad rahe ho, to 0 se 10 ka quick estimate bhi useful hai.",
+      text: "0 se 10 scale par yeh usually around ",
     },
     timing: {
       title: "Timing batao",
@@ -402,6 +472,26 @@ const NUDGE_LIBRARY = {
       title: "Worry pattern explain karo",
       description: "Mind worry, body tension, ya dono ka mix ho to woh clear karo.",
       text: "Mujhe worry zyada is tarah feel hoti hai ki ",
+    },
+    body: {
+      title: "Body signal bolo",
+      description: "Kabhi kabhi whole emotion se easy hota hai body ke signal ko name karna.",
+      text: "Body mein yeh zyada is tarah show up karta hai ki ",
+    },
+    compare: {
+      title: "Then vs now compare karo",
+      description: "Before-versus-now contrast se change jaldi clearer ho jata hai.",
+      text: "Pehle ke comparison mein sabse bada change yeh hai ki ",
+    },
+    coping: {
+      title: "Kya worsen ya soften karta hai batao",
+      description: "Kis cheez se yeh spike hota hai ya thoda soft hota hai, woh useful signal deta hai.",
+      text: "Yeh zyada worsen hota hai jab ",
+    },
+    support: {
+      title: "One support anchor add karo",
+      description: "Bas ek person, routine, ya anchor enough hai jo iss waqt matter karta hai.",
+      text: "Jo ek support anchor abhi matter karta hai woh hai ",
     },
     safety: {
       title: "Short answer bhi enough hai",
@@ -1048,12 +1138,35 @@ function estimateNarrativeStrength(dialogue) {
   return Math.max(0.08, Math.min(score, 0.96));
 }
 
+function leadNudgeKey(dialogue) {
+  return (dialogue.recommended_nudges || [])[0] || null;
+}
+
 function buildNudgeCoach(dialogue, language = state.language) {
   const uiLanguage = resolveUiLanguage(language);
   const topic = humanizeToken(dialogue.target_topic, uiLanguage).toLowerCase();
+  const lead = leadNudgeKey(dialogue);
   if (uiLanguage === "hi") {
     if (dialogue.next_action === "risk_check") {
       return "यहाँ छोटा और सीधा जवाब सबसे उपयोगी है। अभी उद्देश्य विस्तार नहीं, स्पष्टता और सुरक्षा है।";
+    }
+    if (lead === "choice") {
+      return "यहाँ उद्देश्य लंबा जवाब नहीं, बस सबसे आसान आधार चुनना है: क्या हुआ, कब बढ़ता है, या असर क्या है।";
+    }
+    if (lead === "scale") {
+      return "अगर शब्द नहीं मिल रहे हों, तो छोटा तीव्रता-अंदाज़ा भी बातचीत को आगे बढ़ाने के लिए काफ़ी है।";
+    }
+    if (lead === "compare") {
+      return "पहले और अब का एक छोटा अंतर बताने से बदलाव जल्दी साफ़ हो सकता है।";
+    }
+    if (lead === "body") {
+      return "अगर पूरे अनुभव को बताना मुश्किल हो, तो शरीर में क्या होता है उससे शुरुआत कीजिए।";
+    }
+    if (lead === "coping") {
+      return "क्या चीज़ इसे बढ़ाती है या थोड़ा कम करती है, उससे तेज़ स्पष्टता मिलती है।";
+    }
+    if (lead === "support") {
+      return "यहाँ बस एक व्यक्ति, आदत, या सहारा बताना काफ़ी है। लंबा संदर्भ ज़रूरी नहीं है।";
     }
     if ((dialogue.disclosure?.nudge_effectiveness || 0) > 0.2) {
       return "पिछले संकेत से उपयोगी स्पष्टता मिली। अब एक उदाहरण या रोज़मर्रा पर असर जोड़ने से अगला सवाल और सटीक हो जाएगा।";
@@ -1067,6 +1180,24 @@ function buildNudgeCoach(dialogue, language = state.language) {
     if (dialogue.next_action === "risk_check") {
       return "Yahan short direct answer best hai. Abhi goal overshare karwana nahi, clarity aur safety hai.";
     }
+    if (lead === "choice") {
+      return "Yahan goal long reply nahi hai. Bas sabse easy anchor pick karo: kya hua, kab spike hota hai, ya impact kya hai.";
+    }
+    if (lead === "scale") {
+      return "Agar words nahi mil rahe, to quick intensity estimate bhi enough hai conversation ko move karne ke liye.";
+    }
+    if (lead === "compare") {
+      return "Then-versus-now ka ek short contrast change ko jaldi clearer bana deta hai.";
+    }
+    if (lead === "body") {
+      return "Agar whole feeling batana hard hai, to body signal se start kar sakte ho.";
+    }
+    if (lead === "coping") {
+      return "Kis cheez se yeh worsen ya soften hota hai, usse fast clarity milti hai.";
+    }
+    if (lead === "support") {
+      return "Yahan bas ek person, routine, ya anchor enough hai. Long context ki need nahi hai.";
+    }
     if ((dialogue.disclosure?.nudge_effectiveness || 0) > 0.2) {
       return "Last nudge se useful clarity mili. Ab ek example ya daily impact add karoge to next question aur sharp ho jayega.";
     }
@@ -1077,6 +1208,24 @@ function buildNudgeCoach(dialogue, language = state.language) {
   }
   if (dialogue.next_action === "risk_check") {
     return "A short direct answer helps most here. The goal right now is clarity and safety, not more detail for its own sake.";
+  }
+  if (lead === "choice") {
+    return "You do not need a long answer here. Pick the easiest anchor: what happened, when it peaks, or how it changes your day.";
+  }
+  if (lead === "scale") {
+    return "If words feel hard, a quick intensity estimate is enough to keep the session moving.";
+  }
+  if (lead === "compare") {
+    return "A short then-versus-now contrast can sharpen change without needing a long story.";
+  }
+  if (lead === "body") {
+    return "Body sensations can be easier to name than the whole feeling, and they still add strong signal.";
+  }
+  if (lead === "coping") {
+    return "What worsens or softens it often gives cleaner signal than repeating the symptom.";
+  }
+  if (lead === "support") {
+    return "One support anchor is enough here. This is about context, not a long backstory.";
   }
   if ((dialogue.disclosure?.nudge_effectiveness || 0) > 0.2) {
     return "The last nudge unlocked useful signal. One example or one daily-life impact can now move the conversation forward faster.";
@@ -2090,10 +2239,10 @@ function buildBonusSignals(dialogue, coverage) {
 
 function buildResponsePosture(userStyle) {
   if (userStyle.openness === "guarded") {
-    return "Low-pressure pacing";
+    return "Low-pressure choice prompts";
   }
   if (userStyle.verbosity === "brief") {
-    return "Short focused prompts";
+    return "One-anchor prompts";
   }
   if (userStyle.verbosity === "detailed") {
     return "Narrative-friendly flow";
@@ -2107,21 +2256,45 @@ function resolveUiLanguage(language) {
 
 function buildPersonalizationSummary(dialogue, language = state.language) {
   const uiLanguage = resolveUiLanguage(language);
+  const lead = leadNudgeKey(dialogue);
+  const nudgeSummary = lead === "choice"
+    ? "the easiest anchor first"
+    : lead === "compare"
+      ? "a before-versus-now contrast"
+      : lead === "body"
+        ? "body cues"
+        : lead === "scale"
+          ? "a quick intensity estimate"
+          : lead === "support"
+            ? "one support anchor"
+            : lead === "coping"
+              ? "what worsens or softens the pattern"
+              : "one concrete detail at a time";
   if (uiLanguage === "hi") {
-    return "मनोवार्ता आपके जवाब की लंबाई, खुलापन और भाषा के ढंग को देखकर अगला सवाल बदल रही है। यह किसी तय स्क्रिप्ट पर नहीं चल रही।";
+    return `मनोवार्ता आपके जवाब की लंबाई, खुलापन, भाषा-मिश्रण और बोझ को देखकर अगला सवाल बदल रही है। अभी यह तय स्क्रिप्ट की जगह ${dialogue.user_style.steering_preference === "guided" ? "थोड़ा निर्देशित" : dialogue.user_style.steering_preference === "user_led" ? "ज़्यादा उपयोगकर्ता-नेतृत्व वाला" : "संतुलित"} प्रवाह और ${lead === "choice" ? "सबसे आसान आधार" : lead === "compare" ? "पहले और अब की तुलना" : lead === "body" ? "शरीर के संकेत" : lead === "scale" ? "छोटे तीव्रता-अंदाज़े" : lead === "support" ? "एक सहारे" : lead === "coping" ? "क्या बढ़ाता या कम करता है" : "एक-एक ठोस विवरण"} पर ज़ोर दे रही है।`;
+  }
+  if (uiLanguage === "hinglish") {
+    return `ManoVarta tumhare response length, openness, code-mix, aur burden ko dekhkar next follow-up shape kar rahi hai. Fixed script use karne ke bajay abhi yeh ${dialogue.user_style.steering_preference} steering ke saath ${nudgeSummary} par lean kar rahi hai.`;
   }
   const { verbosity, openness, code_mix: codeMix, distress_trend: distressTrend, steering_preference: steeringPreference } = dialogue.user_style;
-  return `ManoVarta is adapting to ${verbosity} responses, ${openness} disclosure, ${codeMix} code-mix, and a ${distressTrend} pattern. Right now it is using a ${steeringPreference} steering style instead of a fixed script.`;
+  return `ManoVarta is adapting to ${verbosity} responses, ${openness} disclosure, ${codeMix} code-mix, and a ${distressTrend} pattern. Right now it is using a ${steeringPreference} steering style and leaning on ${nudgeSummary} instead of a fixed script.`;
 }
 
 function buildComposerHelper(dialogue, language = state.language) {
   const uiLanguage = resolveUiLanguage(language);
+  const lead = leadNudgeKey(dialogue);
   if (uiLanguage === "hi") {
     if (dialogue.next_action === "risk_check") {
       return "यहाँ छोटा और सीधा जवाब भी काफ़ी है। मनोवार्ता सामान्य प्रवाह पर लौटने से पहले सावधानी से सुरक्षा-जाँच कर रही है।";
     }
     if (dialogue.fatigue === "high") {
       return "अभी गति हल्की रखी जा रही है। एक छोटा सा ठोस विवरण भी काफ़ी है।";
+    }
+    if (lead === "choice") {
+      return "जो हिस्सा सबसे आसान लगे, बस वही बताइए। एक छोटा आधार भी काफ़ी है।";
+    }
+    if (lead === "scale") {
+      return "अगर शब्द कम पड़ रहे हों, तो छोटा तीव्रता-अंदाज़ा भी ठीक है।";
     }
     if (dialogue.readiness === "ready_to_close") {
       return "तस्वीर अब काफ़ी साफ़ हो रही है। पुनरावलोकन से पहले बस एक आख़िरी स्पष्टता काफ़ी हो सकती है।";
@@ -2137,11 +2310,44 @@ function buildComposerHelper(dialogue, language = state.language) {
     }
     return "मनोवार्ता आपके दिए गए विवरण के हिसाब से अगला सवाल बदल रही है और वही अगला हिस्सा पूछ रही है जो सबसे ज़्यादा स्पष्टता देगा।";
   }
+  if (uiLanguage === "hinglish") {
+    if (dialogue.next_action === "risk_check") {
+      return "Yahan short direct answer bhi enough hai. ManoVarta normal flow par wapas jaane se pehle careful safety check kar rahi hai.";
+    }
+    if (dialogue.fatigue === "high") {
+      return "Abhi pace halka rakha ja raha hai. Ek short concrete detail bhi enough hai.";
+    }
+    if (lead === "choice") {
+      return "Jo anchor sabse easy lage, bas wahi answer karo. Ek small anchor bhi enough hai.";
+    }
+    if (lead === "scale") {
+      return "Agar words hard lag rahe hain, to quick intensity estimate bhi bilkul okay hai.";
+    }
+    if (dialogue.readiness === "ready_to_close") {
+      return "Picture kaafi steady ho rahi hai. Recap se pehle ek last clarification enough ho sakta hai.";
+    }
+    if (dialogue.user_style.openness === "guarded") {
+      return "Low-pressure mode on hai: ek recent example ya daily-life impact bhi enough hai.";
+    }
+    if (dialogue.user_style.verbosity === "brief") {
+      return "Short replies okay hain. Ek example ya timing detail bahut help karega.";
+    }
+    if (dialogue.user_style.verbosity === "detailed") {
+      return "Narrative mode on hai: jo part sabse important lag raha hai, us par raho. ManoVarta quietly usse organize kar legi.";
+    }
+    return "ManoVarta tumhare detail level ke hisaab se next sawaal adapt kar rahi hai aur wahi next piece pooch rahi hai jo sabse zyada clarity dega.";
+  }
   if (dialogue.next_action === "risk_check") {
     return "A short direct answer is enough here. ManoVarta is doing a careful safety check before returning to the normal flow.";
   }
   if (dialogue.fatigue === "high") {
     return "The pace is being kept light right now. One short concrete detail is enough.";
+  }
+  if (lead === "choice") {
+    return "Pick the easiest anchor and answer only that part if you want.";
+  }
+  if (lead === "scale") {
+    return "If words feel hard, a quick intensity estimate is completely okay.";
   }
   if (dialogue.readiness === "ready_to_close") {
     return "The picture is getting steady. One final clarification may be enough before the recap.";
@@ -2160,9 +2366,19 @@ function buildComposerHelper(dialogue, language = state.language) {
 
 function buildNudgeSubtitle(dialogue, language = state.language) {
   const uiLanguage = resolveUiLanguage(language);
+  const lead = leadNudgeKey(dialogue);
   if (uiLanguage === "hi") {
     if (dialogue.next_action === "risk_check") {
       return "यह एक संवेदनशील जाँच है: छोटा और सीधा जवाब भी काफ़ी है। आपको लंबा पैराग्राफ़ लिखने की ज़रूरत नहीं है।";
+    }
+    if (lead === "choice") {
+      return "इन संकेतों में से जो सबसे आसान लगे, वही चुनिए। एक छोटा आधार भी बातचीत को स्थिर प्रमाण की तरफ़ ले जा सकता है।";
+    }
+    if (lead === "scale") {
+      return "जब शब्द कम पड़ते हैं, तब भी छोटा तीव्रता-अंदाज़ा उपयोगी रहता है।";
+    }
+    if (lead === "compare") {
+      return "पहले और अब का एक फ़र्क़ भी बिना दबाव बढ़ाए अच्छा संकेत देता है।";
     }
     if ((dialogue.disclosure?.nudge_effectiveness || 0) < 0) {
       return "पिछले संकेत से ज़्यादा विवरण नहीं खुला, इसलिए ये संकेत अब थोड़ा अलग रास्ता सुझा रहे हैं।";
@@ -2178,6 +2394,15 @@ function buildNudgeSubtitle(dialogue, language = state.language) {
   if (dialogue.next_action === "risk_check") {
     return "Sensitive checkpoint: a short direct answer is enough. You do not need to write a long paragraph.";
   }
+  if (lead === "choice") {
+    return "Pick the easiest of these. One small anchor can move the session from vague signal to usable evidence.";
+  }
+  if (lead === "scale") {
+    return "When words are hard, a quick intensity estimate can still keep the session moving.";
+  }
+  if (lead === "compare") {
+    return "A then-versus-now contrast can sharpen change without raising the pressure.";
+  }
   if ((dialogue.disclosure?.nudge_effectiveness || 0) < 0) {
     return "The last prompt did not unlock much detail, so these nudges shift strategy and try a different angle.";
   }
@@ -2192,9 +2417,19 @@ function buildNudgeSubtitle(dialogue, language = state.language) {
 
 function buildNudgeMeta(dialogue, language = state.language) {
   const uiLanguage = resolveUiLanguage(language);
+  const lead = leadNudgeKey(dialogue);
   if (uiLanguage === "hi") {
     if (dialogue.next_action === "risk_check") {
       return "हल्का संकेत";
+    }
+    if (lead === "choice") {
+      return "सबसे आसान आधार";
+    }
+    if (lead === "compare") {
+      return "पहले बनाम अब";
+    }
+    if (lead === "scale") {
+      return "त्वरित तीव्रता";
     }
     if ((dialogue.disclosure?.nudge_effectiveness || 0) > 0.2) {
       return "पिछली बार उपयोगी";
@@ -2209,6 +2444,15 @@ function buildNudgeMeta(dialogue, language = state.language) {
   }
   if (dialogue.next_action === "risk_check") {
     return "Low-pressure prompt";
+  }
+  if (lead === "choice") {
+    return "Pick one easy anchor";
+  }
+  if (lead === "compare") {
+    return "Then vs now";
+  }
+  if (lead === "scale") {
+    return "Quick intensity";
   }
   if ((dialogue.disclosure?.nudge_effectiveness || 0) > 0.2) {
     return "Helpful last time";
@@ -2411,22 +2655,50 @@ function pickNudges(language, dialogue) {
 
   if (dialogue.next_action === "risk_check" || dialogue.target_topic === "safety") {
     add("safety");
+    add("support");
+    add("choice");
   }
 
   add(dialogue.target_topic);
+  if (dialogue.target_topic === "anxiety") {
+    add("body");
+    add("scale");
+  } else if (dialogue.target_topic === "sleep") {
+    add("timing");
+    add("sleep");
+    add("impact");
+  } else if (dialogue.target_topic === "mood" || dialogue.target_topic === "self_view") {
+    add("compare");
+    add("impact");
+    add("support");
+  } else if (dialogue.target_topic === "focus" || dialogue.target_topic === "energy") {
+    add("impact");
+    add("coping");
+  }
+  if (dialogue.continuity_note) {
+    add("compare");
+  }
 
   if (dialogue.user_style.verbosity === "brief") {
+    add("choice");
     add("example");
     add("timing");
+    add("scale");
     add("impact");
   } else if (dialogue.user_style.openness === "guarded") {
+    add("choice");
     add("impact");
     add("example");
-    add("timing");
+    add("support");
+  } else if (dialogue.user_style.verbosity === "detailed" || dialogue.user_style.steering_preference === "user_led") {
+    add("compare");
+    add("coping");
+    add("impact");
   } else {
     add("example");
     add("impact");
     add("timing");
+    add("coping");
   }
 
   return nudges.slice(0, 3);
@@ -2976,15 +3248,22 @@ function handleCapturedTranscript(transcript, sourceLabel = "voice") {
     setVoicePreview("", { visible: false });
     return;
   }
-  messageInput.value = cleaned;
-  setComposerCollapsed(false, { focusInput: !autoSendToggle.checked });
+  if (autoSendToggle.checked) {
+    messageInput.value = cleaned;
+    setComposerCollapsed(false, { focusInput: false });
+    updateComposerCollapsedHint(state.language);
+    setVoicePreview(cleaned, { visible: true });
+    setVoiceState("thinking");
+    updateVoiceStatus(`Transcript captured. Auto-sending from ${sourceLabel}.`);
+    void sendMessageText(cleaned, { fromVoice: true });
+    return;
+  }
+  pendingVoiceTranscript = cleaned;
+  setComposerCollapsed(false, { focusInput: false });
   updateComposerCollapsedHint(state.language);
   setVoicePreview(cleaned, { visible: true });
-  setVoiceState("thinking");
-  updateVoiceStatus(`Transcript captured from ${sourceLabel}.`);
-  if (autoSendToggle.checked) {
-    void sendMessageText(cleaned, { fromVoice: true });
-  }
+  setVoiceState("idle");
+  updateVoiceStatus(`Transcript captured. Review before sending from ${sourceLabel}.`);
 }
 
 async function startBackendRecording() {
@@ -3140,7 +3419,7 @@ function setupVoice() {
       void sendMessageText(pendingVoiceTranscript, { fromVoice: true });
     } else {
       messageInput.focus();
-      updateVoiceStatus("Transcript moved into the message box.");
+      updateVoiceStatus("Transcript moved into the message box. Edit it if needed, then send.");
     }
   });
   autoSendToggle?.addEventListener("change", () => {

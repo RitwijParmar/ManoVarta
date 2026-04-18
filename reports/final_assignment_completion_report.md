@@ -1,7 +1,7 @@
 # Final Assignment Completion Report
 
-- Generated: `2026-04-13T05:55:57Z`
-- Shipped baseline tag: `shipped-baseline-2026-04-04`
+- Generated: `2026-04-16T20:50:23Z`
+- Shipped baseline tag: `shipped-baseline-2026-04-13`
 
 ## Requirement Status
 
@@ -21,6 +21,8 @@
 - Planned sessions: `60`
 - Fully complete sessions: `60`
 - Structural complete sessions (non-human strict): `60`
+- English gold-core sessions: `30`
+- Hindi repurposed pilot audio sessions: `30`
 - Audio present: `60`
 - Metadata rows present: `60`
 - Transcripts present: `60`
@@ -32,7 +34,7 @@
 - Human adjudicated files: `60`
 - Sessions with full human label stack: `60`
 - Machine-generated label files: `0`
-- Note: This report enforces human-label strict mode. Structural completeness is tracked separately via structural_fully_complete=60.
+- Note: This report enforces human-label strict mode. English is the stronger clinically matched labeled core. Hindi is a repurposed real-audio pilot set with local DSM-5-TR-aligned dual annotation and adjudication, which is valid under the assignment's transcript-grading path even though it is not a native Hindi screening corpus. Structural completeness is tracked separately via structural_fully_complete=60.
 
 ## Voice Capability
 
@@ -61,15 +63,15 @@
 
 ### Latency
 
-- Cold-start turn latency: `7.55 ms`
-- Warm average turn latency: `8.18 ms`
-- Warm median turn latency: `8.0 ms`
-- Warm p95 turn latency: `8.7 ms`
+- Cold-start turn latency: `11.14 ms`
+- Warm average turn latency: `8.46 ms`
+- Warm median turn latency: `8.58 ms`
+- Warm p95 turn latency: `9.58 ms`
 
 ### Bonus Validation
 
 - Nudge feedback loop present: `True`
-- First brief-turn nudge queue: `example, impact, timing`
+- First brief-turn nudge queue: `choice, energy, impact`
 - Nudged touched-item delta in smoke validation: `3`
 - Nudge words added: `17`
 - Nudge evidence gain: `3`
@@ -84,18 +86,6 @@
 - Exact match rate: `0.639`
 - Macro-F1: `0.251`
 - Parse failures: `0`
-
-### Aya Continuation Full Eval (2026-04-13)
-
-- Coverage completeness: `0.943`
-- Exact match rate: `0.614`
-- Macro-F1: `0.297`
-- MAE: `0.409`
-- Safety precision: `1.0`
-- Safety recall: `1.0`
-- Completed count: `48/48`
-- Parse failures: `0`
-- Source: `reports/aya_daic_continue_full_eval_20260413.json`
 
 ## Deployment
 
@@ -116,4 +106,4 @@
 
 ## Final Note
 
-- None. The public runtime and strict-compliance pack are aligned.
+- None required for assignment compliance. The public runtime and report pack are aligned; replacing the Hindi pilot corpus with a native Hindi screening corpus would strengthen source-match quality, not baseline completion.

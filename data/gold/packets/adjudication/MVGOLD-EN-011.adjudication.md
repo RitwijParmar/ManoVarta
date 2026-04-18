@@ -1,0 +1,123 @@
+# MVGOLD-EN-011 adjudication packet
+
+- Language: `en`
+- Cohort: `expansion`
+- Target primary domain: `irritability`
+- Target risk band: `none`
+- Target output file: `data/gold/labels/MVGOLD-EN-011.adjudicated.json`
+
+## Metadata
+
+- Participant ID: `316`
+- Age years: ``
+- Age band: `adult_unknown_from_source`
+- Occupation: `unknown_from_source`
+- Living situation: `unknown_from_source`
+- Support system: `unknown_from_source`
+- Consent recorded: `public_dataset_license`
+- Collection source: `e_daic_public_2019`
+
+## Instructions
+
+Resolve disagreements between annotator A and annotator B, justify the decision, and save one final adjudicated label file.
+
+## Transcript
+
+- `u1` user: I could see her
+- `u2` user: thank you
+- `u3` user: yes
+- `u4` user: I'm fine
+- `u5` user: New York
+- `u6` user: for business
+- `u7` user: now I'm glad you hospitality
+- `u8` user: I'm in between jobs
+- `u9` user: when
+- `u10` user: 8/3 let me see
+- `u11` user: 26 years ago
+- `u12` user: once a year
+- `u13` user: the Sun the beach
+- `u14` user: the palm trees
+- `u15` user: sometimes
+- `u16` user: I kept some of the people
+- `u17` user: some of the flash Enos
+- `u18` user: the people are very self-centered
+- `u19` user: flashing if there's some of them are not very sophisticated or it for well educated
+- `u20` user: that was very easy
+- `u21` user: I have a teaching degree in an art degree
+- `u22` user: designing
+- `u23` user: for the movie industry
+- `u24` user: extremely so I never really pursued it
+- `u25` user: very
+- `u26` user: no
+- `u27` user: I like people I like being around people
+- `u28` user: I like having friends
+- `u29` user: social activity
+- `u30` user: people who aren't true about themselves
+- `u31` user: it happens all the time
+- `u32` user: I usually try to just disregard it
+- `u33` user: I try not to get upset about it
+- `u34` user: I argued with my sister
+- `u35` user: about Obama
+- `u36` user: that whole fiscal cliff whatever that thing was called I was totally against anything that he thought he was doing to fix the economy
+- `u37` user: I like swimming I like museums I like plays I like concerts
+- `u38` user: I like dance
+- `u39` user: traveling
+- `u40` user: yes
+- `u41` user: being in a different environment learning different cultures meeting people
+- `u42` user: well actually I was in New York couple of weeks ago
+- `u43` user: and I haven't been back for a while
+- `u44` user: Hannah was just exhilarating to me again
+- `u45` user: I learned to love New York all over again
+- `u46` user: no
+- `u47` user: yes
+- `u48` user: couple years back
+- `u49` user: I was feeling very
+- `u50` user: not energized not energized
+- `u51` user: I know I was down huh
+- `u52` user: sorry yes
+- `u53` user: yes I sleep a lot more
+- `u54` user: and
+- `u55` user: it's I'm not that motivated to go out and have fun
+- `u56` user: yes
+- `u57` user: I haven't been happy at my jobs for at least 10 years
+- `u58` user: all right I went through seeing my father be sick and then passing away
+- `u59` user: I just recently seen my mother my mother was sick for about 4 years and she finally passed away
+- `u60` user: that was very hard on me
+- `u61` user: to a degree but not as much as I like
+- `u62` user: I don't know you know
+- `u63` user: I know it's help me a little bit
+- `u64` user: but it's definitely not help me as much as I want but also they can't get a job for you
+- `u65` user: I didn't tip
+- `u66` user: correct
+- `u67` user: I push myself father to get out of the house
+- `u68` user: how to try to enjoy life and to be in a better to myself
+- `u69` user: yes
+- `u70` user: when my nephew called me
+- `u71` user: that I'm a pretty good person caring person
+- `u72` user: how can I tell time
+- `u73` user: I enjoyed since I went to the movies recently which I haven't gone in a while and I really enjoyed the Phelps
+- `u74` user: I'm one with the Life of Pi
+- `u75` user: and the other was at and the other was Anna Karenina
+- `u76` user: which I thoroughly enjoyed
+- `u77` user: Africa caring friend
+- `u78` user: send somebody who likes to do things
+- `u79` user: I'd say my mom
+- `u80` user: it's getting easier
+- `u81` user: she was the kind of person that even though this is kind of a cold hard world
+- `u82` user: she sat herself above that and was still determined to be a good caring person
+- `u83` user: traveling
+- `u84` user: not calling father
+- `u85` user: and my education
+- `u86` user: yes yes
+- `u87` user: sorry
+- `u88` user: I don't understand the question sorry
+- `u89` user: I should have got gotten father and in my education. No Masters or PhD
+- `u90` user: and I think my job search would be a lot easier
+- `u91` user: and yes
+- `u92` user: yeah
+- `u93` user: that I've been a very
+- `u94` user: kind considerate helpful person
+- `u95` user: I like being around the Arts I like about I like being around creative people
+- `u96` user: thank you
+- `u97` user: bye
+- `u98` user: Texas

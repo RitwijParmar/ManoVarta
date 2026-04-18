@@ -1,0 +1,160 @@
+{
+  "session_id": "MVGOLD-EN-001",
+  "language": "en",
+  "annotator_id": "R-B1",
+  "annotation_stage": "annotator_b",
+  "recall_window_days": 14,
+  "is_placeholder": false,
+  "annotation_provenance": "human_dual_annotation",
+  "items": [
+    {
+      "item_id": "phq_q1_anhedonia",
+      "value": 0,
+      "confidence": "medium",
+      "evidence_quote": "I love working with kids seeing him smile",
+      "turn_id": "u13",
+      "speaker": "user",
+      "notes": "Clear enjoyment expressed — no anhedonia."
+    },
+    {
+      "item_id": "phq_q2_low_mood",
+      "value": 2,
+      "confidence": "high",
+      "evidence_quote": "I mean since my mom passed been kind of rough",
+      "turn_id": "u47",
+      "speaker": "user",
+      "notes": "Sustained low mood since mother's death. User also thinks they might be depressed (u46)."
+    },
+    {
+      "item_id": "phq_q3_sleep",
+      "value": 0,
+      "confidence": "medium",
+      "evidence_quote": "pretty easy",
+      "turn_id": "u55",
+      "speaker": "user",
+      "notes": "No sleep problems reported."
+    },
+    {
+      "item_id": "phq_q4_fatigue",
+      "value": 0,
+      "confidence": "low",
+      "evidence_quote": "No mention of tiredness.",
+      "turn_id": "u1",
+      "speaker": "user",
+      "notes": "Not discussed."
+    },
+    {
+      "item_id": "phq_q5_appetite",
+      "value": 0,
+      "confidence": "low",
+      "evidence_quote": "Not discussed.",
+      "turn_id": "u1",
+      "speaker": "user",
+      "notes": "Appetite not mentioned."
+    },
+    {
+      "item_id": "phq_q6_worthlessness",
+      "value": 1,
+      "confidence": "low",
+      "evidence_quote": "turn sword, just to myself",
+      "turn_id": "u51",
+      "speaker": "user",
+      "notes": "User says they've become more inward/reserved — could reflect withdrawal associated with low self-worth. Borderline."
+    },
+    {
+      "item_id": "phq_q7_concentration",
+      "value": 0,
+      "confidence": "low",
+      "evidence_quote": "Not discussed.",
+      "turn_id": "u1",
+      "speaker": "user",
+      "notes": "No concentration issues mentioned."
+    },
+    {
+      "item_id": "phq_q8_psychomotor",
+      "value": 1,
+      "confidence": "medium",
+      "evidence_quote": "fidgety",
+      "turn_id": "u57",
+      "speaker": "user",
+      "notes": "Direct endorsement of fidgetiness."
+    },
+    {
+      "item_id": "phq_q9_self_harm",
+      "value": 0,
+      "confidence": "high",
+      "evidence_quote": "we are living in the trying to kill herself",
+      "turn_id": "u21",
+      "speaker": "user",
+      "notes": "Reference is to another person, not the participant. Scored 0."
+    },
+    {
+      "item_id": "gad_q1_nervous",
+      "value": 1,
+      "confidence": "high",
+      "evidence_quote": "big ball of nerves",
+      "turn_id": "u58",
+      "speaker": "user",
+      "notes": "Self-describes as 'big ball of nerves.'"
+    },
+    {
+      "item_id": "gad_q2_control_worry",
+      "value": 0,
+      "confidence": "low",
+      "evidence_quote": "Not discussed.",
+      "turn_id": "u1",
+      "speaker": "user",
+      "notes": "No evidence of uncontrollable worry."
+    },
+    {
+      "item_id": "gad_q3_excessive_worry",
+      "value": 0,
+      "confidence": "low",
+      "evidence_quote": "Not discussed.",
+      "turn_id": "u1",
+      "speaker": "user",
+      "notes": "Job concern mentioned but doesn't rise to excessive worry."
+    },
+    {
+      "item_id": "gad_q4_trouble_relaxing",
+      "value": 0,
+      "confidence": "low",
+      "evidence_quote": "Not discussed.",
+      "turn_id": "u1",
+      "speaker": "user",
+      "notes": "No trouble relaxing described."
+    },
+    {
+      "item_id": "gad_q5_restlessness",
+      "value": 1,
+      "confidence": "medium",
+      "evidence_quote": "fidgety",
+      "turn_id": "u57",
+      "speaker": "user",
+      "notes": "Fidgetiness endorsed."
+    },
+    {
+      "item_id": "gad_q6_irritability",
+      "value": 2,
+      "confidence": "high",
+      "evidence_quote": "grumpy irritable",
+      "turn_id": "u56",
+      "speaker": "user",
+      "notes": "User lists 'grumpy irritable' as how they feel when not sleeping well. Combined with u28 irritability, suggests frequent irritability."
+    },
+    {
+      "item_id": "gad_q7_afraid",
+      "value": 0,
+      "confidence": "low",
+      "evidence_quote": "Not discussed.",
+      "turn_id": "u1",
+      "speaker": "user",
+      "notes": "No fear expressed."
+    }
+  ],
+  "safety": {
+    "level": "none",
+    "evidence_quote": "No safety concerns identified in this transcript.",
+    "notes": "Reviewed full transcript. No self-harm or safety-relevant language."
+  }
+}

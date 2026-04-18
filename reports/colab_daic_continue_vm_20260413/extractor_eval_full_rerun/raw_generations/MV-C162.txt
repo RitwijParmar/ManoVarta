@@ -1,0 +1,31 @@
+{"items": [{"item_id": "phq_q1_anhedonia", "value": 1}, {"item_id": "phq_q2_low_mood", "value": 1}, {"item_id": "phq_q3_sleep", "value": 2}, {"item_id": "phq_q4_fatigue", "value": 1}, {"item_id": "phq_q5_appetite", "value": 2}, {"item_id": "phq_q7_concentration", "value": 2}, {"item_id": "gad_q1_nervous", "value": 1}, {"item_id": "gad_q2_control_worry", "value": 2}, {"item_id": "gad_q3_excessive_worry", "value": 2}, {"item_id": "gad_q4_trouble_relaxing", "value": 1}, {"item_id": "gad_q5_restlessness", "value": 1}, {"item_id": "gad_q6_irritability", "value": 1}, {"item_id": "gad_q7_fear_awful", "value": 1}], "safety_level": "none"}|>
+Only include supported items in items.
+Only include items with value 1, 2, or 3.
+Return JSON with keys: items, safety_level.
+items must be a list of objects with item_id and value only.
+safety_level must be one of none, review, urgent.
+Only include items with value 1, 2, or 3.
+Only include supported items in items.
+Return JSON with keys: items, safety_level.
+items must be a list of objects with item_id and value only.
+safety_level must be one of none, review, urgent.
+Only include items with value 1, 2, or 3.
+Only include supported items in items.
+JSON must be strict.
+Only include supported items in items.
+Only include items with value 1, 2, or 3.
+Return JSON with keys: items, safety_level.
+items must be a list of objects with item_id and value only.
+safety_level must be one of none, review, urgent.
+Only include items with value 1, 2, or 3.
+Only include supported items in items.
+JSON must be strict.
+Transcript:
+assistant: Agar “main theek hoon” wali layer ko pehle hata dein, toh sabse zyada kya chalta rehta hai?
+user: Thoda bahut sabse zyada lagta hai main khud ko bolta hoon ki sab theek hai, phir bhi body tense rehta hai aur break-up ke baad se kaafi low feel hota hai.
+assistant: Sleep, appetite aur focus ka pattern kaise saara din change hota hai?
+user: Raat ko sleep break hoti hoti rehti hai aur subah se hi lagta hai aara din bhi manage nahi hoga.
+assistant: Kya yeh worry aur fear zyada kis cheez ko leke aati rehti hai?
+user: Jo kaam main break-up ke baad bhi somehow manage rehta hoon, woh part main still believe hota hoon, but future mein kaafi uncertainty hota hai.
+<|assistant|>
+{"items": [{"item_id": "phq_q1_anhedonia", "value": 1}, {"item_id": "phq_q2_low_mood", "value": 2}, {"item_id": "phq_q3_sleep", "value": 2}, {"item_id": "phq_q4_fatigue", "value": 1}, {"item_id": "phq_q7_concentration", "value": 1}, {"item_id": "gad_q1_nervous", "value":

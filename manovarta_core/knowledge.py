@@ -4,6 +4,18 @@ from typing import Dict, List
 
 
 SCREENING_KNOWLEDGE_BASE: Dict[str, object] = {
+    "clinical_grounding": {
+        "summary": (
+            "Symptom interpretation is grounded in DSM-5-TR depressive/anxiety disorder criteria and "
+            "operationalized through PHQ-9 and GAD-7 item boundaries. Public-facing risk language stays "
+            "anchored to NIMH safety guidance."
+        ),
+        "use": [
+            "DSM-5-TR is the symptom-definition reference for annotation and follow-up design.",
+            "PHQ-9 and GAD-7 define the scored item set used by the extractor and evaluator.",
+            "NIMH sources are used for accessible safety wording and escalation guidance.",
+        ],
+    },
     "questionnaires": {
         "PHQ9": {
             "purpose": "Tracks depressive symptom burden through open-ended conversation evidence.",
@@ -119,12 +131,29 @@ SCREENING_KNOWLEDGE_BASE: Dict[str, object] = {
     },
     "sources": [
         {
+            "label": "DSM-5-TR depressive and anxiety disorder symptom criteria",
+            "citation": "American Psychiatric Association. 2022. Diagnostic and Statistical Manual of Mental Disorders (5th ed., text rev.).",
+            "role": "clinical_symptom_grounding",
+        },
+        {
+            "label": "PHQ-9 questionnaire reference",
+            "citation": "Kroenke, Spitzer, and Williams. 2001. The PHQ-9: Validity of a brief depression severity measure.",
+            "role": "item_scoring_reference",
+        },
+        {
+            "label": "GAD-7 questionnaire reference",
+            "citation": "Spitzer, Kroenke, Williams, and Löwe. 2006. A brief measure for assessing generalized anxiety disorder.",
+            "role": "item_scoring_reference",
+        },
+        {
             "label": "NIMH generalized anxiety disorder overview",
             "url": "https://www.nimh.nih.gov/health/publications/generalized-anxiety-disorder-gad",
+            "role": "public_risk_guidance",
         },
         {
             "label": "NIMH warning signs of suicide",
             "url": "https://www.nimh.nih.gov/health/publications/warning-signs-of-suicide",
+            "role": "public_risk_guidance",
         },
     ],
 }
