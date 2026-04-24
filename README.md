@@ -70,7 +70,8 @@ The final repository state is not just a notebook experiment. It includes:
 
 - a FastAPI runtime for chat, transcript scoring, summaries, voice endpoints, and runtime inspection
 - a Django admin/data layer for seed data, annotation workflow, and review support
-- self-hosted local inference for the deployed runtime
+- a controller / extractor split where the application owns steering, Vertex can power the live language layer, and Aya remains the specialized scorer
+- a budget-safe deployment path that keeps the public runtime on CPU Cloud Run while moving heavy Aya scoring to an asynchronous worker
 - a hybrid safety stack with rules plus a promoted local safety checkpoint
 - patient-profile onboarding in the actual user flow
 - browser voice plus backend speech-to-text and text-to-speech routes
@@ -78,7 +79,17 @@ The final repository state is not just a notebook experiment. It includes:
 - a final project presentation deck in PPTX
 - a clean phase submission zip with compact relevant weights included
 
+Recommended final runtime split:
+
+- `MANOVARTA_CHAT_PROVIDER=vertex` and `MANOVARTA_CHAT_MODEL=gemini-2.5-flash` for live multilingual replies
+- `MANOVARTA_EXTRACTION_PROVIDER=vertex` and `MANOVARTA_EXTRACTION_MODEL=gemini-2.5-flash` for real-time turn interpretation that keeps steering fast enough for a cheap public runtime
+- `tools/process_async_score_queue.py` on a separate worker with `MANOVARTA_EXTRACTION_PROVIDER=local`, `MANOVARTA_EXTRACTION_MODEL=/models/aya-expanse-8b`, and `MANOVARTA_LOCAL_EXTRACTION_ADAPTER=/models/aya_bundle` for checkpoint or end-of-session clinical scoring
+
+In other words: the application logic remains the real controller, Gemini/Vertex supplies the live language layer, and trained Aya is preserved for the higher-value clinical scoring pass instead of burning budget on every turn.
+
 ## Final results
+
+The metrics below come from the archived self-hosted local-inference benchmark that established the strongest held-out runtime quality before the budget-safe deployment pivot. The current low-cost production plan reuses the same controller logic and safety stack, but swaps the always-on live model path to Vertex/Gemini and keeps Aya for asynchronous scoring checkpoints.
 
 Final live runtime metrics from `reports/live_runtime_eval_20260404.json`:
 
@@ -107,13 +118,13 @@ Assignment-aligned evaluation from `reports/final_assignment_completion_report.j
 - Latency: cold start `937.69 ms`, warm median `32.73 ms`, warm p95 `32.89 ms`
 - Discourse Effectiveness: coverage `0.783`, exact `0.639`, macro-F1 `0.251`, parse failures `0`
 
-## Live deployment
+## Deployment modes
 
-The final public runtime URL recorded in the current report bundle is:
+Archived self-hosted deployment snapshot recorded in the report bundle:
 
 - `https://manovarta-runtime-122722888597.us-east4.run.app`
 
-The live deployment report currently describes:
+That earlier deployment report described:
 
 - `provider: local`
 - `self_hosted_inference_enabled: true`
@@ -122,17 +133,38 @@ The live deployment report currently describes:
 - `speech_to_text_enabled: true`
 - `text_to_speech_enabled: true`
 
+Recommended low-cost production path now:
+
+- public runtime: CPU Cloud Run service using our controller/state logic plus Vertex/Gemini for live replies and structured turn updates
+- async scoring: queue-based Aya worker that drains `artifacts/async_scoring` or a shared bucket-backed queue and writes scored snapshots back to the app
+- deployment helper for the public runtime: `tools/deploy_cloudrun_vertex.sh`
+- worker helper for trained Aya scoring: `tools/run_aya_async_worker.sh`
+- async scoring API: `POST /screen/transcript/async`, `POST /chat/sessions/{session_id}/score_async`, `GET /screen/requests/{request_id}`
+
+This split is the practical path when credits matter. It keeps the conversational layer online for weeks on CPU while still preserving the trained Aya artifact as the specialist scorer.
+
+### Async Aya worker notes
+
+The intended worker shape is:
+
+- download the Aya base model on the worker host directly from Hugging Face
+- mount or copy your trained adapter to `/models/aya_bundle`
+- point `MANOVARTA_EXTRACTION_MODEL` at the base model path
+- run `tools/run_aya_async_worker.sh --max-jobs 1` on demand or from a small loop
+
+The worker uses the same queue directory structure as the API runtime, so the public service can enqueue jobs and the Aya worker can complete them later without keeping a GPU online all day.
+
 ## What the system does
 
 At runtime, ManoVarta works as a structured conversational pipeline:
 
 1. The user selects language and optionally enters profile context.
-2. The dialogue planner decides what topic needs to be covered next.
-3. The extractor pulls questionnaire-aligned evidence from the conversation.
+2. The application-side dialogue planner decides what topic needs to be covered next.
+3. The live language model turns that state into the next natural question and can also help interpret the latest turn into structured state updates.
 4. The scorer updates PHQ-9 and GAD-7 item state.
 5. The runtime checks whether evidence is still insufficient and should trigger a follow-up question.
 6. The safety stack separately checks for `none`, `review`, or `urgent` risk.
-7. The response generator turns the current screening state into the next natural question.
+7. The async Aya worker can be triggered at high-value checkpoints to run a richer multilingual evidence extraction pass.
 8. The voice layer optionally handles microphone input and spoken replies.
 
 This separation was one of the main project findings. Direct prompting alone was not enough. The strongest improvements came from:

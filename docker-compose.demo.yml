@@ -8,9 +8,21 @@ services:
     env_file:
       - .env.local
     environment:
-      MANOVARTA_MODEL_PROVIDER: local
-      MANOVARTA_CHAT_MODEL: /models/qwen2.5-0.5b-instruct
-      MANOVARTA_EXTRACTION_MODEL: /models/qwen2.5-0.5b-instruct
+      MANOVARTA_MODEL_PROVIDER: ${MANOVARTA_MODEL_PROVIDER:-vertex}
+      MANOVARTA_CHAT_PROVIDER: ${MANOVARTA_CHAT_PROVIDER:-vertex}
+      MANOVARTA_EXTRACTION_PROVIDER: ${MANOVARTA_EXTRACTION_PROVIDER:-vertex}
+      MANOVARTA_SAFETY_PROVIDER: ${MANOVARTA_SAFETY_PROVIDER:-local}
+      MANOVARTA_CHAT_MODEL: ${MANOVARTA_CHAT_MODEL:-gemini-2.5-flash}
+      MANOVARTA_EXTRACTION_MODEL: ${MANOVARTA_EXTRACTION_MODEL:-gemini-2.5-flash}
+      MANOVARTA_VERTEX_PROJECT: ${MANOVARTA_VERTEX_PROJECT:-}
+      MANOVARTA_VERTEX_LOCATION: ${MANOVARTA_VERTEX_LOCATION:-us-central1}
+      MANOVARTA_LOCAL_LOAD_IN_4BIT: ${MANOVARTA_LOCAL_LOAD_IN_4BIT:-true}
+      MANOVARTA_LOCAL_CHAT_ADAPTER: ${MANOVARTA_LOCAL_CHAT_ADAPTER:-}
+      MANOVARTA_LOCAL_EXTRACTION_ADAPTER: ${MANOVARTA_LOCAL_EXTRACTION_ADAPTER:-}
+      MANOVARTA_LOCAL_SAFETY_ADAPTER: ${MANOVARTA_LOCAL_SAFETY_ADAPTER:-}
       MANOVARTA_LOCAL_SAFETY_CHECKPOINT: /app/outputs/local_safety_boost/safety-indicbert-best-infer-fp16
+      MANOVARTA_ASYNC_SCORING_ENABLED: ${MANOVARTA_ASYNC_SCORING_ENABLED:-true}
+      MANOVARTA_ASYNC_SCORING_DIR: /app/artifacts/async_scoring
     volumes:
       - ./outputs/local_safety_boost/safety-indicbert-best-infer-fp16:/app/outputs/local_safety_boost/safety-indicbert-best-infer-fp16:ro
+      - ./artifacts/async_scoring:/app/artifacts/async_scoring

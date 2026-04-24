@@ -5,6 +5,7 @@ from fastapi import FastAPI, File, HTTPException, Response, UploadFile
 from fastapi.responses import FileResponse, HTMLResponse
 from fastapi.staticfiles import StaticFiles
 
+from manovarta_core.async_scoring import AsyncScoringStore
 from manovarta_core.config import get_runtime_config
 from manovarta_core.dialogue import DialoguePlanner
 from manovarta_core.engine import RuntimeEngine
@@ -21,6 +22,8 @@ from manovarta_core.schemas import (
     ChatTurnRequest,
     ChatTurnResponse,
     ChatSession,
+    AsyncScoreResponse,
+    AsyncTranscriptScoreRequest,
     NudgeEvent,
     SessionExportResponse,
     SessionDetailResponse,
@@ -44,6 +47,7 @@ voice_runtime = detect_voice_runtime()
 
 runtime_config = get_runtime_config()
 store = SessionStore()
+async_scoring_store = AsyncScoringStore(runtime_config.async_scoring_dir)
 planner = DialoguePlanner()
 safety_monitor = SafetyMonitor()
 semantic_safety_monitor = SemanticSafetyMonitor(
@@ -154,11 +158,19 @@ def health() -> dict:
 def runtime_settings() -> dict:
     return {
         "provider": runtime_config.model_provider,
+        "chat_provider": runtime_config.chat_model_provider,
+        "extraction_provider": runtime_config.extraction_model_provider,
+        "safety_provider": runtime_config.safety_model_provider,
+        "controller_model": runtime_config.chat_model,
+        "extractor_model": runtime_config.extraction_model,
         "chat_model": runtime_config.chat_model,
         "extraction_model": runtime_config.extraction_model,
         "safety_model": runtime_config.safety_model,
         "huggingface_enabled": runtime_config.huggingface_enabled,
         "self_hosted_inference_enabled": runtime_config.local_inference_enabled,
+        "vertex_enabled": runtime_config.vertex_enabled,
+        "vertex_project": runtime_config.vertex_project,
+        "vertex_location": runtime_config.vertex_location,
         "semantic_safety_enabled": runtime_config.semantic_safety_enabled,
         "semantic_safety_model": runtime_config.semantic_safety_model,
         "hybrid_safety_enabled": bool(runtime_config.local_safety_checkpoint),
@@ -166,6 +178,8 @@ def runtime_settings() -> dict:
         "local_safety_checkpoint_path": runtime_config.local_safety_checkpoint,
         "remote_safety_fallback_enabled": bool(hf_safety_assessor and hf_safety_assessor.enabled),
         "live_chat_llm_analysis_enabled": runtime_config.live_chat_llm_analysis_enabled,
+        "async_scoring_enabled": runtime_config.async_scoring_enabled,
+        "async_scoring_dir": runtime_config.async_scoring_dir,
         "cloud_voice_enabled": voice_runtime.enabled,
         "speech_to_text_enabled": voice_runtime.speech_to_text,
         "text_to_speech_enabled": voice_runtime.text_to_speech,
@@ -358,16 +372,50 @@ def score_transcript_heuristic(payload: TranscriptScoreRequest) -> dict:
 @app.post("/screen/transcript/llm")
 def score_transcript_with_llm(payload: TranscriptScoreRequest) -> dict:
     if not extractor.enabled:
-        raise HTTPException(status_code=503, detail="Hugging Face runtime is not configured.")
+        raise HTTPException(status_code=503, detail="Extractor runtime is not configured.")
 
     result = extractor.extract(payload.turns, payload.language)
     if result is None:
         raise HTTPException(status_code=502, detail="LLM extraction failed.")
     return {
-        "provider": runtime_config.model_provider,
+        "provider": runtime_config.extraction_model_provider,
         "model": runtime_config.extraction_model,
         "result": result,
     }
+
+
+@app.post("/screen/transcript/async", response_model=AsyncScoreResponse)
+def enqueue_transcript_score(payload: AsyncTranscriptScoreRequest) -> AsyncScoreResponse:
+    if not runtime_config.async_scoring_enabled:
+        raise HTTPException(status_code=503, detail="Asynchronous scoring is not configured.")
+    job = async_scoring_store.enqueue(payload)
+    return AsyncScoreResponse(job=job, result=None)
+
+
+@app.post("/chat/sessions/{session_id}/score_async", response_model=AsyncScoreResponse)
+def enqueue_session_score(session_id: str) -> AsyncScoreResponse:
+    if not runtime_config.async_scoring_enabled:
+        raise HTTPException(status_code=503, detail="Asynchronous scoring is not configured.")
+    session = store.get(session_id)
+    if session is None:
+        raise HTTPException(status_code=404, detail="Session not found.")
+    payload = AsyncTranscriptScoreRequest(
+        language=session.language,
+        turns=session.turns,
+        session_id=session_id,
+        label="session_async_score",
+        use_llm=True,
+    )
+    job = async_scoring_store.enqueue(payload)
+    return AsyncScoreResponse(job=job, result=None)
+
+
+@app.get("/screen/requests/{request_id}", response_model=AsyncScoreResponse)
+def get_async_score(request_id: str) -> AsyncScoreResponse:
+    try:
+        return async_scoring_store.get(request_id)
+    except FileNotFoundError as exc:
+        raise HTTPException(status_code=404, detail="Score request not found.") from exc
 
 
 @app.post("/voice/transcribe")

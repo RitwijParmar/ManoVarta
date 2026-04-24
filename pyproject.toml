@@ -25,15 +25,17 @@ dev = [
 ]
 gpu = [
   "torch>=2.2",
-  "transformers>=4.45",
+  "transformers>=4.51.0",
+  "peft>=0.18.0",
+  "bitsandbytes>=0.45.0",
 ]
 train = [
   "torch>=2.2",
-  "transformers>=4.45",
+  "transformers>=4.51.0",
   "datasets>=3.0.0",
   "accelerate>=1.0.0",
   "trl>=0.11.0",
-  "peft>=0.12.0",
+  "peft>=0.18.0",
   "numpy>=1.26.0",
   "sentencepiece>=0.2.0",
 ]
@@ -46,12 +48,15 @@ vertex = [
   "remotezip>=0.12.3",
 ]
 runtime-cloud = [
+  "google-cloud-aiplatform>=1.122.0",
   "google-cloud-storage>=2.18.0",
   "google-cloud-speech>=2.31.0",
   "google-cloud-texttospeech>=2.17.2",
   "torch>=2.2",
-  "transformers>=4.45",
+  "transformers>=4.51.0",
   "sentencepiece>=0.2.0",
+  "peft>=0.18.0",
+  "bitsandbytes>=0.45.0",
 ]
 
 [tool.setuptools.packages.find]

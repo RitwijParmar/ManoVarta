@@ -39,6 +39,12 @@ CLOSING_MESSAGES = {
     "hinglish": "Ab mere paas structured summary ke liye enough detail hai. Agar ek important detail abhi bhi missing lag rahi ho, to aap use seedha bol sakte ho.",
 }
 
+WORKING_SUMMARY_PREFIXES = {
+    "en": "Here is the working picture so far:",
+    "hi": "अभी तक जो तस्वीर बन रही है, उसमें",
+    "hinglish": "Ab tak jo picture ban rahi hai, usme",
+}
+
 FINAL_HOLD_MESSAGES = {
     "en": "Okay. I’ll hold that as the current summary for now. If one important detail still feels missing later, you can say it directly.",
     "hi": "ठीक है। अभी के लिए मैं इसे वर्तमान सार मानकर रखता हूँ। अगर बाद में कोई एक ज़रूरी बात छूटी लगे, तो आप उसे सीधे बता सकते हैं।",
@@ -82,15 +88,15 @@ POST_CLOSE_IDLE_MESSAGES = {
 }
 
 ANXIETY_LOOP_BREAK_PROMPTS = {
-    "en": "Let me pause and reflect what I’m hearing: this anxiety seems to build at certain times, affect both mind and body, and feel heavier on stressful days. If that fits, tell me just one last thing: does it mostly stay around work or responsibilities, or does it spread into other parts of life too?",
-    "hi": "मैं थोड़ा रुककर जो समझ आ रहा है उसे पकड़ना चाहता हूँ: यह चिंता कुछ खास समय पर बढ़ती है, दिमाग और शरीर दोनों पर असर डालती है, और तनाव वाले दिनों में ज्यादा लग सकती है। अगर यह सही लग रहा है, तो बस एक आख़िरी बात बताइए: यह ज़्यादा काम या जिम्मेदारियों तक रहती है, या दूसरी बातों में भी फैल जाती है?",
-    "hinglish": "Main thoda ruk kar jo samajh aa raha hai use hold karna chahta hoon: yeh anxiety kuch specific times par build hoti hai, mind aur body dono par effect karti hai, aur stressful days mein heavier lag sakti hai. Agar yeh sahi lag raha hai, to bas ek last cheez batao: yeh zyada work ya responsibilities tak rehti hai, ya life ke aur parts mein bhi spread ho jaati hai?",
+    "en": "Let me pause and reflect what I’m hearing: this anxiety seems to build at certain times and feel heavier on stressful days. If that fits, tell me just one last thing: does it mostly stay around work or responsibilities, or does it spread into other parts of life too?",
+    "hi": "मैं थोड़ा रुककर जो समझ आ रहा है उसे पकड़ना चाहता हूँ: यह चिंता कुछ खास समय पर बढ़ती है और तनाव वाले दिनों में ज्यादा लग सकती है। अगर यह सही लग रहा है, तो बस एक आख़िरी बात बताइए: यह ज़्यादा काम या जिम्मेदारियों तक रहती है, या दूसरी बातों में भी फैल जाती है?",
+    "hinglish": "Main thoda ruk kar jo samajh aa raha hai use hold karna chahta hoon: yeh anxiety kuch specific times par build hoti hai aur stressful days mein heavier lag sakti hai. Agar yeh sahi lag raha hai, to bas ek last cheez batao: yeh zyada work ya responsibilities tak rehti hai, ya life ke aur parts mein bhi spread ho jaati hai?",
 }
 
 ANXIETY_LOOP_CLOSE_PROMPTS = {
-    "en": "I have enough to hold onto the main pattern now: this anxiety builds more at certain times, affects both mind and body, and can feel heavier on stressful days. I can treat that as the working summary unless there is one important detail you still want to add.",
-    "hi": "अब मेरे पास मुख्य पैटर्न पकड़ने लायक काफ़ी जानकारी है: यह चिंता कुछ खास समय पर बढ़ती है, दिमाग और शरीर दोनों पर असर डालती है, और तनाव वाले दिनों में ज्यादा लग सकती है। अगर कोई बहुत ज़रूरी बात बाकी न हो, तो मैं इसे अभी कामचलाऊ सार मान सकता हूँ।",
-    "hinglish": "Ab mere paas main pattern hold karne ke liye enough detail hai: yeh anxiety kuch specific times par build hoti hai, mind aur body dono par effect karti hai, aur stressful days mein heavier lag sakti hai. Agar koi bahut important detail baaki nahi hai, to main ise abhi working summary maan sakta hoon.",
+    "en": "I have enough to hold onto the main pattern now: this anxiety builds more at certain times and can feel heavier on stressful days. I can treat that as the working summary unless there is one important detail you still want to add.",
+    "hi": "अब मेरे पास मुख्य पैटर्न पकड़ने लायक काफ़ी जानकारी है: यह चिंता कुछ खास समय पर बढ़ती है और तनाव वाले दिनों में ज्यादा लग सकती है। अगर कोई बहुत ज़रूरी बात बाकी न हो, तो मैं इसे अभी कामचलाऊ सार मान सकता हूँ।",
+    "hinglish": "Ab mere paas main pattern hold karne ke liye enough detail hai: yeh anxiety kuch specific times par build hoti hai aur stressful days mein heavier lag sakti hai. Agar koi bahut important detail baaki nahi hai, to main ise abhi working summary maan sakta hoon.",
 }
 
 RAPPORT_PROMPTS = {
@@ -301,6 +307,25 @@ FATIGUE_MARKERS = (
     "aur nahi",
     "samjhana mushkil",
 )
+CONTINUE_MARKERS = (
+    "what else do you want to know",
+    "what else do you want to ask",
+    "what else should i tell you",
+    "ask what you need",
+    "kya janana hai",
+    "kya janna hai",
+    "kya jaanna hai",
+    "kya poochna hai",
+    "kya puchna hai",
+    "aur kya poochna hai",
+    "aur kya puchna hai",
+    "kya aur janana hai",
+    "क्या जानना है",
+    "क्या और जानना है",
+    "क्या पूछना है",
+    "और क्या पूछना है",
+    "और क्या जानना है",
+)
 ACTIVATION_MARKERS = (
     "low energy",
     "energy down",
@@ -329,6 +354,11 @@ ACTIVATION_MARKERS = (
     "सुबह भारी",
     "दिमाग धीमा",
     "धीमा लग",
+    "aalas",
+    "susti",
+    "सुस्ती",
+    "सुस्त",
+    "आलस",
 )
 SLEEP_PATTERN_MARKERS = (
     "hard to fall asleep",
@@ -398,6 +428,12 @@ TIME_MARKERS = (
     "din ke end",
     "दिन के अंत",
     "दिन के end",
+    "दिन भर",
+    "पूरे दिन",
+    "पूरा दिन",
+    "poore din",
+    "poora din",
+    "din bhar",
 )
 FREQUENCY_MARKERS = (
     "every day",
@@ -487,10 +523,13 @@ PERSISTENT_WORRY_MARKERS = (
     "wont stop",
     "loop",
     "looping",
+    "comes back",
+    "come back",
     "chalta rehta",
     "chalta rehti",
     "chalte rehta",
     "chalte rehti",
+    "background mein chalta rehta",
     "चलती रहती",
     "चलता रहता",
     "चलते रहता",
@@ -927,22 +966,22 @@ ITEM_FOLLOW_UPS: Dict[str, Dict[str, Dict[str, str]]] = {
 }
 
 ITEM_SIGNAL_MARKERS: Dict[str, Tuple[str, ...]] = {
-    "phq_q1_anhedonia": ("not interested", "no interest", "disconnected", "nothing feels good", "used to enjoy", "feel flat", "feels flat", "flat now", "flat lagta", "flat lagti", "flat lagti hai", "flat lagti hain", "numb", "feel very little from them", "get much from them", "do not get much from them", "don't get much from them", "feel nahi hota", "kuch feel nahi hota", "go through the motions", "go through motions", "mann nahi lagta", "मन नहीं लगता", "दिल नहीं करता", "फीका लगता", "बहुत कम महसूस", "कटा-कटा", "कटा कटा"),
+    "phq_q1_anhedonia": ("not interested", "no interest", "disconnected", "nothing feels good", "used to enjoy", "less interest in things", "interest has gone down", "interest bhi kam ho gaya", "रुचि कम हो गई", "pulling away from people", "distance bana leta", "motivation low", "feel flat", "feels flat", "flat now", "flat lagta", "flat lagti", "flat lagti hai", "flat lagti hain", "numb", "feel very little from them", "get much from them", "do not get much from them", "don't get much from them", "feel nahi hota", "kuch feel nahi hota", "go through the motions", "go through motions", "mann nahi lagta", "मन नहीं लगता", "दिल नहीं करता", "फीका लगता", "बहुत कम महसूस", "कटा-कटा", "कटा कटा"),
     "phq_q2_low_mood": ("low mood", "sad", "down", "empty", "heavy", "heaviness", "मन भारी", "भारी", "उदास"),
-    "phq_q4_fatigue": ("tired", "drained", "fatigue", "low energy", "energy down", "wiped", "heavy in the morning", "slow to start", "slow to get started", "mind feels slow", "brain fog", "subah heavy", "थक", "थकान", "ऊर्जा", "ऊर्जा कम", "सुबह भारी", "दिमाग धीमा"),
+    "phq_q4_fatigue": ("tired", "drained", "fatigue", "low energy", "energy down", "wiped", "heavy in the morning", "slow to start", "slow to get started", "mind feels slow", "brain fog", "subah heavy", "थक", "थकान", "ऊर्जा", "ऊर्जा कम", "सुबह भारी", "दिमाग धीमा", "aalas", "susti", "सुस्ती", "सुस्त", "आलस", "दिन भर आलस", "next day pura tired", "bed se uthna heavy"),
     "phq_q6_worthlessness": ("burden", "extra burden", "burden hoon", "worthless", "useless", "make things heavier", "making things heavier", "ashamed", "shame", "बोझ", "बोझ हूँ", "सबके लिए बोझ", "बेकार", "मेरी वजह से", "शर्म"),
     "phq_q3_sleep": ("sleep", "asleep", "wake", "waking", "sleep disturb", "neend disturb", "नींद", "रात", "रात में", "उठ जाती", "switch off"),
     "phq_q7_concentration": ("focus", "concentrat", "attention", "cannot focus", "can't focus", "harder to focus", "hard to focus", "taking longer to get started", "takes longer to get started", "mind taking longer", "mind feels slow", "brain fog", "ध्यान", "focus nahi", "ध्यान नहीं टिक", "mind blanks", "screen", "start hone mein time lagta", "start hone me time lagta", "mind ko start hone mein time lagta", "mind ko start hone me time lagta", "दिमाग धीमा"),
-    "gad_q2_control_worry": ("worry", "loop", "looping", "replay", "mind won't stop", "mind wont stop", "चिंता", "सोच बंद"),
-    "gad_q3_excessive_worry": ("future", "rent", "family", "money", "what if", "work", "job", "exam", "काम", "काम को लेकर", "परिवार", "पैसे", "भविष्य", "हर बात"),
-    "gad_q4_trouble_relaxing": ("switch off", "settle down", "quiet your thoughts", "quieting my mind", "quiet my mind", "calming my mind", "calm my mind", "mind ko quiet karna", "mind ko calm karna", "mind ko shant karna", "mind ko shaant karna", "dimag ko quiet karna", "dimag ko calm karna", "dimag ko shant karna", "तनाव", "शांत", "relax", "off karna", "busy mind", "tense body", "body tense", "tense in my body", "body stays tense", "stay tense in my body", "tense lagti"),
+    "gad_q2_control_worry": ("worry", "loop", "looping", "replay", "mind won't stop", "mind wont stop", "mind keeps running", "worry comes back", "दिमाग चलता रहता", "दिमाग को शांत करना मुश्किल", "dimaag rukta hi nahi", "background mein chalta rehta", "चिंता", "सोच बंद"),
+    "gad_q3_excessive_worry": ("future", "rent", "family", "money", "what if", "work", "job", "exam", "future and job", "job aur future", "whether i will keep my job", "job ko lekar worry", "future ko lekar worry", "काम", "काम को लेकर", "परिवार", "पैसे", "भविष्य", "भविष्य और नौकरी", "हर बात"),
+    "gad_q4_trouble_relaxing": ("switch off", "settle down", "quiet your thoughts", "quieting my mind", "quiet my mind", "calming my mind", "calm my mind", "hard to calm down", "mind ko quiet karna", "mind ko calm karna", "mind ko shant karna", "mind ko shaant karna", "mind ko shant karna mushkil", "dimag ko quiet karna", "dimag ko calm karna", "dimag ko shant karna", "दिमाग को शांत करना मुश्किल", "तनाव", "शांत", "relax", "off karna", "busy mind", "tense body", "body tense", "tense in my body", "body stays tense", "stay tense in my body", "tense lagti"),
     "gad_q5_restlessness": ("restless", "restlessness", "sit still", "pacing", "बेचैनी", "chain se baith", "move around"),
 }
 
 TOPIC_SIGNAL_MARKERS: Dict[str, Tuple[str, ...]] = {
     "mood": ("low mood", "sad", "down", "empty", "heavy", "heaviness", "disconnected", "usually enjoy", "used to enjoy", "flat lagta", "flat lagti", "flat lagti hai", "flat lagti hain", "उदासी", "उदास", "खाली", "low feel", "भारी", "मन भारी", "मन नहीं लगता", "कटा-कटा", "कटा कटा"),
     "sleep": ("sleep", "asleep", "wake up", "waking", "neend", "नींद", "सोने", "उठ जाती", "night", "रात"),
-    "energy": ("tired", "drained", "fatigue", "wiped", "low energy", "energy down", "energy bhi down", "energy bhi low", "energy down ho", "heavy in the morning", "slow to start", "slow to get started", "mind feels slow", "brain fog", "subah heavy", "din ke end", "day ke end", "दिन के अंत", "thak", "थक", "थका", "थकान", "ऊर्जा", "सुबह भारी", "दिमाग धीमा", "धीमा लग"),
+    "energy": ("tired", "drained", "fatigue", "wiped", "low energy", "energy down", "energy bhi down", "energy bhi low", "energy down ho", "heavy in the morning", "slow to start", "slow to get started", "mind feels slow", "brain fog", "subah heavy", "din ke end", "day ke end", "दिन के अंत", "thak", "थक", "थका", "थकान", "ऊर्जा", "सुबह भारी", "दिमाग धीमा", "धीमा लग", "aalas", "susti", "सुस्ती", "सुस्त", "आलस"),
     "self_view": ("burden", "extra burden", "burden hoon", "worthless", "useless", "guilt", "make things heavier", "making things heavier", "ashamed", "shame", "बोझ", "बोझ हूँ", "सबके लिए बोझ", "बेकार", "गलती मेरी", "शर्म", "worthless"),
     "focus": ("focus", "concentrat", "attention", "mind blanks", "cannot focus", "can't focus", "harder to focus", "hard to focus", "get started", "taking longer to get started", "takes longer to get started", "mind taking longer", "mind feels slow", "screen", "ध्यान", "focus nahi", "ध्यान नहीं", "ध्यान नहीं टिक", "start hone mein time lagta", "start hone me time lagta", "mind ko start hone mein time lagta", "mind ko start hone me time lagta", "दिमाग धीमा"),
     "anxiety": ("worry", "restless", "tense", "panic", "loop", "बेचैनी", "चिंता", "घबराहट", "mind won't stop", "quieting my mind", "quiet my mind", "calming my mind", "calm my mind", "mind ko quiet karna", "mind ko calm karna", "mind ko shant karna", "mind ko shaant karna"),
@@ -1099,7 +1138,7 @@ class DialoguePlanner:
                 return ANXIETY_LOOP_CLOSE_PROMPTS[language], None
             return ANXIETY_LOOP_BREAK_PROMPTS[language], None
         if plan.next_action == "summarize":
-            return CLOSING_MESSAGES[language], None
+            return self._build_working_summary(snapshot, session), None
         if plan.stage == "rapport":
             targeted_prompt = self._build_prompt_for_target(language, plan, session)
             if targeted_prompt and self._should_use_targeted_rapport(plan, session):
@@ -1294,6 +1333,10 @@ class DialoguePlanner:
             for item_id, item in snapshot.items.items()
             if item.review_recommended or item.status in {"contradicted", "abstained"}
         ]
+        coverage_debt = self._coverage_debt_topics(topic_states, session)
+        latest_user_text = self._latest_user_text(session)
+        continue_intent = self._has_continue_signal(latest_user_text)
+        reopen_signal = self._should_reopen_after_close(session, latest_user_text)
         reflective_anchor = self._build_reflective_anchor(session.language, target_topic, user_style, fatigue)
         continuity_note = self._build_continuity_note(session.language, session, target_topic)
         recommended_nudges = self._recommend_nudges(session, target_topic, user_style, stage, fatigue)
@@ -1313,6 +1356,10 @@ class DialoguePlanner:
             disclosure=disclosure,
             readiness=readiness,
             fatigue=fatigue,
+            coverage_debt=coverage_debt,
+            continue_intent=continue_intent,
+            reopen_signal=reopen_signal,
+            summary_ready=stage == "summary" and not continue_intent and len(coverage_debt) <= 1,
             reflective_anchor=reflective_anchor,
             continuity_note=continuity_note,
             recommended_nudges=recommended_nudges,
@@ -1326,6 +1373,240 @@ class DialoguePlanner:
                 "dialogue": dialogue,
             }
         )
+
+    def _coverage_debt_topics(self, topic_states: list[TopicState], session: ChatSession) -> list[str]:
+        priority_topics: list[str] = []
+        latest_signal_topics = [topic for topic in self._latest_signal_topics(session) if topic in TOPIC_GRAPH]
+        recent_signal_topics = [topic for topic in self._recent_signal_topics(session) if topic in TOPIC_GRAPH]
+        for topic_id in latest_signal_topics + recent_signal_topics:
+            if topic_id not in priority_topics:
+                priority_topics.append(topic_id)
+
+        active_topics = [
+            topic.topic_id
+            for topic in topic_states
+            if topic.topic_id != "safety" and topic.status in {"probing", "review"} and (topic.unresolved_items or topic.review_items)
+        ]
+        for topic_id in active_topics:
+            if topic_id not in priority_topics:
+                priority_topics.append(topic_id)
+
+        pending_topics = [
+            topic.topic_id
+            for topic in topic_states
+            if topic.topic_id != "safety" and topic.status == "pending" and topic.priority >= 3
+        ]
+        for topic_id in pending_topics:
+            if topic_id not in priority_topics:
+                priority_topics.append(topic_id)
+        return priority_topics[:4]
+
+    def _summary_fragments(self, snapshot: ScreeningSnapshot, session: ChatSession) -> list[str]:
+        language = session.language
+        fragments: list[str] = []
+        items = snapshot.items
+        session_signal_topics = self._session_signal_topics(session)
+
+        def _active(item_id: str, minimum: int = 1) -> bool:
+            item = items.get(item_id)
+            return bool(item and item.value is not None and item.value >= minimum and item.status in {"resolved", "partial", "contradicted"})
+
+        if _active("phq_q1_anhedonia"):
+            fragments.append(
+                {
+                    "en": "interest tends to drop before getting started",
+                    "hi": "काम शुरू करने से पहले ही मन हटने लगता है",
+                    "hinglish": "kaam start karne se pehle hi mann hatne lagta hai",
+                }[language]
+            )
+        if _active("phq_q2_low_mood"):
+            fragments.append(
+                {
+                    "en": "the heaviness seems to stay through much of the day",
+                    "hi": "भारीपन दिन के बड़े हिस्से में बना रहता है",
+                    "hinglish": "heaviness din ke bade hissa mein bani rehti hai",
+                }[language]
+            )
+        if _active("phq_q3_sleep"):
+            fragments.append(
+                {
+                    "en": "sleep looks disrupted rather than settled",
+                    "hi": "नींद ठीक से स्थिर नहीं हो पा रही है",
+                    "hinglish": "sleep theek se settle nahi ho pa rahi hai",
+                }[language]
+            )
+        if _active("phq_q4_fatigue") or _active("phq_q7_concentration"):
+            fragments.append(
+                {
+                    "en": "energy and focus both look slower than usual",
+                    "hi": "ऊर्जा और ध्यान दोनों सामान्य से धीमे लग रहे हैं",
+                    "hinglish": "energy aur focus dono normal se slower lag rahe hain",
+                }[language]
+            )
+        if _active("phq_q6_worthlessness"):
+            fragments.append(
+                {
+                    "en": "self-view is also getting pulled toward burden or self-blame",
+                    "hi": "अपने बारे में नज़र भी बोझ या आत्म-दोष की तरफ़ खिंच रही है",
+                    "hinglish": "self-view bhi burden ya self-blame ki taraf khinch raha hai",
+                }[language]
+            )
+        if _active("gad_q2_control_worry") or _active("gad_q3_excessive_worry") or _active("gad_q4_trouble_relaxing") or "anxiety" in session_signal_topics:
+            anxiety_fragment = self._anxiety_summary_fragment(session)
+            if anxiety_fragment:
+                fragments.append(anxiety_fragment)
+
+        if not any("ऊर्जा" in fragment or "energy" in fragment for fragment in fragments) and "energy" in session_signal_topics:
+            fragments.append(
+                {
+                    "en": "energy or startup effort also looks lower than usual",
+                    "hi": "ऊर्जा या शुरुआत करने की क्षमता भी सामान्य से कम लग रही है",
+                    "hinglish": "energy ya start-up effort bhi normal se lower lag raha hai",
+                }[language]
+            )
+        if not any("भारीपन" in fragment or "heaviness" in fragment for fragment in fragments) and "mood" in session_signal_topics:
+            fragments.append(
+                {
+                    "en": "there is still a day-level low or heavy mood in the background",
+                    "hi": "पीछे एक दिन-भर का भारी या नीचे खिंचा हुआ मन बना हुआ है",
+                    "hinglish": "background mein day-level low ya heavy mood bana hua hai",
+                }[language]
+            )
+        if not fragments and any(item_id in ANXIETY_CORE_ITEMS for item_id in session.asked_items[-5:]):
+            fragments.append(self._anxiety_summary_fragment(session))
+        if not fragments and session.asked_items:
+            last_topic = ITEM_TO_TOPIC.get(session.asked_items[-1], "mood")
+            fragments.append(
+                {
+                    "en": f"the main pattern still centers on {self._topic_label(last_topic, language)}",
+                    "hi": f"मुख्य पैटर्न अभी भी {self._topic_label(last_topic, language)} के इर्द-गिर्द है",
+                    "hinglish": f"main pattern abhi bhi {self._topic_label(last_topic, language)} ke around hai",
+                }[language]
+            )
+
+        return fragments[:4]
+
+    def _anxiety_summary_fragment(self, session: ChatSession) -> str:
+        language = session.language
+        recent_user_text = " ".join(self._normalize(turn.text) for turn in session.turns if turn.speaker == "user")
+        channel = self._infer_anxiety_channel(recent_user_text)
+        single_issue = self._has_single_issue_scope_answer(recent_user_text)
+        if channel == "mind" and single_issue:
+            return {
+                "en": "the worry seems to stay mostly around one future or responsibility issue, and the harder part is quieting the mind",
+                "hi": "चिंता ज़्यादातर एक ही भविष्य या ज़िम्मेदारी वाली बात के इर्द-गिर्द रहती है, और मुश्किल हिस्सा दिमाग को शांत करना है",
+                "hinglish": "worry zyada ek future ya responsibility wali baat ke around rehti hai, aur harder part mind ko quiet karna hai",
+            }[language]
+        if channel == "mind":
+            return {
+                "en": "the harder part looks mental rather than bodily: the mind keeps running even when the body is not the main issue",
+                "hi": "मुश्किल हिस्सा शरीर से ज़्यादा मानसिक लग रहा है: जब शरीर मुख्य समस्या नहीं है तब भी दिमाग चलता रहता है",
+                "hinglish": "harder part body se zyada mental lag raha hai: body main issue na ho tab bhi mind chalta rehta hai",
+            }[language]
+        if channel == "body":
+            return {
+                "en": "the worry shows up mainly as physical tension rather than racing thoughts",
+                "hi": "चिंता ज़्यादातर भागते विचारों से नहीं बल्कि शारीरिक तनाव के रूप में दिख रही है",
+                "hinglish": "worry zyada racing thoughts se nahi balki physical tension ke form mein aa rahi hai",
+            }[language]
+        if channel == "both":
+            return {
+                "en": "the worry seems to pull both thoughts and body tension together",
+                "hi": "चिंता विचारों और शारीरिक तनाव दोनों को साथ में खींच रही है",
+                "hinglish": "worry thoughts aur body tension dono ko saath kheench rahi hai",
+            }[language]
+        return {
+            "en": "worry still looks like an active part of the picture",
+            "hi": "चिंता अभी भी इस तस्वीर का सक्रिय हिस्सा लग रही है",
+            "hinglish": "worry abhi bhi picture ka active hissa lag rahi hai",
+        }[language]
+
+    def _infer_anxiety_channel(self, normalized_text: str) -> str:
+        if not normalized_text:
+            return "unclear"
+        mind_markers = (
+            "mind",
+            "thought",
+            "quieting your thoughts",
+            "quieting thoughts",
+            "quiet my mind",
+            "calm my mind",
+            "mind ko",
+            "दिमाग",
+            "dimag",
+            "सोच",
+        )
+        body_markers = (
+            "body",
+            "body tension",
+            "tense body",
+            "physical",
+            "शरीर",
+            "तनाव",
+            "body me",
+            "body mein",
+        )
+        body_negations = (
+            "no body issue",
+            "not body",
+            "body is not the main issue",
+            "body is not the issue",
+            "body mein koi problem nahi",
+            "body me koi problem nahi",
+            "sharir mein koi samasya nahi",
+            "शरीर में कोई समस्या नहीं",
+            "शरीर में मुझे कोई समस्या नहीं",
+            "केवल दिमाग",
+            "सिर्फ दिमाग",
+            "बस दिमाग",
+        )
+        has_mind = any(marker in normalized_text for marker in mind_markers)
+        has_body = any(marker in normalized_text for marker in body_markers)
+        if any(marker in normalized_text for marker in body_negations):
+            return "mind"
+        if has_mind and has_body:
+            return "both"
+        if has_body:
+            return "body"
+        if has_mind:
+            return "mind"
+        return "unclear"
+
+    def _session_signal_topics(self, session: ChatSession) -> set[str]:
+        session_text = " ".join(self._normalize(turn.text) for turn in session.turns if turn.speaker == "user")
+        if not session_text:
+            return set()
+        return {
+            topic_id
+            for topic_id, markers in TOPIC_SIGNAL_MARKERS.items()
+            if any(marker in session_text for marker in markers)
+        }
+
+    def _build_working_summary(self, snapshot: ScreeningSnapshot, session: ChatSession) -> str:
+        language = session.language
+        fragments = self._summary_fragments(snapshot, session)
+        if not fragments:
+            return CLOSING_MESSAGES[language]
+
+        prefix = WORKING_SUMMARY_PREFIXES[language]
+        joined = "; ".join(fragments[:3])
+        debt_topics = snapshot.coverage.dialogue.coverage_debt if snapshot.coverage.dialogue else []
+        if debt_topics:
+            top_debt = self._topic_label(debt_topics[0], language)
+            tail = {
+                "en": f"If one detail still matters to clarify, {top_debt} is the next best place to tighten.",
+                "hi": f"अगर एक बात अभी भी साफ़ करनी हो, तो अगला सबसे उपयोगी हिस्सा {top_debt} रहेगा।",
+                "hinglish": f"Agar ek cheez abhi bhi clarify karni ho, to next best jagah {top_debt} rahegi.",
+            }[language]
+        else:
+            tail = {
+                "en": "If that fits, I can hold this as the current working summary.",
+                "hi": "अगर यह ठीक लग रहा है, तो मैं इसे अभी का कामचलाऊ सार मान सकता हूँ।",
+                "hinglish": "Agar yeh fit lag raha hai, to main ise abhi ka working summary maan sakta hoon.",
+            }[language]
+        if language == "hi":
+            return f"{prefix} {joined}। {tail}"
+        return f"{prefix} {joined}. {tail}"
 
     def _infer_user_style(
         self,
@@ -1463,11 +1744,31 @@ class DialoguePlanner:
             return "opening"
 
         stable_topics = len([topic for topic in topic_states if topic.status == "stable" and topic.topic_id != "safety"])
+        probing_topics = len([topic for topic in topic_states if topic.status in {"probing", "review"} and topic.topic_id != "safety"])
         recent_text = " ".join(self._normalize(turn.text) for turn in user_turns[-2:])
+        latest_text = self._latest_user_text(session)
         closure_signal = any(marker in recent_text for marker in CLOSURE_MARKERS)
         completion = snapshot.coverage.completion_ratio
+        latest_signal_topics = self._latest_signal_topics(session) & AFFECTIVE_TOPIC_FAMILY
 
-        if completion >= 0.62 and (closure_signal or stable_topics >= 3 or user_style.steering_preference == "guided"):
+        if self._has_continue_signal(latest_text):
+            return "steady"
+        if latest_signal_topics and completion < 0.85:
+            unresolved_latest = any(
+                snapshot.items[item_id].status != "resolved"
+                for topic_id in latest_signal_topics
+                for item_id in TOPIC_GRAPH[topic_id].item_ids
+            )
+            if unresolved_latest:
+                return "steady"
+
+        if probing_topics > 1 and completion < 0.85:
+            return "steady"
+        if completion >= 0.68 and probing_topics <= 1 and (
+            closure_signal
+            or stable_topics >= 3
+            or (user_style.steering_preference == "guided" and stable_topics >= 2)
+        ):
             return "ready_to_close"
         if completion >= 0.42 or stable_topics >= 2:
             return "steady"
@@ -1575,11 +1876,14 @@ class DialoguePlanner:
         if any(topic.status in {"review", "probing"} for topic in topic_states if topic.topic_id != "safety"):
             return "clarification"
         stable_topics = [topic for topic in topic_states if topic.status == "stable" and topic.topic_id != "safety"]
-        if readiness == "ready_to_close":
+        active_open_topics = [topic for topic in topic_states if topic.status in {"review", "probing"} and topic.topic_id != "safety"]
+        if readiness == "ready_to_close" and len(active_open_topics) <= 1:
             return "summary"
         if fatigue == "high" and snapshot.coverage.completion_ratio >= 0.45:
             return "clarification"
         if snapshot.coverage.completion_ratio >= 0.72 or len(stable_topics) >= 4:
+            if len(active_open_topics) > 1:
+                return "clarification"
             return "summary"
         return "exploration"
 
@@ -1611,6 +1915,8 @@ class DialoguePlanner:
             return "sleep"
         if current_topic == "sleep" and "gad_q4_trouble_relaxing" in latest_signal_items:
             return "anxiety"
+        if "energy" in latest_signal_topics and self._infer_anxiety_channel(latest_user_text) == "mind":
+            return "energy"
 
         if stage == "rapport":
             touched_candidates = [
@@ -1875,6 +2181,12 @@ class DialoguePlanner:
         if last_item == "gad_q2_control_worry" and target_topic == "anxiety":
             if self._has_worry_domain_signal(latest_user_text) and available("gad_q3_excessive_worry"):
                 return "gad_q3_excessive_worry"
+            if (
+                self._infer_anxiety_channel(latest_user_text) == "mind"
+                and self._has_persistent_worry_signal(latest_user_text)
+                and available("gad_q3_excessive_worry")
+            ):
+                return "gad_q3_excessive_worry"
             if "phq_q3_sleep" in recent_signal_items and available("gad_q4_trouble_relaxing"):
                 return "gad_q4_trouble_relaxing"
             if "gad_q4_trouble_relaxing" in recent_signal_items and available("gad_q4_trouble_relaxing"):
@@ -1911,6 +2223,16 @@ class DialoguePlanner:
                 and session.asked_items.count("gad_q3_excessive_worry") >= 1
             ):
                 return None
+            if (
+                self._infer_anxiety_channel(latest_user_text) == "mind"
+                and (
+                    self._has_persistent_worry_signal(latest_user_text)
+                    or self._has_worry_domain_signal(latest_user_text)
+                    or "gad_q2_control_worry" in latest_signal_items
+                )
+                and available("gad_q3_excessive_worry")
+            ):
+                return "gad_q3_excessive_worry"
             if self._has_worry_scope_answer(latest_user_text) and available("gad_q3_excessive_worry"):
                 return "gad_q3_excessive_worry"
             if self._has_worry_domain_signal(latest_user_text) and available("gad_q3_excessive_worry"):
@@ -2433,6 +2755,7 @@ class DialoguePlanner:
 
     def _post_close_segments(self, language: str) -> Tuple[str, ...]:
         return (
+            WORKING_SUMMARY_PREFIXES[language],
             ANXIETY_LOOP_CLOSE_PROMPTS[language],
             CLOSING_MESSAGES[language],
             POST_CLOSE_CHOOSER_MESSAGES[language],
@@ -2515,6 +2838,11 @@ class DialoguePlanner:
             return True
         return any(marker in normalized_text for marker in CLOSE_ACK_MARKERS if len(marker.split()) > 1)
 
+    def _has_continue_signal(self, normalized_text: str) -> bool:
+        if not normalized_text:
+            return False
+        return any(marker in normalized_text for marker in CONTINUE_MARKERS)
+
     def _has_high_priority_post_close_signal(self, normalized_text: str) -> bool:
         if not normalized_text:
             return False
@@ -2529,9 +2857,13 @@ class DialoguePlanner:
             return False
         if self._is_post_close_echo(session, normalized_text, session.language):
             return False
+        if self._has_continue_signal(normalized_text):
+            return True
+        latest_signal_topics = self._latest_signal_topics(session)
+        if latest_signal_topics & AFFECTIVE_TOPIC_FAMILY:
+            return True
         if self._is_close_acknowledgement(normalized_text) or self._is_nonexpansive_followup(normalized_text):
             return False
-        latest_signal_topics = self._latest_signal_topics(session)
         if not latest_signal_topics:
             return False
         reopenable_topics = (AFFECTIVE_TOPIC_FAMILY | {"sleep"}) - {"anxiety"}

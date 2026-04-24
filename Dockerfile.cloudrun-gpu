@@ -1,0 +1,34 @@
+FROM python:3.11-slim
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PIP_NO_CACHE_DIR=1 \
+    PORT=8000 \
+    MANOVARTA_MODEL_PROVIDER=local \
+    MANOVARTA_CHAT_MODEL=/models/qwen3-14b \
+    MANOVARTA_LOCAL_LOAD_IN_4BIT=true \
+    MANOVARTA_LIVE_CHAT_LLM_ANALYSIS=true \
+    MANOVARTA_LIVE_LLM_TURN_THRESHOLD=1 \
+    HF_HUB_DISABLE_TELEMETRY=1
+
+WORKDIR /app
+
+COPY pyproject.toml README.md manage.py .env.example ./
+COPY manovarta_core ./manovarta_core
+COPY manovarta_admin ./manovarta_admin
+COPY screening ./screening
+COPY training ./training
+COPY data/seed ./data/seed
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends git \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN pip install --upgrade pip \
+    && pip install ".[runtime-cloud]"
+
+RUN python -c "from huggingface_hub import snapshot_download; snapshot_download('Qwen/Qwen3-14B', local_dir='/models/qwen3-14b', ignore_patterns=['*.onnx', '*.h5', '*.msgpack', '*.gguf', 'original/*'])"
+
+EXPOSE 8000
+
+CMD ["sh", "-c", "uvicorn manovarta_core.api:app --host 0.0.0.0 --port ${PORT:-8000}"]

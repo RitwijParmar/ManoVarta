@@ -13,12 +13,13 @@ artifacts
 logs
 outputs/*
 !outputs/local_safety_boost/
-outputs/local_safety_boost/*
-!outputs/local_safety_boost/safety-indicbert-best-infer-fp16/
-!outputs/local_safety_boost/safety-indicbert-best-infer-fp16/**
+!outputs/local_safety_boost/**
 reports
 data/external
 data/gold
+data/*
+!data/seed/
+!data/seed/**
 manovarta.egg-info
 db.sqlite3
 .codex_tmp

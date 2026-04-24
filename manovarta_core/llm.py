@@ -4,6 +4,7 @@ import json
 import re
 import time
 from functools import lru_cache
+from pathlib import Path
 from threading import Lock
 from typing import Any, Optional, Tuple
 
@@ -12,6 +13,7 @@ from manovarta_core.dialogue import FREQUENCY_MARKERS, TIME_MARKERS
 from manovarta_core.knowledge import knowledge_summary_for_topic, profile_summary
 from manovarta_core.json_utils import normalize_extractor_payload, normalize_safety_level, parse_extractor_payload, parse_json_object
 from manovarta_core.questionnaires import ITEM_INDEX
+from manovarta_core.scoring import ConversationScorer
 from manovarta_core.schemas import ChatSession, SafetyFlag, ScreeningSnapshot, Turn
 from manovarta_core.text import extract_window, normalize_text
 
@@ -21,12 +23,26 @@ except ImportError:  # pragma: no cover
     InferenceClient = None
 
 try:  # pragma: no cover
+    import vertexai
+    from vertexai.generative_models import GenerativeModel, GenerationConfig
+except ImportError:  # pragma: no cover
+    vertexai = None
+    GenerativeModel = None
+    GenerationConfig = None
+
+try:  # pragma: no cover
     import torch
-    from transformers import AutoModelForCausalLM, AutoTokenizer
+    from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
 except ImportError:  # pragma: no cover
     AutoModelForCausalLM = None
     AutoTokenizer = None
+    BitsAndBytesConfig = None
     torch = None
+
+try:  # pragma: no cover
+    from peft import PeftModel
+except ImportError:  # pragma: no cover
+    PeftModel = None
 
 
 EXTRACTOR_TOPIC_GUIDANCE = ("mood", "sleep", "energy", "self_view", "focus", "anxiety", "safety")
@@ -116,30 +132,122 @@ class _ChatCompletionOutput:
 
 
 @lru_cache(maxsize=4)
-def _load_local_generation_backend(model_name: str, token: Optional[str]):
+def _load_local_generation_backend(
+    model_name: str,
+    token: Optional[str],
+    adapter_path: Optional[str],
+    load_in_4bit: bool,
+):
     if AutoTokenizer is None or AutoModelForCausalLM is None or torch is None:
         raise RuntimeError("transformers runtime is not installed")
 
+    resolved_adapter = _resolve_adapter_path(adapter_path)
+    base_model_name = _resolve_base_model_name(model_name, resolved_adapter)
+    tokenizer_source = _resolve_tokenizer_source(base_model_name, resolved_adapter)
+    model_kwargs = {
+        "token": token,
+        "trust_remote_code": True,
+    }
+
+    if load_in_4bit and torch.cuda.is_available() and BitsAndBytesConfig is not None:
+        model_kwargs["quantization_config"] = BitsAndBytesConfig(
+            load_in_4bit=True,
+            bnb_4bit_quant_type="nf4",
+            bnb_4bit_compute_dtype=_preferred_cuda_dtype(),
+        )
+        model_kwargs["device_map"] = "auto"
+    else:
+        model_kwargs["low_cpu_mem_usage"] = True
+        if torch.cuda.is_available():
+            model_kwargs["torch_dtype"] = _preferred_cuda_dtype()
+
     tokenizer = AutoTokenizer.from_pretrained(
-        model_name,
+        tokenizer_source,
         token=token,
         trust_remote_code=True,
     )
     model = AutoModelForCausalLM.from_pretrained(
-        model_name,
-        token=token,
-        trust_remote_code=True,
-        low_cpu_mem_usage=True,
+        base_model_name,
+        **model_kwargs,
     )
+    if resolved_adapter and PeftModel is not None:
+        model = PeftModel.from_pretrained(model, resolved_adapter, token=token)
+    elif resolved_adapter and PeftModel is None:
+        raise RuntimeError("peft is required to load adapter checkpoints")
+
+    if "device_map" not in model_kwargs and torch.cuda.is_available():
+        model.to("cuda")
     if tokenizer.pad_token_id is None and tokenizer.eos_token_id is not None:
         tokenizer.pad_token = tokenizer.eos_token
     model.eval()
-    return tokenizer, model
+    return tokenizer, model, _infer_input_device(model)
+
+
+def _resolve_adapter_path(adapter_path: Optional[str]) -> Optional[str]:
+    if not adapter_path:
+        return None
+    path = Path(adapter_path).expanduser()
+    return str(path) if path.exists() else adapter_path
+
+
+def _resolve_base_model_name(model_name: str, adapter_path: Optional[str]) -> str:
+    if not adapter_path:
+        return model_name
+    config_path = Path(adapter_path) / "adapter_config.json"
+    if not config_path.exists():
+        return model_name
+    payload = json.loads(config_path.read_text(encoding="utf-8"))
+    return payload.get("base_model_name_or_path", model_name)
+
+
+def _resolve_tokenizer_source(model_name: str, adapter_path: Optional[str]) -> str:
+    if not adapter_path:
+        return model_name
+    adapter_root = Path(adapter_path)
+    tokenizer_files = ("tokenizer_config.json", "tokenizer.json", "special_tokens_map.json")
+    if any((adapter_root / filename).exists() for filename in tokenizer_files):
+        return str(adapter_root)
+    return _resolve_base_model_name(model_name, adapter_path)
+
+
+def _preferred_cuda_dtype():
+    if torch is None:
+        return None
+    if getattr(torch.cuda, "is_bf16_supported", lambda: False)():
+        return torch.bfloat16
+    return torch.float16
+
+
+def _infer_input_device(model) -> Optional[str]:
+    hf_device_map = getattr(model, "hf_device_map", None)
+    if isinstance(hf_device_map, dict):
+        for device in hf_device_map.values():
+            if isinstance(device, int):
+                return f"cuda:{device}"
+            if isinstance(device, str) and device not in {"cpu", "disk"}:
+                return device
+    try:
+        first_parameter = next(model.parameters())
+        return str(first_parameter.device)
+    except Exception:
+        return None
 
 
 class _LocalGenerationClient:
-    def __init__(self, model_name: str, token: Optional[str]) -> None:
-        self._tokenizer, self._model = _load_local_generation_backend(model_name, token)
+    def __init__(
+        self,
+        model_name: str,
+        token: Optional[str],
+        *,
+        adapter_path: Optional[str] = None,
+        load_in_4bit: bool = False,
+    ) -> None:
+        self._tokenizer, self._model, self._input_device = _load_local_generation_backend(
+            model_name,
+            token,
+            adapter_path,
+            load_in_4bit,
+        )
         self._lock = Lock()
 
     def chat_completion(self, *, messages, temperature: float, max_tokens: int):
@@ -168,22 +276,115 @@ class _LocalGenerationClient:
                 messages,
                 tokenize=True,
                 add_generation_prompt=True,
+                enable_thinking=False,
                 return_tensors="pt",
                 return_dict=True,
             )
         except Exception:
-            prompt = "\n".join(f"{message['role']}: {message['content']}" for message in messages) + "\nassistant:"
-            model_inputs = self._tokenizer(prompt, return_tensors="pt")
+            try:
+                model_inputs = self._tokenizer.apply_chat_template(
+                    messages,
+                    tokenize=True,
+                    add_generation_prompt=True,
+                    return_tensors="pt",
+                    return_dict=True,
+                )
+            except Exception:
+                prompt = "\n".join(f"{message['role']}: {message['content']}" for message in messages) + "\nassistant:"
+                model_inputs = self._tokenizer(prompt, return_tensors="pt")
+        if self._input_device and self._input_device != "cpu":
+            model_inputs = {
+                key: value.to(self._input_device) if hasattr(value, "to") else value
+                for key, value in model_inputs.items()
+            }
         return model_inputs
 
 
-def _build_text_generation_client(config: RuntimeConfig, model_name: str):
-    if config.local_inference_enabled:
+class _VertexGenerationClient:
+    def __init__(self, config: RuntimeConfig, model_name: str) -> None:
+        if vertexai is None or GenerativeModel is None or GenerationConfig is None:
+            raise RuntimeError("vertex runtime is not installed")
+        if not config.vertex_project:
+            raise RuntimeError("vertex project is not configured")
+        self._config = config
+        self._model_name = model_name
+        self._lock = Lock()
+        self._initialized = False
+
+    def chat_completion(self, *, messages, temperature: float, max_tokens: int):
+        wants_json = any(
+            "return strict json only" in str(message.get("content", "")).strip().lower()
+            or "return json with keys" in str(message.get("content", "")).strip().lower()
+            for message in messages
+        )
+        system_instruction = "\n\n".join(
+            message["content"].strip()
+            for message in messages
+            if message.get("role") == "system" and message.get("content")
+        ).strip()
+        prompt = "\n\n".join(
+            f"{message.get('role', 'user').upper()}:\n{message.get('content', '').strip()}"
+            for message in messages
+            if message.get("content")
+        ).strip()
+        if not prompt:
+            return _ChatCompletionOutput("")
+
+        with self._lock:
+            if not self._initialized:
+                vertexai.init(project=self._config.vertex_project, location=self._config.vertex_location)
+                self._initialized = True
+
+            model = GenerativeModel(
+                self._model_name,
+                system_instruction=system_instruction or None,
+            )
+            response = model.generate_content(
+                prompt,
+                generation_config=GenerationConfig(
+                    temperature=temperature,
+                    max_output_tokens=max_tokens,
+                    response_mime_type="application/json" if wants_json else "text/plain",
+                ),
+            )
+
+        content = getattr(response, "text", "") or ""
+        if not content and getattr(response, "candidates", None):
+            parts = []
+            for candidate in response.candidates:
+                candidate_parts = getattr(getattr(candidate, "content", None), "parts", None) or []
+                for part in candidate_parts:
+                    part_text = getattr(part, "text", None)
+                    if part_text:
+                        parts.append(part_text)
+            content = "\n".join(parts).strip()
+        return _ChatCompletionOutput(content.strip())
+
+
+def _build_text_generation_client(
+    config: RuntimeConfig,
+    provider: str,
+    model_name: str,
+    *,
+    adapter_path: Optional[str] = None,
+):
+    normalized_provider = (provider or config.model_provider).strip().lower()
+    if normalized_provider == "local":
         try:
-            return _LocalGenerationClient(model_name, config.hf_token)
+            return _LocalGenerationClient(
+                model_name,
+                config.hf_token,
+                adapter_path=adapter_path,
+                load_in_4bit=config.local_load_in_4bit,
+            )
         except Exception:
             return None
-    if config.huggingface_enabled and InferenceClient is not None:
+    if normalized_provider == "vertex":
+        try:
+            return _VertexGenerationClient(config, model_name)
+        except Exception:
+            return None
+    if normalized_provider == "huggingface" and config.hf_token and InferenceClient is not None:
         return InferenceClient(
             model=model_name,
             token=config.hf_token,
@@ -195,7 +396,13 @@ def _build_text_generation_client(config: RuntimeConfig, model_name: str):
 class HuggingFaceResponder:
     def __init__(self, config: RuntimeConfig) -> None:
         self.config = config
-        self._client = _build_text_generation_client(self.config, self.config.chat_model)
+        self._provider = self.config.chat_model_provider
+        self._client = _build_text_generation_client(
+            self.config,
+            self._provider,
+            self.config.chat_model,
+            adapter_path=self.config.local_chat_adapter,
+        )
 
     @property
     def enabled(self) -> bool:
@@ -233,9 +440,11 @@ class HuggingFaceResponder:
             self._sounds_invalid_empathy(cleaned)
             or self._repeats_last_question(cleaned, session)
             or self._looks_like_meta_or_draft(cleaned)
+            or self._contradicts_recent_channel(cleaned, session)
+            or self._summary_stage_sounds_empty(cleaned, snapshot)
         ):
             return fallback_text, "template"
-        return cleaned, self.config.model_provider
+        return cleaned, self._provider
 
     def _build_messages(
         self,
@@ -254,11 +463,12 @@ class HuggingFaceResponder:
         topic_knowledge = knowledge_summary_for_topic(dialogue.target_topic)
         style_guidance = self._build_style_guidance(dialogue)
         nudge_guidance = self._build_nudge_guidance(dialogue)
+        coverage_debt = ", ".join(dialogue.coverage_debt) or "none"
 
         system_prompt = (
             "You are ManoVarta, a multilingual mental health screening assistant. "
             "You are not a therapist and you do not diagnose. "
-            "Write one concise follow-up question or one brief closing message. "
+            "Write one concise follow-up question or one brief summary-stage message. "
             "Stay in the user's language. Use at most two sentences and prefer one focused question. "
             "Mirror the user's pacing and level of detail without sounding scripted. "
             "Use autonomy-supportive phrasing like 'if easier' or 'you can pick one' for guarded or fatigued users. "
@@ -272,6 +482,8 @@ class HuggingFaceResponder:
             "Do not stack gratitude, continuity reminders, and reflective paraphrases in the same short reply. "
             "Do not repeat the previous assistant question in the same wording. "
             "If the user already answered timing or frequency, move to what the symptom feels like, how strong it is, or how it affects the day. "
+            "If the dialogue stage is summary, give a plain-language working summary of the main pattern you have enough confidence to hold, "
+            "and optionally mention one missing detail only if it truly matters. Do not just say that the conversation can stop. "
             "Sound warm, calm, and respectful. "
             "Do not mention PHQ-9 or GAD-7. "
             "If safety is urgent, do not continue screening."
@@ -292,6 +504,10 @@ class HuggingFaceResponder:
             f"Disclosure efficiency: items_per_turn={dialogue.disclosure.items_per_user_turn}, resolved_per_turn={dialogue.disclosure.resolved_per_user_turn}, nudge_effectiveness={dialogue.disclosure.nudge_effectiveness}\n"
             f"Readiness: {dialogue.readiness}\n"
             f"Fatigue: {dialogue.fatigue}\n"
+            f"Coverage debt topics: {coverage_debt}\n"
+            f"Continue intent: {dialogue.continue_intent}\n"
+            f"Reopen signal: {dialogue.reopen_signal}\n"
+            f"Summary ready: {dialogue.summary_ready}\n"
             f"Recommended nudge families: {', '.join(dialogue.recommended_nudges) or 'none'}\n"
             f"Style guidance: {style_guidance}\n"
             f"Nudge guidance: {nudge_guidance}\n"
@@ -307,6 +523,72 @@ class HuggingFaceResponder:
             {"role": "system", "content": system_prompt},
             {"role": "user", "content": user_prompt},
         ]
+
+    def _contradicts_recent_channel(self, cleaned: str, session: ChatSession) -> bool:
+        latest_user_text = ""
+        for turn in reversed(session.turns):
+            if turn.speaker == "user":
+                latest_user_text = normalize_text(turn.text)
+                break
+        if not latest_user_text:
+            return False
+        body_negations = (
+            "no body issue",
+            "not body",
+            "mostly mental",
+            "only mental",
+            "body is not the issue",
+            "body is not the main issue",
+            "body mein koi problem nahi",
+            "body me koi problem nahi",
+            "sharir mein koi samasya nahi",
+            "शरीर में कोई समस्या नहीं",
+            "शरीर में मुझे कोई समस्या नहीं",
+            "केवल दिमाग",
+            "सिर्फ दिमाग",
+            "बस दिमाग",
+        )
+        cleaned_norm = normalize_text(cleaned)
+        if any(marker in latest_user_text for marker in body_negations):
+            contradictory = (
+                "mind and body" in cleaned_norm
+                or "both mind and body" in cleaned_norm
+                or "दिमाग और शरीर दोनों" in cleaned_norm
+                or "mind aur body dono" in cleaned_norm
+                or "relax your body" in cleaned_norm
+                or "body tension" in cleaned_norm
+                or "tense body" in cleaned_norm
+                or "body relax karna" in cleaned_norm
+                or "शरीर को ढीला" in cleaned_norm
+            )
+            if contradictory:
+                return True
+        return False
+
+    def _summary_stage_sounds_empty(self, cleaned: str, snapshot: ScreeningSnapshot) -> bool:
+        if snapshot.coverage.dialogue.stage != "summary":
+            return False
+        cleaned_norm = normalize_text(cleaned)
+        empty_summary_markers = (
+            "we can pause here",
+            "we can stop here",
+            "you can stop here",
+            "leave this here for now",
+            "yahin viram rakh sakte hain",
+            "हम अभी यहीं विराम रख सकते हैं",
+            "when you want to continue",
+            "jab aage badhna chahein",
+        )
+        if any(marker in cleaned_norm for marker in empty_summary_markers):
+            summary_markers = (
+                "working picture",
+                "working summary",
+                "तस्वीर बन रही है",
+                "कामचलाऊ सार",
+                "picture ban rahi hai",
+            )
+            return not any(marker in cleaned_norm for marker in summary_markers)
+        return False
 
     def _build_style_guidance(self, dialogue) -> str:
         parts: list[str] = []
@@ -414,13 +696,13 @@ class HuggingFaceResponder:
     def _should_prefer_fallback(self, session: ChatSession, snapshot: ScreeningSnapshot, target_item: Optional[str]) -> bool:
         dialogue = snapshot.coverage.dialogue
         if (
-            self.config.model_provider == "local"
+            self._provider == "local"
             and target_item
             and dialogue.stage in {"rapport", "clarification", "exploration"}
             and dialogue.target_topic != "safety"
         ):
             return True
-        if self.config.model_provider == "local" and session.language in {"hi", "hinglish"}:
+        if self._provider == "local" and session.language in {"hi", "hinglish"}:
             return True
         if not target_item or target_item not in ITEM_INDEX:
             return False
@@ -472,7 +754,13 @@ class HuggingFaceResponder:
 class HuggingFaceExtractor:
     def __init__(self, config: RuntimeConfig) -> None:
         self.config = config
-        self._client = _build_text_generation_client(self.config, self.config.extraction_model)
+        self._provider = self.config.extraction_model_provider
+        self._client = _build_text_generation_client(
+            self.config,
+            self._provider,
+            self.config.extraction_model,
+            adapter_path=self.config.local_extraction_adapter,
+        )
 
     @property
     def enabled(self) -> bool:
@@ -483,16 +771,22 @@ class HuggingFaceExtractor:
             return None
 
         normalized_language = language.lower()
-        if self.config.local_inference_enabled:
+        if self._provider == "local":
             return self._extract_with_local_fast_path(turns, normalized_language)
 
         if normalized_language in {"en", "hi", "hinglish"}:
-            return self._extract_with_window_verifier(turns, normalized_language)
+            payload = self._extract_with_window_verifier(turns, normalized_language)
+            if payload and payload.get("items"):
+                return payload
+            return self._build_rule_rescue_payload(turns, normalized_language, payload)
 
         transcript = self._build_extraction_transcript(turns)
         full_transcript = self._build_extraction_transcript(turns, include_assistant=True)
         item_lines = self._item_lines(include_hints=False)
-        return self._run_attempt_sequence(normalized_language, transcript, full_transcript, item_lines)
+        payload = self._run_attempt_sequence(normalized_language, transcript, full_transcript, item_lines)
+        if payload and payload.get("items"):
+            return payload
+        return self._build_rule_rescue_payload(turns, normalized_language, payload)
 
     def _extract_with_local_fast_path(self, turns: list[Turn], language: str) -> Optional[dict]:
         transcripts = self._build_local_fast_transcripts(turns)
@@ -596,7 +890,7 @@ class HuggingFaceExtractor:
         *,
         prefer_compact: bool = False,
     ) -> list[tuple[list[dict[str, str]], int]]:
-        if self.config.local_inference_enabled:
+        if self._provider == "local":
             return [
                 (
                     self._build_compact_extraction_messages(language, primary_transcript),
@@ -643,7 +937,7 @@ class HuggingFaceExtractor:
         return parse_extractor_payload(content)
 
     def _build_extraction_transcript(self, turns: list[Turn], *, include_assistant: bool = False) -> str:
-        if self.config.local_inference_enabled:
+        if self._provider == "local":
             selected_turns = turns[-10:] if include_assistant else [turn for turn in turns if turn.speaker == "user"][-6:]
         else:
             selected_turns = turns[-12:] if include_assistant else [turn for turn in turns if turn.speaker == "user"][-6:]
@@ -778,6 +1072,54 @@ class HuggingFaceExtractor:
         if current is None:
             return dict(candidate)
         return dict(candidate) if self._prefer_item(candidate, current) else current
+
+    def _build_rule_rescue_payload(
+        self,
+        turns: list[Turn],
+        language: str,
+        prior_payload: Optional[dict],
+    ) -> Optional[dict]:
+        snapshot = ConversationScorer().analyze(turns, language, SafetyFlag(level="none"))
+        if not snapshot.evidence_spans:
+            return prior_payload
+
+        span_index = {span.span_id: span for span in snapshot.evidence_spans}
+        rescued_items = []
+        for item_id, item in snapshot.items.items():
+            if item.value is None or item.status not in {"resolved", "partial"}:
+                continue
+            quote = ""
+            for span_id in item.evidence_span_ids:
+                span = span_index.get(span_id)
+                if span is not None:
+                    quote = span.text_span
+                    break
+            rescued_items.append(
+                {
+                    "item_id": item_id,
+                    "value": item.value,
+                    "evidence_quote": quote,
+                    "confidence_note": "Rule-grounded rescue fallback after non-parseable extractor output.",
+                }
+            )
+
+        if not rescued_items:
+            return prior_payload
+
+        payload = normalize_extractor_payload(
+            {
+                "items": rescued_items,
+                "safety_level": prior_payload.get("safety_level", "none") if prior_payload else "none",
+                "safety_cues": prior_payload.get("safety_cues", []) if prior_payload else [],
+                "notes": " | ".join(
+                    part for part in [
+                        prior_payload.get("notes", "").strip() if prior_payload else "",
+                        "rule_rescue_fallback",
+                    ] if part
+                ),
+            }
+        )
+        return payload or prior_payload
 
     def _run_candidate_pass(self, language: str, transcript: str, item_lines: str) -> Optional[dict]:
         try:
@@ -1125,7 +1467,17 @@ class HuggingFaceExtractor:
 class HuggingFaceSafetyAssessor:
     def __init__(self, config: RuntimeConfig) -> None:
         self.config = config
-        self._client = _build_text_generation_client(self.config, self.config.safety_model) if self.config.safety_model else None
+        self._provider = self.config.safety_model_provider
+        self._client = (
+            _build_text_generation_client(
+                self.config,
+                self._provider,
+                self.config.safety_model,
+                adapter_path=self.config.local_safety_adapter,
+            )
+            if self.config.safety_model
+            else None
+        )
 
     @property
     def enabled(self) -> bool:

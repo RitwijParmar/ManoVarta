@@ -38,14 +38,65 @@ class RuntimeConfig:
     live_chat_llm_analysis_enabled: bool = False
     live_llm_turn_threshold: int = 2
     local_safety_checkpoint: Optional[str] = None
+    local_load_in_4bit: bool = False
+    local_chat_adapter: Optional[str] = None
+    local_extraction_adapter: Optional[str] = None
+    local_safety_adapter: Optional[str] = None
+    chat_provider: str = ""
+    extraction_provider: str = ""
+    safety_provider: str = ""
+    vertex_project: Optional[str] = None
+    vertex_location: str = "us-central1"
+    async_scoring_enabled: bool = False
+    async_scoring_dir: str = str(PROJECT_ROOT / "artifacts" / "async_scoring")
 
     @property
     def huggingface_enabled(self) -> bool:
-        return bool(self.hf_token and self.model_provider == "huggingface")
+        return bool(
+            self.hf_token
+            and any(
+                provider == "huggingface"
+                for provider in (
+                    self.chat_model_provider,
+                    self.extraction_model_provider,
+                    self.safety_model_provider,
+                )
+            )
+        )
 
     @property
     def local_inference_enabled(self) -> bool:
-        return self.model_provider == "local"
+        return any(
+            provider == "local"
+            for provider in (
+                self.chat_model_provider,
+                self.extraction_model_provider,
+                self.safety_model_provider,
+            )
+        )
+
+    @property
+    def vertex_enabled(self) -> bool:
+        return any(
+            provider == "vertex"
+            for provider in (
+                self.chat_model_provider,
+                self.extraction_model_provider,
+                self.safety_model_provider,
+            )
+        )
+
+    @property
+    def chat_model_provider(self) -> str:
+        return (self.chat_provider or self.model_provider).strip().lower()
+
+    @property
+    def extraction_model_provider(self) -> str:
+        return (self.extraction_provider or self.model_provider).strip().lower()
+
+    @property
+    def safety_model_provider(self) -> str:
+        return (self.safety_provider or self.model_provider).strip().lower()
 
     @property
     def semantic_safety_enabled(self) -> bool:
@@ -140,4 +191,15 @@ def get_runtime_config() -> RuntimeConfig:
         live_chat_llm_analysis_enabled=os.getenv("MANOVARTA_LIVE_CHAT_LLM_ANALYSIS", "false").strip().lower() in {"1", "true", "yes", "on"},
         live_llm_turn_threshold=int(os.getenv("MANOVARTA_LIVE_LLM_TURN_THRESHOLD", "2")),
         local_safety_checkpoint=discover_local_safety_checkpoint(),
+        local_load_in_4bit=os.getenv("MANOVARTA_LOCAL_LOAD_IN_4BIT", "false").strip().lower() in {"1", "true", "yes", "on"},
+        local_chat_adapter=os.getenv("MANOVARTA_LOCAL_CHAT_ADAPTER"),
+        local_extraction_adapter=os.getenv("MANOVARTA_LOCAL_EXTRACTION_ADAPTER"),
+        local_safety_adapter=os.getenv("MANOVARTA_LOCAL_SAFETY_ADAPTER"),
+        chat_provider=os.getenv("MANOVARTA_CHAT_PROVIDER", ""),
+        extraction_provider=os.getenv("MANOVARTA_EXTRACTION_PROVIDER", ""),
+        safety_provider=os.getenv("MANOVARTA_SAFETY_PROVIDER", ""),
+        vertex_project=os.getenv("MANOVARTA_VERTEX_PROJECT") or os.getenv("GOOGLE_CLOUD_PROJECT") or os.getenv("GCP_PROJECT"),
+        vertex_location=os.getenv("MANOVARTA_VERTEX_LOCATION", os.getenv("GOOGLE_CLOUD_LOCATION", "us-central1")),
+        async_scoring_enabled=os.getenv("MANOVARTA_ASYNC_SCORING_ENABLED", "false").strip().lower() in {"1", "true", "yes", "on"},
+        async_scoring_dir=os.getenv("MANOVARTA_ASYNC_SCORING_DIR", str(PROJECT_ROOT / "artifacts" / "async_scoring")),
     )

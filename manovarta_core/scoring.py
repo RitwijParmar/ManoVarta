@@ -71,11 +71,21 @@ class ConversationScorer:
         if "no good reason" in window:
             window = window.replace("no good reason", " ")
         phrase_contains_negation = any(cue in normalized_phrase for cue in NEGATION_CUES)
-        if not phrase_contains_negation and any(cue in window for cue in NEGATION_CUES):
+        if not phrase_contains_negation and self._contains_cue(window, NEGATION_CUES):
             return "absent"
         if any(cue in local_window for cue in UNCERTAINTY_CUES):
             return "uncertain"
         return "present"
+
+    def _contains_cue(self, text: str, cues: Tuple[str, ...]) -> bool:
+        padded = f" {text.strip()} "
+        for cue in cues:
+            normalized_cue = normalize_text(cue).strip()
+            if not normalized_cue:
+                continue
+            if f" {normalized_cue} " in padded:
+                return True
+        return False
 
     def _resolve_score(self, base_score: int, local_window: str, polarity: str) -> int:
         if polarity == "absent":

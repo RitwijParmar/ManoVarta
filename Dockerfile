@@ -4,13 +4,18 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     PIP_NO_CACHE_DIR=1 \
     PORT=8000 \
-    MANOVARTA_MODEL_PROVIDER=local \
-    MANOVARTA_CHAT_MODEL=/models/qwen2.5-0.5b-instruct \
-    MANOVARTA_EXTRACTION_MODEL=/models/qwen2.5-0.5b-instruct \
+    MANOVARTA_MODEL_PROVIDER=vertex \
+    MANOVARTA_CHAT_PROVIDER=vertex \
+    MANOVARTA_EXTRACTION_PROVIDER=vertex \
+    MANOVARTA_SAFETY_PROVIDER=local \
+    MANOVARTA_CHAT_MODEL=gemini-2.5-flash \
+    MANOVARTA_EXTRACTION_MODEL=gemini-2.5-flash \
+    MANOVARTA_VERTEX_LOCATION=us-central1 \
     MANOVARTA_LIVE_CHAT_LLM_ANALYSIS=true \
     MANOVARTA_LIVE_LLM_TURN_THRESHOLD=1 \
+    MANOVARTA_ASYNC_SCORING_ENABLED=true \
+    MANOVARTA_ASYNC_SCORING_DIR=/app/artifacts/async_scoring \
     MANOVARTA_LOCAL_SAFETY_CHECKPOINT=/app/outputs/local_safety_boost/safety-indicbert-best-infer-fp16 \
-    MANOVARTA_SELF_HOSTED_MODEL_DIR=/models/qwen2.5-0.5b-instruct \
     HF_HUB_DISABLE_TELEMETRY=1
 
 WORKDIR /app
@@ -26,8 +31,6 @@ COPY outputs/local_safety_boost ./outputs/local_safety_boost
 RUN pip install --upgrade pip \
     && pip install --index-url https://download.pytorch.org/whl/cpu "torch>=2.2" \
     && pip install ".[runtime-cloud]"
-
-RUN python -c "from huggingface_hub import snapshot_download; snapshot_download('Qwen/Qwen2.5-0.5B-Instruct', local_dir='/models/qwen2.5-0.5b-instruct', ignore_patterns=['*.onnx', '*.h5', '*.msgpack', 'original/*'])"
 
 EXPOSE 8000
 

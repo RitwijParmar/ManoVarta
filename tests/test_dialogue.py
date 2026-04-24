@@ -250,6 +250,43 @@ def test_mood_followup_can_pivot_to_focus_without_drifting_to_anxiety():
     assert "चिंता शुरू" not in reply
 
 
+def test_hindi_day_long_low_mood_answer_advances_past_repeat_probe():
+    planner = DialoguePlanner()
+    session = ChatSession(
+        session_id="hindi-day-long-low-mood",
+        language="hi",
+        turns=[
+            Turn(
+                turn_id=1,
+                speaker="user",
+                text="पिछले दो हफ़्तों से मन बहुत भारी रहता है।",
+                language_tag="hi",
+            ),
+            Turn(
+                turn_id=2,
+                speaker="assistant",
+                text="जब यह महसूस होता है, क्या यह ज़्यादा दिन भर की उदासी या भारीपन जैसा रहता है, या कुछ खास समय पर लहरों में आता है?",
+                language_tag="hi",
+            ),
+            Turn(
+                turn_id=3,
+                speaker="user",
+                text="नहीं यह दिन भर रहता है।",
+                language_tag="hi",
+            ),
+        ],
+        asked_items=["phq_q2_low_mood"],
+    )
+
+    snapshot = ConversationScorer().analyze(session.turns, "hi", SafetyFlag(level="none"))
+    coverage = planner.build_plan(snapshot, session)
+    reply, asked_item = planner.next_reply(snapshot, session)
+
+    assert coverage.dialogue.target_item != "phq_q2_low_mood"
+    assert asked_item != "phq_q2_low_mood"
+    assert "भावनात्मक सुन्नपन" not in reply
+
+
 def test_hinglish_tense_body_signal_stays_on_relaxation_branch():
     planner = DialoguePlanner()
     session = ChatSession(
@@ -515,7 +552,7 @@ def test_repeated_anxiety_loop_break_closes_instead_of_repeating():
     reply, asked_item = planner.next_reply(snapshot, session)
 
     assert asked_item is None
-    assert reply.startswith("अब मेरे पास मुख्य पैटर्न पकड़ने लायक")
+    assert reply.startswith(ANXIETY_LOOP_CLOSE_PROMPTS["hi"])
 
 
 def test_english_persistent_worry_after_core_rotation_uses_break_prompt():
@@ -672,7 +709,7 @@ def test_recent_break_prompt_is_not_reused_again_in_same_hindi_flow():
     reply, asked_item = planner.next_reply(snapshot, session)
 
     assert asked_item is None
-    assert reply == ANXIETY_LOOP_CLOSE_PROMPTS["hi"]
+    assert reply.startswith(ANXIETY_LOOP_CLOSE_PROMPTS["hi"])
 
 
 def test_hindi_post_close_echo_uses_short_rest_message():
@@ -685,7 +722,7 @@ def test_hindi_post_close_echo_uses_short_rest_message():
             Turn(
                 turn_id=2,
                 speaker="user",
-                text="अब मेरे पास मुख्य पैटर्न पकड़ने लायक काफी जानकारी है यह चिंता कुछ खास समय पर बढ़ती है दिमाग और शरीर दोनों पर असर डालती है और तनाव वाले दिनों में ज्यादा लग सकती है अगर कोई बहुत जरूरी बात बाकी ना हो तो मैं इसे अभी कामचलाऊ सार मान सकता हूं",
+                text="अब मेरे पास मुख्य पैटर्न पकड़ने लायक काफी जानकारी है यह चिंता कुछ खास समय पर बढ़ती है और तनाव वाले दिनों में ज्यादा लग सकती है अगर कोई बहुत जरूरी बात बाकी ना हो तो मैं इसे अभी कामचलाऊ सार मान सकता हूं",
                 language_tag="hi",
             ),
         ],
@@ -754,6 +791,141 @@ def test_close_prompt_followed_by_short_reply_does_not_reopen_anxiety_branch():
 
     assert asked_item is None
     assert reply == POST_CLOSE_CHOOSER_MESSAGES["hi"]
+
+
+def test_hindi_post_close_continue_signal_reopens_exploration():
+    planner = DialoguePlanner()
+    session = ChatSession(
+        session_id="hindi-post-close-continue",
+        language="hi",
+        turns=[
+            Turn(turn_id=1, speaker="assistant", text=ANXIETY_LOOP_CLOSE_PROMPTS["hi"], language_tag="hi"),
+            Turn(turn_id=2, speaker="user", text="हां तो क्या जानना है आपको", language_tag="hi"),
+        ],
+        asked_items=[
+            "phq_q1_anhedonia",
+            "phq_q2_low_mood",
+            "gad_q2_control_worry",
+            "gad_q3_excessive_worry",
+            "gad_q4_trouble_relaxing",
+        ],
+    )
+
+    snapshot = ConversationScorer().analyze(session.turns, "hi", SafetyFlag(level="none"))
+    reply, asked_item = planner.next_reply(snapshot, session)
+
+    assert asked_item is not None
+    assert reply not in {
+        ANXIETY_LOOP_CLOSE_PROMPTS["hi"],
+        POST_CLOSE_CHOOSER_MESSAGES["hi"],
+        POST_CLOSE_IDLE_MESSAGES["hi"],
+        FINAL_REST_MESSAGES["hi"],
+        *FINAL_HOLD_VARIANTS["hi"],
+    }
+
+
+def test_hindi_post_close_energy_signal_reopens_with_fatigue_probe():
+    planner = DialoguePlanner()
+    session = ChatSession(
+        session_id="hindi-post-close-energy",
+        language="hi",
+        turns=[
+            Turn(turn_id=1, speaker="assistant", text=ANXIETY_LOOP_CLOSE_PROMPTS["hi"], language_tag="hi"),
+            Turn(turn_id=2, speaker="user", text="हां तुम शरीर में मुझे कोई समस्या नहीं होती है बस थोड़ा आलस लगता है", language_tag="hi"),
+        ],
+        asked_items=[
+            "phq_q1_anhedonia",
+            "phq_q2_low_mood",
+            "gad_q2_control_worry",
+            "gad_q3_excessive_worry",
+            "gad_q4_trouble_relaxing",
+        ],
+    )
+
+    snapshot = ConversationScorer().analyze(session.turns, "hi", SafetyFlag(level="none"))
+    reply, asked_item = planner.next_reply(snapshot, session)
+
+    assert asked_item == "phq_q4_fatigue"
+    assert "थकान" in reply or "ऊर्जा" in reply or "आलस" in reply
+
+
+def test_english_post_close_continue_signal_reopens_exploration():
+    planner = DialoguePlanner()
+    session = ChatSession(
+        session_id="english-post-close-continue",
+        language="en",
+        turns=[
+            Turn(turn_id=1, speaker="assistant", text=ANXIETY_LOOP_CLOSE_PROMPTS["en"], language_tag="en"),
+            Turn(turn_id=2, speaker="user", text="Okay, what else do you want to know?", language_tag="en"),
+        ],
+        asked_items=[
+            "phq_q1_anhedonia",
+            "phq_q2_low_mood",
+            "gad_q2_control_worry",
+            "gad_q3_excessive_worry",
+            "gad_q4_trouble_relaxing",
+        ],
+    )
+
+    snapshot = ConversationScorer().analyze(session.turns, "en", SafetyFlag(level="none"))
+    reply, asked_item = planner.next_reply(snapshot, session)
+
+    assert asked_item is not None
+    assert reply not in {
+        ANXIETY_LOOP_CLOSE_PROMPTS["en"],
+        POST_CLOSE_CHOOSER_MESSAGES["en"],
+        POST_CLOSE_IDLE_MESSAGES["en"],
+        FINAL_REST_MESSAGES["en"],
+        *FINAL_HOLD_VARIANTS["en"],
+    }
+
+
+def test_english_post_close_energy_signal_reopens_with_fatigue_probe():
+    planner = DialoguePlanner()
+    session = ChatSession(
+        session_id="english-post-close-energy",
+        language="en",
+        turns=[
+            Turn(turn_id=1, speaker="assistant", text=ANXIETY_LOOP_CLOSE_PROMPTS["en"], language_tag="en"),
+            Turn(turn_id=2, speaker="user", text="There is no body issue, I just feel low energy and slow to get going.", language_tag="en"),
+        ],
+        asked_items=[
+            "phq_q1_anhedonia",
+            "phq_q2_low_mood",
+            "gad_q2_control_worry",
+            "gad_q3_excessive_worry",
+            "gad_q4_trouble_relaxing",
+        ],
+    )
+
+    snapshot = ConversationScorer().analyze(session.turns, "en", SafetyFlag(level="none"))
+    reply, asked_item = planner.next_reply(snapshot, session)
+
+    assert asked_item == "phq_q4_fatigue"
+    assert "energy" in reply.lower() or "tired" in reply.lower() or "slow" in reply.lower()
+
+
+def test_hindi_working_summary_avoids_false_mind_and_body_claim():
+    planner = DialoguePlanner()
+    session = ChatSession(
+        session_id="hindi-working-summary",
+        language="hi",
+        turns=[
+            Turn(turn_id=1, speaker="user", text="पिछले दो हफ़्तों से किसी काम में मन नहीं लगता और मन भारी रहता है।", language_tag="hi"),
+            Turn(turn_id=2, speaker="user", text="यह दिन भर रहता है।", language_tag="hi"),
+            Turn(turn_id=3, speaker="user", text="भविष्य की नौकरी को लेकर चिंता रहती है।", language_tag="hi"),
+            Turn(turn_id=4, speaker="user", text="शरीर में मुझे कोई समस्या नहीं होती, बस दिमाग शांत नहीं होता और थोड़ा आलस लगता है।", language_tag="hi"),
+        ],
+    )
+
+    snapshot = ConversationScorer().analyze(session.turns, "hi", SafetyFlag(level="none"))
+    snapshot.coverage = planner.build_plan(snapshot, session)
+    summary = planner._build_working_summary(snapshot, session)
+
+    assert "अभी तक जो तस्वीर बन रही है" in summary
+    assert "दिमाग" in summary
+    assert "दिमाग और शरीर दोनों" not in summary
+    assert "आलस" in summary or "ऊर्जा" in summary
 
 
 def test_post_close_nonexpansive_followup_uses_chooser_message():
@@ -839,7 +1011,7 @@ def test_break_prompt_followed_by_family_scoped_answer_closes_instead_of_reopeni
     reply, asked_item = planner.next_reply(snapshot, session)
 
     assert asked_item is None
-    assert reply == ANXIETY_LOOP_CLOSE_PROMPTS["hi"]
+    assert reply.startswith(ANXIETY_LOOP_CLOSE_PROMPTS["hi"])
 
 
 def test_close_prompt_followed_by_long_garbled_followup_stays_on_final_hold():
@@ -941,7 +1113,7 @@ def test_scope_answer_after_worry_spread_question_closes_anxiety_branch():
     reply, asked_item = planner.next_reply(snapshot, session)
 
     assert asked_item is None
-    assert reply.startswith("अब मेरे पास मुख्य पैटर्न पकड़ने लायक")
+    assert reply.startswith(ANXIETY_LOOP_CLOSE_PROMPTS["hi"])
 
 
 def test_target_topic_aligns_with_directed_followup_item():
@@ -1206,3 +1378,67 @@ def test_anxiety_body_tension_signal_pivots_from_control_worry_to_relaxation():
     assert coverage.dialogue.target_item == "gad_q4_trouble_relaxing"
     assert asked_item == "gad_q4_trouble_relaxing"
     assert "quiet your thoughts" in reply.lower() or "relax your body" in reply.lower()
+
+
+def test_mind_only_anxiety_answer_skips_body_relaxation_repeat_and_moves_to_worry_scope():
+    planner = DialoguePlanner()
+    session = ChatSession(
+        session_id="mind-only-worry-scope",
+        language="en",
+        turns=[
+            Turn(
+                turn_id=1,
+                speaker="assistant",
+                text="When the worry starts, can you pull your mind away from it, or does it keep looping even when you try to stop it?",
+                language_tag="en",
+            ),
+            Turn(
+                turn_id=2,
+                speaker="user",
+                text="It is mostly mental, not body tension. I can sometimes distract myself, but the worry comes back and my mind keeps running.",
+                language_tag="en",
+            ),
+        ],
+        asked_items=["gad_q2_control_worry"],
+    )
+
+    snapshot = ConversationScorer().analyze(session.turns, "en", SafetyFlag(level="none"))
+    coverage = planner.build_plan(snapshot, session)
+    reply, asked_item = planner.next_reply(snapshot, session)
+
+    assert coverage.dialogue.target_item == "gad_q3_excessive_worry"
+    assert asked_item == "gad_q3_excessive_worry"
+    assert "relax your body" not in reply.lower()
+    assert "both together" not in reply.lower()
+
+
+def test_hindi_mind_only_anxiety_answer_skips_body_relaxation_repeat_and_moves_to_worry_scope():
+    planner = DialoguePlanner()
+    session = ChatSession(
+        session_id="hi-mind-only-worry-scope",
+        language="hi",
+        turns=[
+            Turn(
+                turn_id=1,
+                speaker="assistant",
+                text="जब चिंता शुरू होती है, क्या आप दिमाग को उससे हटा पाते हैं, या रोकने की कोशिश के बाद भी वह चलती रहती है?",
+                language_tag="hi",
+            ),
+            Turn(
+                turn_id=2,
+                speaker="user",
+                text="शरीर में उतना तनाव नहीं होता, केवल दिमाग चलता रहता है। दिमाग को शांत करना मुश्किल होता है।",
+                language_tag="hi",
+            ),
+        ],
+        asked_items=["gad_q2_control_worry"],
+    )
+
+    snapshot = ConversationScorer().analyze(session.turns, "hi", SafetyFlag(level="none"))
+    coverage = planner.build_plan(snapshot, session)
+    reply, asked_item = planner.next_reply(snapshot, session)
+
+    assert coverage.dialogue.target_item == "gad_q3_excessive_worry"
+    assert asked_item == "gad_q3_excessive_worry"
+    assert "शरीर को ढीला" not in reply
+    assert "दोनों साथ में" not in reply

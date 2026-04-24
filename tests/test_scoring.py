@@ -111,6 +111,107 @@ def test_scoring_picks_up_later_turn_interest_guilt_and_focus_phrasing():
     assert snapshot.items["phq_q7_concentration"].value >= 1
 
 
+def test_scoring_captures_live_probe_wording_across_english_hindi_and_hinglish():
+    english_turns = [
+        Turn(
+            turn_id=1,
+            speaker="user",
+            text="For the last two weeks my sleep keeps breaking and I feel tired all day. I drag through work and even small tasks feel hard to start.",
+            language_tag="en",
+        ),
+        Turn(
+            turn_id=2,
+            speaker="user",
+            text="A lot of it is worry about whether I will keep my job. Once it starts, my mind keeps running and I find it hard to calm down.",
+            language_tag="en",
+        ),
+        Turn(
+            turn_id=3,
+            speaker="user",
+            text="It is mostly mental, not body tension. I can sometimes distract myself, but the worry comes back and the low motivation stays through the day.",
+            language_tag="en",
+        ),
+        Turn(
+            turn_id=4,
+            speaker="user",
+            text="What else do you want to know? I also have less interest in things and I have been pulling away from people a bit.",
+            language_tag="en",
+        ),
+    ]
+    english_snapshot = ConversationScorer().analyze(english_turns, "en", SafetyMonitor().assess(english_turns))
+    assert english_snapshot.items["phq_q3_sleep"].value >= 2
+    assert english_snapshot.items["phq_q4_fatigue"].value >= 2
+    assert english_snapshot.items["gad_q2_control_worry"].value >= 2
+    assert english_snapshot.items["gad_q3_excessive_worry"].value >= 1
+    assert english_snapshot.items["phq_q1_anhedonia"].value >= 1
+
+    hindi_turns = [
+        Turn(
+            turn_id=1,
+            speaker="user",
+            text="नींद बार बार टूटती है और दिन भर आलस रहता है। किसी काम में मन नहीं लगता और शुरू करने से पहले ही मन हट जाता है।",
+            language_tag="hi",
+        ),
+        Turn(
+            turn_id=2,
+            speaker="user",
+            text="ज्यादा चिंता भविष्य और नौकरी को लेकर रहती है। शरीर में उतना तनाव नहीं होता, केवल दिमाग चलता रहता है।",
+            language_tag="hi",
+        ),
+        Turn(
+            turn_id=3,
+            speaker="user",
+            text="हां तो क्या जानना है आपको? बात यही है कि यह दिन भर रहता है और दिमाग को शांत करना मुश्किल होता है।",
+            language_tag="hi",
+        ),
+        Turn(
+            turn_id=4,
+            speaker="user",
+            text="थोड़ा आलस भी रहता है और पहले जिन चीजों में मन लगता था उनमें अब रुचि कम हो गई है।",
+            language_tag="hi",
+        ),
+    ]
+    hindi_snapshot = ConversationScorer().analyze(hindi_turns, "hi", SafetyMonitor().assess(hindi_turns))
+    assert hindi_snapshot.items["phq_q3_sleep"].value >= 2
+    assert hindi_snapshot.items["phq_q4_fatigue"].value >= 2
+    assert hindi_snapshot.items["gad_q2_control_worry"].value >= 2
+    assert hindi_snapshot.items["gad_q3_excessive_worry"].value >= 1
+    assert hindi_snapshot.items["phq_q1_anhedonia"].value >= 1
+
+    hinglish_turns = [
+        Turn(
+            turn_id=1,
+            speaker="user",
+            text="Sleep break hoti rehti hai aur next day pura tired feel hota hai. Kaam start karne ka bilkul mann nahi karta.",
+            language_tag="hinglish",
+        ),
+        Turn(
+            turn_id=2,
+            speaker="user",
+            text="Main zyada future aur job ko lekar worry karta hoon. Body tension utna nahi hota, but dimaag rukta hi nahi.",
+            language_tag="hinglish",
+        ),
+        Turn(
+            turn_id=3,
+            speaker="user",
+            text="Ab aap aur kya jaana chahte ho? Ye din bhar background mein chalta rehta hai and motivation low rehti hai.",
+            language_tag="hinglish",
+        ),
+        Turn(
+            turn_id=4,
+            speaker="user",
+            text="Thoda interest bhi kam ho gaya hai, logon se distance bana leta hoon, aur kabhi kabhi bas bed se uthna heavy lagta hai.",
+            language_tag="hinglish",
+        ),
+    ]
+    hinglish_snapshot = ConversationScorer().analyze(hinglish_turns, "hinglish", SafetyMonitor().assess(hinglish_turns))
+    assert hinglish_snapshot.items["phq_q3_sleep"].value >= 2
+    assert hinglish_snapshot.items["phq_q4_fatigue"].value >= 1
+    assert hinglish_snapshot.items["gad_q2_control_worry"].value >= 2
+    assert hinglish_snapshot.items["gad_q3_excessive_worry"].value >= 1
+    assert hinglish_snapshot.items["phq_q1_anhedonia"].value >= 1
+
+
 def test_scoring_abstains_on_unresolved_contradiction():
     turns = [
         Turn(turn_id=1, speaker="assistant", text="How has your sleep been?", language_tag="en"),

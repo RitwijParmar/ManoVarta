@@ -1,3 +1,4 @@
+from dataclasses import replace
 import io
 
 from fastapi.testclient import TestClient
@@ -46,15 +47,22 @@ def test_review_route_serves_hidden_presenter_surface():
     assert "Hidden details for demos, evaluation, and care-team review" in response.text
 
 
-def test_runtime_config_reports_huggingface_disabled_by_default():
+def test_runtime_config_reports_component_providers_and_async_support():
     response = client.get("/runtime/config")
 
     assert response.status_code == 200
     body = response.json()
     assert "provider" in body
-    assert "chat_model" in body
+    assert "chat_provider" in body
+    assert "extraction_provider" in body
+    assert "safety_provider" in body
+    assert "controller_model" in body
+    assert "extractor_model" in body
     assert "huggingface_enabled" in body
     assert "self_hosted_inference_enabled" in body
+    assert "vertex_enabled" in body
+    assert "async_scoring_enabled" in body
+    assert "async_scoring_dir" in body
 
 
 def test_add_turn_skips_prior_analysis_without_nudge(monkeypatch):
@@ -216,6 +224,25 @@ def test_export_endpoint_returns_rows_and_snapshot_mode():
     assert body["snapshot"]["mode"] in {"heuristic", "hybrid"}
     assert body["rows"]
     assert body["rows"][0]["questionnaire"] in {"PHQ9", "GAD7"}
+
+
+def test_session_async_score_enqueues_existing_session(tmp_path, monkeypatch):
+    monkeypatch.setattr(api_module, "runtime_config", replace(api_module.runtime_config, async_scoring_enabled=True, async_scoring_dir=str(tmp_path)))
+    monkeypatch.setattr(api_module, "async_scoring_store", api_module.AsyncScoringStore(tmp_path))
+
+    start = client.post("/chat/sessions", json={"language": "en"})
+    session_id = start.json()["session_id"]
+    client.post(
+        f"/chat/sessions/{session_id}/turns",
+        json={"text": "I have been exhausted and my sleep keeps breaking."},
+    )
+
+    response = client.post(f"/chat/sessions/{session_id}/score_async")
+
+    assert response.status_code == 200
+    body = response.json()
+    assert body["job"]["status"] == "pending"
+    assert body["job"]["session_id"] == session_id
 
 
 def test_contradiction_flow_marks_review_gate():
@@ -1750,7 +1777,7 @@ def test_hindi_post_close_echo_does_not_cycle_hold_variants():
 
     echoed_summary = client.post(
         f"/chat/sessions/{session_id}/turns",
-        json={"text": "अब मेरे पास मुख्य पैटर्न पकड़ने लायक काफी जानकारी है यह चिंता कुछ खास समय पर बढ़ती है दिमाग और शरीर दोनों पर असर डालती है और तनाव वाले दिनों में ज्यादा लग सकती है अगर कोई बहुत जरूरी बात बाकी ना हो तो मैं इसे अभी कामचलाऊ सार मान सकता हूं"},
+        json={"text": "अब मेरे पास मुख्य पैटर्न पकड़ने लायक काफी जानकारी है यह चिंता कुछ खास समय पर बढ़ती है और तनाव वाले दिनों में ज्यादा लग सकती है अगर कोई बहुत जरूरी बात बाकी ना हो तो मैं इसे अभी कामचलाऊ सार मान सकता हूं"},
     )
     assert echoed_summary.status_code == 200
     assert echoed_summary.json()["assistant_turn"]["text"] == FINAL_REST_MESSAGES["hi"]

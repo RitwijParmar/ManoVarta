@@ -1,5 +1,11 @@
 from manovarta_core.config import RuntimeConfig
-from manovarta_core.llm import HuggingFaceExtractor, HuggingFaceResponder, HuggingFaceSafetyAssessor
+from manovarta_core.llm import (
+    HuggingFaceExtractor,
+    HuggingFaceResponder,
+    HuggingFaceSafetyAssessor,
+    _resolve_base_model_name,
+    _resolve_tokenizer_source,
+)
 from manovarta_core.schemas import ChatSession, CoveragePlan, DialoguePlan, DisclosureMetrics, SafetyFlag, ScreeningSnapshot, Turn, UserStyleProfile
 
 
@@ -53,7 +59,7 @@ def test_local_responder_uses_self_hosted_provider(monkeypatch):
         def chat_completion(self, *, messages, temperature, max_tokens):
             return _Response("Take your time. What feels heaviest right now?")
 
-    monkeypatch.setattr("manovarta_core.llm._build_text_generation_client", lambda config, model_name: _FakeClient())
+    monkeypatch.setattr("manovarta_core.llm._build_text_generation_client", lambda config, provider, model_name, adapter_path=None: _FakeClient())
     responder = HuggingFaceResponder(_local_config())
     session = ChatSession(session_id="local-session", language="en", turns=[Turn(turn_id=1, speaker="user", text="I feel overwhelmed.", language_tag="en")])
     snapshot = ScreeningSnapshot(
@@ -72,9 +78,139 @@ def test_local_responder_uses_self_hosted_provider(monkeypatch):
     assert source == "local"
 
 
+def test_component_provider_overrides_can_split_chat_and_extractor():
+    config = RuntimeConfig(
+        model_provider="huggingface",
+        chat_model="gemini-2.5-flash",
+        extraction_model="/models/aya-expanse-8b",
+        safety_model="/models/aya-expanse-8b",
+        hf_token="token",
+        hf_timeout=30.0,
+        assistant_temperature=0.2,
+        assistant_max_tokens=180,
+        extraction_max_tokens=900,
+        safety_max_tokens=180,
+        semantic_safety_model=None,
+        semantic_safety_review_threshold=0.64,
+        semantic_safety_urgent_threshold=0.72,
+        chat_provider="vertex",
+        extraction_provider="local",
+        safety_provider="local",
+        vertex_project="demo-project",
+        vertex_location="us-central1",
+    )
+
+    assert config.chat_model_provider == "vertex"
+    assert config.extraction_model_provider == "local"
+    assert config.safety_model_provider == "local"
+    assert config.vertex_enabled is True
+
+
+def test_vertex_chat_provider_is_reported_as_reply_source(monkeypatch):
+    class _Response:
+        def __init__(self, content):
+            self.choices = [type("Choice", (), {"message": type("Message", (), {"content": content})()})()]
+
+    class _FakeClient:
+        def chat_completion(self, *, messages, temperature, max_tokens):
+            return _Response("If easier, pick one part of today that felt the heaviest.")
+
+    monkeypatch.setattr("manovarta_core.llm._build_text_generation_client", lambda config, provider, model_name, adapter_path=None: _FakeClient())
+    config = RuntimeConfig(
+        model_provider="local",
+        chat_model="gemini-2.5-flash",
+        extraction_model="/models/aya-expanse-8b",
+        safety_model="/models/safety",
+        hf_token=None,
+        hf_timeout=30.0,
+        assistant_temperature=0.2,
+        assistant_max_tokens=180,
+        extraction_max_tokens=900,
+        safety_max_tokens=180,
+        semantic_safety_model=None,
+        semantic_safety_review_threshold=0.64,
+        semantic_safety_urgent_threshold=0.72,
+        chat_provider="vertex",
+        extraction_provider="local",
+        safety_provider="local",
+        vertex_project="demo-project",
+        vertex_location="us-central1",
+    )
+    responder = HuggingFaceResponder(config)
+    session = ChatSession(session_id="vertex-session", language="en", turns=[Turn(turn_id=1, speaker="user", text="I feel overwhelmed and flat.", language_tag="en")])
+    snapshot = ScreeningSnapshot(
+        language="en",
+        items={},
+        evidence_spans=[],
+        unresolved_items=[],
+        totals={"PHQ9": None, "GAD7": None},
+        safety=SafetyFlag(level="none"),
+        coverage=CoveragePlan(total_items=16, touched_items=0, completion_ratio=0.0, dialogue=DialoguePlan()),
+    )
+
+    reply, source = responder.compose_reply(session, snapshot, None, "Fallback")
+
+    assert reply == "If easier, pick one part of today that felt the heaviest."
+    assert source == "vertex"
+
+
+def test_responder_summary_stage_prompt_requests_working_summary():
+    responder = HuggingFaceResponder(_disabled_config())
+    session = ChatSession(
+        session_id="summary-stage-session",
+        language="hi",
+        turns=[Turn(turn_id=1, speaker="user", text="मन काफी भारी रहता है और किसी काम में मन नहीं लगता।", language_tag="hi")],
+    )
+    snapshot = ScreeningSnapshot(
+        language="hi",
+        items={},
+        evidence_spans=[],
+        unresolved_items=["phq_q1_anhedonia", "phq_q2_low_mood"],
+        totals={"PHQ9": 4, "GAD7": 2},
+        safety=SafetyFlag(level="none"),
+        coverage=CoveragePlan(
+            total_items=16,
+            touched_items=6,
+            completion_ratio=0.62,
+            dialogue=DialoguePlan(stage="summary", target_topic="mood", next_action="summarize"),
+        ),
+    )
+
+    messages = responder._build_messages(session, snapshot, None, "Fallback")
+
+    assert "working summary" in messages[0]["content"]
+    assert "Do not just say that the conversation can stop." in messages[0]["content"]
+    assert "Dialogue stage: summary" in messages[1]["content"]
+    assert "Coverage debt topics:" in messages[1]["content"]
+    assert "Summary ready:" in messages[1]["content"]
+
+
 def test_huggingface_extractor_stays_disabled_without_token():
     extractor = HuggingFaceExtractor(_disabled_config())
     assert extractor.enabled is False
+
+
+def test_local_adapter_resolution_uses_adapter_base_model(tmp_path):
+    adapter_dir = tmp_path / "aya-adapter"
+    adapter_dir.mkdir()
+    (adapter_dir / "adapter_config.json").write_text(
+        '{"base_model_name_or_path":"CohereForAI/aya-expanse-8b"}',
+        encoding="utf-8",
+    )
+
+    assert _resolve_base_model_name("/models/ignored", str(adapter_dir)) == "CohereForAI/aya-expanse-8b"
+
+
+def test_local_tokenizer_resolution_prefers_adapter_files(tmp_path):
+    adapter_dir = tmp_path / "aya-adapter"
+    adapter_dir.mkdir()
+    (adapter_dir / "adapter_config.json").write_text(
+        '{"base_model_name_or_path":"CohereForAI/aya-expanse-8b"}',
+        encoding="utf-8",
+    )
+    (adapter_dir / "tokenizer_config.json").write_text("{}", encoding="utf-8")
+
+    assert _resolve_tokenizer_source("/models/ignored", str(adapter_dir)) == str(adapter_dir)
 
 
 def test_huggingface_extractor_candidate_prompt_pushes_indirect_coverage():
@@ -182,6 +318,49 @@ def test_huggingface_extractor_retries_with_compact_prompt_after_failure():
     assert payload["items"][0]["item_id"] == "phq_q6_worthlessness"
     assert len(extractor._client.calls) >= 2
     assert any("User disclosures:" in call["messages"][1]["content"] for call in extractor._client.calls)
+
+
+def test_vertex_extractor_uses_rule_rescue_when_json_parse_fails(monkeypatch):
+    class _Response:
+        def __init__(self, content):
+            self.choices = [type("Choice", (), {"message": type("Message", (), {"content": content})()})()]
+
+    class _FakeClient:
+        def chat_completion(self, *, messages, temperature, max_tokens):
+            return _Response("not valid json")
+
+    monkeypatch.setattr("manovarta_core.llm._build_text_generation_client", lambda config, provider, model_name, adapter_path=None: _FakeClient())
+    config = RuntimeConfig(
+        model_provider="vertex",
+        chat_model="gemini-2.5-flash",
+        extraction_model="gemini-2.5-flash",
+        safety_model="/models/safety",
+        hf_token=None,
+        hf_timeout=30.0,
+        assistant_temperature=0.2,
+        assistant_max_tokens=180,
+        extraction_max_tokens=480,
+        safety_max_tokens=180,
+        semantic_safety_model=None,
+        semantic_safety_review_threshold=0.64,
+        semantic_safety_urgent_threshold=0.72,
+        chat_provider="vertex",
+        extraction_provider="vertex",
+        safety_provider="local",
+        vertex_project="demo-project",
+        vertex_location="us-central1",
+    )
+    extractor = HuggingFaceExtractor(config)
+    turns = [
+        Turn(turn_id=1, speaker="user", text="I feel tired all day and my sleep keeps breaking.", language_tag="en"),
+        Turn(turn_id=2, speaker="user", text="It is mostly at night and then I drag through work the next day.", language_tag="en"),
+    ]
+
+    payload = extractor.extract(turns, "en")
+
+    assert payload is not None
+    assert any(item["item_id"] == "phq_q3_sleep" for item in payload["items"])
+    assert "rule_rescue_fallback" in payload["notes"]
 
 
 def test_huggingface_extractor_builds_english_windows_with_context():
@@ -654,6 +833,67 @@ def test_huggingface_responder_prefers_targeted_fallback_for_short_clarifier_ans
 
     fallback = "That helps me understand how often it happens. When it hits, does it feel more like a busy mind, a tense body, or both together?"
     reply, source = responder.compose_reply(session, snapshot, "gad_q4_trouble_relaxing", fallback)
+
+    assert reply == fallback
+    assert source == "template"
+
+
+def test_huggingface_responder_rejects_body_relaxation_reply_after_mind_only_user_answer():
+    class _Response:
+        def __init__(self, content):
+            self.choices = [type("Choice", (), {"message": type("Message", (), {"content": content})()})()]
+
+    class _FakeClient:
+        def chat_completion(self, *, messages, temperature, max_tokens):
+            return _Response("It sounds like both mind and body are involved here. Is it harder to quiet your thoughts, relax your body, or both?")
+
+    responder = HuggingFaceResponder(_disabled_config())
+    responder._client = _FakeClient()
+    session = ChatSession(
+        session_id="mind-only-channel-guard",
+        language="en",
+        turns=[
+            Turn(
+                turn_id=1,
+                speaker="assistant",
+                text="When the worry starts, can you pull your mind away from it, or does it keep looping even when you try to stop it?",
+                language_tag="en",
+            ),
+            Turn(
+                turn_id=2,
+                speaker="user",
+                text="It is mostly mental, not body tension. I can sometimes distract myself, but the worry comes back.",
+                language_tag="en",
+            ),
+        ],
+    )
+    snapshot = ScreeningSnapshot(
+        language="en",
+        items={},
+        evidence_spans=[],
+        unresolved_items=["gad_q3_excessive_worry"],
+        totals={"PHQ9": None, "GAD7": None},
+        safety=SafetyFlag(level="none"),
+        coverage=CoveragePlan(
+            total_items=16,
+            touched_items=2,
+            completion_ratio=0.12,
+            dialogue=DialoguePlan(
+                stage="clarification",
+                next_action="clarify",
+                current_topic="anxiety",
+                target_topic="anxiety",
+                target_item="gad_q3_excessive_worry",
+                rationale="The user already clarified that the harder part is mental, so move into worry scope instead of revisiting body tension.",
+                transition_hint="Shift from channel to scope.",
+                user_style=UserStyleProfile(openness="open"),
+                disclosure=DisclosureMetrics(),
+            ),
+        ),
+    )
+
+    fallback = "When the worry keeps running, does it spread across things like work, family, money, or the future, or does it usually get stuck on one main issue?"
+    reply, source = responder.compose_reply(session, snapshot, "gad_q3_excessive_worry", fallback)
 
     assert reply == fallback
     assert source == "template"

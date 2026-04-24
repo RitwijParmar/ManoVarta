@@ -22,6 +22,7 @@ SteeringPreference = Literal["guided", "balanced", "user_led"]
 ReadinessLevel = Literal["opening", "building", "steady", "ready_to_close"]
 FatigueLevel = Literal["low", "medium", "high"]
 NudgeOutcome = Literal["unknown", "helpful", "unhelpful"]
+AsyncScoreStatus = Literal["pending", "running", "completed", "failed"]
 
 
 class Turn(BaseModel):
@@ -113,6 +114,10 @@ class DialoguePlan(BaseModel):
     disclosure: DisclosureMetrics = Field(default_factory=DisclosureMetrics)
     readiness: ReadinessLevel = "opening"
     fatigue: FatigueLevel = "low"
+    coverage_debt: List[str] = Field(default_factory=list)
+    continue_intent: bool = False
+    reopen_signal: bool = False
+    summary_ready: bool = False
     reflective_anchor: str = ""
     continuity_note: str = ""
     recommended_nudges: List[str] = Field(default_factory=list)
@@ -213,6 +218,30 @@ class SessionDetailResponse(BaseModel):
 class TranscriptScoreRequest(BaseModel):
     language: LanguageCode
     turns: List[Turn]
+
+
+class AsyncTranscriptScoreRequest(TranscriptScoreRequest):
+    label: Optional[str] = None
+    session_id: Optional[str] = None
+    use_llm: bool = True
+
+
+class AsyncScoreJob(BaseModel):
+    request_id: str
+    status: AsyncScoreStatus = "pending"
+    language: LanguageCode
+    turn_count: int = 0
+    use_llm: bool = True
+    label: Optional[str] = None
+    session_id: Optional[str] = None
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+    updated_at: datetime = Field(default_factory=datetime.utcnow)
+    error: Optional[str] = None
+
+
+class AsyncScoreResponse(BaseModel):
+    job: AsyncScoreJob
+    result: Optional[dict] = None
 
 
 class SummaryResponse(BaseModel):
