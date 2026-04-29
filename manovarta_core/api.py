@@ -1,4 +1,7 @@
+from contextlib import asynccontextmanager
+import logging
 import re
+import time
 from dataclasses import replace
 from datetime import datetime
 from pathlib import Path
@@ -16,7 +19,7 @@ from manovarta_core.knowledge import SCREENING_KNOWLEDGE_BASE
 from manovarta_core.llm import HuggingFaceExtractor, HuggingFaceResponder, HuggingFaceSafetyAssessor
 from manovarta_core.profiles import load_seed_profiles
 from manovarta_core.questionnaires import grouped_items
-from manovarta_core.reporting import build_rows, build_summary
+from manovarta_core.reporting import build_domain_results, build_rows, build_summary
 from manovarta_core.safety_assessors import CompositeSafetyAssessor, LocalSafetyCheckpointAssessor
 from manovarta_core.semantic_safety import SemanticSafetyConfig, SemanticSafetyMonitor
 from manovarta_core.safety import SafetyMonitor
@@ -40,6 +43,9 @@ from manovarta_core.schemas import (
 )
 from manovarta_core.sessions import SessionStore
 from manovarta_core.voice import detect_voice_runtime, synthesize_speech, transcribe_audio
+
+
+logger = logging.getLogger(__name__)
 
 
 app = FastAPI(
@@ -87,7 +93,11 @@ def _build_live_chat_analysis_stack():
     live_provider = runtime_config.live_chat_extraction_model_provider
     live_model = runtime_config.live_chat_extraction_model or runtime_config.extraction_model
     base_provider = runtime_config.extraction_model_provider
-    if live_provider == base_provider and live_model == runtime_config.extraction_model:
+    needs_remote_timeout_cap = (
+        live_provider == "remote"
+        and runtime_config.remote_extraction_timeout > runtime_config.live_chat_remote_extraction_timeout
+    )
+    if live_provider == base_provider and live_model == runtime_config.extraction_model and not needs_remote_timeout_cap:
         return runtime_config, extractor, engine
 
     live_config = replace(
@@ -95,7 +105,17 @@ def _build_live_chat_analysis_stack():
         extraction_provider=live_provider,
         extraction_model=live_model,
     )
+    if live_provider == "remote":
+        live_config = replace(
+            live_config,
+            remote_extraction_timeout=min(
+                live_config.remote_extraction_timeout,
+                live_config.live_chat_remote_extraction_timeout,
+            ),
+        )
     live_extractor = HuggingFaceExtractor(live_config)
+    if not live_extractor.enabled and extractor.enabled:
+        return runtime_config, extractor, engine
     live_engine = RuntimeEngine(
         scorer=scorer,
         safety_monitor=safety_monitor,
@@ -126,6 +146,60 @@ SUMMARY_RECOVERY_MESSAGES = {
 }
 
 
+def _warm_runtime_backends() -> list[str]:
+    warmed_components: list[str] = []
+    warm_targets = [
+        ("semantic_safety", semantic_safety_monitor),
+        ("safety_assessor", safety_assessor),
+        ("responder", responder),
+        ("extractor", extractor),
+        ("live_chat_extractor", live_chat_extractor),
+    ]
+    seen_targets: set[int] = set()
+    for label, target in warm_targets:
+        if target is None or id(target) in seen_targets:
+            continue
+        seen_targets.add(id(target))
+        warmup = getattr(target, "warmup", None)
+        if warmup is None:
+            continue
+        started_at = time.perf_counter()
+        try:
+            warmed = bool(warmup())
+        except Exception:
+            logger.exception("runtime_warmup_failed component=%s", label)
+            continue
+        duration_ms = round((time.perf_counter() - started_at) * 1000)
+        logger.info(
+            "runtime_warmup_%s component=%s duration_ms=%s",
+            "completed" if warmed else "skipped",
+            label,
+            duration_ms,
+        )
+        if warmed:
+            warmed_components.append(label)
+    return warmed_components
+
+
+@asynccontextmanager
+async def _app_lifespan(_app: FastAPI):
+    del _app
+    if not runtime_config.startup_warmup_enabled:
+        logger.info("runtime_startup_warmup_skipped reason=disabled")
+    else:
+        started_at = time.perf_counter()
+        warmed_components = _warm_runtime_backends()
+        logger.info(
+            "runtime_startup_warmup_complete components=%s duration_ms=%s",
+            ",".join(warmed_components) or "none",
+            round((time.perf_counter() - started_at) * 1000),
+        )
+    yield
+
+
+app.router.lifespan_context = _app_lifespan
+
+
 def _asset_version() -> str:
     tracked = ["app.css", "app.js", "brand-mark.svg", "favicon.svg", "index.html"]
     stamp = 0
@@ -150,21 +224,48 @@ def _inject_asset_version(html: str) -> str:
 
 
 def _safe_rule_safety_flag(turns: list[Turn]) -> SafetyFlag:
+    analysis_turns = [turn for turn in turns if turn.speaker == "user"] or turns
     try:
-        return safety_monitor.assess(turns)
+        return safety_monitor.assess(analysis_turns)
     except Exception:
         return SafetyFlag(level="none")
 
 
 def _safe_analyze(turns: list[Turn], language: str, *, use_llm: bool = True):
     active_engine = live_chat_engine if use_llm else engine
+    analysis_turns = [turn for turn in turns if turn.speaker == "user"] or turns
     try:
-        return active_engine.analyze(turns, language, use_llm=use_llm)
+        snapshot = active_engine.analyze(turns, language, use_llm=use_llm)
     except Exception:
+        if use_llm and active_engine is not engine:
+            try:
+                snapshot = engine.analyze(turns, language, use_llm=True)
+                return _enrich_snapshot(snapshot, llm_requested=use_llm)
+            except Exception:
+                pass
         try:
-            return scorer.analyze(turns, language, _safe_rule_safety_flag(turns))
+            snapshot = scorer.analyze(analysis_turns, language, _safe_rule_safety_flag(turns))
         except Exception:
-            return scorer.analyze(turns, language, SafetyFlag(level="none"))
+            snapshot = scorer.analyze(analysis_turns, language, SafetyFlag(level="none"))
+        return _enrich_snapshot(snapshot, llm_requested=use_llm)
+    return _enrich_snapshot(snapshot, llm_requested=use_llm)
+
+
+def _enrich_snapshot(snapshot, *, llm_requested: bool):
+    phq_result, gad_result = build_domain_results(snapshot)
+    if snapshot.mode == "hybrid":
+        analysis_status = "llm_backed"
+    elif llm_requested:
+        analysis_status = "degraded"
+    else:
+        analysis_status = "heuristic_only"
+    return snapshot.model_copy(
+        update={
+            "analysis_status": analysis_status,
+            "phq_result": phq_result,
+            "gad_result": gad_result,
+        }
+    )
 
 
 def _safe_summary(session: ChatSession, snapshot) -> str:
@@ -186,6 +287,16 @@ def _safe_row_models(snapshot) -> list:
         return build_rows(snapshot)
     except Exception:
         return []
+
+
+def _assistant_source_notes(source: str) -> str:
+    notes = [f"source:{source}"]
+    diagnostics = responder.last_reply_diagnostics
+    if source == "template":
+        reason = diagnostics.get("reason", "").strip()
+        if reason:
+            notes.append(f"fallback:{reason}")
+    return " | ".join(notes)
 
 
 def _render_shell(include_review: bool) -> HTMLResponse:
@@ -269,11 +380,9 @@ def _should_use_live_llm(session: ChatSession) -> bool:
     if runtime_config.live_chat_llm_analysis_enabled:
         if not live_chat_extractor.enabled:
             return False
-        threshold = max(runtime_config.live_llm_turn_threshold, 1)
+        threshold = 1
         if user_turns < threshold:
             return False
-        if runtime_config.live_chat_extraction_model_provider == "remote":
-            return (user_turns - threshold) % 3 == 0
         return True
     if not session.turns:
         return False
@@ -307,6 +416,9 @@ def runtime_settings() -> dict:
         "chat_provider": runtime_config.chat_model_provider,
         "extraction_provider": runtime_config.extraction_model_provider,
         "safety_provider": runtime_config.safety_model_provider,
+        "responder_enabled": responder.enabled,
+        "extractor_enabled": extractor.enabled,
+        "live_chat_extractor_enabled": live_chat_extractor.enabled,
         "controller_model": runtime_config.chat_model,
         "extractor_model": runtime_config.extraction_model,
         "chat_model": runtime_config.chat_model,
@@ -326,6 +438,9 @@ def runtime_settings() -> dict:
         "vertex_live_chat_analysis_fallback_location": runtime_config.resolved_vertex_live_chat_analysis_fallback_location,
         "remote_extraction_enabled": bool(runtime_config.remote_extraction_url),
         "remote_extraction_url_configured": bool(runtime_config.remote_extraction_url),
+        "remote_extraction_hybrid_enabled": runtime_config.remote_extraction_hybrid_enabled,
+        "remote_extraction_timeout": runtime_config.remote_extraction_timeout,
+        "live_chat_remote_extraction_timeout": live_chat_runtime_config.remote_extraction_timeout,
         "live_chat_extraction_provider": live_chat_runtime_config.extraction_model_provider,
         "live_chat_extraction_model": live_chat_runtime_config.extraction_model,
         "semantic_safety_enabled": runtime_config.semantic_safety_enabled,
@@ -337,6 +452,7 @@ def runtime_settings() -> dict:
         "live_chat_llm_analysis_enabled": runtime_config.live_chat_llm_analysis_enabled,
         "async_scoring_enabled": runtime_config.async_scoring_enabled,
         "async_scoring_dir": runtime_config.async_scoring_dir,
+        "startup_warmup_enabled": runtime_config.startup_warmup_enabled,
         "cloud_voice_enabled": voice_runtime.enabled,
         "speech_to_text_enabled": voice_runtime.speech_to_text,
         "text_to_speech_enabled": voice_runtime.text_to_speech,
@@ -490,7 +606,7 @@ def add_turn(session_id: str, payload: ChatTurnRequest) -> ChatTurnResponse:
             "assistant",
             reply_text,
             session.language,
-            notes=f"source:{source}",
+            notes=_assistant_source_notes(source),
         )
         return ChatTurnResponse(
             session_id=session_id,

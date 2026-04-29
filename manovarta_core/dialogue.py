@@ -2602,7 +2602,7 @@ class DialoguePlanner:
             coverage_debt=coverage_debt,
             continue_intent=continue_intent,
             reopen_signal=reopen_signal,
-            summary_ready=remaining_closeout == 0 and not snapshot.safety.needs_human_review and (
+            summary_ready=remaining_closeout == 0 and snapshot.mode == "hybrid" and not snapshot.safety.needs_human_review and (
                 summary_request
                 or stage == "summary"
                 or snapshot.coverage.touched_items >= MIN_SUMMARY_TOUCHES

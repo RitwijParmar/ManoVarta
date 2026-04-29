@@ -24,6 +24,7 @@ FatigueLevel = Literal["low", "medium", "high"]
 NudgeOutcome = Literal["unknown", "helpful", "unhelpful"]
 AsyncScoreStatus = Literal["pending", "running", "completed", "failed"]
 DomainTrack = Literal["phq", "gad", "safety", "rapport"]
+SnapshotAnalysisStatus = Literal["llm_backed", "heuristic_only", "degraded"]
 
 
 class Turn(BaseModel):
@@ -175,6 +176,19 @@ class CoveragePlan(BaseModel):
     dialogue: DialoguePlan = Field(default_factory=DialoguePlan)
 
 
+class DomainResult(BaseModel):
+    domain: Literal["phq", "gad"]
+    questionnaire: Literal["PHQ9", "GAD7"]
+    total_score: int = 0
+    resolved_items: List[str] = Field(default_factory=list)
+    remaining_items: List[str] = Field(default_factory=list)
+    denied_items: List[str] = Field(default_factory=list)
+    review_items: List[str] = Field(default_factory=list)
+    source_modes: List[str] = Field(default_factory=list)
+    completion_ratio: float = Field(default=0.0, ge=0.0, le=1.0)
+    complete: bool = False
+
+
 class ScreeningSnapshot(BaseModel):
     language: LanguageCode
     items: Dict[str, ItemScore]
@@ -184,6 +198,10 @@ class ScreeningSnapshot(BaseModel):
     safety: SafetyFlag
     coverage: CoveragePlan
     mode: Literal["heuristic", "hybrid"] = "heuristic"
+    analysis_status: Optional[SnapshotAnalysisStatus] = None
+    phq_result: Optional[DomainResult] = None
+    gad_result: Optional[DomainResult] = None
+
 
 
 class UserProfileContext(BaseModel):

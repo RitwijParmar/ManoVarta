@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import logging
 import re
 import time
 from dataclasses import replace
@@ -16,6 +17,7 @@ from manovarta_core.dialogue import FREQUENCY_MARKERS, TIME_MARKERS
 from manovarta_core.knowledge import knowledge_summary_for_topic, profile_summary
 from manovarta_core.json_utils import normalize_extractor_payload, normalize_safety_level, parse_extractor_payload, parse_json_object
 from manovarta_core.questionnaires import ITEM_INDEX
+from manovarta_core.safety import PROTECTIVE_CUES, PROTECTIVE_NEGATION_PATTERNS
 from manovarta_core.scoring import ConversationScorer
 from manovarta_core.schemas import (
     ChatSession,
@@ -33,18 +35,20 @@ except ImportError:  # pragma: no cover
     InferenceClient = None
 
 try:  # pragma: no cover
-    import vertexai
-    from vertexai.generative_models import GenerativeModel, GenerationConfig
+    from google import auth as google_auth
+    from google.auth.transport.requests import Request as GoogleAuthRequest
 except ImportError:  # pragma: no cover
-    vertexai = None
-    GenerativeModel = None
-    GenerationConfig = None
+    google_auth = None
+    GoogleAuthRequest = None
 
 AutoModelForCausalLM = None
 AutoTokenizer = None
 BitsAndBytesConfig = None
 PeftModel = None
 torch = None
+
+
+logger = logging.getLogger(__name__)
 
 
 EXTRACTOR_TOPIC_GUIDANCE = ("mood", "sleep", "energy", "self_view", "focus", "anxiety", "safety")
@@ -68,19 +72,106 @@ EXTRACTOR_ITEM_HINTS = {
     "gad_q7_afraid": "getting written up, not covering rent, something bad will happen, debt or catastrophe anticipation",
 }
 ENGLISH_VERIFIER_FOCUS_ITEMS = (
+    "phq_q1_anhedonia",
+    "phq_q2_low_mood",
+    "phq_q5_appetite",
+    "phq_q6_worthlessness",
     "gad_q1_nervous",
     "gad_q2_control_worry",
     "gad_q3_excessive_worry",
     "gad_q4_trouble_relaxing",
+    "gad_q5_restlessness",
     "gad_q6_irritability",
+    "gad_q7_afraid",
     "phq_q3_sleep",
     "phq_q9_self_harm",
+)
+ENGLISH_ANHEDONIA_CUES = (
+    "go through the motions",
+    "go through motions",
+    "do not get much from them",
+    "don't get much from them",
+    "feel very little from them",
+    "things i used to enjoy feel flat",
+    "things i usually care about feel flat",
+    "before i even start them",
+    "used to enjoy",
+    "used to enjoy feel flat",
+    "keep delaying starting things",
+    "put off starting things",
+    "pulling away from people",
+    "ignore texts",
+)
+ENGLISH_LOW_MOOD_CUES = (
+    "low mood",
+    "feel flat most of the day",
+    "emotionally flat underneath",
+    "everything feels flat underneath",
+    "days feel heavy",
+    "day feels heavy",
+    "my mood stays heavy",
+    "mood stays heavy most of the day",
+    "heavy most of the day",
+    "heavy and blank",
+    "flat and heavy",
+    "empty most days",
+    "drop in my stomach",
+    "dimmer and heavier than it used to",
+    "heavy muted feeling",
+    "muted feeling that sits underneath everything",
+    "heavier than it used to",
+)
+ENGLISH_SLEEP_CUES = (
+    "sleep is messy",
+    "wake up around 3 a.m.",
+    "wake up around 3 am",
+    "wake around 3 or 4",
+    "drift in and out until morning",
+    "sleep problem is happening",
+    "waking during the night",
+    "wake too early",
+    "sleep keeps breaking",
+)
+ENGLISH_APPETITE_CUES = (
+    "skip lunch",
+    "skipped lunch",
+    "still have not eaten properly",
+    "late afternoon before eating",
+    "skip meals",
+    "skipping meals",
+    "lunch gets skipped",
+    "whatever is quickest",
+    "meals get skipped",
+    "meals get delayed",
+    "appetite is off",
+    "not eating much",
+    "appetite does not really show up",
+    "appetite does not show up",
+)
+ENGLISH_WORTHLESSNESS_CUES = (
+    "wasting everyone's time",
+    "waste everyone's time",
+    "better off without me",
+    "letting people down",
+    "hard on myself",
+    "harsh on myself",
+    "judging myself",
+    "blame myself",
+    "feel like i am failing",
+    "feeling like i am failing",
+    "failing at things that should be easy",
+    "tiny tasks feel bigger than they should",
+    "not cut out for this",
+    "feeling weak",
+    "like a burden",
 )
 ENGLISH_CONTROL_WORRY_CUES = (
     "mind won't stop",
     "thoughts won't stop",
     "mind keeps looping",
     "thoughts keep looping",
+    "even when i try to stop it",
+    "try to stop it",
     "can't stop worrying",
     "cannot stop worrying",
     "worrying a lot",
@@ -88,6 +179,11 @@ ENGLISH_CONTROL_WORRY_CUES = (
     "replaying comments from my advisor",
     "brain keeps replaying",
     "head keeps saying",
+    "hard to shut it off",
+    "cannot really turn it off",
+    "cannot turn it off",
+    "turn it off on my own",
+    "no real control over it",
 )
 ENGLISH_EXCESSIVE_WORRY_CUES = (
     "worrying a lot",
@@ -101,6 +197,9 @@ ENGLISH_EXCESSIVE_WORRY_CUES = (
     "kids",
     "marriage",
     "rent",
+    "work or money",
+    "let people down",
+    "miss something important",
 )
 ENGLISH_TROUBLE_RELAXING_CUES = (
     "can't really switch off",
@@ -115,6 +214,74 @@ ENGLISH_TROUBLE_RELAXING_CUES = (
     "pacing around",
     "do not sit still",
     "can't sit still",
+    "relaxing has been hard",
+    "do not feel settled",
+    "body still feels revved up",
+    "actually unwinding",
+)
+ENGLISH_NERVOUS_CUES = (
+    "always on edge",
+    "on edge",
+    "on edge before calls",
+    "feel anxious",
+    "feeling anxious",
+    "feel on edge",
+    "constantly nervous",
+    "jaw stays tight",
+    "chest tight",
+    "hands start shaking",
+    "keyed up",
+    "before difficult calls",
+)
+ENGLISH_RESTLESSNESS_CUES = (
+    "pace around",
+    "pacing around",
+    "can't sit still",
+    "cannot sit still",
+    "do not sit still",
+    "need to move around",
+    "urge to move around",
+    "keep getting up",
+)
+ENGLISH_CONCENTRATION_CUES = (
+    "reread the same email",
+    "reread the same paragraph",
+    "rereading things",
+    "lose my thread",
+    "concentration slips",
+    "focus slips",
+    "mind not sticking",
+)
+ENGLISH_PSYCHOMOTOR_CUES = (
+    "body feels slowed down",
+    "move more slowly",
+    "move slower than usual",
+    "slowed down feeling",
+    "takes effort to get myself started",
+    "takes real effort just to get started",
+    "delay basic tasks",
+)
+ENGLISH_AFRAID_CUES = (
+    "something bad will happen",
+    "something bad is about to happen",
+    "cover rent",
+    "get written up",
+    "say the wrong thing",
+    "catastrophe",
+    "awful will happen",
+    "something is about to go wrong",
+    "miss something important",
+)
+ENGLISH_SELF_HARM_POSITIVE_CUES = (
+    "hurt myself",
+    "harm myself",
+    "kill myself",
+    "end my life",
+    "want to die",
+    "not wanting to be alive",
+    "better off without me around",
+    "everyone would have an easier life",
+    "want to disappear",
 )
 
 
@@ -300,6 +467,10 @@ class _LocalGenerationClient:
         content = self._tokenizer.batch_decode(completion, skip_special_tokens=True)[0].strip()
         return _ChatCompletionOutput(content)
 
+    def warmup(self) -> bool:
+        self._ensure_backend()
+        return self._tokenizer is not None and self._model is not None
+
     def _ensure_backend(self) -> None:
         if self._tokenizer is not None and self._model is not None:
             return
@@ -345,63 +516,175 @@ class _LocalGenerationClient:
 
 class _VertexGenerationClient:
     def __init__(self, config: RuntimeConfig, model_name: str) -> None:
-        if vertexai is None or GenerativeModel is None or GenerationConfig is None:
-            raise RuntimeError("vertex runtime is not installed")
+        if google_auth is None or GoogleAuthRequest is None:
+            raise RuntimeError("google auth runtime is not installed")
         if not config.vertex_project:
             raise RuntimeError("vertex project is not configured")
         self._config = config
         self._model_name = model_name
         self._lock = Lock()
-        self._initialized = False
+        self._credentials = None
 
     def chat_completion(self, *, messages, temperature: float, max_tokens: int):
-        wants_json = any(
-            "return strict json only" in str(message.get("content", "")).strip().lower()
-            or "return json with keys" in str(message.get("content", "")).strip().lower()
-            for message in messages
+        system_instruction, prompt, wants_json = self._prepare_request(messages)
+        if not prompt:
+            return _ChatCompletionOutput("")
+
+        payload = self._build_request_payload(
+            system_instruction=system_instruction,
+            prompt=prompt,
+            temperature=temperature,
+            max_tokens=max_tokens,
+            wants_json=wants_json,
         )
+        response = self._post_json(self._endpoint_url(), payload)
+        content = self._extract_response_text(response)
+        return _ChatCompletionOutput(content.strip())
+
+    def warmup(self) -> bool:
+        if self._credentials_or_refresh() is None:
+            return False
+        response = self._post_json(self._endpoint_url(), self._build_warmup_payload())
+        self._extract_response_text(response)
+        return True
+
+    def _prepare_request(self, messages) -> tuple[str, str, bool]:
+        wants_json = self._wants_json_response(messages)
         system_instruction = "\n\n".join(
-            message["content"].strip()
+            str(message.get("content", "")).strip()
             for message in messages
             if message.get("role") == "system" and message.get("content")
         ).strip()
         prompt = "\n\n".join(
-            f"{message.get('role', 'user').upper()}:\n{message.get('content', '').strip()}"
+            f"{str(message.get('role', 'user')).upper()}:\n{str(message.get('content', '')).strip()}"
+            for message in messages
+            if message.get("content") and message.get("role") != "system"
+        ).strip()
+        return system_instruction, prompt, wants_json
+
+    def _wants_json_response(self, messages) -> bool:
+        normalized_content = " ".join(
+            str(message.get("content", "")).strip().lower()
             for message in messages
             if message.get("content")
-        ).strip()
-        if not prompt:
-            return _ChatCompletionOutput("")
+        )
+        return (
+            "json" in normalized_content
+            and (
+                "return" in normalized_content
+                or "schema" in normalized_content
+                or "valid json" in normalized_content
+            )
+        )
 
+    def _endpoint_url(self) -> str:
+        location = (self._config.vertex_location or "us-central1").strip()
+        if location == "global":
+            base_url = "https://aiplatform.googleapis.com"
+        else:
+            base_url = f"https://{location}-aiplatform.googleapis.com"
+        return (
+            f"{base_url}/v1/projects/{self._config.vertex_project}/locations/{location}"
+            f"/publishers/google/models/{self._model_name}:generateContent"
+        )
+
+    def _build_request_payload(
+        self,
+        *,
+        system_instruction: str,
+        prompt: str,
+        temperature: float,
+        max_tokens: int,
+        wants_json: bool,
+    ) -> dict[str, Any]:
+        effective_max_tokens = max_tokens
+        generation_config: dict[str, Any] = {
+            "temperature": temperature,
+            "maxOutputTokens": max_tokens,
+            "responseMimeType": "application/json" if wants_json else "text/plain",
+        }
+        thinking_config = self._thinking_config(wants_json=wants_json)
+        if thinking_config:
+            generation_config["thinkingConfig"] = thinking_config
+            if thinking_config.get("thinkingBudget", 0) > 0:
+                effective_max_tokens = max(max_tokens, 384)
+                generation_config["maxOutputTokens"] = effective_max_tokens
+        payload: dict[str, Any] = {
+            "contents": [{"role": "user", "parts": [{"text": prompt}]}],
+            "generationConfig": generation_config,
+        }
+        if system_instruction:
+            payload["systemInstruction"] = {"parts": [{"text": system_instruction}]}
+        return payload
+
+    def _build_warmup_payload(self) -> dict[str, Any]:
+        generation_config: dict[str, Any] = {
+            "temperature": 0.0,
+            "maxOutputTokens": 8,
+            "responseMimeType": "text/plain",
+        }
+        return {
+            "contents": [{"role": "user", "parts": [{"text": "Reply with ok."}]}],
+            "generationConfig": generation_config,
+        }
+
+    def _thinking_config(self, *, wants_json: bool) -> Optional[dict[str, int]]:
+        if wants_json:
+            return None
+        normalized_model = self._model_name.strip().lower()
+        if normalized_model.startswith("gemini-2.5-pro"):
+            return {"thinkingBudget": 128}
+        if normalized_model.startswith("gemini-2.5-flash"):
+            return {"thinkingBudget": 0}
+        return None
+
+    def _post_json(self, url: str, payload: dict[str, Any]) -> dict[str, Any]:
+        credentials = self._credentials_or_refresh()
+        request = urllib_request.Request(
+            url,
+            data=json.dumps(payload).encode(),
+            headers={
+                "Authorization": f"Bearer {credentials.token}",
+                "Content-Type": "application/json",
+            },
+            method="POST",
+        )
+        try:
+            with urllib_request.urlopen(request, timeout=180) as response:
+                return json.loads(response.read().decode())
+        except urllib_error.HTTPError as exc:
+            detail = exc.read().decode("utf-8", errors="ignore")
+            raise RuntimeError(f"{exc.code} {exc.reason}: {detail}") from exc
+
+    def _credentials_or_refresh(self):
         with self._lock:
-            if not self._initialized:
-                vertexai.init(project=self._config.vertex_project, location=self._config.vertex_location)
-                self._initialized = True
+            if self._credentials is None:
+                credentials, _ = google_auth.default(scopes=["https://www.googleapis.com/auth/cloud-platform"])
+                self._credentials = credentials
+            if not getattr(self._credentials, "valid", False) or getattr(self._credentials, "expired", False):
+                self._credentials.refresh(GoogleAuthRequest())
+            return self._credentials
 
-            model = GenerativeModel(
-                self._model_name,
-                system_instruction=system_instruction or None,
-            )
-            response = model.generate_content(
-                prompt,
-                generation_config=GenerationConfig(
-                    temperature=temperature,
-                    max_output_tokens=max_tokens,
-                    response_mime_type="application/json" if wants_json else "text/plain",
-                ),
-            )
-
-        content = getattr(response, "text", "") or ""
-        if not content and getattr(response, "candidates", None):
-            parts = []
-            for candidate in response.candidates:
+    def _extract_response_text(self, response) -> str:
+        parts: list[str] = []
+        if isinstance(response, dict):
+            for candidate in response.get("candidates", []) or []:
+                for part in ((candidate.get("content") or {}).get("parts") or []):
+                    part_text = part.get("text")
+                    if part_text:
+                        parts.append(str(part_text))
+        else:
+            for candidate in getattr(response, "candidates", None) or []:
                 candidate_parts = getattr(getattr(candidate, "content", None), "parts", None) or []
                 for part in candidate_parts:
                     part_text = getattr(part, "text", None)
                     if part_text:
-                        parts.append(part_text)
-            content = "\n".join(parts).strip()
-        return _ChatCompletionOutput(content.strip())
+                        parts.append(str(part_text))
+        if parts:
+            return "".join(parts).strip()
+        if isinstance(response, dict):
+            return str(response.get("text", "") or "").strip()
+        return str(getattr(response, "text", "") or "").strip()
 
 
 def _build_text_generation_client(
@@ -440,6 +723,7 @@ class HuggingFaceResponder:
     def __init__(self, config: RuntimeConfig) -> None:
         self.config = config
         self._provider = self.config.chat_model_provider
+        self._last_reply_diagnostics: dict[str, str] = {}
         self._generation_clients = self._build_client_chain(
             primary_model=self.config.chat_model,
             fallback_model=self.config.resolved_chat_fallback_model,
@@ -460,6 +744,20 @@ class HuggingFaceResponder:
     def enabled(self) -> bool:
         return bool(self._active_generation_clients())
 
+    def warmup(self) -> bool:
+        warmed = False
+        seen_clients: set[tuple[str, str, str]] = set()
+        for client in [*self._active_generation_clients(), *self._active_analysis_clients()]:
+            warmup_key = self._warmup_key(client)
+            if warmup_key in seen_clients:
+                continue
+            seen_clients.add(warmup_key)
+            warmup = getattr(client, "warmup", None)
+            if warmup is None:
+                continue
+            warmed = bool(warmup()) or warmed
+        return warmed
+
     def compose_reply(
         self,
         session: ChatSession,
@@ -467,40 +765,99 @@ class HuggingFaceResponder:
         target_item: Optional[str],
         fallback_text: str,
     ) -> Tuple[str, str]:
+        self._last_reply_diagnostics = {"source": "template", "reason": "not_attempted", "detail": ""}
         if not self.enabled or snapshot.safety.level == "urgent":
+            self._last_reply_diagnostics = {"source": "template", "reason": "responder_disabled_or_urgent", "detail": ""}
             return fallback_text, "template"
         if snapshot.safety.level == "review" and snapshot.coverage.dialogue.target_topic == "safety":
+            self._last_reply_diagnostics = {"source": "template", "reason": "safety_review", "detail": ""}
             return fallback_text, "template"
         if self._should_prefer_fallback(session, snapshot, target_item):
+            self._last_reply_diagnostics = {"source": "template", "reason": "planner_prefers_fallback", "detail": ""}
             return fallback_text, "template"
 
         analyzer_result = self._analyze_turn(session, snapshot, target_item)
         messages = self._build_messages(session, snapshot, target_item, fallback_text, analyzer_result=analyzer_result)
+        last_failure_reason = "no_generation_attempt"
+        last_failure_detail = ""
         for client in self._active_generation_clients():
-            try:
-                output = client.chat_completion(
-                    messages=messages,
-                    temperature=self.config.assistant_temperature,
-                    max_tokens=self.config.assistant_max_tokens,
-                )
-                content = output.choices[0].message.content.strip()
-            except Exception:
-                continue
+            client_label = self._client_label(client)
+            repair_context: tuple[str, str] | None = None
+            for attempt_index in range(2):
+                prompt_messages = messages
+                if repair_context is not None:
+                    prompt_messages = self._build_repair_messages(
+                        messages,
+                        session,
+                        repair_context[0],
+                        repair_context[1],
+                    )
+                try:
+                    output = client.chat_completion(
+                        messages=prompt_messages,
+                        temperature=self.config.assistant_temperature,
+                        max_tokens=self.config.assistant_max_tokens,
+                    )
+                    content = output.choices[0].message.content.strip()
+                except Exception as exc:
+                    last_failure_reason = "generation_error"
+                    last_failure_detail = f"{client_label}:{type(exc).__name__}:{str(exc)[:180]}"
+                    logger.warning(
+                        "reply_generation_error provider=%s client=%s attempt=%s target_item=%s error=%s",
+                        self._provider,
+                        client_label,
+                        attempt_index + 1,
+                        target_item or "none",
+                        exc,
+                    )
+                    break
 
-            cleaned = self._clean_content(content, fallback_text)
-            if not cleaned:
-                continue
-            if (
-                self._sounds_invalid_empathy(cleaned)
-                or self._repeats_last_question(cleaned, session)
-                or self._looks_like_meta_or_draft(cleaned)
-                or self._contradicts_recent_channel(cleaned, session)
-                or self._summary_stage_sounds_empty(cleaned, snapshot)
-                or self._violates_analysis_constraints(cleaned, analyzer_result)
-            ):
-                continue
-            return cleaned, self._provider
+                cleaned = self._clean_content(content, fallback_text)
+                if not cleaned:
+                    last_failure_reason = "empty_or_invalid"
+                    last_failure_detail = f"{client_label}:{content[:180]}"
+                    repair_context = ("empty_or_invalid", content[:240])
+                    continue
+                rejection_reason = self._reply_rejection_reason(cleaned, session, snapshot, analyzer_result)
+                if rejection_reason is None:
+                    self._last_reply_diagnostics = {
+                        "source": self._provider,
+                        "reason": "accepted",
+                        "detail": f"{client_label}:attempt_{attempt_index + 1}",
+                    }
+                    return cleaned, self._provider
+                last_failure_reason = rejection_reason
+                last_failure_detail = f"{client_label}:{cleaned[:180]}"
+                logger.info(
+                    "reply_generation_rejected provider=%s client=%s attempt=%s target_item=%s reason=%s draft=%r",
+                    self._provider,
+                    client_label,
+                    attempt_index + 1,
+                    target_item or "none",
+                    rejection_reason,
+                    cleaned[:240],
+                )
+                if attempt_index == 0:
+                    repair_context = (rejection_reason, cleaned[:240])
+                    continue
+                break
+        logger.info(
+            "reply_generation_fallback provider=%s target_item=%s reason=%s detail=%r",
+            self._provider,
+            target_item or "none",
+            last_failure_reason,
+            last_failure_detail,
+        )
+        self._last_reply_diagnostics = {
+            "source": "template",
+            "reason": last_failure_reason,
+            "detail": last_failure_detail,
+        }
         return fallback_text, "template"
+
+    @property
+    def last_reply_diagnostics(self) -> dict[str, str]:
+        return dict(self._last_reply_diagnostics)
 
     def _build_client_chain(
         self,
@@ -546,6 +903,18 @@ class HuggingFaceResponder:
         if legacy_client is not None and (not self._generation_clients or legacy_client is not self._generation_clients[0]):
             return [legacy_client]
         return self._analysis_clients
+
+    def _client_label(self, client: Any) -> str:
+        model_name = getattr(client, "_model_name", None)
+        if model_name:
+            return str(model_name)
+        return type(client).__name__
+
+    def _warmup_key(self, client: Any) -> tuple[str, str, str]:
+        model_name = str(getattr(client, "_model_name", "") or "")
+        client_config = getattr(client, "_config", None)
+        location = str(getattr(client_config, "vertex_location", "") or "")
+        return (type(client).__name__, model_name, location)
 
     def _build_single_client(
         self,
@@ -837,6 +1206,29 @@ class HuggingFaceResponder:
             f"evidence={','.join(evidence_bits)}"
         )
 
+    def _build_repair_messages(
+        self,
+        original_messages: list[dict[str, str]],
+        session: ChatSession,
+        rejection_reason: str,
+        rejected_draft: str,
+    ) -> list[dict[str, str]]:
+        recent_turns = " | ".join(
+            turn.text.strip()
+            for turn in [turn for turn in session.turns if turn.speaker == "assistant"][-3:]
+            if turn.text.strip()
+        ) or "none"
+        repair_instruction = (
+            "Rewrite the assistant turn. "
+            f"The previous draft was rejected for: {rejection_reason}. "
+            "Keep the same topic target, but switch to a different sentence family from the recent assistant turns. "
+            "Do not reuse the same opener, reflection frame, or question shape. "
+            "Use at most two sentences, stay in the user's language, and return only the rewritten turn.\n"
+            f"Rejected draft: {rejected_draft}\n"
+            f"Recent assistant turns to avoid echoing: {recent_turns}"
+        )
+        return [*original_messages, {"role": "user", "content": repair_instruction}]
+
     def _violates_analysis_constraints(
         self,
         cleaned: str,
@@ -904,6 +1296,29 @@ class HuggingFaceResponder:
         if analyzer_result.stay_in_domain and analyzer_result.active_domain == "gad":
             return any(marker in normalized for marker in phq_markers)
         return False
+
+    def _reply_rejection_reason(
+        self,
+        cleaned: str,
+        session: ChatSession,
+        snapshot: ScreeningSnapshot,
+        analyzer_result: Optional[DialogueAnalyzerResult],
+    ) -> Optional[str]:
+        if self._sounds_invalid_empathy(cleaned):
+            return "invalid_empathy"
+        if self._repeats_last_question(cleaned, session):
+            return "duplicate_question"
+        if self._repeats_recent_reply_family(cleaned, session):
+            return "repetitive_full_reply"
+        if self._looks_like_meta_or_draft(cleaned):
+            return "meta_or_draft"
+        if self._contradicts_recent_channel(cleaned, session):
+            return "contradicts_recent_channel"
+        if self._summary_stage_sounds_empty(cleaned, snapshot):
+            return "empty_summary"
+        if self._violates_analysis_constraints(cleaned, analyzer_result):
+            return "analysis_constraint_violation"
+        return None
 
     def _contradicts_recent_channel(self, cleaned: str, session: ChatSession) -> bool:
         latest_user_text = ""
@@ -1082,6 +1497,46 @@ class HuggingFaceResponder:
                 return True
         return False
 
+    def _repeats_recent_reply_family(self, content: str, session: ChatSession) -> bool:
+        assistant_turns = [turn.text for turn in session.turns if turn.speaker == "assistant"][-3:]
+        if not assistant_turns:
+            return False
+
+        current_sentences = self._normalized_sentences(content)
+        if not current_sentences:
+            return False
+        current_families = self._reply_family_markers(content)
+        current_opening = self._sentence_opening_signature(content)
+        current_reply_signature = self._reply_signature(content)
+
+        for previous in assistant_turns:
+            previous_sentences = self._normalized_sentences(previous)
+            previous_families = self._reply_family_markers(previous)
+            previous_opening = self._sentence_opening_signature(previous)
+            previous_reply_signature = self._reply_signature(previous)
+            if current_opening and previous_opening and current_opening == previous_opening:
+                return True
+            if current_families and previous_families and current_families & previous_families:
+                return True
+            if current_reply_signature and previous_reply_signature:
+                overlap = len(current_reply_signature & previous_reply_signature) / max(
+                    len(current_reply_signature | previous_reply_signature),
+                    1,
+                )
+                if overlap >= 0.78:
+                    return True
+            for current_sentence in current_sentences:
+                for previous_sentence in previous_sentences:
+                    if current_sentence == previous_sentence:
+                        return True
+                    sentence_overlap = len(current_sentence & previous_sentence) / max(
+                        len(current_sentence | previous_sentence),
+                        1,
+                    )
+                    if sentence_overlap >= 0.74:
+                        return True
+        return False
+
     def _looks_like_meta_or_draft(self, content: str) -> bool:
         normalized = normalize_text(content)
         meta_markers = (
@@ -1095,8 +1550,6 @@ class HuggingFaceResponder:
 
     def _should_prefer_fallback(self, session: ChatSession, snapshot: ScreeningSnapshot, target_item: Optional[str]) -> bool:
         dialogue = snapshot.coverage.dialogue
-        if dialogue.stage == "summary" and dialogue.summary_ready:
-            return True
         if dialogue.target_topic == "safety":
             return True
         if (
@@ -1156,6 +1609,51 @@ class HuggingFaceResponder:
         }
         return {token for token in tokens if token not in stopwords}
 
+    def _reply_signature(self, text: str) -> set[str]:
+        tokens = re.findall(r"\w+", normalize_text(text), flags=re.UNICODE)
+        stopwords = {
+            "the",
+            "a",
+            "an",
+            "is",
+            "it",
+            "this",
+            "that",
+            "do",
+            "does",
+            "did",
+            "you",
+            "your",
+            "to",
+            "of",
+            "and",
+            "or",
+            "be",
+            "are",
+            "if",
+            "when",
+            "what",
+            "how",
+            "more",
+            "like",
+            "then",
+        }
+        return {token for token in tokens if token not in stopwords and len(token) > 2}
+
+    def _normalized_sentences(self, text: str) -> list[set[str]]:
+        normalized = normalize_text(text)
+        sentences = [segment.strip() for segment in re.split(r"[?.!]+", normalized) if segment.strip()]
+        token_sets: list[set[str]] = []
+        for sentence in sentences:
+            tokens = {
+                token
+                for token in re.findall(r"\w+", sentence, flags=re.UNICODE)
+                if len(token) > 2 and token not in {"the", "and", "that", "this", "with", "from", "your"}
+            }
+            if tokens:
+                token_sets.append(tokens)
+        return token_sets
+
     def _sentence_opening_signature(self, text: str) -> tuple[str, ...]:
         normalized = normalize_text(text)
         tokens = re.findall(r"\w+", normalized, flags=re.UNICODE)
@@ -1177,6 +1675,23 @@ class HuggingFaceResponder:
             "hard to switch off": "hard_to_switch_off",
             "staying active even when things are quiet": "staying_active_quiet",
             "what slips first": "what_slips_first",
+        }
+        return {label for marker, label in markers.items() if marker in normalized}
+
+    def _reply_family_markers(self, text: str) -> set[str]:
+        normalized = normalize_text(text)
+        markers = {
+            "it sounds like": "reflective_opener",
+            "that timing helps": "timing_anchor",
+            "that helps me understand how often": "frequency_anchor",
+            "when this hits": "when_this_hits",
+            "when the worry starts": "worry_starts",
+            "what slips first": "what_slips_first",
+            "or both": "or_both",
+            "lag raha hai": "lag_raha_hai",
+            "jab yeh hota hai": "jab_yeh_hota_hai",
+            "jab din heavy ho jata hai": "din_heavy",
+            "mind or body": "mind_or_body",
         }
         return {label for marker, label in markers.items() if marker in normalized}
 
@@ -1205,17 +1720,28 @@ class HuggingFaceExtractor:
             return self._remote_client is not None and self._remote_client.enabled
         return self._client is not None
 
+    def warmup(self) -> bool:
+        if not self.enabled or self._provider == "remote":
+            return False
+        warmup = getattr(self._client, "warmup", None)
+        if warmup is None:
+            return False
+        return bool(warmup())
+
     def extract(self, turns: list[Turn], language: str) -> Optional[dict]:
         if not self.enabled:
             return None
-        if self._provider == "remote" and self._remote_client is not None:
-            return self._remote_client.extract(turns, language)
-
         normalized_language = language.lower()
+        if self._provider == "remote" and self._remote_client is not None:
+            payload = self._remote_client.extract(turns, language)
+            if payload is None:
+                return None
+            if self.config.remote_extraction_hybrid_enabled:
+                return self._postprocess_extraction_payload(turns, normalized_language, payload)
+            return payload
+
         if self._provider == "local":
             payload = self._extract_with_local_fast_path(turns, normalized_language)
-            if payload and payload.get("items"):
-                return payload
             best_payload = payload
             if normalized_language in {"en", "hi", "hinglish"}:
                 full_transcript = self._build_extraction_transcript(turns, include_assistant=True)
@@ -1240,6 +1766,23 @@ class HuggingFaceExtractor:
         if payload and payload.get("items"):
             return payload
         return self._build_rule_rescue_payload(turns, normalized_language, payload)
+
+    def _postprocess_extraction_payload(
+        self,
+        turns: list[Turn],
+        language: str,
+        payload: Optional[dict],
+    ) -> Optional[dict]:
+        if not payload:
+            return payload
+        merged_payload = normalize_extractor_payload(payload) or payload
+        merged_payload = self._build_rule_rescue_payload(turns, language, merged_payload) or merged_payload
+        if language == "en":
+            transcript = self._build_extraction_transcript(turns, include_assistant=True)
+            refined_payload = self._refine_english_anxiety_payload(transcript, merged_payload)
+            if refined_payload:
+                return refined_payload
+        return merged_payload
 
     def _extract_with_local_fast_path(self, turns: list[Turn], language: str) -> Optional[dict]:
         transcripts = self._build_local_fast_transcripts(turns)
@@ -1464,18 +2007,127 @@ class HuggingFaceExtractor:
         normalized = normalize_text(transcript)
         items = {item["item_id"]: dict(item) for item in payload.get("items", []) if item.get("item_id")}
 
+        anhedonia_hit = self._find_first_cue(transcript, ENGLISH_ANHEDONIA_CUES)
+        low_mood_hit = self._find_first_cue(transcript, ENGLISH_LOW_MOOD_CUES)
+        sleep_hit = self._find_first_cue(transcript, ENGLISH_SLEEP_CUES)
+        appetite_hit = self._find_first_cue(transcript, ENGLISH_APPETITE_CUES)
+        worthlessness_hit = self._find_first_cue(transcript, ENGLISH_WORTHLESSNESS_CUES)
+        concentration_hit = self._find_first_cue(transcript, ENGLISH_CONCENTRATION_CUES)
+        psychomotor_hit = self._find_first_cue(transcript, ENGLISH_PSYCHOMOTOR_CUES)
+        nervous_hit = self._find_first_cue(transcript, ENGLISH_NERVOUS_CUES)
         control_hit = self._find_first_cue(transcript, ENGLISH_CONTROL_WORRY_CUES)
         excessive_hit = self._find_first_cue(transcript, ENGLISH_EXCESSIVE_WORRY_CUES)
         relaxing_hit = self._find_first_cue(transcript, ENGLISH_TROUBLE_RELAXING_CUES)
+        restlessness_hit = self._find_first_cue(transcript, ENGLISH_RESTLESSNESS_CUES)
+        afraid_hit = self._find_first_cue(transcript, ENGLISH_AFRAID_CUES)
+        self_harm_denial_hit = self._find_first_pattern_match(transcript, PROTECTIVE_NEGATION_PATTERNS)
+        if self_harm_denial_hit is None:
+            self_harm_denial_hit = self._find_first_cue(transcript, PROTECTIVE_CUES)
+        if self_harm_denial_hit is None:
+            self_harm_denial_hit = self._find_first_pattern_match(
+                transcript,
+                (
+                    r"\b(?:no|not|never|have\s+not|haven't|had\s+not)\b.{0,48}\bbetter off dead\b",
+                    r"\b(?:no|not|never|have\s+not|haven't)\b.{0,48}\bwishing i was dead\b",
+                ),
+            )
+
+        if anhedonia_hit:
+            items["phq_q1_anhedonia"] = self._prefer_structured_item(
+                items.get("phq_q1_anhedonia"),
+                {
+                    "item_id": "phq_q1_anhedonia",
+                    "value": 2,
+                    "evidence_quote": extract_window(transcript, anhedonia_hit),
+                    "confidence_note": "Reduced interest or emotional flatness around usually meaningful activities.",
+                },
+            )
+
+        if low_mood_hit:
+            items["phq_q2_low_mood"] = self._prefer_structured_item(
+                items.get("phq_q2_low_mood"),
+                {
+                    "item_id": "phq_q2_low_mood",
+                    "value": self._english_support_value(transcript, low_mood_hit),
+                    "evidence_quote": extract_window(transcript, low_mood_hit, radius=72),
+                    "confidence_note": "Persistent heaviness, emptiness, or low mood language across the day.",
+                },
+            )
+
+        if sleep_hit:
+            items["phq_q3_sleep"] = self._prefer_structured_item(
+                items.get("phq_q3_sleep"),
+                {
+                    "item_id": "phq_q3_sleep",
+                    "value": self._english_support_value(transcript, sleep_hit),
+                    "evidence_quote": extract_window(transcript, sleep_hit, radius=72),
+                    "confidence_note": "Broken, early, or repeatedly interrupted sleep is clearly described.",
+                },
+            )
+
+        if appetite_hit:
+            items["phq_q5_appetite"] = self._prefer_structured_item(
+                items.get("phq_q5_appetite"),
+                {
+                    "item_id": "phq_q5_appetite",
+                    "value": self._english_support_value(transcript, appetite_hit),
+                    "evidence_quote": extract_window(transcript, appetite_hit, radius=72),
+                    "confidence_note": "Meals are skipped, delayed, or appetite is clearly off.",
+                },
+            )
+
+        if worthlessness_hit:
+            items["phq_q6_worthlessness"] = self._prefer_structured_item(
+                items.get("phq_q6_worthlessness"),
+                {
+                    "item_id": "phq_q6_worthlessness",
+                    "value": 2,
+                    "evidence_quote": extract_window(transcript, worthlessness_hit),
+                    "confidence_note": "Self-blame, burden language, or harsh self-judgment is present.",
+                },
+            )
+
+        if concentration_hit:
+            items["phq_q7_concentration"] = self._prefer_structured_item(
+                items.get("phq_q7_concentration"),
+                {
+                    "item_id": "phq_q7_concentration",
+                    "value": self._english_support_value(transcript, concentration_hit),
+                    "evidence_quote": extract_window(transcript, concentration_hit, radius=72),
+                    "confidence_note": "Concentration slips, rereading, or losing the thread is explicit.",
+                },
+            )
+
+        if psychomotor_hit:
+            items["phq_q8_psychomotor"] = self._prefer_structured_item(
+                items.get("phq_q8_psychomotor"),
+                {
+                    "item_id": "phq_q8_psychomotor",
+                    "value": self._english_support_value(transcript, psychomotor_hit),
+                    "evidence_quote": extract_window(transcript, psychomotor_hit, radius=72),
+                    "confidence_note": "Slowed movement or activation difficulty is clearly described.",
+                },
+            )
+
+        if nervous_hit:
+            items["gad_q1_nervous"] = self._prefer_structured_item(
+                items.get("gad_q1_nervous"),
+                {
+                    "item_id": "gad_q1_nervous",
+                    "value": self._english_support_value(transcript, nervous_hit),
+                    "evidence_quote": extract_window(transcript, nervous_hit, radius=72),
+                    "confidence_note": "On-edge or physical anxiety language is explicitly present.",
+                },
+            )
 
         if control_hit:
             item = items.get("gad_q2_control_worry")
-            value = 3 if any(phrase in normalized for phrase in ("mind won t stop", "thoughts won t stop", "can t stop worrying", "cannot stop worrying")) else 2
+            value = self._english_control_worry_value(transcript, control_hit)
             if item is None or int(item.get("value", 0)) < value:
                 items["gad_q2_control_worry"] = {
                     "item_id": "gad_q2_control_worry",
                     "value": value,
-                    "evidence_quote": extract_window(transcript, control_hit),
+                    "evidence_quote": extract_window(transcript, control_hit, radius=72),
                     "confidence_note": "Persistent looping or uncontrollable worry language.",
                 }
             elif int(item.get("value", 0)) > value:
@@ -1486,8 +2138,8 @@ class HuggingFaceExtractor:
                 items.get("gad_q3_excessive_worry"),
                 {
                     "item_id": "gad_q3_excessive_worry",
-                    "value": 2,
-                    "evidence_quote": extract_window(transcript, excessive_hit),
+                    "value": self._english_support_value(transcript, excessive_hit),
+                    "evidence_quote": extract_window(transcript, excessive_hit, radius=72),
                     "confidence_note": "Concrete worry about outcomes across work, family, or finances.",
                 },
             )
@@ -1497,21 +2149,147 @@ class HuggingFaceExtractor:
                 items.get("gad_q4_trouble_relaxing"),
                 {
                     "item_id": "gad_q4_trouble_relaxing",
-                    "value": 2,
-                    "evidence_quote": extract_window(transcript, relaxing_hit),
+                    "value": self._english_support_value(transcript, relaxing_hit),
+                    "evidence_quote": extract_window(transcript, relaxing_hit, radius=72),
                     "confidence_note": "Difficulty settling or switching off after stress.",
                 },
             )
+
+        if restlessness_hit:
+            items["gad_q5_restlessness"] = self._prefer_structured_item(
+                items.get("gad_q5_restlessness"),
+                {
+                    "item_id": "gad_q5_restlessness",
+                    "value": self._english_support_value(transcript, restlessness_hit),
+                    "evidence_quote": extract_window(transcript, restlessness_hit, radius=72),
+                    "confidence_note": "Restlessness or urge to keep moving is clearly described.",
+                },
+            )
+
+        if afraid_hit:
+            items["gad_q7_afraid"] = self._prefer_structured_item(
+                items.get("gad_q7_afraid"),
+                {
+                    "item_id": "gad_q7_afraid",
+                    "value": self._english_support_value(transcript, afraid_hit),
+                    "evidence_quote": extract_window(transcript, afraid_hit, radius=72),
+                    "confidence_note": "Fear of consequences or something awful happening is explicit.",
+                },
+            )
+
+        if self_harm_denial_hit and not self._has_positive_self_harm_signal(transcript):
+            items["phq_q9_self_harm"] = {
+                "item_id": "phq_q9_self_harm",
+                "value": 0,
+                "evidence_quote": extract_window(transcript, self_harm_denial_hit),
+                "confidence_note": "Explicit denial of self-harm or suicidal intent.",
+            }
 
         refined = normalize_extractor_payload(
             {
                 "items": list(items.values()),
                 "safety_level": payload.get("safety_level", "none"),
                 "safety_cues": payload.get("safety_cues", []),
-                "notes": " | ".join(part for part in [payload.get("notes", "").strip(), "english_anxiety_refined"] if part),
+                "notes": " | ".join(
+                    part
+                    for part in [payload.get("notes", "").strip(), "english_screening_refined"]
+                    if part
+                ),
             }
         )
         return refined or payload
+
+    def _english_support_value(self, transcript: str, cue: str, *, default: int = 2) -> int:
+        snippet = normalize_text(extract_window(transcript, cue, radius=96))
+        if any(
+            phrase in snippet
+            for phrase in (
+                "every day",
+                "daily",
+                "almost every day",
+                "most days",
+                "more days than not",
+                "five days a week",
+                "five nights a week",
+                "most workdays",
+                "most evenings",
+                "hard to shut it off",
+                "cannot really turn it off",
+                "cannot turn it off",
+            )
+        ):
+            return 3
+        if any(
+            phrase in snippet
+            for phrase in (
+                "some days",
+                "several days",
+                "often",
+                "usually",
+                "nights a week",
+                "days a week",
+                "most of the day",
+                "throughout the day",
+            )
+        ):
+            return max(default, 2)
+        if any(
+            phrase in snippet
+            for phrase in (
+                "sometimes",
+                "occasionally",
+                "briefly",
+                "once or twice",
+            )
+        ):
+            return 1
+        return default
+
+    def _english_control_worry_value(self, transcript: str, cue: str) -> int:
+        snippet = normalize_text(extract_window(transcript, cue, radius=96))
+        severe_control_hit = any(
+            phrase in snippet
+            for phrase in (
+                "mind won t stop",
+                "thoughts won t stop",
+                "can t stop worrying",
+                "cannot stop worrying",
+                "hard to shut it off",
+                "cannot really turn it off",
+                "cannot turn it off",
+                "turn it off on my own",
+                "even when i try to stop it",
+            )
+        )
+        if severe_control_hit:
+            if any(
+                phrase in snippet
+                for phrase in (
+                    "every day",
+                    "daily",
+                    "almost every day",
+                    "most days",
+                    "more days than not",
+                    "five days a week",
+                    "usually",
+                    "often",
+                )
+            ):
+                return 3
+            return 2
+        if any(
+            phrase in snippet
+            for phrase in (
+                "mind keeps looping",
+                "thoughts keep looping",
+                "replay whole conversations",
+                "brain keeps replaying",
+                "head keeps saying",
+                "worrying a lot",
+            )
+        ):
+            return 2
+        return self._english_support_value(transcript, cue, default=2)
 
     def _find_first_cue(self, transcript: str, cues: tuple[str, ...]) -> Optional[str]:
         normalized = normalize_text(transcript)
@@ -1519,6 +2297,23 @@ class HuggingFaceExtractor:
             if normalize_text(cue) in normalized:
                 return cue
         return None
+
+    def _find_first_pattern_match(self, transcript: str, patterns: tuple[str, ...]) -> Optional[str]:
+        for pattern in patterns:
+            match = re.search(pattern, transcript, flags=re.IGNORECASE)
+            if match:
+                return match.group(0)
+        return None
+
+    def _has_positive_self_harm_signal(self, transcript: str) -> bool:
+        normalized_transcript = normalize_text(transcript)
+        scrubbed_transcript = transcript
+        for pattern in PROTECTIVE_NEGATION_PATTERNS:
+            scrubbed_transcript = re.sub(pattern, " ", scrubbed_transcript, flags=re.IGNORECASE)
+        scrubbed_normalized = normalize_text(scrubbed_transcript)
+        for cue in PROTECTIVE_CUES:
+            scrubbed_normalized = scrubbed_normalized.replace(normalize_text(cue), " ")
+        return any(normalize_text(cue) in scrubbed_normalized for cue in ENGLISH_SELF_HARM_POSITIVE_CUES if normalize_text(cue) in normalized_transcript)
 
     def _prefer_structured_item(self, current: Optional[dict[str, Any]], candidate: dict[str, Any]) -> dict[str, Any]:
         if current is None:
@@ -1655,14 +2450,16 @@ class HuggingFaceExtractor:
                     "Use these item ids and meanings:\n"
                     f"{item_lines}\n\n"
                     "Scoring rubric:\n"
+                    "- 0 = explicit, direct denial or absence, mainly for clear safety denials such as no self-harm thoughts\n"
                     "- 1 = mild, vague, occasional, or indirectly supported\n"
                     "- 2 = clear support, repeated mention, or definite functional impact\n"
                     "- 3 = severe, near-daily, escalating, or strongly impairing support\n\n"
                     "Return JSON with keys: items, safety_level, safety_cues, notes.\n"
                     "items must be a list of objects with item_id, value, evidence_quote, confidence_note.\n"
-                    "Only include items with value 1, 2, or 3.\n"
+                    "Only include items with value 1, 2, or 3, except use value 0 for explicit denials such as clearly denying self-harm or suicidal thoughts.\n"
                     "Look carefully for subtle but supported signals.\n"
                     "Treat indirect but concrete evidence as valid when it clearly implies the symptom.\n"
+                    "If the user clearly says they are not suicidal, are not thinking of harming themselves, or have no plan or wish to hurt themselves, include phq_q9_self_harm with value 0.\n"
                     f"Coverage reminders:\n{self._coverage_reminders()}\n\n"
                     f"Transcript (prioritize user disclosures):\n{transcript}"
                 ),
@@ -1686,7 +2483,7 @@ class HuggingFaceExtractor:
                 "content": (
                     "Extract supported questionnaire items from multilingual mental health transcripts. "
                     "Return strict JSON only with keys: items, safety_level, safety_cues, notes. "
-                    "Only include supported items with values 1, 2, or 3. "
+                    "Only include supported items with values 1, 2, or 3, except value 0 for explicit denials such as no self-harm thoughts. "
                     "Each item should include item_id, value, and evidence_quote. "
                     "Keep evidence quotes short. "
                     f"Include at most {max_items} strongest items. "
@@ -1704,6 +2501,7 @@ class HuggingFaceExtractor:
                     "Indirect cues count when clearly supported, including: skipped meals, not sleeping through the night, "
                     "mind not sticking, feeling weak or like a burden, heart racing, replaying worries, wanting to disappear, "
                     "or saying everything should end.\n"
+                    "If the user explicitly denies self-harm or suicidal thinking, include phq_q9_self_harm with value 0.\n"
                     'If nothing is supported, return {"items":[],"safety_level":"none","safety_cues":[],"notes":"none"}.\n\n'
                     f"User disclosures:\n{transcript}"
                 ),
@@ -1746,7 +2544,8 @@ class HuggingFaceExtractor:
                     "You are verifying and completing English mental health symptom extraction from a short transcript. "
                     "Return strict JSON only with keys: items, safety_level, safety_cues, notes. "
                     "Keep supported candidate items, remove unsupported ones, and add any clearly supported missing items. "
-                    "Pay extra attention to subtle English cues for nervousness, trouble relaxing, irritability, replaying worries, disrupted sleep, and disappearance or self-harm language. "
+                    "Pay extra attention to subtle English cues for low mood, anhedonia, appetite change, harsh self-view, nervousness, trouble relaxing, restlessness, awful-outcome worry, disrupted sleep, and disappearance or self-harm language. "
+                    "Use value 0 for explicit denials, especially when the user clearly denies self-harm or suicidal thoughts. "
                     "Do not add markdown fences."
                 ),
             },
@@ -1760,7 +2559,7 @@ class HuggingFaceExtractor:
                     f"{candidate_lines}\n\n"
                     "Priority English miss-check items:\n"
                     f"{focus_lines}\n\n"
-                    "Return only supported items with values 1, 2, or 3.\n"
+                    "Return supported items with values 1, 2, or 3, or value 0 for explicit denials.\n"
                     f"Transcript:\n{transcript}"
                 ),
             },
@@ -1790,6 +2589,7 @@ class HuggingFaceExtractor:
                     "Use these item ids, meanings, and indirect cue reminders:\n"
                     f"{item_lines}\n\n"
                     "Scoring rubric:\n"
+                    "- 0 = explicit, direct denial or absence, mainly for clear safety denials such as no self-harm thoughts\n"
                     "- 1 = mild, occasional, or indirectly supported\n"
                     "- 2 = clear support, repeated mention, or definite functional impact\n"
                     "- 3 = severe, near-daily, escalating, or strongly impairing support\n\n"
@@ -1799,6 +2599,7 @@ class HuggingFaceExtractor:
                     "- Concentration may appear as rereading, staring at the same task, or getting nowhere.\n"
                     "- Relaxation difficulty may appear as replaying comments, not switching off, or carrying body tension after stress.\n"
                     "- Fear that something awful will happen may appear as catastrophe expectations about money, work, or family consequences.\n"
+                    "- Clear denial like 'I am not suicidal' should close phq_q9_self_harm with value 0.\n"
                     f"Clinical guidance summary:\n{self._knowledge_guidance()}\n\n"
                     f"Transcript:\n{transcript}"
                 ),
@@ -1838,9 +2639,9 @@ class HuggingFaceExtractor:
                     f"Language: {language}\n"
                     "Use these item ids and meanings:\n"
                     f"{item_lines}\n\n"
-                    "Return only items with value 1, 2, or 3.\n"
-                    "Focus especially on subtle but supported signals for appetite, worthlessness, concentration, trouble relaxing, irritability, "
-                    "fear of awful outcomes, and control of worry.\n"
+                    "Return items with value 1, 2, or 3, or value 0 for explicit denials.\n"
+                    "Focus especially on subtle but supported signals for anhedonia, low mood, appetite, worthlessness, concentration, nervousness, trouble relaxing, restlessness, irritability, "
+                    "fear of awful outcomes, control of worry, and clear self-harm denial.\n"
                     "Candidate support from pass 1:\n"
                     f"{candidate_lines}\n\n"
                     f"Clinical guidance summary:\n{self._knowledge_guidance()}\n\n"
@@ -1977,6 +2778,14 @@ class HuggingFaceSafetyAssessor:
     @property
     def enabled(self) -> bool:
         return self._client is not None
+
+    def warmup(self) -> bool:
+        if not self.enabled:
+            return False
+        warmup = getattr(self._client, "warmup", None)
+        if warmup is None:
+            return False
+        return bool(warmup())
 
     def assess(self, turns: list[Turn], language: str) -> Optional[SafetyFlag]:
         if not self.enabled:

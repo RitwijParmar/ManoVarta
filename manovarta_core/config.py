@@ -58,8 +58,11 @@ class RuntimeConfig:
     vertex_live_chat_analysis_fallback_location: Optional[str] = None
     remote_extraction_url: Optional[str] = None
     remote_extraction_timeout: float = 120.0
+    live_chat_remote_extraction_timeout: float = 25.0
+    remote_extraction_hybrid_enabled: bool = True
     async_scoring_enabled: bool = False
     async_scoring_dir: str = str(PROJECT_ROOT / "artifacts" / "async_scoring")
+    startup_warmup_enabled: bool = False
 
     @property
     def huggingface_enabled(self) -> bool:
@@ -223,6 +226,7 @@ def discover_local_safety_checkpoint(project_root: Path = PROJECT_ROOT) -> Optio
 
 @lru_cache(maxsize=1)
 def get_runtime_config() -> RuntimeConfig:
+    startup_warmup_default = "true" if os.getenv("K_SERVICE") else "false"
     return RuntimeConfig(
         model_provider=os.getenv("MANOVARTA_MODEL_PROVIDER", "huggingface"),
         chat_model=os.getenv("MANOVARTA_CHAT_MODEL", "Qwen/Qwen2.5-7B-Instruct"),
@@ -260,6 +264,9 @@ def get_runtime_config() -> RuntimeConfig:
         vertex_live_chat_analysis_fallback_location=os.getenv("MANOVARTA_VERTEX_LIVE_CHAT_ANALYSIS_FALLBACK_LOCATION"),
         remote_extraction_url=os.getenv("MANOVARTA_REMOTE_EXTRACTION_URL"),
         remote_extraction_timeout=float(os.getenv("MANOVARTA_REMOTE_EXTRACTION_TIMEOUT", "120")),
+        live_chat_remote_extraction_timeout=float(os.getenv("MANOVARTA_LIVE_CHAT_REMOTE_EXTRACTION_TIMEOUT", "25")),
+        remote_extraction_hybrid_enabled=os.getenv("MANOVARTA_REMOTE_EXTRACTION_HYBRID", "true").strip().lower() in {"1", "true", "yes", "on"},
         async_scoring_enabled=os.getenv("MANOVARTA_ASYNC_SCORING_ENABLED", "false").strip().lower() in {"1", "true", "yes", "on"},
         async_scoring_dir=os.getenv("MANOVARTA_ASYNC_SCORING_DIR", str(PROJECT_ROOT / "artifacts" / "async_scoring")),
+        startup_warmup_enabled=os.getenv("MANOVARTA_STARTUP_WARMUP", startup_warmup_default).strip().lower() in {"1", "true", "yes", "on"},
     )

@@ -130,6 +130,8 @@ PROTECTIVE_CUES = (
     "i do not want to do anything to myself",
     "i am not thinking about hurting myself",
     "i am not thinking about harming myself",
+    "i have not had thoughts of hurting myself or not wanting to be alive",
+    "i have not had thoughts of hurting myself or of not wanting to be alive",
     "main khud ko nuksan nahi pahunchana chahta",
     "main aisa kuch nahi karunga",
     "khud ko nuksan pahunchane ka mann nahi hai",
@@ -151,6 +153,7 @@ PROTECTIVE_CUES = (
 )
 
 PROTECTIVE_NEGATION_PATTERNS = (
+    r"\bi\s+have\s+not\s+had\s+thoughts\s+of\s+(?:hurting|harming)\s+myself\s+or\s+(?:of\s+)?not\s+wanting\s+to\s+be\s+alive\b",
     r"\b(?:do\s+not|don't|dont|did\s+not|didn't|would\s+not|wouldn't|won't|will\s+not|never|not)\b.{0,36}\b(?:hurt\s+myself|harm\s+myself|kill\s+myself|end\s+my\s+life|want\s+to\s+die|suicidal|suicide|not\s+want\s+to\s+live|not\s+be\s+alive)\b",
     r"\bi\s+do\s+not\s+want\s+to\s+(?:hurt\s+myself|harm\s+myself)(?:\s+or\s+do\s+anything\s+to\s+myself)?\b",
     r"\bi\s+am\s+not\s+thinking\s+about\s+(?:hurting|harming)\s+myself\b",

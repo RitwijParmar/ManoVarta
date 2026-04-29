@@ -160,3 +160,21 @@ def test_local_safety_checkpoint_assessor_is_disabled_without_checkpoint():
 
     assert assessor.enabled is False
     assert assessor.assess([], "en") is None
+
+
+def test_local_safety_checkpoint_assessor_warmup_loads_backend_once(tmp_path, monkeypatch):
+    checkpoint = tmp_path / "checkpoint"
+    checkpoint.mkdir()
+    assessor = LocalSafetyCheckpointAssessor(checkpoint)
+    calls: list[str] = []
+
+    def fake_load_backend():
+        calls.append("load")
+        assessor._backend = ("torch", "tokenizer", "model", "cpu")
+        assessor._load_complete.set()
+
+    monkeypatch.setattr(assessor, "_load_backend", fake_load_backend)
+
+    assert assessor.warmup() is True
+    assert assessor.warmup() is True
+    assert calls == ["load"]

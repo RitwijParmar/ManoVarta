@@ -1,8 +1,11 @@
+from dataclasses import replace
+
 from manovarta_core.config import RuntimeConfig, get_runtime_config
 from manovarta_core.llm import (
     HuggingFaceExtractor,
     HuggingFaceResponder,
     HuggingFaceSafetyAssessor,
+    _VertexGenerationClient,
     _resolve_base_model_name,
     _resolve_tokenizer_source,
 )
@@ -240,6 +243,140 @@ def test_huggingface_responder_uses_secondary_generation_client_when_primary_fai
     assert source == "vertex"
 
 
+def test_vertex_generation_client_does_not_duplicate_system_prompt_in_prompt_body():
+    client = object.__new__(_VertexGenerationClient)
+    system_instruction, prompt, wants_json = client._prepare_request(
+        [
+            {"role": "system", "content": "Write one short follow-up question."},
+            {"role": "user", "content": "Sleep has been rough and I drag through the day."},
+        ]
+    )
+
+    assert system_instruction == "Write one short follow-up question."
+    assert prompt == "USER:\nSleep has been rough and I drag through the day."
+    assert wants_json is False
+
+
+def test_vertex_generation_client_detects_json_requests_from_analysis_prompt():
+    client = object.__new__(_VertexGenerationClient)
+    system_instruction, prompt, wants_json = client._prepare_request(
+        [
+            {"role": "system", "content": "Return ONLY valid JSON."},
+            {"role": "user", "content": "Return JSON with this schema: {\"active_domain\":\"phq\"}"},
+        ]
+    )
+
+    assert system_instruction == "Return ONLY valid JSON."
+    assert "USER:\nReturn JSON with this schema" in prompt
+    assert wants_json is True
+
+
+def test_vertex_generation_client_joins_all_candidate_text_parts():
+    client = object.__new__(_VertexGenerationClient)
+
+    content = client._extract_response_text(
+        {
+            "text": "That sounds really draining,",
+            "candidates": [
+                {
+                    "content": {
+                        "parts": [
+                            {"text": "That sounds really draining,"},
+                            {"text": " to wake that early and keep dragging through the day."},
+                            {"text": " When you wake at 3 or 4, is your mind racing or does your body feel tense?"},
+                        ]
+                    }
+                }
+            ],
+        }
+    )
+
+    assert content == (
+        "That sounds really draining, to wake that early and keep dragging through the day."
+        " When you wake at 3 or 4, is your mind racing or does your body feel tense?"
+    )
+
+
+def test_vertex_generation_client_sets_reply_thinking_budget_for_2_5_models():
+    pro_client = object.__new__(_VertexGenerationClient)
+    pro_client._model_name = "gemini-2.5-pro"
+    flash_client = object.__new__(_VertexGenerationClient)
+    flash_client._model_name = "gemini-2.5-flash"
+
+    pro_payload = pro_client._build_request_payload(
+        system_instruction="Reply naturally.",
+        prompt="USER:\nSleep has been rough.",
+        temperature=0.2,
+        max_tokens=180,
+        wants_json=False,
+    )
+    flash_payload = flash_client._build_request_payload(
+        system_instruction="Reply naturally.",
+        prompt="USER:\nSleep has been rough.",
+        temperature=0.2,
+        max_tokens=180,
+        wants_json=False,
+    )
+    json_payload = pro_client._build_request_payload(
+        system_instruction="Return ONLY valid JSON.",
+        prompt="USER:\nReturn JSON.",
+        temperature=0.0,
+        max_tokens=180,
+        wants_json=True,
+    )
+
+    assert pro_payload["generationConfig"]["thinkingConfig"] == {"thinkingBudget": 128}
+    assert pro_payload["generationConfig"]["maxOutputTokens"] == 384
+    assert flash_payload["generationConfig"]["thinkingConfig"] == {"thinkingBudget": 0}
+    assert flash_payload["generationConfig"]["maxOutputTokens"] == 180
+    assert "thinkingConfig" not in json_payload["generationConfig"]
+
+
+def test_vertex_generation_client_warmup_uses_tiny_text_request():
+    client = object.__new__(_VertexGenerationClient)
+    client._model_name = "gemini-2.5-pro"
+    client._config = type("Config", (), {"vertex_location": "us-central1"})()
+    captured = {}
+
+    client._credentials_or_refresh = lambda: object()
+    client._endpoint_url = lambda: "https://example.test"
+
+    def _fake_post(url, payload):
+        captured["url"] = url
+        captured["payload"] = payload
+        return {"candidates": [{"content": {"parts": [{"text": "ok"}]}}]}
+
+    client._post_json = _fake_post
+
+    assert client.warmup() is True
+    assert captured["url"] == "https://example.test"
+    assert captured["payload"]["generationConfig"]["maxOutputTokens"] == 8
+    assert "thinkingConfig" not in captured["payload"]["generationConfig"]
+
+
+def test_huggingface_responder_warmup_deduplicates_same_vertex_spec():
+    class _WarmClient:
+        def __init__(self):
+            self._model_name = "gemini-2.5-pro"
+            self._config = type("Config", (), {"vertex_location": "us-central1"})()
+            self.calls = 0
+
+        def warmup(self):
+            self.calls += 1
+            return True
+
+    generation_client = _WarmClient()
+    analysis_client = _WarmClient()
+    responder = object.__new__(HuggingFaceResponder)
+    responder._generation_clients = [generation_client]
+    responder._analysis_clients = [analysis_client]
+    responder._client = None
+
+    assert responder.warmup() is True
+    assert generation_client.calls == 1
+    assert analysis_client.calls == 0
+
+
 def test_huggingface_responder_uses_secondary_analysis_client_when_primary_analysis_parse_fails(monkeypatch):
     class _Response:
         def __init__(self, content):
@@ -387,7 +524,7 @@ def test_huggingface_responder_rejects_generation_that_violates_analyzer_domain_
 
     assert reply.startswith("When that low stretch hits")
     assert source == "vertex"
-    assert call_order == ["analysis", "primary_generation", "fallback_generation"]
+    assert call_order == ["analysis", "primary_generation", "primary_generation", "fallback_generation"]
 
 
 def test_huggingface_responder_rejects_repeated_opener_and_uses_fallback_generation_client(monkeypatch):
@@ -702,6 +839,75 @@ def test_remote_extractor_uses_configured_url(monkeypatch):
     assert payload["items"][0]["item_id"] == "phq_q4_fatigue"
 
 
+def test_remote_extractor_hybrid_postprocesses_nuanced_english_screening(monkeypatch):
+    class _FakeRemoteExtractor:
+        def __init__(self, base_url, timeout):
+            self.enabled = True
+
+        def extract(self, turns, language):
+            return {
+                "items": [
+                    {
+                        "item_id": "gad_q6_irritability",
+                        "value": 2,
+                        "evidence_quote": "I get snappy faster than I want to.",
+                        "confidence_note": "Remote Aya caught irritability.",
+                    }
+                ],
+                "safety_level": "none",
+                "safety_cues": [],
+                "notes": "remote_aya",
+            }
+
+    monkeypatch.setattr("manovarta_core.llm._RemoteExtractorClient", _FakeRemoteExtractor)
+    config = RuntimeConfig(
+        model_provider="vertex",
+        chat_model="gemini-2.5-flash",
+        extraction_model="trained-aya-remote",
+        safety_model="/models/safety",
+        hf_token=None,
+        hf_timeout=30.0,
+        assistant_temperature=0.2,
+        assistant_max_tokens=180,
+        extraction_max_tokens=480,
+        safety_max_tokens=180,
+        semantic_safety_model=None,
+        semantic_safety_review_threshold=0.64,
+        semantic_safety_urgent_threshold=0.72,
+        chat_provider="vertex",
+        extraction_provider="remote",
+        safety_provider="local",
+        remote_extraction_url="https://aya.example.com",
+        remote_extraction_timeout=77.0,
+        remote_extraction_hybrid_enabled=True,
+    )
+    extractor = HuggingFaceExtractor(config)
+    turns = [
+        Turn(turn_id=1, speaker="assistant", text="What has felt heaviest lately?", language_tag="en"),
+        Turn(turn_id=2, speaker="user", text="Things I normally care about do not land the same way, and I mostly go through the motions.", language_tag="en"),
+        Turn(turn_id=3, speaker="assistant", text="What else have you noticed?", language_tag="en"),
+        Turn(turn_id=4, speaker="user", text="Sleep is messy. I wake up around 3 a.m. and drift in and out until morning about five nights a week.", language_tag="en"),
+        Turn(turn_id=5, speaker="assistant", text="Anything else?", language_tag="en"),
+        Turn(turn_id=6, speaker="user", text="My appetite does not really show up, concentration slips, and I reread the same email most workdays.", language_tag="en"),
+        Turn(turn_id=7, speaker="assistant", text="What about worry?", language_tag="en"),
+        Turn(turn_id=8, speaker="user", text="Once the worry starts, it keeps looping and I cannot really turn it off on my own.", language_tag="en"),
+        Turn(turn_id=9, speaker="assistant", text="Any safety concerns?", language_tag="en"),
+        Turn(turn_id=10, speaker="user", text="No, I have not had thoughts of hurting myself or of being better off dead.", language_tag="en"),
+    ]
+
+    payload = extractor.extract(turns, "en")
+
+    assert payload is not None
+    items = {item["item_id"]: item for item in payload["items"]}
+    assert items["phq_q1_anhedonia"]["value"] >= 2
+    assert items["phq_q3_sleep"]["value"] == 3
+    assert items["phq_q5_appetite"]["value"] >= 2
+    assert items["phq_q7_concentration"]["value"] == 3
+    assert items["gad_q2_control_worry"]["value"] == 2
+    assert items["phq_q9_self_harm"]["value"] == 0
+    assert "english_screening_refined" in payload["notes"]
+
+
 def test_huggingface_extractor_retries_with_compact_prompt_after_failure():
     extractor = HuggingFaceExtractor(_disabled_config())
 
@@ -857,7 +1063,91 @@ def test_huggingface_extractor_refines_english_anxiety_items():
     assert items["gad_q2_control_worry"]["value"] == 2
     assert items["gad_q3_excessive_worry"]["value"] == 2
     assert items["gad_q4_trouble_relaxing"]["value"] == 2
-    assert "english_anxiety_refined" in refined["notes"]
+    assert "english_screening_refined" in refined["notes"]
+
+
+def test_huggingface_extractor_refines_control_worry_from_trying_to_stop_it():
+    extractor = HuggingFaceExtractor(_disabled_config())
+    transcript = (
+        "assistant: What happens once the worry starts?\n"
+        "user: My mind keeps looping about work, rent, and family even when I try to stop it."
+    )
+    payload = {
+        "items": [],
+        "safety_level": "none",
+        "safety_cues": [],
+        "notes": "raw",
+    }
+
+    refined = extractor._refine_english_anxiety_payload(transcript, payload)
+    items = {item["item_id"]: item for item in refined["items"]}
+
+    assert items["gad_q2_control_worry"]["value"] == 2
+
+
+def test_huggingface_extractor_refines_english_mood_and_self_harm_denial_items():
+    extractor = HuggingFaceExtractor(_disabled_config())
+    transcript = (
+        "assistant: What has the last couple of weeks felt like?\n"
+        "user: Things I used to enjoy feel flat now and I mostly go through the motions.\n"
+        "assistant: What else have you noticed?\n"
+        "user: My mood stays heavy most of the day, I skip lunch, and basic tasks make me feel like I am failing at things that should be easy.\n"
+        "assistant: Have thoughts of hurting yourself shown up at all?\n"
+        "user: No, I have not had thoughts of hurting myself or not wanting to be alive."
+    )
+    payload = {
+        "items": [],
+        "safety_level": "none",
+        "safety_cues": [],
+        "notes": "raw",
+    }
+
+    refined = extractor._refine_english_anxiety_payload(transcript, payload)
+    items = {item["item_id"]: item for item in refined["items"]}
+
+    assert items["phq_q1_anhedonia"]["value"] == 2
+    assert items["phq_q2_low_mood"]["value"] == 2
+    assert items["phq_q5_appetite"]["value"] == 2
+    assert items["phq_q6_worthlessness"]["value"] == 2
+    assert items["phq_q9_self_harm"]["value"] == 0
+    assert "english_screening_refined" in refined["notes"]
+
+
+def test_local_extractor_keeps_verifier_pass_even_when_fast_path_has_items(monkeypatch):
+    extractor = HuggingFaceExtractor(_local_config())
+    turns = [
+        Turn(turn_id=1, speaker="user", text="Things I used to enjoy feel flat now and I mostly go through the motions.", language_tag="en"),
+        Turn(turn_id=2, speaker="user", text="My mood stays heavy most of the day and I skip lunch.", language_tag="en"),
+        Turn(turn_id=3, speaker="user", text="I pace around and cannot relax at night.", language_tag="en"),
+        Turn(turn_id=4, speaker="user", text="No, I have not had thoughts of hurting myself or not wanting to be alive.", language_tag="en"),
+    ]
+    fast_payload = {
+        "items": [
+            {"item_id": "gad_q4_trouble_relaxing", "value": 2, "evidence_quote": "cannot relax", "confidence_note": "fast"}
+        ],
+        "safety_level": "none",
+        "safety_cues": [],
+        "notes": "fast",
+    }
+    verifier_payload = {
+        "items": [
+            {"item_id": "phq_q1_anhedonia", "value": 2, "evidence_quote": "go through the motions", "confidence_note": "verifier"}
+        ],
+        "safety_level": "none",
+        "safety_cues": [],
+        "notes": "verifier",
+    }
+
+    monkeypatch.setattr(extractor, "_extract_with_local_fast_path", lambda _turns, _language: fast_payload)
+    monkeypatch.setattr(extractor, "_extract_with_window_verifier", lambda _turns, _language: verifier_payload)
+
+    payload = extractor.extract(turns, "en")
+
+    assert payload is not None
+    items = {item["item_id"] for item in payload["items"]}
+    assert "gad_q4_trouble_relaxing" in items
+    assert "phq_q1_anhedonia" in items
+    assert "phq_q9_self_harm" in items
 
 
 def test_huggingface_safety_assessor_stays_disabled_without_token():
@@ -992,7 +1282,8 @@ def test_local_extractor_fast_path_refines_english_worry_without_heavy_passes():
     items = {item["item_id"] for item in payload["items"]}
     assert "gad_q2_control_worry" in items
     assert "gad_q4_trouble_relaxing" in items
-    assert len(extractor._client.calls) <= 2
+    assert len(extractor._client.calls) >= 2
+    assert len(extractor._client.calls) <= 8
 
 
 def test_huggingface_responder_rejects_celebratory_symptom_wording():
@@ -1095,6 +1386,94 @@ def test_huggingface_responder_rejects_duplicate_question_wording():
 
     assert reply == fallback
     assert source == "template"
+
+
+def test_huggingface_responder_retries_after_full_reply_repetition():
+    class _Response:
+        def __init__(self, content):
+            self.choices = [type("Choice", (), {"message": type("Message", (), {"content": content})()})()]
+
+    class _FakeClient:
+        def __init__(self):
+            self.calls = []
+
+        def chat_completion(self, *, messages, temperature, max_tokens):
+            self.calls.append({"messages": messages, "temperature": temperature, "max_tokens": max_tokens})
+            if len(self.calls) == 1:
+                return _Response(
+                    "It sounds like sleep is taking a real hit here. When sleep gets disrupted, is it mostly hard to fall asleep, waking during the night, or waking too early?"
+                )
+            return _Response(
+                "When the night breaks like that, is it more trouble falling asleep in the first place, repeated wake-ups, or waking too early and not getting back to sleep?"
+            )
+
+    config = RuntimeConfig(
+        model_provider="local",
+        chat_model="gemini-3-pro-preview",
+        extraction_model="/models/aya-expanse-8b",
+        safety_model="/models/safety",
+        hf_token=None,
+        hf_timeout=30.0,
+        assistant_temperature=0.2,
+        assistant_max_tokens=180,
+        extraction_max_tokens=900,
+        safety_max_tokens=180,
+        semantic_safety_model=None,
+        semantic_safety_review_threshold=0.64,
+        semantic_safety_urgent_threshold=0.72,
+        chat_provider="vertex",
+        extraction_provider="local",
+        safety_provider="local",
+        vertex_project="demo-project",
+        vertex_location="us-central1",
+    )
+    responder = HuggingFaceResponder(config)
+    responder._client = _FakeClient()
+    session = ChatSession(
+        session_id="repair-session",
+        language="en",
+        turns=[
+            Turn(
+                turn_id=1,
+                speaker="assistant",
+                text="It sounds like sleep is getting hit in a real way. When sleep gets disrupted, is it mostly hard to fall asleep, waking during the night, or waking too early?",
+                language_tag="en",
+            ),
+            Turn(turn_id=2, speaker="user", text="Mostly waking during the night.", language_tag="en"),
+        ],
+    )
+    snapshot = ScreeningSnapshot(
+        language="en",
+        items={},
+        evidence_spans=[],
+        unresolved_items=["phq_q3_sleep"],
+        totals={"PHQ9": 2, "GAD7": 0},
+        safety=SafetyFlag(level="none"),
+        coverage=CoveragePlan(
+            total_items=16,
+            touched_items=1,
+            completion_ratio=0.06,
+            dialogue=DialoguePlan(
+                stage="clarification",
+                next_action="clarify",
+                current_topic="sleep",
+                target_topic="sleep",
+                target_item="phq_q3_sleep",
+                rationale="Stay with sleep but avoid repeating the same reflective opener and question frame.",
+                transition_hint="Clarify the sleep pattern without echoing the last turn.",
+                user_style=UserStyleProfile(),
+                disclosure=DisclosureMetrics(),
+            ),
+        ),
+    )
+
+    fallback = "When sleep gets disrupted, is it more about falling asleep, waking in the night, or waking too early?"
+    reply, source = responder.compose_reply(session, snapshot, "phq_q3_sleep", fallback)
+
+    assert reply.startswith("When the night breaks like that")
+    assert "It sounds like" not in reply
+    assert source == "vertex"
+    assert len(responder._client.calls) == 2
 
 
 def test_huggingface_responder_prefers_template_for_review_level_safety():

@@ -111,7 +111,7 @@ def normalize_extractor_payload(payload: dict[str, Any]) -> dict[str, Any] | Non
             value = int(item.get("value"))
         except (TypeError, ValueError):
             continue
-        if value < 1 or value > 3:
+        if value < 0 or value > 3:
             continue
         normalized_item = {"item_id": item_id, "value": value}
         if "evidence_quote" in item and str(item.get("evidence_quote", "")).strip():

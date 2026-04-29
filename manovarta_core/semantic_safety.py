@@ -37,6 +37,13 @@ class SemanticSafetyMonitor:
     def enabled(self) -> bool:
         return bool(self.config.model_name)
 
+    def warmup(self) -> bool:
+        if not self.enabled:
+            return False
+        if self._backend is None:
+            self._load_backend()
+        return self._backend is not None
+
     def assess(self, turns: Iterable[Turn]) -> SafetyFlag:
         if not self.enabled:
             return SafetyFlag()

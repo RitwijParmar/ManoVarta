@@ -36,6 +36,36 @@ def test_root_serves_browser_demo():
     assert 'id="backstagePanel"' not in response.text
 
 
+def test_warm_runtime_backends_warms_each_unique_target_once(monkeypatch):
+    class WarmStub:
+        def __init__(self, result=True):
+            self.result = result
+            self.calls = 0
+
+        def warmup(self):
+            self.calls += 1
+            return self.result
+
+    semantic = WarmStub()
+    safety = WarmStub()
+    responder = WarmStub()
+    extractor = WarmStub()
+
+    monkeypatch.setattr(api_module, "semantic_safety_monitor", semantic)
+    monkeypatch.setattr(api_module, "safety_assessor", safety)
+    monkeypatch.setattr(api_module, "responder", responder)
+    monkeypatch.setattr(api_module, "extractor", extractor)
+    monkeypatch.setattr(api_module, "live_chat_extractor", extractor)
+
+    warmed = api_module._warm_runtime_backends()
+
+    assert warmed == ["semantic_safety", "safety_assessor", "responder", "extractor"]
+    assert semantic.calls == 1
+    assert safety.calls == 1
+    assert responder.calls == 1
+    assert extractor.calls == 1
+
+
 def test_negated_self_harm_sentence_does_not_trigger_urgent_handoff():
     start = client.post("/chat/sessions", json={"language": "en"})
     session_id = start.json()["session_id"]
@@ -420,6 +450,9 @@ def test_runtime_config_reports_component_providers_and_async_support():
     assert "chat_provider" in body
     assert "extraction_provider" in body
     assert "safety_provider" in body
+    assert "responder_enabled" in body
+    assert "extractor_enabled" in body
+    assert "live_chat_extractor_enabled" in body
     assert "controller_model" in body
     assert "extractor_model" in body
     assert "chat_fallback_model" in body
@@ -430,8 +463,124 @@ def test_runtime_config_reports_component_providers_and_async_support():
     assert "vertex_enabled" in body
     assert "remote_extraction_enabled" in body
     assert "remote_extraction_url_configured" in body
+    assert "remote_extraction_hybrid_enabled" in body
+    assert "live_chat_remote_extraction_timeout" in body
     assert "async_scoring_enabled" in body
     assert "async_scoring_dir" in body
+
+
+def test_live_chat_analysis_stack_caps_remote_timeout_for_turn_scoring(monkeypatch):
+    remote_runtime = replace(
+        api_module.runtime_config,
+        extraction_provider="remote",
+        live_chat_extraction_provider="remote",
+        extraction_model="trained-aya-remote",
+        live_chat_extraction_model="trained-aya-remote",
+        remote_extraction_url="https://aya.example.com",
+        remote_extraction_timeout=120.0,
+        live_chat_remote_extraction_timeout=18.0,
+    )
+
+    class StubExtractor:
+        enabled = True
+
+    class StubEngine:
+        pass
+
+    monkeypatch.setattr(api_module, "runtime_config", remote_runtime)
+    monkeypatch.setattr(api_module, "extractor", StubExtractor())
+    monkeypatch.setattr(api_module, "engine", StubEngine())
+    monkeypatch.setattr(api_module, "scorer", object())
+    monkeypatch.setattr(api_module, "safety_monitor", object())
+    monkeypatch.setattr(api_module, "semantic_safety_monitor", object())
+    monkeypatch.setattr(api_module, "safety_assessor", object())
+
+    captured = {}
+
+    class FakeHFExtractor:
+        enabled = True
+
+        def __init__(self, config):
+            captured["timeout"] = config.remote_extraction_timeout
+            captured["provider"] = config.extraction_model_provider
+
+    monkeypatch.setattr(api_module, "HuggingFaceExtractor", FakeHFExtractor)
+    live_config, _, _ = api_module._build_live_chat_analysis_stack()
+
+    assert live_config.remote_extraction_timeout == 18.0
+    assert captured["timeout"] == 18.0
+    assert captured["provider"] == "remote"
+
+
+def test_score_transcript_falls_back_to_base_engine_when_live_engine_raises(monkeypatch):
+    base_snapshot = api_module.scorer.analyze(
+        [Turn(turn_id=1, speaker="user", text="Sleep has been rough lately.", language_tag="en")],
+        "en",
+        api_module.SafetyFlag(level="none"),
+    ).model_copy(update={"mode": "hybrid"})
+
+    def broken_live_analyze(*args, **kwargs):
+        raise RuntimeError("live chat extractor failed")
+
+    def base_analyze(*args, **kwargs):
+        return base_snapshot
+
+    monkeypatch.setattr(api_module.live_chat_engine, "analyze", broken_live_analyze)
+    monkeypatch.setattr(api_module.engine, "analyze", base_analyze)
+
+    response = client.post(
+        "/screen/transcript",
+        json={
+            "language": "en",
+            "turns": [
+                {
+                    "turn_id": 1,
+                    "speaker": "user",
+                    "text": "Sleep has been rough lately.",
+                    "language_tag": "en",
+                }
+            ],
+        },
+    )
+
+    assert response.status_code == 200
+    body = response.json()
+    assert body["mode"] == "hybrid"
+    assert body["snapshot"]["analysis_status"] == "llm_backed"
+    assert body["snapshot"]["phq_result"]["questionnaire"] == "PHQ9"
+    assert body["snapshot"]["gad_result"]["questionnaire"] == "GAD7"
+
+
+def test_score_transcript_reports_degraded_status_when_llm_requested_but_snapshot_is_heuristic(monkeypatch):
+    heuristic_snapshot = api_module.scorer.analyze(
+        [Turn(turn_id=1, speaker="user", text="Sleep has been rough lately.", language_tag="en")],
+        "en",
+        api_module.SafetyFlag(level="none"),
+    ).model_copy(update={"mode": "heuristic"})
+
+    monkeypatch.setattr(api_module.live_chat_engine, "analyze", lambda *args, **kwargs: heuristic_snapshot)
+
+    response = client.post(
+        "/screen/transcript",
+        json={
+            "language": "en",
+            "turns": [
+                {
+                    "turn_id": 1,
+                    "speaker": "user",
+                    "text": "Sleep has been rough lately.",
+                    "language_tag": "en",
+                }
+            ],
+        },
+    )
+
+    assert response.status_code == 200
+    body = response.json()
+    assert body["mode"] == "heuristic"
+    assert body["snapshot"]["analysis_status"] == "degraded"
+    assert body["snapshot"]["phq_result"]["questionnaire"] == "PHQ9"
+    assert body["snapshot"]["gad_result"]["questionnaire"] == "GAD7"
 
 
 def test_add_turn_skips_prior_analysis_without_nudge(monkeypatch):
@@ -477,7 +626,20 @@ def test_add_turn_returns_recovery_reply_when_planner_raises(monkeypatch):
     assert turn.status_code == 200
     body = turn.json()
     assert body["assistant_turn"]["text"] == api_module.TURN_RECOVERY_MESSAGES["en"]
-    assert body["assistant_turn"]["notes"] == "source:recovery"
+
+
+def test_assistant_source_notes_include_template_fallback_reason():
+    original = dict(api_module.responder._last_reply_diagnostics)
+    try:
+        api_module.responder._last_reply_diagnostics = {
+            "source": "template",
+            "reason": "generation_error",
+            "detail": "gemini-3-pro-preview",
+        }
+        assert api_module._assistant_source_notes("template") == "source:template | fallback:generation_error"
+        assert api_module._assistant_source_notes("vertex") == "source:vertex"
+    finally:
+        api_module.responder._last_reply_diagnostics = original
 
 
 def test_add_turn_returns_200_when_summary_builder_raises(monkeypatch):
@@ -893,7 +1055,7 @@ def test_safety_sensitive_first_disclosure_skips_full_llm_when_rule_safety_is_en
     assert api_module._should_use_live_llm(session) is False
 
 
-def test_remote_live_llm_waits_for_later_turns(monkeypatch):
+def test_remote_live_llm_uses_live_analysis_after_first_supported_turn(monkeypatch):
     config = replace(
         api_module.runtime_config,
         live_chat_llm_analysis_enabled=True,
@@ -913,10 +1075,10 @@ def test_remote_live_llm_waits_for_later_turns(monkeypatch):
         ],
     )
 
-    assert api_module._should_use_live_llm(session) is False
+    assert api_module._should_use_live_llm(session) is True
 
 
-def test_remote_live_llm_samples_periodically_after_threshold(monkeypatch):
+def test_remote_live_llm_stays_enabled_on_subsequent_turns(monkeypatch):
     config = replace(
         api_module.runtime_config,
         live_chat_llm_analysis_enabled=True,
@@ -945,12 +1107,12 @@ def test_remote_live_llm_samples_periodically_after_threshold(monkeypatch):
     session.turns.append(Turn(turn_id=9, speaker="assistant", text="Follow-up", language_tag="en"))
     session.turns.append(Turn(turn_id=10, speaker="user", text="Body feels heavy by afternoon.", language_tag="en"))
 
-    assert api_module._should_use_live_llm(session) is False
+    assert api_module._should_use_live_llm(session) is True
 
     session.turns.append(Turn(turn_id=11, speaker="assistant", text="Follow-up", language_tag="en"))
     session.turns.append(Turn(turn_id=12, speaker="user", text="My appetite is off too.", language_tag="en"))
 
-    assert api_module._should_use_live_llm(session) is False
+    assert api_module._should_use_live_llm(session) is True
 
     session.turns.append(Turn(turn_id=13, speaker="assistant", text="Follow-up", language_tag="en"))
     session.turns.append(Turn(turn_id=14, speaker="user", text="It takes longer to get going most mornings.", language_tag="en"))
