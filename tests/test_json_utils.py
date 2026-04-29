@@ -1,4 +1,4 @@
-from manovarta_core.json_utils import normalize_safety_level, parse_extractor_payload, parse_json_object
+from manovarta_core.json_utils import normalize_extractor_payload, normalize_safety_level, parse_extractor_payload, parse_json_object
 
 
 def test_parse_json_object_handles_fenced_content():
@@ -70,6 +70,32 @@ def test_parse_extractor_payload_salvages_line_based_items():
         "phq_q3_sleep",
     ]
     assert [item["value"] for item in payload["items"]] == [2, 1, 2]
+
+
+def test_normalize_extractor_payload_keeps_explicit_zero_value():
+    payload = normalize_extractor_payload(
+        {
+            "items": [
+                {
+                    "item_id": "phq_q9_self_harm",
+                    "value": 0,
+                    "evidence_quote": "I am not suicidal and I do not want to hurt myself.",
+                    "confidence_note": "Explicit denial.",
+                }
+            ],
+            "safety_level": "none",
+        }
+    )
+
+    assert payload is not None
+    assert payload["items"] == [
+        {
+            "item_id": "phq_q9_self_harm",
+            "value": 0,
+            "evidence_quote": "I am not suicidal and I do not want to hurt myself.",
+            "confidence_note": "Explicit denial.",
+        }
+    ]
 
 
 def test_normalize_safety_level_maps_aliases():

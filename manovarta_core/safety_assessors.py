@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from pathlib import Path
+import threading
 from typing import Iterable, Optional, Sequence
 
 from manovarta_core.json_utils import normalize_safety_level
@@ -38,7 +39,7 @@ def compose_runtime_safety_flag(
     rule_flag: SafetyFlag | None = None,
     checkpoint_flag: SafetyFlag | None = None,
 ) -> SafetyFlag:
-    extractor_flag = extractor_flag or SafetyFlag()
+    advisory_flag = extractor_flag or SafetyFlag()
     rule_flag = rule_flag or SafetyFlag()
     checkpoint_flag = checkpoint_flag or SafetyFlag()
 
@@ -51,17 +52,17 @@ def compose_runtime_safety_flag(
     merged = merge_safety_flags(*corroborating_flags)
     advisory_cues = []
     advisory_notes = []
-    if extractor_flag.level != "none":
-        advisory_cues.append(f"extractor_advisory:{extractor_flag.level}")
-        if extractor_flag.rationale:
-            advisory_notes.append(extractor_flag.rationale)
-    if extractor_flag.cues:
-        advisory_cues.extend(f"extractor:{cue}" for cue in extractor_flag.cues if cue)
+    if advisory_flag.level != "none":
+        advisory_cues.append(f"extractor_advisory:{advisory_flag.level}")
+        if advisory_flag.rationale:
+            advisory_notes.append(advisory_flag.rationale)
+    if advisory_flag.cues:
+        advisory_cues.extend(f"extractor_advisory:{cue}" for cue in advisory_flag.cues if cue)
 
     merged_cues = list(dict.fromkeys(merged.cues + advisory_cues))
     rationale_parts = [part for part in [merged.rationale, *advisory_notes] if part]
     if advisory_cues:
-        rationale_parts.append("Extractor safety signal was treated as advisory until corroborated by the runtime safety stack.")
+        rationale_parts.append("Advisory safety signal was treated as advisory until corroborated by the runtime safety stack.")
 
     return merged.model_copy(
         update={
@@ -120,6 +121,17 @@ class CompositeSafetyAssessor:
     def enabled(self) -> bool:
         return any(getattr(assessor, "enabled", True) for assessor in self.assessors)
 
+    def warmup(self) -> bool:
+        warmed = False
+        for assessor in self.assessors:
+            if not getattr(assessor, "enabled", True):
+                continue
+            warmup = getattr(assessor, "warmup", None)
+            if warmup is None:
+                continue
+            warmed = bool(warmup()) or warmed
+        return warmed
+
     def assess(self, turns: list[Turn], language: str) -> Optional[SafetyFlag]:
         flags: list[SafetyFlag] = []
         for assessor in self.assessors:
@@ -139,10 +151,30 @@ class LocalSafetyCheckpointAssessor:
         self.device = device
         self.max_length = max_length
         self._backend = None
+        self._load_lock = threading.Lock()
+        self._load_complete = threading.Event()
+        self._load_started = False
 
     @property
     def enabled(self) -> bool:
         return bool(self.model_path and self.model_path.exists())
+
+    def warmup(self, *, wait_timeout: float | None = None) -> bool:
+        if not self.enabled:
+            return False
+        should_load_inline = False
+        with self._load_lock:
+            if self._backend is not None:
+                return True
+            if not self._load_started:
+                self._load_started = True
+                self._load_complete.clear()
+                should_load_inline = True
+        if should_load_inline:
+            self._load_backend()
+        else:
+            self._load_complete.wait(wait_timeout)
+        return self._backend is not None
 
     def assess(self, turns: list[Turn], language: str) -> Optional[SafetyFlag]:
         del language
@@ -154,7 +186,8 @@ class LocalSafetyCheckpointAssessor:
             return None
 
         if self._backend is None:
-            self._load_backend()
+            self._load_backend_async()
+            return None
         if self._backend is None:
             return None
 
@@ -180,17 +213,31 @@ class LocalSafetyCheckpointAssessor:
             needs_human_review=True,
         )
 
+    def _load_backend_async(self) -> None:
+        if self._backend is not None or not self.enabled:
+            return
+        with self._load_lock:
+            if self._backend is not None or self._load_started:
+                return
+            self._load_started = True
+            self._load_complete.clear()
+        thread = threading.Thread(target=self._load_backend, name="local-safety-checkpoint-loader", daemon=True)
+        thread.start()
+
     def _load_backend(self) -> None:
         try:
             import torch
             from transformers import AutoModelForSequenceClassification, AutoTokenizer
         except ImportError:  # pragma: no cover
-            self._backend = None
+            with self._load_lock:
+                self._backend = None
+                self._load_started = False
+            self._load_complete.set()
             return
         from training.runtime_utils import detect_device
 
-        device = detect_device(torch, self.device)
         try:
+            device = detect_device(torch, self.device)
             try:
                 tokenizer = AutoTokenizer.from_pretrained(
                     self.model_path,
@@ -200,13 +247,17 @@ class LocalSafetyCheckpointAssessor:
             except TypeError:
                 tokenizer = AutoTokenizer.from_pretrained(self.model_path, trust_remote_code=True)
             model = AutoModelForSequenceClassification.from_pretrained(self.model_path, trust_remote_code=True)
-        except OSError:  # pragma: no cover
-            self._backend = None
+        except Exception:  # pragma: no cover
+            with self._load_lock:
+                self._backend = None
+                self._load_started = False
+            self._load_complete.set()
             return
         if device != "cpu":
             model.to(device)
         model.eval()
         self._backend = (torch, tokenizer, model, device)
+        self._load_complete.set()
 
 
 def evaluate_safety_stack(

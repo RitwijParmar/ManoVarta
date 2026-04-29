@@ -1,5 +1,6 @@
 from manovarta_core.safety import SafetyMonitor
-from manovarta_core.schemas import Turn
+from manovarta_core.safety_assessors import compose_runtime_safety_flag
+from manovarta_core.schemas import SafetyFlag, Turn
 
 
 def test_review_level_safety_handles_indirect_disappearance_language():
@@ -132,5 +133,75 @@ def test_safety_does_not_match_partial_word_fragments():
     ]
 
     flag = SafetyMonitor().assess(turns)
+
+    assert flag.level == "none"
+
+
+def test_negated_self_harm_phrase_does_not_false_trigger_urgent():
+    turns = [
+        Turn(
+            turn_id=1,
+            speaker="user",
+            text="I would not say I want to hurt myself, but I do feel stuck and useless sometimes.",
+            language_tag="en",
+        ),
+    ]
+
+    flag = SafetyMonitor().assess(turns)
+
+    assert flag.level == "none"
+
+
+def test_hindi_negated_self_harm_phrase_does_not_false_trigger_urgent():
+    turns = [
+        Turn(
+            turn_id=1,
+            speaker="user",
+            text="खुद को नुकसान पहुंचाने का मन नहीं है, बस दिमाग शांत नहीं होता।",
+            language_tag="hi",
+        ),
+    ]
+
+    flag = SafetyMonitor().assess(turns)
+
+    assert flag.level == "none"
+
+
+def test_hindi_negated_self_harm_with_death_phrase_does_not_false_trigger_urgent():
+    turns = [
+        Turn(
+            turn_id=1,
+            speaker="user",
+            text="खुद को नुकसान पहुंचाने या मरने जैसा कुछ नहीं सोच रहा हूं, बस नींद और दिमाग दोनों खराब चल रहे हैं।",
+            language_tag="hi",
+        ),
+    ]
+
+    flag = SafetyMonitor().assess(turns)
+
+    assert flag.level == "none"
+
+
+def test_hindi_negated_self_harm_without_death_phrase_does_not_false_trigger_urgent():
+    turns = [
+        Turn(
+            turn_id=1,
+            speaker="user",
+            text="खुद को नुकसान पहुँचाने जैसा कुछ नहीं सोच रहा हूँ, बस नींद और ध्यान दोनों गड़बड़ हैं।",
+            language_tag="hi",
+        ),
+    ]
+
+    flag = SafetyMonitor().assess(turns)
+
+    assert flag.level == "none"
+
+
+def test_advisory_only_safety_signal_does_not_escalate_without_runtime_corroboration():
+    flag = compose_runtime_safety_flag(
+        extractor_flag=SafetyFlag(level="urgent", cues=["semantic:test"], rationale="similarity-only"),
+        rule_flag=SafetyFlag(level="none"),
+        checkpoint_flag=SafetyFlag(level="none"),
+    )
 
     assert flag.level == "none"

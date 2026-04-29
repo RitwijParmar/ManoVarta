@@ -125,8 +125,51 @@ PROTECTIVE_CUES = (
     "i will not hurt myself",
     "i won't hurt myself",
     "i do not plan to hurt myself",
+    "i do not want to hurt myself",
+    "i do not want to hurt myself or do anything to myself",
+    "i do not want to do anything to myself",
+    "i am not thinking about hurting myself",
+    "i am not thinking about harming myself",
+    "i have not had thoughts of hurting myself or not wanting to be alive",
+    "i have not had thoughts of hurting myself or of not wanting to be alive",
     "main khud ko nuksan nahi pahunchana chahta",
     "main aisa kuch nahi karunga",
+    "khud ko nuksan pahunchane ka mann nahi hai",
+    "khud ko nuksan pahunchane ka man nahi hai",
+    "khud ko नुकसान पहुंचाने का मन नहीं है",
+    "khud ko नुकसान पहुंचाने या मरने जैसा कुछ नहीं सोच रहा",
+    "khud ko नुकसान पहुंचाने ya marne jaisa kuch nahi soch raha",
+    "khud ko नुकसान पहुंचाने ya marne jaisa kuch nahi soch rahi",
+    "खुद को नुकसान पहुँचाने जैसा कुछ नहीं सोच रहा",
+    "खुद को नुकसान पहुँचाने जैसा कुछ नहीं सोच रही",
+    "खुद को नुकसान पहुंचाने जैसा कुछ नहीं सोच रहा",
+    "खुद को नुकसान पहुंचाने जैसा कुछ नहीं सोच रही",
+    "marne jaisa kuch nahi soch raha",
+    "marne jaisa kuch nahi soch rahi",
+    "mujhe hurt karne ka plan nahi hai",
+    "mujhe harm karne ka plan nahi hai",
+    "khud ko hurt karne ka koi plan ya wish nahi hai",
+    "khud ko harm karne ka koi plan ya wish nahi hai",
+)
+
+PROTECTIVE_NEGATION_PATTERNS = (
+    r"\bi\s+have\s+not\s+had\s+thoughts\s+of\s+(?:hurting|harming)\s+myself\s+or\s+(?:of\s+)?not\s+wanting\s+to\s+be\s+alive\b",
+    r"\b(?:do\s+not|don't|dont|did\s+not|didn't|would\s+not|wouldn't|won't|will\s+not|never|not)\b.{0,36}\b(?:hurt\s+myself|harm\s+myself|kill\s+myself|end\s+my\s+life|want\s+to\s+die|suicidal|suicide|not\s+want\s+to\s+live|not\s+be\s+alive)\b",
+    r"\bi\s+do\s+not\s+want\s+to\s+(?:hurt\s+myself|harm\s+myself)(?:\s+or\s+do\s+anything\s+to\s+myself)?\b",
+    r"\bi\s+am\s+not\s+thinking\s+about\s+(?:hurting|harming)\s+myself\b",
+    r"\bi\s+would\s+not\s+say\s+i\s+(?:want|wanted)\s+to\s+(?:hurt\s+myself|harm\s+myself|kill\s+myself|die)\b",
+    r"\bmain\s+(?:aisa|yeh)\s+kuch\s+nahi\s+kar(?:unga|ungi|na)\b",
+    r"\bmain\s+khud\s+ko\s+nuksan\s+nahi\b",
+    r"\bkhud\s+ko\s+nuksan\s+pahunchane\s+ka\s+mann?\s+nahi\s+hai\b",
+    r"\bkhud\s+ko\s+nuksan\s+pahunchane(?:\s+ya\s+marne)?\s+jaisa\s+kuch\s+nahi\s+soch\s+rah(?:a|i)\b",
+    r"\bmarne\s+jaisa\s+kuch\s+nahi\s+soch\s+rah(?:a|i)\b",
+    r"\bmujhe\s+(?:khud\s+ko\s+)?(?:hurt|harm)\s+karne\s+ka\s+plan\s+nahi\s+hai\b",
+    r"\bkhud\s+ko\s+(?:hurt|harm)\s+karne\s+ka\s+koi\s+(?:plan|wish)\s+nahi\s+hai\b",
+    r"खुद\s+को\s+नुकसान\s+पहुंचाने\s+जैसा\s+कुछ\s+नहीं\s+सोच\s+रह(?:ा|ी)",
+    r"खुद\s+को\s+नुकसान\s+पहुँचाने\s+जैसा\s+कुछ\s+नहीं\s+सोच\s+रह(?:ा|ी)",
+    r"खुद\s+को\s+नुकसान\s+पहुंचाने\s+का\s+मन\s+नहीं\s+है",
+    r"खुद\s+को\s+नुकसान\s+पहुंचाने\s+या\s+मरने\s+जैसा\s+कुछ\s+नहीं\s+सोच\s+रह(?:ा|ी)",
+    r"मुझे\s+(?:खुद\s+को\s+)?(?:हर्ट|हार्म)\s+करने\s+का\s+प्लान\s+नहीं\s+है",
 )
 
 
@@ -151,12 +194,14 @@ class SafetyMonitor:
             self._collect_hits(all_text, recent_text, URGENT_INTENT_CUES)
             + self._collect_pattern_hits(all_text, recent_text, URGENT_INTENT_PATTERNS)
         )
+        urgent_hits = self._filter_negated_hits(urgent_hits)
         method_hits = self._collect_hits(all_text, recent_text, URGENT_METHOD_CUES)
         time_hits = self._collect_hits(all_text, recent_text, URGENT_TIME_CUES)
         review_hits = self._dedupe_hits(
             self._collect_hits(all_text, recent_text, REVIEW_CUES)
             + self._collect_pattern_hits(all_text, recent_text, REVIEW_PATTERNS)
         )
+        review_hits = self._filter_negated_hits(review_hits)
         protective_hits = self._collect_hits(all_text, recent_text, PROTECTIVE_CUES)
 
         if urgent_hits:
@@ -244,6 +289,27 @@ class SafetyMonitor:
             seen.add(key)
             deduped.append(hit)
         return deduped
+
+    def _filter_negated_hits(self, hits: Sequence[CueHit]) -> List[CueHit]:
+        return [hit for hit in hits if not self._hit_is_negated(hit)]
+
+    def _hit_is_negated(self, hit: CueHit) -> bool:
+        normalized = normalize_text(hit.snippet or hit.phrase)
+        if not normalized:
+            return False
+        if any(cue in normalized for cue in (normalize_text(cue) for cue in PROTECTIVE_CUES)):
+            return True
+        direct_negated_patterns = (
+            ("khud ko nuksan", ("nahi soch", "plan nahi", "wish nahi", "mann nahi", "man nahi")),
+            ("hurt myself", ("do not", "dont", "don't", "not", "no plan", "no wish")),
+            ("harm myself", ("do not", "dont", "don't", "not", "no plan", "no wish")),
+            ("kill myself", ("do not", "dont", "don't", "not")),
+            ("marne", ("nahi soch",)),
+        )
+        for cue, negations in direct_negated_patterns:
+            if cue in normalized and any(negation in normalized for negation in negations):
+                return True
+        return any(re.search(pattern, normalized) for pattern in PROTECTIVE_NEGATION_PATTERNS)
 
     def _build_flag(self, level: str, hits: Sequence[CueHit], rationale: str) -> SafetyFlag:
         cues = list(dict.fromkeys(hit.snippet or hit.phrase for hit in hits))

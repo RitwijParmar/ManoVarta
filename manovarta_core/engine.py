@@ -30,21 +30,33 @@ class RuntimeEngine:
 
     def analyze(self, turns: Iterable[Turn], language: str, use_llm: bool = True) -> ScreeningSnapshot:
         turn_list = list(turns)
-        safety_flag = self.safety_monitor.assess(turn_list)
-        if self.semantic_safety_monitor is not None:
-            safety_flag = merge_safety_flags(safety_flag, self.semantic_safety_monitor.assess(turn_list))
-        if self.safety_assessor is not None and self.safety_assessor.enabled and safety_flag.level != "urgent":
-            assessed_flag = self.safety_assessor.assess(turn_list, language)
+        analysis_turns = [turn for turn in turn_list if turn.speaker == "user"] or turn_list
+        rule_flag = self.safety_monitor.assess(analysis_turns)
+        semantic_flag = self.semantic_safety_monitor.assess(analysis_turns) if self.semantic_safety_monitor is not None else SafetyFlag()
+        checkpoint_flag = SafetyFlag()
+        if self.safety_assessor is not None and self.safety_assessor.enabled and rule_flag.level != "urgent":
+            assessed_flag = self.safety_assessor.assess(analysis_turns, language)
             if assessed_flag is not None:
-                safety_flag = merge_safety_flags(safety_flag, assessed_flag)
-        snapshot = self.scorer.analyze(turn_list, language, safety_flag)
+                checkpoint_flag = assessed_flag
+        safety_flag = compose_runtime_safety_flag(
+            extractor_flag=SafetyFlag(),
+            rule_flag=merge_safety_flags(rule_flag, semantic_flag),
+            checkpoint_flag=checkpoint_flag,
+        )
+        snapshot = self.scorer.analyze(analysis_turns, language, safety_flag)
         if not use_llm or self.extractor is None or not self.extractor.enabled:
             return snapshot
 
-        llm_result = self.extractor.extract(turn_list, language)
+        try:
+            llm_result = self.extractor.extract(analysis_turns, language)
+        except Exception:
+            return snapshot
         if not llm_result:
             return snapshot
-        return self._merge_snapshot(snapshot, turn_list, llm_result)
+        try:
+            return self._merge_snapshot(snapshot, analysis_turns, llm_result)
+        except Exception:
+            return snapshot
 
     def _merge_snapshot(self, base: ScreeningSnapshot, turns: list[Turn], llm_result: dict) -> ScreeningSnapshot:
         items = {item_id: item.model_copy(deep=True) for item_id, item in base.items.items()}
@@ -170,14 +182,15 @@ class RuntimeEngine:
                         "review_recommended": True,
                     }
                 )
-            status = "resolved" if llm_confidence >= 0.78 else "partial"
+            explicit_negative_closure = llm_value == 0 and bool(matched_quote or note)
+            status = "resolved" if explicit_negative_closure or llm_confidence >= 0.78 else "partial"
             review_recommended = base.review_recommended and status != "resolved"
             return base.model_copy(
                 update={
                     "value": llm_value,
                     "status": status,
-                    "confidence": max(base.confidence, llm_confidence),
-                    "stable": llm_confidence >= 0.82 and status == "resolved",
+                    "confidence": max(base.confidence, llm_confidence, 0.82 if explicit_negative_closure else 0.0),
+                    "stable": explicit_negative_closure or (llm_confidence >= 0.82 and status == "resolved"),
                     "evidence_span_ids": evidence_ids,
                     "contradiction_note": note or None,
                     "source": "llm",

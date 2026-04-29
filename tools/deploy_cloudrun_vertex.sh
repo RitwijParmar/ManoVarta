@@ -1,39 +1,122 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+GCLOUD_BIN="${GCLOUD_BIN:-}"
+if [[ -z "${GCLOUD_BIN}" ]]; then
+  if command -v gcloud >/dev/null 2>&1; then
+    GCLOUD_BIN="$(command -v gcloud)"
+  elif [[ -x "${HOME}/google-cloud-sdk/bin/gcloud" ]]; then
+    GCLOUD_BIN="${HOME}/google-cloud-sdk/bin/gcloud"
+  else
+    echo "gcloud not found on PATH or at ${HOME}/google-cloud-sdk/bin/gcloud" >&2
+    exit 1
+  fi
+fi
+
 PROJECT_ID="${PROJECT_ID:-project-2281c357-4539-4bc6-b96}"
 REGION="${REGION:-us-east4}"
 SERVICE="${SERVICE:-manovarta-runtime}"
+BUCKET="${BUCKET:-project-2281c357-4539-4bc6-b96-us-east4-vertex}"
 REPO="${REPO:-cloud-run-source-deploy}"
 TAG="${TAG:-vertex-$(date +%Y%m%d-%H%M%S)}"
 IMAGE_URI="${IMAGE_URI:-${REGION}-docker.pkg.dev/${PROJECT_ID}/${REPO}/manovarta-runtime:${TAG}}"
 SERVICE_ACCOUNT="${SERVICE_ACCOUNT:-122722888597-compute@developer.gserviceaccount.com}"
 VERTEX_PROJECT="${VERTEX_PROJECT:-${PROJECT_ID}}"
 VERTEX_LOCATION="${VERTEX_LOCATION:-us-central1}"
-CHAT_MODEL="${CHAT_MODEL:-gemini-2.5-flash}"
+VERTEX_CHAT_LOCATION="${VERTEX_CHAT_LOCATION:-${VERTEX_LOCATION}}"
+VERTEX_CHAT_FALLBACK_LOCATION="${VERTEX_CHAT_FALLBACK_LOCATION:-${VERTEX_LOCATION}}"
+VERTEX_LIVE_CHAT_ANALYSIS_LOCATION="${VERTEX_LIVE_CHAT_ANALYSIS_LOCATION:-${VERTEX_CHAT_LOCATION}}"
+VERTEX_LIVE_CHAT_ANALYSIS_FALLBACK_LOCATION="${VERTEX_LIVE_CHAT_ANALYSIS_FALLBACK_LOCATION:-${VERTEX_CHAT_FALLBACK_LOCATION}}"
+CHAT_MODEL="${CHAT_MODEL:-gemini-2.5-pro}"
+CHAT_FALLBACK_MODEL="${CHAT_FALLBACK_MODEL:-gemini-2.5-flash}"
+LIVE_CHAT_ANALYSIS_MODEL="${LIVE_CHAT_ANALYSIS_MODEL:-${CHAT_MODEL}}"
+LIVE_CHAT_ANALYSIS_FALLBACK_MODEL="${LIVE_CHAT_ANALYSIS_FALLBACK_MODEL:-${CHAT_FALLBACK_MODEL}}"
 EXTRACTION_MODEL="${EXTRACTION_MODEL:-gemini-2.5-flash}"
+LIVE_CHAT_EXTRACTION_PROVIDER="${LIVE_CHAT_EXTRACTION_PROVIDER:-}"
+LIVE_CHAT_EXTRACTION_MODEL="${LIVE_CHAT_EXTRACTION_MODEL:-}"
+REMOTE_EXTRACTION_URL="${REMOTE_EXTRACTION_URL:-}"
+
+require_vertex_service_account_access() {
+  local member="serviceAccount:${SERVICE_ACCOUNT}"
+  local roles
+  echo "[preflight] checking Vertex IAM for ${SERVICE_ACCOUNT}"
+  roles="$(
+    CLOUDSDK_PYTHON="${CLOUDSDK_PYTHON:-python3}" "${GCLOUD_BIN}" projects get-iam-policy "${PROJECT_ID}" \
+      --flatten='bindings[].members' \
+      --filter="bindings.members:${member}" \
+      --format='value(bindings.role)' 2>/dev/null || true
+  )"
+  if grep -qx 'roles/aiplatform.user' <<<"${roles}" || grep -qx 'roles/aiplatform.admin' <<<"${roles}"; then
+    return 0
+  fi
+  echo "Cloud Run service account ${SERVICE_ACCOUNT} is missing Vertex AI access on project ${PROJECT_ID}." >&2
+  echo "Grant roles/aiplatform.user (or use a service account that already has it) before deploying Gemini-backed runtime replies." >&2
+  exit 1
+}
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
+STAGING_DIR="$(mktemp -d)"
+cleanup() {
+  rm -rf "${STAGING_DIR}"
+}
+trap cleanup EXIT
+
+cp "${ROOT}/pyproject.toml" "${STAGING_DIR}/"
+cp "${ROOT}/README.md" "${STAGING_DIR}/"
+cp "${ROOT}/Dockerfile" "${STAGING_DIR}/"
+cp -R "${ROOT}/manovarta_core" "${STAGING_DIR}/"
+cp -R "${ROOT}/training" "${STAGING_DIR}/"
+mkdir -p "${STAGING_DIR}/data"
+cp -R "${ROOT}/data/seed" "${STAGING_DIR}/data/"
 
 echo "[build] image=${IMAGE_URI}"
-CLOUDSDK_PYTHON="${CLOUDSDK_PYTHON:-python3}" gcloud builds submit "${ROOT}" \
+CLOUDSDK_PYTHON="${CLOUDSDK_PYTHON:-python3}" "${GCLOUD_BIN}" builds submit "${STAGING_DIR}" \
   --project "${PROJECT_ID}" \
   --region "${REGION}" \
   --tag "${IMAGE_URI}"
 
 echo "[deploy] service=${SERVICE}"
-CLOUDSDK_PYTHON="${CLOUDSDK_PYTHON:-python3}" gcloud run deploy "${SERVICE}" \
+if [[ -n "${REMOTE_EXTRACTION_URL}" ]]; then
+  EXTRACTION_PROVIDER="remote"
+  EXTRACTION_MODEL_VALUE="${EXTRACTION_MODEL:-trained-aya-remote}"
+  EXTRACTION_REMOTE_ENV=",MANOVARTA_REMOTE_EXTRACTION_URL=${REMOTE_EXTRACTION_URL},MANOVARTA_REMOTE_EXTRACTION_TIMEOUT=900"
+else
+  EXTRACTION_PROVIDER="vertex"
+  EXTRACTION_MODEL_VALUE="${EXTRACTION_MODEL}"
+  EXTRACTION_REMOTE_ENV=""
+fi
+
+if [[ "${CHAT_MODEL}" == gemini-* || "${CHAT_FALLBACK_MODEL}" == gemini-* || "${LIVE_CHAT_ANALYSIS_MODEL}" == gemini-* || "${LIVE_CHAT_ANALYSIS_FALLBACK_MODEL}" == gemini-* || "${EXTRACTION_PROVIDER}" == "vertex" || "${LIVE_CHAT_EXTRACTION_PROVIDER}" == "vertex" ]]; then
+  require_vertex_service_account_access
+fi
+
+if [[ -z "${LIVE_CHAT_EXTRACTION_PROVIDER}" ]]; then
+  LIVE_CHAT_EXTRACTION_PROVIDER="${EXTRACTION_PROVIDER}"
+fi
+
+if [[ -n "${LIVE_CHAT_EXTRACTION_MODEL}" ]]; then
+  LIVE_CHAT_EXTRACTION_MODEL_VALUE="${LIVE_CHAT_EXTRACTION_MODEL}"
+elif [[ "${LIVE_CHAT_EXTRACTION_PROVIDER}" == "remote" ]]; then
+  LIVE_CHAT_EXTRACTION_MODEL_VALUE="${EXTRACTION_MODEL_VALUE}"
+else
+  LIVE_CHAT_EXTRACTION_MODEL_VALUE="${EXTRACTION_MODEL}"
+fi
+
+CLOUDSDK_PYTHON="${CLOUDSDK_PYTHON:-python3}" "${GCLOUD_BIN}" run deploy "${SERVICE}" \
   --project "${PROJECT_ID}" \
   --region "${REGION}" \
   --image "${IMAGE_URI}" \
   --service-account "${SERVICE_ACCOUNT}" \
   --cpu 2 \
   --memory 4Gi \
+  --timeout 900 \
   --concurrency 8 \
   --max-instances 3 \
   --min-instances 0 \
   --allow-unauthenticated \
-  --set-env-vars "MANOVARTA_MODEL_PROVIDER=vertex,MANOVARTA_CHAT_PROVIDER=vertex,MANOVARTA_EXTRACTION_PROVIDER=vertex,MANOVARTA_SAFETY_PROVIDER=local,MANOVARTA_CHAT_MODEL=${CHAT_MODEL},MANOVARTA_EXTRACTION_MODEL=${EXTRACTION_MODEL},MANOVARTA_VERTEX_PROJECT=${VERTEX_PROJECT},MANOVARTA_VERTEX_LOCATION=${VERTEX_LOCATION},MANOVARTA_ASYNC_SCORING_ENABLED=true,MANOVARTA_ASYNC_SCORING_DIR=/app/artifacts/async_scoring,MANOVARTA_LOCAL_SAFETY_CHECKPOINT=/app/outputs/local_safety_boost/safety-indicbert-best-infer-fp16,MANOVARTA_LIVE_CHAT_LLM_ANALYSIS=true,MANOVARTA_LIVE_LLM_TURN_THRESHOLD=1"
+  --add-volume name=models,type=cloud-storage,bucket="${BUCKET}",readonly=true,mount-options="implicit-dirs" \
+  --add-volume-mount volume=models,mount-path=/mnt/models \
+  --set-env-vars "MANOVARTA_MODEL_PROVIDER=vertex,MANOVARTA_CHAT_PROVIDER=vertex,MANOVARTA_EXTRACTION_PROVIDER=${EXTRACTION_PROVIDER},MANOVARTA_SAFETY_PROVIDER=local,MANOVARTA_CHAT_MODEL=${CHAT_MODEL},MANOVARTA_CHAT_FALLBACK_MODEL=${CHAT_FALLBACK_MODEL},MANOVARTA_LIVE_CHAT_ANALYSIS_MODEL=${LIVE_CHAT_ANALYSIS_MODEL},MANOVARTA_LIVE_CHAT_ANALYSIS_FALLBACK_MODEL=${LIVE_CHAT_ANALYSIS_FALLBACK_MODEL},MANOVARTA_EXTRACTION_MODEL=${EXTRACTION_MODEL_VALUE},MANOVARTA_LIVE_CHAT_EXTRACTION_PROVIDER=${LIVE_CHAT_EXTRACTION_PROVIDER},MANOVARTA_LIVE_CHAT_EXTRACTION_MODEL=${LIVE_CHAT_EXTRACTION_MODEL_VALUE},MANOVARTA_VERTEX_PROJECT=${VERTEX_PROJECT},MANOVARTA_VERTEX_LOCATION=${VERTEX_LOCATION},MANOVARTA_VERTEX_CHAT_LOCATION=${VERTEX_CHAT_LOCATION},MANOVARTA_VERTEX_CHAT_FALLBACK_LOCATION=${VERTEX_CHAT_FALLBACK_LOCATION},MANOVARTA_VERTEX_LIVE_CHAT_ANALYSIS_LOCATION=${VERTEX_LIVE_CHAT_ANALYSIS_LOCATION},MANOVARTA_VERTEX_LIVE_CHAT_ANALYSIS_FALLBACK_LOCATION=${VERTEX_LIVE_CHAT_ANALYSIS_FALLBACK_LOCATION},MANOVARTA_ASYNC_SCORING_ENABLED=true,MANOVARTA_ASYNC_SCORING_DIR=/app/artifacts/async_scoring,MANOVARTA_LOCAL_SAFETY_CHECKPOINT=/mnt/models/manovarta/runtime/safety-indicbert-best-infer-fp16,MANOVARTA_LIVE_CHAT_LLM_ANALYSIS=true,MANOVARTA_LIVE_LLM_TURN_THRESHOLD=1${EXTRACTION_REMOTE_ENV}"
 
 echo "[done] image=${IMAGE_URI}"

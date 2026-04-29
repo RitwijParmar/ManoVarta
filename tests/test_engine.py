@@ -60,6 +60,55 @@ class StubSafetyAssessor:
         )
 
 
+class FailingExtractor:
+    enabled = True
+
+    def extract(self, turns, language):
+        raise RuntimeError("extractor failed")
+
+
+class ExplicitDenialExtractor:
+    enabled = True
+
+    def extract(self, turns, language):
+        return {
+            "items": [
+                {
+                    "item_id": "phq_q9_self_harm",
+                    "value": 0,
+                    "evidence_quote": "I have not had thoughts of hurting myself or not wanting to be alive.",
+                    "confidence_note": "Explicit denial of self-harm or suicidal intent.",
+                }
+            ],
+            "safety_level": "none",
+            "safety_cues": [],
+            "notes": "Explicit denial.",
+        }
+
+
+class RecordingExtractor:
+    enabled = True
+
+    def __init__(self):
+        self.seen_speakers = []
+
+    def extract(self, turns, language):
+        self.seen_speakers = [turn.speaker for turn in turns]
+        return {
+            "items": [
+                {
+                    "item_id": "phq_q2_low_mood",
+                    "value": 2,
+                    "evidence_quote": "My mood stays heavy most of the day.",
+                    "confidence_note": "Persistent heaviness through the day.",
+                }
+            ],
+            "safety_level": "none",
+            "safety_cues": [],
+            "notes": "Recorded user-only analysis turns.",
+        }
+
+
 def test_runtime_engine_merges_llm_output_into_snapshot():
     turns = [
         Turn(turn_id=1, speaker="assistant", text="What has been hardest lately?", language_tag="en"),
@@ -164,3 +213,67 @@ def test_runtime_engine_keeps_rule_signal_when_extractor_overcalls_safety():
 
     assert snapshot.safety.level == "review"
     assert "extractor_advisory:review" in snapshot.safety.cues
+
+
+def test_runtime_engine_falls_back_to_heuristic_snapshot_when_extractor_raises():
+    turns = [
+        Turn(turn_id=1, speaker="assistant", text="What has felt heaviest?", language_tag="hinglish"),
+        Turn(
+            turn_id=2,
+            speaker="user",
+            text="Kaafi time se low aur disconnected feel ho raha hai.",
+            language_tag="hinglish",
+        ),
+    ]
+    engine = RuntimeEngine(
+        scorer=ConversationScorer(),
+        safety_monitor=SafetyMonitor(),
+        extractor=FailingExtractor(),
+    )
+
+    snapshot = engine.analyze(turns, "hinglish")
+
+    assert snapshot.mode == "heuristic"
+    assert snapshot.items["phq_q1_anhedonia"].status == "partial"
+    assert snapshot.items["phq_q2_low_mood"].status == "partial"
+
+
+def test_runtime_engine_resolves_explicit_negative_closure_items():
+    turns = [
+        Turn(turn_id=1, speaker="assistant", text="Have thoughts of hurting yourself shown up at all?", language_tag="en"),
+        Turn(
+            turn_id=2,
+            speaker="user",
+            text="I have not had thoughts of hurting myself or not wanting to be alive.",
+            language_tag="en",
+        ),
+    ]
+    engine = RuntimeEngine(
+        scorer=ConversationScorer(),
+        safety_monitor=SafetyMonitor(),
+        extractor=ExplicitDenialExtractor(),
+    )
+
+    snapshot = engine.analyze(turns, "en")
+
+    assert snapshot.items["phq_q9_self_harm"].value == 0
+    assert snapshot.items["phq_q9_self_harm"].status == "resolved"
+
+
+def test_runtime_engine_passes_only_user_turns_into_extractor():
+    turns = [
+        Turn(turn_id=1, speaker="assistant", text="How has your mood been?", language_tag="en"),
+        Turn(turn_id=2, speaker="user", text="My mood stays heavy most of the day.", language_tag="en"),
+        Turn(turn_id=3, speaker="assistant", text="Has appetite shifted too?", language_tag="en"),
+    ]
+    extractor = RecordingExtractor()
+    engine = RuntimeEngine(
+        scorer=ConversationScorer(),
+        safety_monitor=SafetyMonitor(),
+        extractor=extractor,
+    )
+
+    snapshot = engine.analyze(turns, "en")
+
+    assert extractor.seen_speakers == ["user"]
+    assert snapshot.items["phq_q2_low_mood"].value == 2

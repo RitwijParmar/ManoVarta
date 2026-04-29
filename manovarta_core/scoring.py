@@ -8,6 +8,50 @@ from manovarta_core.questionnaires import ITEM_INDEX, all_items
 from manovarta_core.schemas import CoveragePlan, EvidenceSpan, ItemScore, ScreeningSnapshot, Turn
 from manovarta_core.text import extract_window, normalize_text
 
+GENERIC_MOOD_OPENING_CUES: Tuple[str, ...] = (
+    "low aur disconnected feel ho raha hai",
+    "low aur disconnected feel ho rahi hai",
+    "kaafi time se low aur disconnected feel ho raha hai",
+    "kaafi time se low aur disconnected feel ho rahi hai",
+    "feel low and disconnected",
+    "feeling low and disconnected",
+    "feel numb and disconnected",
+    "feeling numb and disconnected",
+    "numb and disconnected lately",
+)
+
+CONTRAST_PRESENT_CUES: Tuple[str, ...] = (
+    "but",
+    "more like",
+    "rather",
+    "instead",
+    "bas",
+    "lekin",
+    "par",
+    "zyada",
+    "ज़्यादा",
+    "ज्यादा",
+    "mostly",
+)
+
+SCENE_COHORTS: Dict[str, Tuple[str, ...]] = {
+    "phq_q1_anhedonia": ("phq_q2_low_mood", "phq_q6_worthlessness"),
+    "phq_q2_low_mood": ("phq_q1_anhedonia", "phq_q6_worthlessness"),
+    "phq_q6_worthlessness": ("phq_q1_anhedonia", "phq_q2_low_mood"),
+    "phq_q3_sleep": ("phq_q4_fatigue", "phq_q5_appetite", "phq_q7_concentration", "phq_q8_psychomotor"),
+    "phq_q4_fatigue": ("phq_q3_sleep", "phq_q5_appetite", "phq_q7_concentration", "phq_q8_psychomotor"),
+    "phq_q5_appetite": ("phq_q3_sleep", "phq_q4_fatigue", "phq_q7_concentration", "phq_q8_psychomotor"),
+    "phq_q7_concentration": ("phq_q3_sleep", "phq_q4_fatigue", "phq_q5_appetite", "phq_q8_psychomotor"),
+    "phq_q8_psychomotor": ("phq_q3_sleep", "phq_q4_fatigue", "phq_q5_appetite", "phq_q7_concentration"),
+    "gad_q1_nervous": ("gad_q2_control_worry", "gad_q3_excessive_worry", "gad_q4_trouble_relaxing"),
+    "gad_q2_control_worry": ("gad_q1_nervous", "gad_q3_excessive_worry", "gad_q4_trouble_relaxing"),
+    "gad_q3_excessive_worry": ("gad_q1_nervous", "gad_q2_control_worry", "gad_q7_afraid"),
+    "gad_q4_trouble_relaxing": ("gad_q1_nervous", "gad_q2_control_worry", "gad_q5_restlessness"),
+    "gad_q5_restlessness": ("gad_q4_trouble_relaxing", "gad_q6_irritability", "gad_q7_afraid"),
+    "gad_q6_irritability": ("gad_q4_trouble_relaxing", "gad_q5_restlessness", "gad_q7_afraid"),
+    "gad_q7_afraid": ("gad_q3_excessive_worry", "gad_q5_restlessness", "gad_q6_irritability"),
+}
+
 
 class ConversationScorer:
     def analyze(self, turns: Iterable[Turn], language: str, safety_flag) -> ScreeningSnapshot:
@@ -72,6 +116,8 @@ class ConversationScorer:
             window = window.replace("no good reason", " ")
         phrase_contains_negation = any(cue in normalized_phrase for cue in NEGATION_CUES)
         if not phrase_contains_negation and self._contains_cue(window, NEGATION_CUES):
+            if self._contains_contrastive_present_signal(window, local_window):
+                return "present"
             return "absent"
         if any(cue in local_window for cue in UNCERTAINTY_CUES):
             return "uncertain"
@@ -86,6 +132,10 @@ class ConversationScorer:
             if f" {normalized_cue} " in padded:
                 return True
         return False
+
+    def _contains_contrastive_present_signal(self, window: str, local_window: str) -> bool:
+        combined = f"{window} {local_window}".strip()
+        return any(cue in combined for cue in CONTRAST_PRESENT_CUES)
 
     def _resolve_score(self, base_score: int, local_window: str, polarity: str) -> int:
         if polarity == "absent":
@@ -112,6 +162,10 @@ class ConversationScorer:
         spans_by_item: Dict[str, List[EvidenceSpan]] = defaultdict(list)
         for span in spans:
             spans_by_item[span.item_id].append(span)
+        present_turns_by_item: Dict[str, set[int]] = defaultdict(set)
+        for span in spans:
+            if span.polarity == "present":
+                present_turns_by_item[span.item_id].add(span.turn_id)
 
         scores: Dict[str, ItemScore] = {}
         for item in all_items():
@@ -120,8 +174,30 @@ class ConversationScorer:
             absent = [span for span in item_spans if span.polarity == "absent"]
             uncertain = [span for span in item_spans if span.polarity == "uncertain"]
             contradiction = bool(present and absent)
-            confidence = self._confidence(present, absent, uncertain, contradiction)
-            stable = confidence >= 0.72 and not contradiction
+            cohort = SCENE_COHORTS.get(item.item_id, ())
+            cohort_present_items = [other for other in cohort if present_turns_by_item.get(other)]
+            same_turn_support = any(
+                present_turns_by_item.get(other, set()) & {span.turn_id for span in present}
+                for other in cohort_present_items
+            )
+            confidence = self._confidence(
+                present,
+                absent,
+                uncertain,
+                contradiction,
+                related_present_count=len(cohort_present_items),
+                same_turn_support=same_turn_support,
+            )
+            stable = self._is_stable(
+                item.item_id,
+                present,
+                absent,
+                uncertain,
+                contradiction,
+                confidence,
+                related_present_count=len(cohort_present_items),
+                same_turn_support=same_turn_support,
+            )
 
             if not item_spans:
                 value = None
@@ -167,6 +243,41 @@ class ConversationScorer:
             )
         return scores
 
+    def _is_stable(
+        self,
+        item_id: str,
+        present: List[EvidenceSpan],
+        absent: List[EvidenceSpan],
+        uncertain: List[EvidenceSpan],
+        contradiction: bool,
+        confidence: float,
+        related_present_count: int = 0,
+        same_turn_support: bool = False,
+    ) -> bool:
+        if contradiction:
+            return False
+        evidence_count = len(present) + len(absent) + len(uncertain)
+        if (
+            item_id in {"phq_q1_anhedonia", "phq_q2_low_mood"}
+            and present
+            and evidence_count == 1
+            and related_present_count >= 1
+            and same_turn_support
+            and any(
+                cue in normalize_text(span.text_span)
+                for span in present
+                for cue in GENERIC_MOOD_OPENING_CUES
+            )
+        ):
+            # One broad "low/flat/disconnected" line can touch both mood items,
+            # but it should still invite clarification before we mark either one closed.
+            return False
+        if item_id == "phq_q3_sleep":
+            return confidence >= 0.72 and evidence_count >= 2
+        if item_id == "phq_q4_fatigue":
+            return confidence >= 0.78
+        return confidence >= 0.72
+
     def build_coverage(self, items: Dict[str, ItemScore], next_items: Optional[List[str]] = None) -> CoveragePlan:
         touched_items = [item_id for item_id, item in items.items() if item.evidence_span_ids]
         resolved_items = [item_id for item_id, item in items.items() if item.status == "resolved"]
@@ -202,6 +313,8 @@ class ConversationScorer:
         absent: List[EvidenceSpan],
         uncertain: List[EvidenceSpan],
         contradiction: bool,
+        related_present_count: int = 0,
+        same_turn_support: bool = False,
     ) -> float:
         total = 0.1
         evidence_count = len(present) + len(absent) + len(uncertain)
@@ -210,10 +323,20 @@ class ConversationScorer:
         total += min(evidence_count - 1, 2) * 0.14 if evidence_count > 1 else 0.0
         if present and max(span.score_hint for span in present) >= 2:
             total += 0.12
+        if present and not absent and not uncertain and max(span.score_hint for span in present) >= 2:
+            total += 0.16
+        if len(present) == 1 and not absent and not uncertain and max(span.score_hint for span in present) >= 2:
+            total += 0.1
         if absent and not present:
             total += 0.08
+        if absent and not present and not uncertain:
+            total += 0.19
         if uncertain:
             total -= 0.08
+        if present and related_present_count:
+            total += min(related_present_count, 2) * 0.08
+        if present and same_turn_support:
+            total += 0.2
         if contradiction:
             total -= 0.28
         return round(max(0.0, min(total, 0.95)), 2)

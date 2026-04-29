@@ -33,8 +33,8 @@
               <span class="tab-script">हिंदी</span>
             </button>
             <button type="button" class="language-tab" data-language="hinglish">
-              <span class="tab-label">Hinglish</span>
-              <span class="tab-script">हिंग्लिश</span>
+              <span class="tab-label">Hinglish <span class="tab-asterisk" aria-hidden="true">*</span></span>
+              <span class="tab-script">Text-first</span>
             </button>
           </div>
           <a class="button emergency-link" href="https://988lifeline.org/" target="_blank" rel="noopener noreferrer">
@@ -151,6 +151,8 @@
                 </span>
               </div>
 
+              <p id="languageDisclaimer" class="language-disclaimer is-hidden"></p>
+
               <div class="welcome-actions">
                 <label class="inline-field compact-field native-language-select">
                   <span>Language</span>
@@ -190,7 +192,7 @@
             </section>
 
             <section class="companion-panel">
-              <details class="companion-details" open>
+              <details class="companion-details">
                 <summary class="companion-summary">
                   <div>
                     <p class="eyebrow">Conversation guide</p>
@@ -259,39 +261,12 @@
               </div>
             </div>
 
-            <section class="nudge-panel">
-              <div class="section-head compact">
-                <div>
-                  <p id="nudgeEyebrow" class="eyebrow">Narrative nudges</p>
-                  <h3 id="nudgeTitle">Small prompts that unlock better signal</h3>
-                </div>
-                <span id="nudgeMeterLabel" class="chip bonus">Signal just starting</span>
-              </div>
-              <p id="nudgeCoach" class="panel-subtitle">
-                One concrete moment or one timing detail usually helps more than a long general paragraph.
-              </p>
-              <div class="nudge-quest">
-                <p id="nudgeQuestLabel" class="mini-label">Three anchors make the story clearer</p>
-                <div id="nudgeQuestTrack" class="nudge-quest-track" aria-live="polite"></div>
-              </div>
-              <div class="nudge-meter">
-                <div id="nudgeMeterFill" class="nudge-meter-fill" style="width: 18%"></div>
-              </div>
-              <p id="nudgeOutcome" class="quiet-note">
-                ManoVarta uses these prompts to reduce repeated follow-ups, not to pressure you into oversharing.
-              </p>
-              <p id="nudgeSubtitle" class="panel-subtitle">
-                Open this only if you want help getting started or adding one clearer detail.
-              </p>
-              <div id="nudgeDeck" class="nudge-deck"></div>
-            </section>
-
             <section id="composerPanel" class="composer-panel">
               <div class="section-head compact composer-panel-head">
                 <div>
-                  <p class="mini-label">Voice-first conversation</p>
+                  <p class="mini-label">Reply bar</p>
                   <p id="composerHelper" class="summary-text">
-                    ManoVarta adapts to how much detail you are giving and keeps the next question focused.
+                    Keep the chat close. Type when you want to be precise, or speak when voice is available.
                   </p>
                 </div>
                 <button id="composerToggle" type="button" class="button ghost subtle composer-toggle" aria-expanded="true">
@@ -300,10 +275,12 @@
                 </button>
               </div>
 
+              <p id="voiceLanguageNote" class="voice-language-note is-hidden"></p>
+
               <div class="conversation-mode">
                 <div class="conversation-mode-copy">
                   <p class="eyebrow">Conversation mode</p>
-                  <h3>Speak naturally. ManoVarta listens, thinks, replies aloud, and reopens the mic.</h3>
+                  <h3>Speak naturally. ManoVarta listens, replies, and keeps the thread moving.</h3>
                 </div>
                 <div class="conversation-mode-rail" aria-hidden="true">
                   <span class="mode-step">Listen</span>
@@ -380,6 +357,33 @@
                   <button type="submit" class="button secondary send-button">Send</button>
                 </div>
               </form>
+            </section>
+
+            <section class="nudge-panel">
+              <div class="section-head compact">
+                <div>
+                  <p id="nudgeEyebrow" class="eyebrow">Narrative nudges</p>
+                  <h3 id="nudgeTitle">Small prompts that unlock better signal</h3>
+                </div>
+                <span id="nudgeMeterLabel" class="chip bonus">Signal just starting</span>
+              </div>
+              <p id="nudgeCoach" class="panel-subtitle">
+                One concrete moment or one timing detail usually helps more than a long general paragraph.
+              </p>
+              <div class="nudge-quest">
+                <p id="nudgeQuestLabel" class="mini-label">Three anchors make the story clearer</p>
+                <div id="nudgeQuestTrack" class="nudge-quest-track" aria-live="polite"></div>
+              </div>
+              <div class="nudge-meter">
+                <div id="nudgeMeterFill" class="nudge-meter-fill" style="width: 18%"></div>
+              </div>
+              <p id="nudgeOutcome" class="quiet-note">
+                ManoVarta uses these prompts to reduce repeated follow-ups, not to pressure you into oversharing.
+              </p>
+              <p id="nudgeSubtitle" class="panel-subtitle">
+                Open this only if you want help getting started or adding one clearer detail.
+              </p>
+              <div id="nudgeDeck" class="nudge-deck"></div>
             </section>
 
             <section class="aftercare-panel">

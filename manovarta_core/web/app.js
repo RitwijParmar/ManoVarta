@@ -5,15 +5,94 @@ const state = {
   profiles: [],
   runtime: null,
   isBusy: false,
+  queuedTurn: null,
+  lastSubmittedText: "",
+  lastSubmittedAt: 0,
   recentCheckins: [],
   voiceLoopArmed: false,
   pendingNudge: null,
   voiceState: "idle",
   currentNextSteps: [],
   latestDialogue: null,
+  savedVoicePreferences: {
+    autoSend: true,
+    speak: true,
+  },
 };
 
 const HISTORY_KEY = "manovarta_recent_checkins_v2";
+const VOICE_DUPLICATE_WINDOW_MS = 8000;
+
+function normalizeTurnText(text) {
+  return (text || "")
+    .toLowerCase()
+    .replace(/[।॥]/g, " ")
+    .replace(/[^\w\s\u0900-\u097F]+/gu, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function tokenSetFromText(text) {
+  return new Set(normalizeTurnText(text).split(" ").filter(Boolean));
+}
+
+function textOverlapScore(left, right) {
+  const leftTokens = tokenSetFromText(left);
+  const rightTokens = tokenSetFromText(right);
+  if (!leftTokens.size || !rightTokens.size) {
+    return 0;
+  }
+  let intersection = 0;
+  for (const token of leftTokens) {
+    if (rightTokens.has(token)) {
+      intersection += 1;
+    }
+  }
+  const union = new Set([...leftTokens, ...rightTokens]).size || 1;
+  return intersection / union;
+}
+
+function isNearDuplicateText(left, right) {
+  const normalizedLeft = normalizeTurnText(left);
+  const normalizedRight = normalizeTurnText(right);
+  if (!normalizedLeft || !normalizedRight) {
+    return false;
+  }
+  if (normalizedLeft === normalizedRight) {
+    return true;
+  }
+  const shorter = normalizedLeft.length <= normalizedRight.length ? normalizedLeft : normalizedRight;
+  const longer = shorter === normalizedLeft ? normalizedRight : normalizedLeft;
+  if (shorter.length >= 18 && longer.includes(shorter)) {
+    return true;
+  }
+  return textOverlapScore(normalizedLeft, normalizedRight) >= 0.82;
+}
+
+function mergeTurnText(base, incoming) {
+  const existing = (base || "").trim();
+  const next = (incoming || "").trim();
+  if (!existing) {
+    return next;
+  }
+  if (!next) {
+    return existing;
+  }
+  if (isNearDuplicateText(existing, next)) {
+    return next.length >= existing.length ? next : existing;
+  }
+  const normalizedExisting = normalizeTurnText(existing);
+  const normalizedNext = normalizeTurnText(next);
+  if (normalizedExisting && normalizedNext) {
+    if (normalizedNext.includes(normalizedExisting) && normalizedExisting.length >= 12) {
+      return next;
+    }
+    if (normalizedExisting.includes(normalizedNext) && normalizedNext.length >= 12) {
+      return existing;
+    }
+  }
+  return `${existing} ${next}`.trim();
+}
 
 const TOKEN_LABELS = {
   hi: {
@@ -100,20 +179,20 @@ const LANGUAGE_UI = {
   },
   hinglish: {
     placeholder: "Kya change hua, kab zyada feel hota hai, aur daily routine par kya impact hai, woh share karo...",
-    sessionReady: "Ab tum aaraam se type ya bol sakte ho.",
+    sessionReady: "Ab tum aaraam se type kar sakte ho.",
     startSuccess: "Tumhara private check-in Hinglish mein start ho gaya.",
     turnSuccess: "Thanks. ManoVarta ne yeh note kar liya hai aur next message ke liye ready hai.",
-    runtimeReady: "Everything is ready. Jo easiest lage, usse start karo.",
+    runtimeReady: "Text-first Hinglish mode ready hai. Jo easiest lage, usse start karo.",
     nudgeIntro: "Yeh nudges thodi aur clear detail lane mein help karte hain, bina conversation ko heavy banaye.",
     surface: {
       brandTagline: "Sleep, stress, low mood aur worry ko thoda clearer samajhne ka ek quiet tareeka.",
       welcomeEyebrow: "Aaraam se start karo",
       welcomeTitle: "Bas ek sachchi line se start karo.",
-      welcomeSubtitle: "Tum ek line type kar sakte ho ya naturally bol sakte ho. ManoVarta baaki context gently gather karegi, bina isse clinical feel banaye.",
+      welcomeSubtitle: "Tum ek line type karke start kar sakte ho. ManoVarta baaki context gently gather karegi, bina isse clinical feel banaye.",
       welcomeNote: "Start karne ke liye account ki zaroorat nahi hai.",
       trustItems: [
         "Account ke bina start",
-        "Bolkar ya type karke",
+        "Text-first extension",
         "Quiet safety checks",
         "Short reply bhi okay hai",
       ],
@@ -236,10 +315,10 @@ const COMPOSER_UI_COPY = {
   hinglish: {
     collapse: "Text box fold karo",
     expand: "Text box kholo",
-    emptyHint: "Text box fold hai. Jab type karna ho tab kholo, ya neeche mic use karo.",
+    emptyHint: "Text box fold hai. Jab type karna ho tab kholo.",
     draftPrefix: "Draft saved:",
     quickOpen: "Text box kholo",
-    quickMic: "Mic se bolo",
+    quickMic: "English ya Hindi voice",
   },
 };
 
@@ -860,6 +939,7 @@ const composerCollapsedText = document.getElementById("composerCollapsedText");
 const composerCollapsedActions = document.getElementById("composerCollapsedActions");
 const composerQuickOpen = document.getElementById("composerQuickOpen");
 const composerQuickMic = document.getElementById("composerQuickMic");
+const voiceLanguageNote = document.getElementById("voiceLanguageNote");
 const messageInput = document.getElementById("messageInput");
 const languageSelect = document.getElementById("languageSelect");
 const startButton = document.getElementById("startButton");
@@ -875,6 +955,10 @@ const voicePreview = document.getElementById("voicePreview");
 const voicePreviewText = document.getElementById("voicePreviewText");
 const voiceSendMode = document.getElementById("voiceSendMode");
 const voiceUseButton = document.getElementById("voiceUseButton");
+const conversationMode = document.querySelector(".conversation-mode");
+const callStateCard = document.querySelector(".call-state-card");
+const voiceCluster = document.querySelector(".voice-cluster");
+const voiceToggles = document.querySelector(".voice-toggles");
 const statusBanner = document.getElementById("statusBanner");
 const progressMeterFill = document.getElementById("progressMeterFill");
 const progressMeterLabel = document.getElementById("progressMeterLabel");
@@ -933,6 +1017,7 @@ const welcomeEyebrow = document.getElementById("welcomeEyebrow");
 const welcomeTitle = document.getElementById("welcomeTitle");
 const welcomeSubtitle = document.getElementById("welcomeSubtitle");
 const welcomeNote = document.getElementById("welcomeNote");
+const languageDisclaimer = document.getElementById("languageDisclaimer");
 const trustItemAccount = document.getElementById("trustItemAccount");
 const trustItemVoice = document.getElementById("trustItemVoice");
 const trustItemSafety = document.getElementById("trustItemSafety");
@@ -1008,7 +1093,7 @@ function setBusy(isBusy) {
 }
 
 function handsFreeVoiceEnabled() {
-  return Boolean(autoSendToggle?.checked && speakToggle?.checked);
+  return Boolean(voiceLanguageEnabled() && autoSendToggle?.checked && speakToggle?.checked);
 }
 
 function clearVoiceAutoSendTimer() {
@@ -1027,20 +1112,94 @@ function configureRecognitionMode() {
   recognition.maxAlternatives = 1;
 }
 
+function voiceLanguageEnabled(language = state.language) {
+  return language !== "hinglish";
+}
+
+function voiceExtensionNote(language = state.language) {
+  if (language === "hinglish") {
+    return "Hinglish is a text-first extension right now. Voice input works best in English or Hindi.";
+  }
+  return "";
+}
+
+function updateVoiceLanguageUI(language = state.language) {
+  const voiceEnabled = voiceLanguageEnabled(language);
+  const disclaimer = voiceExtensionNote(language);
+  document.body.classList.toggle("voice-disabled-language", !voiceEnabled);
+  languageDisclaimer?.classList.toggle("is-hidden", !disclaimer);
+  voiceLanguageNote?.classList.toggle("is-hidden", !disclaimer);
+  setTextIfPresent(languageDisclaimer, disclaimer);
+  setTextIfPresent(voiceLanguageNote, disclaimer);
+
+  if (!voiceEnabled) {
+    if ((autoSendToggle && !autoSendToggle.disabled) || (speakToggle && !speakToggle.disabled)) {
+      state.savedVoicePreferences = {
+        autoSend: Boolean(autoSendToggle?.checked),
+        speak: Boolean(speakToggle?.checked),
+      };
+    }
+    state.voiceLoopArmed = false;
+    clearVoiceAutoSendTimer();
+    if (listening) {
+      stopListening();
+    }
+    if (autoSendToggle) {
+      autoSendToggle.checked = false;
+      autoSendToggle.disabled = true;
+    }
+    if (speakToggle) {
+      speakToggle.checked = false;
+      speakToggle.disabled = true;
+    }
+    conversationMode?.setAttribute("aria-hidden", "true");
+    callStateCard?.setAttribute("aria-hidden", "true");
+    voiceCluster?.setAttribute("aria-hidden", "true");
+    voiceToggles?.setAttribute("aria-hidden", "true");
+    updateVoiceStatus(disclaimer || "Voice is off for this language.");
+    setVoiceState("idle");
+    return;
+  }
+
+  if (autoSendToggle) {
+    autoSendToggle.disabled = false;
+    autoSendToggle.checked = state.savedVoicePreferences.autoSend;
+  }
+  if (speakToggle) {
+    speakToggle.disabled = false;
+    speakToggle.checked = state.savedVoicePreferences.speak;
+  }
+  conversationMode?.removeAttribute("aria-hidden");
+  callStateCard?.removeAttribute("aria-hidden");
+  voiceCluster?.removeAttribute("aria-hidden");
+  voiceToggles?.removeAttribute("aria-hidden");
+  updateMicButtonLabel();
+}
+
 function scheduleVoiceAutoSend(transcript, sourceLabel = "voice") {
   const cleaned = (transcript || "").trim();
   if (!cleaned) {
     return;
   }
+  if (
+    Date.now() - state.lastSubmittedAt < VOICE_DUPLICATE_WINDOW_MS
+    && isNearDuplicateText(cleaned, state.lastSubmittedText)
+  ) {
+    pendingVoiceTranscript = mergeTurnText(pendingVoiceTranscript, cleaned);
+    setVoicePreview(pendingVoiceTranscript, { visible: true });
+    setVoiceState("idle");
+    updateVoiceStatus("I heard the same thought again, so I kept the clearer version instead of sending it twice.", false, true);
+    return;
+  }
   clearVoiceAutoSendTimer();
-  pendingVoiceTranscript = cleaned;
+  pendingVoiceTranscript = mergeTurnText(pendingVoiceTranscript, cleaned);
   pendingVoiceAutoSendSource = sourceLabel;
-  setVoicePreview(cleaned, { visible: true });
+  setVoicePreview(pendingVoiceTranscript, { visible: true });
   setVoiceState("listening");
   updateVoiceStatus("Heard that. Waiting a moment to make sure you are done speaking...", false, true);
   pendingVoiceAutoSendTimer = window.setTimeout(() => {
     pendingVoiceAutoSendTimer = null;
-    void handleCapturedTranscript(cleaned, pendingVoiceAutoSendSource);
+    void handleCapturedTranscript(pendingVoiceTranscript, pendingVoiceAutoSendSource);
   }, VOICE_AUTO_SEND_DELAY_MS);
 }
 
@@ -1652,7 +1811,7 @@ function collectProfileContext() {
   return {
     ...profile,
     recent_checkins: (state.recentCheckins || []).slice(0, 3).map((entry) => ({
-      topic: entry.topic || "check_in",
+      topic: "check_in",
       language: entry.language || state.language,
       safety: entry.safety || "none",
       completion: Number(entry.completion || 0),
@@ -1949,6 +2108,10 @@ function renderRuntime(payload) {
   if (runtimeDetail) {
     runtimeDetail.textContent = runtimeToDetail(payload);
   }
+  if (!voiceLanguageEnabled(state.language)) {
+    updateVoiceLanguageUI(state.language);
+    return;
+  }
   if (payload.cloud_voice_enabled) {
     updateVoiceStatus("Cloud voice is ready when microphone access is allowed.");
   } else if (SpeechRecognitionCtor) {
@@ -2089,6 +2252,7 @@ function applyLanguageDefaults(language) {
   renderStarterDeck(language);
   renderNextSteps("default", language);
   renderGuidedStep(null, language);
+  updateVoiceLanguageUI(language);
 }
 
 async function requestSessionStart(options = {}) {
@@ -2169,7 +2333,6 @@ async function startSession() {
     await requestSessionStart();
   } catch (error) {
     console.error(error);
-    renderSystemMessage("Session start failed. Check backend health and try again.");
     setStatusBanner("Could not start session. Please retry.", "error");
   } finally {
     setBusy(false);
@@ -3041,6 +3204,24 @@ async function sendMessageText(text, options = {}) {
   if (!cleaned) {
     return;
   }
+  if (state.isBusy) {
+    state.queuedTurn = {
+      text: mergeTurnText(state.queuedTurn?.text || "", cleaned),
+      fromVoice: Boolean(state.queuedTurn?.fromVoice || fromVoice),
+    };
+    if (!fromVoice) {
+      messageInput.value = state.queuedTurn.text;
+      setComposerCollapsed(false, { focusInput: false });
+      updateComposerCollapsedHint(state.language);
+    }
+    setStatusBanner(
+      fromVoice
+        ? "Still finishing the last reply. I’m folding this voice update into the next turn."
+        : "Still finishing the last reply. I’m holding this update and will send it next.",
+      "info"
+    );
+    return;
+  }
   if (!state.sessionId) {
     await startSession();
     if (!state.sessionId) {
@@ -3049,6 +3230,8 @@ async function sendMessageText(text, options = {}) {
   }
 
   setBusy(true);
+  state.lastSubmittedText = cleaned;
+  state.lastSubmittedAt = Date.now();
   try {
     stopListening();
     setVoicePreview("", { visible: false });
@@ -3068,19 +3251,20 @@ async function sendMessageText(text, options = {}) {
     const pendingNudge = state.pendingNudge;
     state.pendingNudge = null;
 
-    let response = await fetch(`/chat/sessions/${state.sessionId}/turns`, {
+    const requestBody = JSON.stringify({
+      text: cleaned,
+      from_voice: fromVoice,
+      nudge_id: pendingNudge?.id || null,
+      nudge_strategy: pendingNudge?.strategy || null,
+      nudge_title: pendingNudge?.title || null,
+    });
+    const sendTurnRequest = () => fetch(`/chat/sessions/${state.sessionId}/turns`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        text: cleaned,
-        from_voice: fromVoice,
-        nudge_id: pendingNudge?.id || null,
-        nudge_strategy: pendingNudge?.strategy || null,
-        nudge_title: pendingNudge?.title || null,
-      }),
+      body: requestBody,
     });
-    if (response.status === 404 && allowRecovery) {
-      setStatusBanner("The session refreshed in the background. Sending your last message again...", "info");
+    const restartAndRetryTurn = async (message) => {
+      setStatusBanner(message, "info");
       await requestSessionStart({
         resetChat: false,
         renderOpening: false,
@@ -3088,17 +3272,28 @@ async function sendMessageText(text, options = {}) {
         speakOpening: false,
         stopVoiceCapture: false,
       });
-      response = await fetch(`/chat/sessions/${state.sessionId}/turns`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          text: cleaned,
-          from_voice: fromVoice,
-          nudge_id: pendingNudge?.id || null,
-          nudge_strategy: pendingNudge?.strategy || null,
-          nudge_title: pendingNudge?.title || null,
-        }),
-      });
+      return sendTurnRequest();
+    };
+
+    let response;
+    try {
+      response = await sendTurnRequest();
+    } catch (error) {
+      if (allowRecovery) {
+        response = await restartAndRetryTurn("The connection slipped for a moment. Reopening the session and sending your last message again...");
+      } else {
+        throw error;
+      }
+    }
+    if (response.status === 404 && allowRecovery) {
+      response = await restartAndRetryTurn("The session refreshed in the background. Sending your last message again...");
+    }
+    if ([500, 502, 503, 504].includes(response.status)) {
+      setStatusBanner("The last turn hit a short server hiccup. Retrying once...", "info");
+      response = await sendTurnRequest();
+      if (!response.ok && allowRecovery) {
+        response = await restartAndRetryTurn("The backend is still unstable for that turn. Reopening the session and trying once more...");
+      }
     }
     if (!response.ok) {
       const detail = await response.text();
@@ -3122,12 +3317,30 @@ async function sendMessageText(text, options = {}) {
     }
   } catch (error) {
     console.error(error);
-    renderSystemMessage("Turn failed due to a runtime error. Please retry.");
-    setStatusBanner("Turn failed. Check runtime and retry.", "error");
+    if (!fromVoice) {
+      messageInput.value = cleaned;
+      setComposerCollapsed(false, { focusInput: false });
+      updateComposerCollapsedHint(state.language);
+    }
+    setStatusBanner("That turn did not finish cleanly. Your message is still here, so you can retry once.", "error");
     state.voiceLoopArmed = false;
     setVoiceState("error");
   } finally {
     setBusy(false);
+    const queuedTurn = state.queuedTurn;
+    state.queuedTurn = null;
+    if (queuedTurn) {
+      if (
+        Date.now() - state.lastSubmittedAt < VOICE_DUPLICATE_WINDOW_MS
+        && isNearDuplicateText(queuedTurn.text, state.lastSubmittedText)
+      ) {
+        setStatusBanner("Kept the clearest version of that thought and skipped a duplicate resend.", "info");
+        return;
+      }
+      window.setTimeout(() => {
+        void sendMessageText(queuedTurn.text, { fromVoice: queuedTurn.fromVoice, allowRecovery });
+      }, 0);
+    }
   }
 }
 
@@ -3159,11 +3372,11 @@ async function downloadExport() {
 }
 
 function backendVoiceAvailable() {
-  return Boolean(state.runtime?.speech_to_text_enabled || state.runtime?.cloud_voice_enabled);
+  return Boolean(voiceLanguageEnabled() && (state.runtime?.speech_to_text_enabled || state.runtime?.cloud_voice_enabled));
 }
 
 function browserVoiceAvailable() {
-  return Boolean(recognition);
+  return Boolean(voiceLanguageEnabled() && recognition);
 }
 
 function shouldPreferBrowserVoice() {
@@ -3190,6 +3403,10 @@ function startBrowserVoiceCapture(statusMessage = "Requesting microphone access.
 
 function updateMicButtonLabel() {
   if (!micButton) {
+    return;
+  }
+  if (!voiceLanguageEnabled()) {
+    micButton.textContent = "Voice unavailable";
     return;
   }
   if (listening) {
@@ -3246,6 +3463,16 @@ function handleCapturedTranscript(transcript, sourceLabel = "voice") {
     setVoiceState("error");
     updateVoiceStatus("I could not hear enough to transcribe. Please try again.", true);
     setVoicePreview("", { visible: false });
+    return;
+  }
+  if (
+    Date.now() - state.lastSubmittedAt < VOICE_DUPLICATE_WINDOW_MS
+    && isNearDuplicateText(cleaned, state.lastSubmittedText)
+  ) {
+    pendingVoiceTranscript = mergeTurnText(pendingVoiceTranscript, cleaned);
+    setVoicePreview(pendingVoiceTranscript, { visible: true });
+    setVoiceState("idle");
+    updateVoiceStatus(`Captured a duplicate ${sourceLabel} transcript, so I kept the clearest version without sending it twice.`);
     return;
   }
   if (autoSendToggle.checked) {
@@ -3457,10 +3684,15 @@ function setupVoice() {
       configureRecognitionMode();
       recognition.lang = mapVoiceLanguage(languageSelect.value);
     }
+    if (listening && languageSelect.value === "hinglish") {
+      stopListening();
+    }
     state.language = languageSelect.value;
     applyLanguageDefaults(state.language);
     updateSessionBadge();
-    updateVoiceStatus(`Voice language set to ${state.language.toUpperCase()}.`);
+    if (voiceLanguageEnabled(state.language)) {
+      updateVoiceStatus(`Voice language set to ${state.language.toUpperCase()}.`);
+    }
   });
 
   languageTabs.forEach((button) => {
@@ -3479,10 +3711,15 @@ function setupVoice() {
   if (autoSendToggle?.checked && speakToggle && !speakToggle.checked) {
     speakToggle.checked = true;
   }
+  updateVoiceLanguageUI(state.language);
   updateMicButtonLabel();
 }
 
 function toggleListening() {
+  if (!voiceLanguageEnabled()) {
+    updateVoiceStatus(voiceExtensionNote(state.language) || "Voice is off for this language.");
+    return;
+  }
   if (listening) {
     stopListening();
     return;
@@ -3527,6 +3764,11 @@ function stopListening() {
 }
 
 function maybeSpeak(turn) {
+  if (!voiceLanguageEnabled()) {
+    state.voiceLoopArmed = false;
+    setVoiceState("idle");
+    return;
+  }
   if (!speakToggle.checked || turn.speaker !== "assistant") {
     state.voiceLoopArmed = false;
     setVoiceState("idle");

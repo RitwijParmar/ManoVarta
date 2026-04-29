@@ -1,0 +1,2948 @@
+[
+  {
+    "language": "en",
+    "session_id": "mv-221007a9cc",
+    "rows": [
+      {
+        "turn": 0,
+        "speaker": "assistant",
+        "text": "Thanks for being here. Over the last couple of weeks, what has felt the heaviest lately?"
+      },
+      {
+        "turn": 1,
+        "user_text": "I've been dragging myself through the day and sleep has been broken for the last couple of weeks.",
+        "assistant_text": "It sounds like sleep is getting hit in a real way. When sleep gets disrupted, is it mostly hard to fall asleep, waking during the night, or waking too early?",
+        "stage": "clarification",
+        "target_topic": "sleep",
+        "target_item": "phq_q3_sleep",
+        "target_scene": null,
+        "closure_mode": false,
+        "touched_items": 2,
+        "resolved_items": 0,
+        "completion_ratio": 0.0,
+        "safety_level": "none",
+        "PHQ9": 4,
+        "GAD7": 0
+      },
+      {
+        "turn": 2,
+        "user_text": "Most nights I wake around 3 or 4 and then lie there replaying work stuff.",
+        "assistant_text": "That helps place the sleep pattern. Roughly how many nights a week has it been happening like that?",
+        "stage": "clarification",
+        "target_topic": "sleep",
+        "target_item": "phq_q3_sleep",
+        "target_scene": null,
+        "closure_mode": false,
+        "touched_items": 3,
+        "resolved_items": 1,
+        "completion_ratio": 0.06,
+        "safety_level": "none",
+        "PHQ9": 4,
+        "GAD7": 3
+      },
+      {
+        "turn": 3,
+        "user_text": "By the afternoon my body feels heavy, my appetite is off, and lunch just slips.",
+        "assistant_text": "That timing helps. When it happens, is it more trouble falling asleep, staying asleep, or waking up too early?",
+        "stage": "clarification",
+        "target_topic": "sleep",
+        "target_item": "phq_q3_sleep",
+        "target_scene": null,
+        "closure_mode": false,
+        "touched_items": 4,
+        "resolved_items": 3,
+        "completion_ratio": 0.19,
+        "safety_level": "none",
+        "PHQ9": 6,
+        "GAD7": 3
+      },
+      {
+        "turn": 4,
+        "user_text": "I still get through things but everything feels flat underneath before I even start.",
+        "assistant_text": "It sounds like the emotional weight itself has been hard to carry. When this hits, does it sit more like sadness or heaviness through the day, or does it come in waves around certain times?",
+        "stage": "clarification",
+        "target_topic": "mood",
+        "target_item": "phq_q2_low_mood",
+        "target_scene": null,
+        "closure_mode": false,
+        "touched_items": 5,
+        "resolved_items": 4,
+        "completion_ratio": 0.25,
+        "safety_level": "none",
+        "PHQ9": 8,
+        "GAD7": 3
+      },
+      {
+        "turn": 5,
+        "user_text": "When I fall behind I get pretty harsh on myself and feel like I am letting people down.",
+        "assistant_text": "When the harder days hit, what lands most in the foreground: feeling low, losing interest before you even start, or getting harsher on yourself?",
+        "stage": "clarification",
+        "target_topic": "mood",
+        "target_item": "phq_q2_low_mood",
+        "target_scene": "mood_selfview",
+        "closure_mode": true,
+        "touched_items": 6,
+        "resolved_items": 5,
+        "completion_ratio": 0.31,
+        "safety_level": "none",
+        "PHQ9": 11,
+        "GAD7": 3
+      },
+      {
+        "turn": 6,
+        "user_text": "Focus breaks a lot, so I reread the same line and small tasks take forever.",
+        "assistant_text": "It sounds like the emotional weight itself has been hard to carry. After the rough sleep or low-energy days, what slips first for you: getting going, appetite, staying with one task, or your pace feeling noticeably slowed or keyed up?",
+        "stage": "clarification",
+        "target_topic": "mood",
+        "target_item": "phq_q3_sleep",
+        "target_scene": "sleep_functioning",
+        "closure_mode": true,
+        "touched_items": 7,
+        "resolved_items": 6,
+        "completion_ratio": 0.38,
+        "safety_level": "none",
+        "PHQ9": 13,
+        "GAD7": 3
+      },
+      {
+        "turn": 7,
+        "user_text": "The worry jumps between work mistakes, money, and what that means for my future.",
+        "assistant_text": "It sounds like the worry is staying active even when things are quiet. And when it peaks, what stands out more: hard to quiet the mind, restlessness, irritability, or a sense that something may go wrong next?",
+        "stage": "clarification",
+        "target_topic": "anxiety",
+        "target_item": "gad_q4_trouble_relaxing",
+        "target_scene": "worry_activation",
+        "closure_mode": true,
+        "touched_items": 8,
+        "resolved_items": 7,
+        "completion_ratio": 0.44,
+        "safety_level": "none",
+        "PHQ9": 13,
+        "GAD7": 5
+      },
+      {
+        "turn": 8,
+        "user_text": "Mostly it is hard to quiet my mind; the body tension is there but smaller.",
+        "assistant_text": "When the anxiety peaks, does it feel more like something specific might go wrong, that you may get bad news, or that things could spiral out of control?",
+        "stage": "clarification",
+        "target_topic": "anxiety",
+        "target_item": "gad_q7_afraid",
+        "target_scene": "worry_activation",
+        "closure_mode": true,
+        "touched_items": 9,
+        "resolved_items": 8,
+        "completion_ratio": 0.5,
+        "safety_level": "none",
+        "PHQ9": 13,
+        "GAD7": 7
+      },
+      {
+        "turn": 9,
+        "user_text": "Some evenings I feel restless and snappy even though I know nobody is doing anything wrong.",
+        "assistant_text": "That timing helps. At that point, is the fear more about something specific going wrong, bad news, or things spiraling out of control?",
+        "stage": "clarification",
+        "target_topic": "anxiety",
+        "target_item": "gad_q7_afraid",
+        "target_scene": null,
+        "closure_mode": true,
+        "touched_items": 11,
+        "resolved_items": 9,
+        "completion_ratio": 0.56,
+        "safety_level": "none",
+        "PHQ9": 13,
+        "GAD7": 10
+      },
+      {
+        "turn": 10,
+        "user_text": "I do not want to hurt myself or die, I just want a working summary.",
+        "assistant_text": "Here is the working picture so far: interest tends to drop before getting started; sleep looks disrupted rather than settled; the worry seems to pull both thoughts and body tension together. If one detail still matters to clarify, anxiety is the next best place to tighten.",
+        "stage": "summary",
+        "target_topic": "anxiety",
+        "target_item": "gad_q6_irritability",
+        "target_scene": null,
+        "closure_mode": false,
+        "touched_items": 12,
+        "resolved_items": 10,
+        "completion_ratio": 0.62,
+        "safety_level": "none",
+        "PHQ9": 13,
+        "GAD7": 10
+      }
+    ],
+    "final": {
+      "session_id": "mv-221007a9cc",
+      "assistant_turn": {
+        "turn_id": 21,
+        "speaker": "assistant",
+        "text": "Here is the working picture so far: interest tends to drop before getting started; sleep looks disrupted rather than settled; the worry seems to pull both thoughts and body tension together. If one detail still matters to clarify, anxiety is the next best place to tighten.",
+        "language_tag": "en",
+        "notes": "source:template",
+        "created_at": "2026-04-25T07:27:20.051222"
+      },
+      "snapshot": {
+        "language": "en",
+        "items": {
+          "phq_q1_anhedonia": {
+            "item_id": "phq_q1_anhedonia",
+            "questionnaire": "PHQ9",
+            "value": 2,
+            "status": "resolved",
+            "confidence": 0.73,
+            "stable": true,
+            "evidence_span_ids": [
+              "EV-8-6"
+            ],
+            "contradiction_note": null,
+            "source": "heuristic",
+            "review_recommended": false
+          },
+          "phq_q2_low_mood": {
+            "item_id": "phq_q2_low_mood",
+            "questionnaire": "PHQ9",
+            "value": null,
+            "status": "unresolved",
+            "confidence": 0.1,
+            "stable": false,
+            "evidence_span_ids": [],
+            "contradiction_note": null,
+            "source": "heuristic",
+            "review_recommended": false
+          },
+          "phq_q3_sleep": {
+            "item_id": "phq_q3_sleep",
+            "questionnaire": "PHQ9",
+            "value": 2,
+            "status": "partial",
+            "confidence": 0.73,
+            "stable": false,
+            "evidence_span_ids": [
+              "EV-2-1"
+            ],
+            "contradiction_note": null,
+            "source": "heuristic",
+            "review_recommended": false
+          },
+          "phq_q4_fatigue": {
+            "item_id": "phq_q4_fatigue",
+            "questionnaire": "PHQ9",
+            "value": 2,
+            "status": "resolved",
+            "confidence": 0.87,
+            "stable": true,
+            "evidence_span_ids": [
+              "EV-2-2",
+              "EV-6-4"
+            ],
+            "contradiction_note": null,
+            "source": "heuristic",
+            "review_recommended": false
+          },
+          "phq_q5_appetite": {
+            "item_id": "phq_q5_appetite",
+            "questionnaire": "PHQ9",
+            "value": 2,
+            "status": "resolved",
+            "confidence": 0.73,
+            "stable": true,
+            "evidence_span_ids": [
+              "EV-6-5"
+            ],
+            "contradiction_note": null,
+            "source": "heuristic",
+            "review_recommended": false
+          },
+          "phq_q6_worthlessness": {
+            "item_id": "phq_q6_worthlessness",
+            "questionnaire": "PHQ9",
+            "value": 3,
+            "status": "resolved",
+            "confidence": 0.73,
+            "stable": true,
+            "evidence_span_ids": [
+              "EV-10-7"
+            ],
+            "contradiction_note": null,
+            "source": "heuristic",
+            "review_recommended": false
+          },
+          "phq_q7_concentration": {
+            "item_id": "phq_q7_concentration",
+            "questionnaire": "PHQ9",
+            "value": 2,
+            "status": "resolved",
+            "confidence": 0.73,
+            "stable": true,
+            "evidence_span_ids": [
+              "EV-12-8"
+            ],
+            "contradiction_note": null,
+            "source": "heuristic",
+            "review_recommended": false
+          },
+          "phq_q8_psychomotor": {
+            "item_id": "phq_q8_psychomotor",
+            "questionnaire": "PHQ9",
+            "value": null,
+            "status": "unresolved",
+            "confidence": 0.1,
+            "stable": false,
+            "evidence_span_ids": [],
+            "contradiction_note": null,
+            "source": "heuristic",
+            "review_recommended": false
+          },
+          "phq_q9_self_harm": {
+            "item_id": "phq_q9_self_harm",
+            "questionnaire": "PHQ9",
+            "value": 0,
+            "status": "resolved",
+            "confidence": 0.72,
+            "stable": true,
+            "evidence_span_ids": [
+              "EV-20-14"
+            ],
+            "contradiction_note": null,
+            "source": "heuristic",
+            "review_recommended": false
+          },
+          "gad_q1_nervous": {
+            "item_id": "gad_q1_nervous",
+            "questionnaire": "GAD7",
+            "value": null,
+            "status": "unresolved",
+            "confidence": 0.1,
+            "stable": false,
+            "evidence_span_ids": [],
+            "contradiction_note": null,
+            "source": "heuristic",
+            "review_recommended": false
+          },
+          "gad_q2_control_worry": {
+            "item_id": "gad_q2_control_worry",
+            "questionnaire": "GAD7",
+            "value": 3,
+            "status": "resolved",
+            "confidence": 0.87,
+            "stable": true,
+            "evidence_span_ids": [
+              "EV-4-3",
+              "EV-16-10"
+            ],
+            "contradiction_note": null,
+            "source": "heuristic",
+            "review_recommended": false
+          },
+          "gad_q3_excessive_worry": {
+            "item_id": "gad_q3_excessive_worry",
+            "questionnaire": "GAD7",
+            "value": 2,
+            "status": "resolved",
+            "confidence": 0.73,
+            "stable": true,
+            "evidence_span_ids": [
+              "EV-14-9"
+            ],
+            "contradiction_note": null,
+            "source": "heuristic",
+            "review_recommended": false
+          },
+          "gad_q4_trouble_relaxing": {
+            "item_id": "gad_q4_trouble_relaxing",
+            "questionnaire": "GAD7",
+            "value": 2,
+            "status": "resolved",
+            "confidence": 0.73,
+            "stable": true,
+            "evidence_span_ids": [
+              "EV-16-11"
+            ],
+            "contradiction_note": null,
+            "source": "heuristic",
+            "review_recommended": false
+          },
+          "gad_q5_restlessness": {
+            "item_id": "gad_q5_restlessness",
+            "questionnaire": "GAD7",
+            "value": 2,
+            "status": "resolved",
+            "confidence": 0.73,
+            "stable": true,
+            "evidence_span_ids": [
+              "EV-18-12"
+            ],
+            "contradiction_note": null,
+            "source": "heuristic",
+            "review_recommended": false
+          },
+          "gad_q6_irritability": {
+            "item_id": "gad_q6_irritability",
+            "questionnaire": "GAD7",
+            "value": 1,
+            "status": "partial",
+            "confidence": 0.45,
+            "stable": false,
+            "evidence_span_ids": [
+              "EV-18-13"
+            ],
+            "contradiction_note": null,
+            "source": "heuristic",
+            "review_recommended": false
+          },
+          "gad_q7_afraid": {
+            "item_id": "gad_q7_afraid",
+            "questionnaire": "GAD7",
+            "value": null,
+            "status": "unresolved",
+            "confidence": 0.1,
+            "stable": false,
+            "evidence_span_ids": [],
+            "contradiction_note": null,
+            "source": "heuristic",
+            "review_recommended": false
+          }
+        },
+        "evidence_spans": [
+          {
+            "span_id": "EV-2-1",
+            "questionnaire": "PHQ9",
+            "item_id": "phq_q3_sleep",
+            "turn_id": 2,
+            "text_span": "ging myself through the day and sleep has been broken for the last couple of weeks",
+            "polarity": "present",
+            "score_hint": 2,
+            "rationale": "sleep trouble"
+          },
+          {
+            "span_id": "EV-2-2",
+            "questionnaire": "PHQ9",
+            "item_id": "phq_q4_fatigue",
+            "turn_id": 2,
+            "text_span": "I've been dragging myself through the day and sleep has been broken for t",
+            "polarity": "present",
+            "score_hint": 2,
+            "rationale": "fatigue"
+          },
+          {
+            "span_id": "EV-4-3",
+            "questionnaire": "GAD7",
+            "item_id": "gad_q2_control_worry",
+            "turn_id": 4,
+            "text_span": "round 3 or 4 and then lie there replaying work stuff",
+            "polarity": "present",
+            "score_hint": 3,
+            "rationale": "worry control"
+          },
+          {
+            "span_id": "EV-6-4",
+            "questionnaire": "PHQ9",
+            "item_id": "phq_q4_fatigue",
+            "turn_id": 6,
+            "text_span": "By the afternoon my body feels heavy, my appetite is off, and lunch",
+            "polarity": "present",
+            "score_hint": 2,
+            "rationale": "fatigue"
+          },
+          {
+            "span_id": "EV-6-5",
+            "questionnaire": "PHQ9",
+            "item_id": "phq_q5_appetite",
+            "turn_id": 6,
+            "text_span": "ternoon my body feels heavy, my appetite is off, and lunch just slips",
+            "polarity": "present",
+            "score_hint": 2,
+            "rationale": "appetite change"
+          },
+          {
+            "span_id": "EV-8-6",
+            "questionnaire": "PHQ9",
+            "item_id": "phq_q1_anhedonia",
+            "turn_id": 8,
+            "text_span": "I still get through things but everything feels flat underneath before I even start",
+            "polarity": "present",
+            "score_hint": 2,
+            "rationale": "reduced interest"
+          },
+          {
+            "span_id": "EV-10-7",
+            "questionnaire": "PHQ9",
+            "item_id": "phq_q6_worthlessness",
+            "turn_id": 10,
+            "text_span": "sh on myself and feel like I am letting people down",
+            "polarity": "present",
+            "score_hint": 3,
+            "rationale": "worthlessness"
+          },
+          {
+            "span_id": "EV-12-8",
+            "questionnaire": "PHQ9",
+            "item_id": "phq_q7_concentration",
+            "turn_id": 12,
+            "text_span": "Focus breaks a lot, so I reread the same line and small tasks take forever",
+            "polarity": "present",
+            "score_hint": 2,
+            "rationale": "concentration trouble"
+          },
+          {
+            "span_id": "EV-14-9",
+            "questionnaire": "GAD7",
+            "item_id": "gad_q3_excessive_worry",
+            "turn_id": 14,
+            "text_span": "The worry jumps between work mistakes, money, and what that means for",
+            "polarity": "present",
+            "score_hint": 2,
+            "rationale": "excessive worry"
+          },
+          {
+            "span_id": "EV-16-10",
+            "questionnaire": "GAD7",
+            "item_id": "gad_q2_control_worry",
+            "turn_id": 16,
+            "text_span": "Mostly it is hard to quiet my mind; the body tension is there but",
+            "polarity": "present",
+            "score_hint": 3,
+            "rationale": "worry control"
+          },
+          {
+            "span_id": "EV-16-11",
+            "questionnaire": "GAD7",
+            "item_id": "gad_q4_trouble_relaxing",
+            "turn_id": 16,
+            "text_span": "Mostly it is hard to quiet my mind; the body tension is there but",
+            "polarity": "present",
+            "score_hint": 2,
+            "rationale": "trouble relaxing"
+          },
+          {
+            "span_id": "EV-18-12",
+            "questionnaire": "GAD7",
+            "item_id": "gad_q5_restlessness",
+            "turn_id": 18,
+            "text_span": "Some evenings I feel restless and snappy even though I know n",
+            "polarity": "present",
+            "score_hint": 2,
+            "rationale": "restlessness"
+          },
+          {
+            "span_id": "EV-18-13",
+            "questionnaire": "GAD7",
+            "item_id": "gad_q6_irritability",
+            "turn_id": 18,
+            "text_span": "me evenings I feel restless and snappy even though I know nobody is doing anything wrong",
+            "polarity": "present",
+            "score_hint": 1,
+            "rationale": "irritability"
+          },
+          {
+            "span_id": "EV-20-14",
+            "questionnaire": "PHQ9",
+            "item_id": "phq_q9_self_harm",
+            "turn_id": 20,
+            "text_span": "I do not want to hurt myself or die, I just want a working s",
+            "polarity": "absent",
+            "score_hint": 0,
+            "rationale": "self-harm concern"
+          }
+        ],
+        "unresolved_items": [
+          "phq_q2_low_mood",
+          "phq_q8_psychomotor",
+          "gad_q1_nervous",
+          "gad_q7_afraid",
+          "phq_q3_sleep",
+          "gad_q6_irritability"
+        ],
+        "totals": {
+          "PHQ9": 13,
+          "GAD7": 10
+        },
+        "safety": {
+          "level": "none",
+          "cues": [],
+          "rationale": null,
+          "needs_human_review": false
+        },
+        "coverage": {
+          "total_items": 16,
+          "touched_items": 12,
+          "resolved_items": [
+            "phq_q1_anhedonia",
+            "phq_q4_fatigue",
+            "phq_q5_appetite",
+            "phq_q6_worthlessness",
+            "phq_q7_concentration",
+            "phq_q9_self_harm",
+            "gad_q2_control_worry",
+            "gad_q3_excessive_worry",
+            "gad_q4_trouble_relaxing",
+            "gad_q5_restlessness"
+          ],
+          "partial_items": [
+            "phq_q3_sleep",
+            "gad_q6_irritability"
+          ],
+          "contradicted_items": [],
+          "abstained_items": [],
+          "unresolved_items": [
+            "phq_q2_low_mood",
+            "phq_q8_psychomotor",
+            "gad_q1_nervous",
+            "gad_q7_afraid"
+          ],
+          "review_items": [],
+          "next_items": [
+            "gad_q6_irritability",
+            "gad_q1_nervous",
+            "gad_q7_afraid",
+            "phq_q3_sleep",
+            "phq_q2_low_mood"
+          ],
+          "completion_ratio": 0.62,
+          "review_required": false,
+          "topic_states": [
+            {
+              "topic_id": "mood",
+              "label": "Mood and interest",
+              "item_ids": [
+                "phq_q1_anhedonia",
+                "phq_q2_low_mood"
+              ],
+              "touched": true,
+              "priority": 5,
+              "confidence": 0.42,
+              "status": "probing",
+              "resolved_items": [
+                "phq_q1_anhedonia"
+              ],
+              "unresolved_items": [
+                "phq_q2_low_mood"
+              ],
+              "review_items": []
+            },
+            {
+              "topic_id": "sleep",
+              "label": "Sleep",
+              "item_ids": [
+                "phq_q3_sleep"
+              ],
+              "touched": true,
+              "priority": 4,
+              "confidence": 0.73,
+              "status": "probing",
+              "resolved_items": [],
+              "unresolved_items": [
+                "phq_q3_sleep"
+              ],
+              "review_items": []
+            },
+            {
+              "topic_id": "energy",
+              "label": "Energy and appetite",
+              "item_ids": [
+                "phq_q4_fatigue",
+                "phq_q5_appetite"
+              ],
+              "touched": true,
+              "priority": 3,
+              "confidence": 0.8,
+              "status": "stable",
+              "resolved_items": [
+                "phq_q4_fatigue",
+                "phq_q5_appetite"
+              ],
+              "unresolved_items": [],
+              "review_items": []
+            },
+            {
+              "topic_id": "self_view",
+              "label": "Self-worth",
+              "item_ids": [
+                "phq_q6_worthlessness"
+              ],
+              "touched": true,
+              "priority": 4,
+              "confidence": 0.73,
+              "status": "stable",
+              "resolved_items": [
+                "phq_q6_worthlessness"
+              ],
+              "unresolved_items": [],
+              "review_items": []
+            },
+            {
+              "topic_id": "focus",
+              "label": "Focus and activation",
+              "item_ids": [
+                "phq_q7_concentration",
+                "phq_q8_psychomotor"
+              ],
+              "touched": true,
+              "priority": 3,
+              "confidence": 0.52,
+              "status": "probing",
+              "resolved_items": [
+                "phq_q7_concentration"
+              ],
+              "unresolved_items": [
+                "phq_q8_psychomotor"
+              ],
+              "review_items": []
+            },
+            {
+              "topic_id": "anxiety",
+              "label": "Worry and tension",
+              "item_ids": [
+                "gad_q1_nervous",
+                "gad_q2_control_worry",
+                "gad_q3_excessive_worry",
+                "gad_q4_trouble_relaxing",
+                "gad_q5_restlessness",
+                "gad_q6_irritability",
+                "gad_q7_afraid"
+              ],
+              "touched": true,
+              "priority": 5,
+              "confidence": 0.53,
+              "status": "probing",
+              "resolved_items": [
+                "gad_q2_control_worry",
+                "gad_q3_excessive_worry",
+                "gad_q4_trouble_relaxing",
+                "gad_q5_restlessness"
+              ],
+              "unresolved_items": [
+                "gad_q1_nervous",
+                "gad_q6_irritability",
+                "gad_q7_afraid"
+              ],
+              "review_items": []
+            },
+            {
+              "topic_id": "safety",
+              "label": "Safety",
+              "item_ids": [
+                "phq_q9_self_harm"
+              ],
+              "touched": true,
+              "priority": 6,
+              "confidence": 0.72,
+              "status": "stable",
+              "resolved_items": [
+                "phq_q9_self_harm"
+              ],
+              "unresolved_items": [],
+              "review_items": []
+            }
+          ],
+          "dialogue": {
+            "stage": "summary",
+            "next_action": "summarize",
+            "current_topic": "anxiety",
+            "target_topic": "anxiety",
+            "target_item": "gad_q6_irritability",
+            "target_scene": null,
+            "scene_item_ids": [],
+            "closure_mode": false,
+            "rationale": "Worry and tension already has partial evidence, so the next turn should stabilize confidence.",
+            "user_turns": 10,
+            "low_confidence_topics": [
+              "mood",
+              "sleep",
+              "focus",
+              "anxiety"
+            ],
+            "covered_topics": [
+              "mood",
+              "sleep",
+              "energy",
+              "self_view",
+              "focus",
+              "anxiety",
+              "safety"
+            ],
+            "held_back_items": [],
+            "transition_hint": "Reflect briefly, then summarize instead of opening a new branch.",
+            "user_style": {
+              "avg_words_per_turn": 15.5,
+              "verbosity": "balanced",
+              "openness": "open",
+              "code_mix": "low",
+              "distress_trend": "easing",
+              "empathy_level": "moderate",
+              "steering_preference": "user_led"
+            },
+            "disclosure": {
+              "user_turns": 10,
+              "touched_items": 12,
+              "resolved_items": 10,
+              "stable_topics": 3,
+              "items_per_user_turn": 1.2,
+              "resolved_per_user_turn": 1.0,
+              "nudge_effectiveness": 0.0
+            },
+            "readiness": "steady",
+            "fatigue": "medium",
+            "coverage_debt": [
+              "safety",
+              "anxiety",
+              "mood",
+              "sleep"
+            ],
+            "continue_intent": false,
+            "reopen_signal": false,
+            "summary_ready": true,
+            "reflective_anchor": "It sounds like the worry is staying active even when things are quiet.",
+            "continuity_note": "",
+            "recommended_nudges": [
+              "anxiety",
+              "body",
+              "scale"
+            ]
+          }
+        },
+        "mode": "heuristic"
+      },
+      "summary": "Session mv-221007a9cc in en. Profile context: No user profile context provided.. Observed totals: PHQ-9=13, GAD-7=10. Coverage: 12/16 items touched, 10 resolved, 0 abstained. Safety: none. Dialogue stage: summary; next action: summarize on anxiety. User style: balanced, open, distress trend easing. Disclosure efficiency: 1.20 items touched per user turn. Mode: heuristic. Evidence summary: Reduced interest=2 (resolved, 0.73); Sleep=2 (partial, 0.73); Fatigue=2 (resolved, 0.87); Appetite=2 (resolved, 0.73); Worthlessness=3 (resolved, 0.73); Concentration=2 (resolved, 0.73); Self-harm=0 (resolved, 0.72); Control worry=3 (resolved, 0.87). Follow-up still needed for: Low mood, Sleep, Psychomotor, Nervousness, Irritability, Something awful. Human review focus: None.",
+      "rows": [
+        {
+          "item_id": "gad_q2_control_worry",
+          "questionnaire": "GAD7",
+          "label": "Control worry",
+          "value": 3,
+          "status": "resolved",
+          "confidence": 0.87,
+          "source": "heuristic",
+          "evidence_quotes": [
+            "round 3 or 4 and then lie there replaying work stuff",
+            "Mostly it is hard to quiet my mind; the body tension is there but"
+          ]
+        },
+        {
+          "item_id": "gad_q3_excessive_worry",
+          "questionnaire": "GAD7",
+          "label": "Excessive worry",
+          "value": 2,
+          "status": "resolved",
+          "confidence": 0.73,
+          "source": "heuristic",
+          "evidence_quotes": [
+            "The worry jumps between work mistakes, money, and what that means for"
+          ]
+        },
+        {
+          "item_id": "gad_q6_irritability",
+          "questionnaire": "GAD7",
+          "label": "Irritability",
+          "value": 1,
+          "status": "partial",
+          "confidence": 0.45,
+          "source": "heuristic",
+          "evidence_quotes": [
+            "me evenings I feel restless and snappy even though I know nobody is doing anything wrong"
+          ]
+        },
+        {
+          "item_id": "gad_q1_nervous",
+          "questionnaire": "GAD7",
+          "label": "Nervousness",
+          "value": null,
+          "status": "unresolved",
+          "confidence": 0.1,
+          "source": "heuristic",
+          "evidence_quotes": []
+        },
+        {
+          "item_id": "gad_q4_trouble_relaxing",
+          "questionnaire": "GAD7",
+          "label": "Relaxing",
+          "value": 2,
+          "status": "resolved",
+          "confidence": 0.73,
+          "source": "heuristic",
+          "evidence_quotes": [
+            "Mostly it is hard to quiet my mind; the body tension is there but"
+          ]
+        },
+        {
+          "item_id": "gad_q5_restlessness",
+          "questionnaire": "GAD7",
+          "label": "Restlessness",
+          "value": 2,
+          "status": "resolved",
+          "confidence": 0.73,
+          "source": "heuristic",
+          "evidence_quotes": [
+            "Some evenings I feel restless and snappy even though I know n"
+          ]
+        },
+        {
+          "item_id": "gad_q7_afraid",
+          "questionnaire": "GAD7",
+          "label": "Something awful",
+          "value": null,
+          "status": "unresolved",
+          "confidence": 0.1,
+          "source": "heuristic",
+          "evidence_quotes": []
+        },
+        {
+          "item_id": "phq_q5_appetite",
+          "questionnaire": "PHQ9",
+          "label": "Appetite",
+          "value": 2,
+          "status": "resolved",
+          "confidence": 0.73,
+          "source": "heuristic",
+          "evidence_quotes": [
+            "ternoon my body feels heavy, my appetite is off, and lunch just slips"
+          ]
+        },
+        {
+          "item_id": "phq_q7_concentration",
+          "questionnaire": "PHQ9",
+          "label": "Concentration",
+          "value": 2,
+          "status": "resolved",
+          "confidence": 0.73,
+          "source": "heuristic",
+          "evidence_quotes": [
+            "Focus breaks a lot, so I reread the same line and small tasks take forever"
+          ]
+        },
+        {
+          "item_id": "phq_q4_fatigue",
+          "questionnaire": "PHQ9",
+          "label": "Fatigue",
+          "value": 2,
+          "status": "resolved",
+          "confidence": 0.87,
+          "source": "heuristic",
+          "evidence_quotes": [
+            "I've been dragging myself through the day and sleep has been broken for t",
+            "By the afternoon my body feels heavy, my appetite is off, and lunch"
+          ]
+        },
+        {
+          "item_id": "phq_q2_low_mood",
+          "questionnaire": "PHQ9",
+          "label": "Low mood",
+          "value": null,
+          "status": "unresolved",
+          "confidence": 0.1,
+          "source": "heuristic",
+          "evidence_quotes": []
+        },
+        {
+          "item_id": "phq_q8_psychomotor",
+          "questionnaire": "PHQ9",
+          "label": "Psychomotor",
+          "value": null,
+          "status": "unresolved",
+          "confidence": 0.1,
+          "source": "heuristic",
+          "evidence_quotes": []
+        },
+        {
+          "item_id": "phq_q1_anhedonia",
+          "questionnaire": "PHQ9",
+          "label": "Reduced interest",
+          "value": 2,
+          "status": "resolved",
+          "confidence": 0.73,
+          "source": "heuristic",
+          "evidence_quotes": [
+            "I still get through things but everything feels flat underneath before I even start"
+          ]
+        },
+        {
+          "item_id": "phq_q9_self_harm",
+          "questionnaire": "PHQ9",
+          "label": "Self-harm",
+          "value": 0,
+          "status": "resolved",
+          "confidence": 0.72,
+          "source": "heuristic",
+          "evidence_quotes": [
+            "I do not want to hurt myself or die, I just want a working s"
+          ]
+        },
+        {
+          "item_id": "phq_q3_sleep",
+          "questionnaire": "PHQ9",
+          "label": "Sleep",
+          "value": 2,
+          "status": "partial",
+          "confidence": 0.73,
+          "source": "heuristic",
+          "evidence_quotes": [
+            "ging myself through the day and sleep has been broken for the last couple of weeks"
+          ]
+        },
+        {
+          "item_id": "phq_q6_worthlessness",
+          "questionnaire": "PHQ9",
+          "label": "Worthlessness",
+          "value": 3,
+          "status": "resolved",
+          "confidence": 0.73,
+          "source": "heuristic",
+          "evidence_quotes": [
+            "sh on myself and feel like I am letting people down"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "language": "hi",
+    "session_id": "mv-f045f6c6f7",
+    "rows": [
+      {
+        "turn": 0,
+        "speaker": "assistant",
+        "text": "शुक्रिया, आप यहाँ आए। पिछले दो हफ़्तों में सबसे ज़्यादा क्या भारी लगा?"
+      },
+      {
+        "turn": 1,
+        "user_text": "पिछले दो हफ्तों से रात में नींद टूटती रहती है और सुबह शुरू होने में बहुत समय लगता है।",
+        "assistant_text": "लगता है इसका असर नींद पर साफ़ पड़ रहा है। जब नींद बिगड़ती है, क्या ज़्यादा दिक्कत सोने की शुरुआत में होती है, रात में बार-बार उठने में, या बहुत जल्दी उठ जाने में?",
+        "stage": "clarification",
+        "target_topic": "sleep",
+        "target_item": "phq_q3_sleep",
+        "target_scene": null,
+        "closure_mode": false,
+        "touched_items": 2,
+        "resolved_items": 0,
+        "completion_ratio": 0.0,
+        "safety_level": "none",
+        "PHQ9": 4,
+        "GAD7": 0
+      },
+      {
+        "turn": 2,
+        "user_text": "अक्सर रात के तीन-चार बजे उठ जाता हूँ और फिर काम की बातें दिमाग में चलती रहती हैं।",
+        "assistant_text": "लगता है चिंता तब भी सक्रिय रहती है जब बाहर सब शांत हो। जब चिंता चलती रहती है, क्या यह ज़्यादा काम, परिवार, पैसों या भविष्य जैसी कई बातों में फैल जाती है, या आम तौर पर किसी एक मुख्य बात पर अटकती है?",
+        "stage": "clarification",
+        "target_topic": "anxiety",
+        "target_item": "gad_q3_excessive_worry",
+        "target_scene": null,
+        "closure_mode": false,
+        "touched_items": 3,
+        "resolved_items": 1,
+        "completion_ratio": 0.06,
+        "safety_level": "none",
+        "PHQ9": 4,
+        "GAD7": 3
+      },
+      {
+        "turn": 3,
+        "user_text": "दिन चढ़ते-चढ़ते आलस बढ़ जाता है, भूख भी कम हो जाती है और कई बार खाना छूट जाता है।",
+        "assistant_text": "लगता है रोज़ का दिन पहले से ज़्यादा मेहनत माँग रहा है। जब थकान या ऊर्जा की कमी बढ़ती है, क्या ज़्यादा ऐसा लगता है कि शरीर भारी पड़ रहा है, दिमाग शुरू होने में धीमा है, या दोनों?",
+        "stage": "clarification",
+        "target_topic": "energy",
+        "target_item": "phq_q4_fatigue",
+        "target_scene": null,
+        "closure_mode": false,
+        "touched_items": 4,
+        "resolved_items": 2,
+        "completion_ratio": 0.12,
+        "safety_level": "none",
+        "PHQ9": 6,
+        "GAD7": 3
+      },
+      {
+        "turn": 4,
+        "user_text": "जो चीज़ें पहले अच्छी लगती थीं, अब शुरू करने से पहले ही मन हट जाता है और अंदर से सब फीका लगता है।",
+        "assistant_text": "लगता है जो चीज़ें पहले मायने रखती थीं, उनमें अभी मन कम लग रहा है। जब आप उन कामों की तरफ़ जाते हैं जो पहले अच्छे लगते थे, क्या शुरू करने से पहले ही मन हट जाता है, या आप कर लेते हैं लेकिन उनसे बहुत कम महसूस होता है?",
+        "stage": "clarification",
+        "target_topic": "mood",
+        "target_item": "phq_q1_anhedonia",
+        "target_scene": null,
+        "closure_mode": false,
+        "touched_items": 4,
+        "resolved_items": 2,
+        "completion_ratio": 0.12,
+        "safety_level": "none",
+        "PHQ9": 6,
+        "GAD7": 3
+      },
+      {
+        "turn": 5,
+        "user_text": "पीछे रह जाऊँ तो मैं खुद को बहुत कोसता हूँ और लगता है मैं सब पर बोझ बन रहा हूँ।",
+        "assistant_text": "जब आप उन कामों की तरफ़ जाते हैं जो पहले अच्छे लगते थे, क्या शुरू करने से पहले ही मन हट जाता है, या आप कर लेते हैं लेकिन उनसे बहुत कम महसूस होता है?",
+        "stage": "clarification",
+        "target_topic": "mood",
+        "target_item": "phq_q1_anhedonia",
+        "target_scene": null,
+        "closure_mode": true,
+        "touched_items": 5,
+        "resolved_items": 3,
+        "completion_ratio": 0.19,
+        "safety_level": "none",
+        "PHQ9": 9,
+        "GAD7": 3
+      },
+      {
+        "turn": 6,
+        "user_text": "ध्यान बार-बार टूटता है, एक ही लाइन दोबारा पढ़नी पड़ती है और छोटे काम भी लंबे लगते हैं।",
+        "assistant_text": "जब यह महसूस होता है, क्या यह ज़्यादा दिन भर की उदासी या भारीपन जैसा रहता है, या कुछ खास समय पर लहरों में आता है?",
+        "stage": "clarification",
+        "target_topic": "mood",
+        "target_item": "phq_q2_low_mood",
+        "target_scene": null,
+        "closure_mode": true,
+        "touched_items": 6,
+        "resolved_items": 4,
+        "completion_ratio": 0.25,
+        "safety_level": "none",
+        "PHQ9": 11,
+        "GAD7": 3
+      },
+      {
+        "turn": 7,
+        "user_text": "चिंता काम, पैसों और भविष्य के बीच घूमती रहती है।",
+        "assistant_text": "लगता है भावनात्मक बोझ अपने-आप में ही काफ़ी भारी हो गया है। जब यह बना रहता है, क्या यह ज़्यादा दिन भर का लगातार भारी मन लगता है, या भावनात्मक सुन्नपन जैसा जो आता-जाता रहता है?",
+        "stage": "clarification",
+        "target_topic": "mood",
+        "target_item": "phq_q2_low_mood",
+        "target_scene": null,
+        "closure_mode": true,
+        "touched_items": 7,
+        "resolved_items": 5,
+        "completion_ratio": 0.31,
+        "safety_level": "none",
+        "PHQ9": 11,
+        "GAD7": 5
+      },
+      {
+        "turn": 8,
+        "user_text": "ज़्यादा दिमाग को शांत करना मुश्किल होता है; शरीर वाला हिस्सा है लेकिन उतना बड़ा नहीं।",
+        "assistant_text": "लगता है इसका असर नींद पर साफ़ पड़ रहा है। खराब नींद या थके हुए दिनों के बाद सबसे पहले क्या प्रभावित होता है: शुरू होने की ताकत, भूख, एक काम पर टिकना, या चाल-ढाल/रफ्तार का धीमा या बेचैन हो जाना?",
+        "stage": "clarification",
+        "target_topic": "sleep",
+        "target_item": "phq_q3_sleep",
+        "target_scene": "sleep_functioning",
+        "closure_mode": true,
+        "touched_items": 8,
+        "resolved_items": 6,
+        "completion_ratio": 0.38,
+        "safety_level": "none",
+        "PHQ9": 11,
+        "GAD7": 7
+      },
+      {
+        "turn": 9,
+        "user_text": "कुछ शामों में बेचैनी और चिड़चिड़ापन दोनों बढ़ जाते हैं।",
+        "assistant_text": "यह समय-सूचना मददगार है। जब ऐसा होता है, क्या ज़्यादा मुश्किल नींद आने में होती है, नींद बनाए रखने में, या बहुत जल्दी उठ जाने में?",
+        "stage": "clarification",
+        "target_topic": "sleep",
+        "target_item": "phq_q3_sleep",
+        "target_scene": null,
+        "closure_mode": true,
+        "touched_items": 10,
+        "resolved_items": 7,
+        "completion_ratio": 0.44,
+        "safety_level": "none",
+        "PHQ9": 11,
+        "GAD7": 10
+      },
+      {
+        "turn": 10,
+        "user_text": "खुद को नुकसान पहुंचाने का मन नहीं है, बस अभी तक का सार चाहिए।",
+        "assistant_text": "अभी तक जो तस्वीर बन रही है, उसमें नींद ठीक से स्थिर नहीं हो पा रही है; ऊर्जा और ध्यान दोनों सामान्य से धीमे लग रहे हैं; चिंता विचारों और शारीरिक तनाव दोनों को साथ में खींच रही है। अगर एक बात अभी भी साफ़ करनी हो, तो अगला सबसे उपयोगी हिस्सा चिंता रहेगा।",
+        "stage": "summary",
+        "target_topic": "sleep",
+        "target_item": "phq_q3_sleep",
+        "target_scene": null,
+        "closure_mode": false,
+        "touched_items": 11,
+        "resolved_items": 8,
+        "completion_ratio": 0.5,
+        "safety_level": "none",
+        "PHQ9": 14,
+        "GAD7": 10
+      }
+    ],
+    "final": {
+      "session_id": "mv-f045f6c6f7",
+      "assistant_turn": {
+        "turn_id": 21,
+        "speaker": "assistant",
+        "text": "अभी तक जो तस्वीर बन रही है, उसमें नींद ठीक से स्थिर नहीं हो पा रही है; ऊर्जा और ध्यान दोनों सामान्य से धीमे लग रहे हैं; चिंता विचारों और शारीरिक तनाव दोनों को साथ में खींच रही है। अगर एक बात अभी भी साफ़ करनी हो, तो अगला सबसे उपयोगी हिस्सा चिंता रहेगा।",
+        "language_tag": "hi",
+        "notes": "source:template",
+        "created_at": "2026-04-25T07:27:21.253460"
+      },
+      "snapshot": {
+        "language": "hi",
+        "items": {
+          "phq_q1_anhedonia": {
+            "item_id": "phq_q1_anhedonia",
+            "questionnaire": "PHQ9",
+            "value": null,
+            "status": "unresolved",
+            "confidence": 0.1,
+            "stable": false,
+            "evidence_span_ids": [],
+            "contradiction_note": null,
+            "source": "heuristic",
+            "review_recommended": false
+          },
+          "phq_q2_low_mood": {
+            "item_id": "phq_q2_low_mood",
+            "questionnaire": "PHQ9",
+            "value": null,
+            "status": "unresolved",
+            "confidence": 0.1,
+            "stable": false,
+            "evidence_span_ids": [],
+            "contradiction_note": null,
+            "source": "heuristic",
+            "review_recommended": false
+          },
+          "phq_q3_sleep": {
+            "item_id": "phq_q3_sleep",
+            "questionnaire": "PHQ9",
+            "value": 2,
+            "status": "partial",
+            "confidence": 0.73,
+            "stable": false,
+            "evidence_span_ids": [
+              "EV-2-1"
+            ],
+            "contradiction_note": null,
+            "source": "heuristic",
+            "review_recommended": false
+          },
+          "phq_q4_fatigue": {
+            "item_id": "phq_q4_fatigue",
+            "questionnaire": "PHQ9",
+            "value": 2,
+            "status": "partial",
+            "confidence": 0.73,
+            "stable": false,
+            "evidence_span_ids": [
+              "EV-2-2"
+            ],
+            "contradiction_note": null,
+            "source": "heuristic",
+            "review_recommended": false
+          },
+          "phq_q5_appetite": {
+            "item_id": "phq_q5_appetite",
+            "questionnaire": "PHQ9",
+            "value": 2,
+            "status": "resolved",
+            "confidence": 0.73,
+            "stable": true,
+            "evidence_span_ids": [
+              "EV-6-4"
+            ],
+            "contradiction_note": null,
+            "source": "heuristic",
+            "review_recommended": false
+          },
+          "phq_q6_worthlessness": {
+            "item_id": "phq_q6_worthlessness",
+            "questionnaire": "PHQ9",
+            "value": 3,
+            "status": "resolved",
+            "confidence": 0.73,
+            "stable": true,
+            "evidence_span_ids": [
+              "EV-10-5"
+            ],
+            "contradiction_note": null,
+            "source": "heuristic",
+            "review_recommended": false
+          },
+          "phq_q7_concentration": {
+            "item_id": "phq_q7_concentration",
+            "questionnaire": "PHQ9",
+            "value": 2,
+            "status": "resolved",
+            "confidence": 0.73,
+            "stable": true,
+            "evidence_span_ids": [
+              "EV-12-6"
+            ],
+            "contradiction_note": null,
+            "source": "heuristic",
+            "review_recommended": false
+          },
+          "phq_q8_psychomotor": {
+            "item_id": "phq_q8_psychomotor",
+            "questionnaire": "PHQ9",
+            "value": null,
+            "status": "unresolved",
+            "confidence": 0.1,
+            "stable": false,
+            "evidence_span_ids": [],
+            "contradiction_note": null,
+            "source": "heuristic",
+            "review_recommended": false
+          },
+          "phq_q9_self_harm": {
+            "item_id": "phq_q9_self_harm",
+            "questionnaire": "PHQ9",
+            "value": 3,
+            "status": "resolved",
+            "confidence": 0.73,
+            "stable": true,
+            "evidence_span_ids": [
+              "EV-20-12"
+            ],
+            "contradiction_note": null,
+            "source": "heuristic",
+            "review_recommended": false
+          },
+          "gad_q1_nervous": {
+            "item_id": "gad_q1_nervous",
+            "questionnaire": "GAD7",
+            "value": null,
+            "status": "unresolved",
+            "confidence": 0.1,
+            "stable": false,
+            "evidence_span_ids": [],
+            "contradiction_note": null,
+            "source": "heuristic",
+            "review_recommended": false
+          },
+          "gad_q2_control_worry": {
+            "item_id": "gad_q2_control_worry",
+            "questionnaire": "GAD7",
+            "value": 3,
+            "status": "resolved",
+            "confidence": 0.87,
+            "stable": true,
+            "evidence_span_ids": [
+              "EV-4-3",
+              "EV-16-8"
+            ],
+            "contradiction_note": null,
+            "source": "heuristic",
+            "review_recommended": false
+          },
+          "gad_q3_excessive_worry": {
+            "item_id": "gad_q3_excessive_worry",
+            "questionnaire": "GAD7",
+            "value": 2,
+            "status": "resolved",
+            "confidence": 0.73,
+            "stable": true,
+            "evidence_span_ids": [
+              "EV-14-7"
+            ],
+            "contradiction_note": null,
+            "source": "heuristic",
+            "review_recommended": false
+          },
+          "gad_q4_trouble_relaxing": {
+            "item_id": "gad_q4_trouble_relaxing",
+            "questionnaire": "GAD7",
+            "value": 2,
+            "status": "resolved",
+            "confidence": 0.73,
+            "stable": true,
+            "evidence_span_ids": [
+              "EV-16-9"
+            ],
+            "contradiction_note": null,
+            "source": "heuristic",
+            "review_recommended": false
+          },
+          "gad_q5_restlessness": {
+            "item_id": "gad_q5_restlessness",
+            "questionnaire": "GAD7",
+            "value": 2,
+            "status": "resolved",
+            "confidence": 0.73,
+            "stable": true,
+            "evidence_span_ids": [
+              "EV-18-10"
+            ],
+            "contradiction_note": null,
+            "source": "heuristic",
+            "review_recommended": false
+          },
+          "gad_q6_irritability": {
+            "item_id": "gad_q6_irritability",
+            "questionnaire": "GAD7",
+            "value": 1,
+            "status": "partial",
+            "confidence": 0.45,
+            "stable": false,
+            "evidence_span_ids": [
+              "EV-18-11"
+            ],
+            "contradiction_note": null,
+            "source": "heuristic",
+            "review_recommended": false
+          },
+          "gad_q7_afraid": {
+            "item_id": "gad_q7_afraid",
+            "questionnaire": "GAD7",
+            "value": null,
+            "status": "unresolved",
+            "confidence": 0.1,
+            "stable": false,
+            "evidence_span_ids": [],
+            "contradiction_note": null,
+            "source": "heuristic",
+            "review_recommended": false
+          }
+        },
+        "evidence_spans": [
+          {
+            "span_id": "EV-2-1",
+            "questionnaire": "PHQ9",
+            "item_id": "phq_q3_sleep",
+            "turn_id": 2,
+            "text_span": "पिछले दो हफ्तों से रात में नींद टूटती रहती है और सुबह शुरू होने में बहुत समय",
+            "polarity": "present",
+            "score_hint": 2,
+            "rationale": "sleep trouble"
+          },
+          {
+            "span_id": "EV-2-2",
+            "questionnaire": "PHQ9",
+            "item_id": "phq_q4_fatigue",
+            "turn_id": 2,
+            "text_span": "े रात में नींद टूटती रहती है और सुबह शुरू होने में बहुत समय लगता है।",
+            "polarity": "present",
+            "score_hint": 2,
+            "rationale": "fatigue"
+          },
+          {
+            "span_id": "EV-4-3",
+            "questionnaire": "GAD7",
+            "item_id": "gad_q2_control_worry",
+            "turn_id": 4,
+            "text_span": "तीन-चार बजे उठ जाता हूँ और फिर काम की बातें दिमाग में चलती रहती हैं।",
+            "polarity": "present",
+            "score_hint": 3,
+            "rationale": "worry control"
+          },
+          {
+            "span_id": "EV-6-4",
+            "questionnaire": "PHQ9",
+            "item_id": "phq_q5_appetite",
+            "turn_id": 6,
+            "text_span": "िन चढ़ते-चढ़ते आलस बढ़ जाता है, भूख भी कम हो जाती है और कई बार खाना छूट जाता है।",
+            "polarity": "present",
+            "score_hint": 2,
+            "rationale": "appetite change"
+          },
+          {
+            "span_id": "EV-10-5",
+            "questionnaire": "PHQ9",
+            "item_id": "phq_q6_worthlessness",
+            "turn_id": 10,
+            "text_span": "पीछे रह जाऊँ तो मैं खुद को बहुत कोसता हूँ और लगता है मैं सब पर बोझ बन रहा",
+            "polarity": "present",
+            "score_hint": 3,
+            "rationale": "worthlessness"
+          },
+          {
+            "span_id": "EV-12-6",
+            "questionnaire": "PHQ9",
+            "item_id": "phq_q7_concentration",
+            "turn_id": 12,
+            "text_span": "ध्यान बार-बार टूटता है, एक ही लाइन दोबारा पढ़नी पड़ती",
+            "polarity": "present",
+            "score_hint": 2,
+            "rationale": "concentration trouble"
+          },
+          {
+            "span_id": "EV-14-7",
+            "questionnaire": "GAD7",
+            "item_id": "gad_q3_excessive_worry",
+            "turn_id": 14,
+            "text_span": "चिंता काम, पैसों और भविष्य के बीच घूमती रहती है।",
+            "polarity": "present",
+            "score_hint": 2,
+            "rationale": "excessive worry"
+          },
+          {
+            "span_id": "EV-16-8",
+            "questionnaire": "GAD7",
+            "item_id": "gad_q2_control_worry",
+            "turn_id": 16,
+            "text_span": "ज़्यादा दिमाग को शांत करना मुश्किल होता है; शरीर वाला हिस्सा है ले",
+            "polarity": "present",
+            "score_hint": 3,
+            "rationale": "worry control"
+          },
+          {
+            "span_id": "EV-16-9",
+            "questionnaire": "GAD7",
+            "item_id": "gad_q4_trouble_relaxing",
+            "turn_id": 16,
+            "text_span": "ज़्यादा दिमाग को शांत करना मुश्किल होता है; शरीर वाला हिस्सा है ले",
+            "polarity": "present",
+            "score_hint": 2,
+            "rationale": "trouble relaxing"
+          },
+          {
+            "span_id": "EV-18-10",
+            "questionnaire": "GAD7",
+            "item_id": "gad_q5_restlessness",
+            "turn_id": 18,
+            "text_span": "कुछ शामों में बेचैनी और चिड़चिड़ापन दोनों बढ़ जाते ह",
+            "polarity": "present",
+            "score_hint": 2,
+            "rationale": "restlessness"
+          },
+          {
+            "span_id": "EV-18-11",
+            "questionnaire": "GAD7",
+            "item_id": "gad_q6_irritability",
+            "turn_id": 18,
+            "text_span": "कुछ शामों में बेचैनी और चिड़चिड़ापन दोनों बढ़ जाते हैं।",
+            "polarity": "present",
+            "score_hint": 1,
+            "rationale": "irritability"
+          },
+          {
+            "span_id": "EV-20-12",
+            "questionnaire": "PHQ9",
+            "item_id": "phq_q9_self_harm",
+            "turn_id": 20,
+            "text_span": "खुद को नुकसान पहुंचाने का मन नहीं है, बस अभी तक का सार",
+            "polarity": "present",
+            "score_hint": 3,
+            "rationale": "self-harm concern"
+          }
+        ],
+        "unresolved_items": [
+          "phq_q1_anhedonia",
+          "phq_q2_low_mood",
+          "phq_q8_psychomotor",
+          "gad_q1_nervous",
+          "gad_q7_afraid",
+          "phq_q3_sleep",
+          "phq_q4_fatigue",
+          "gad_q6_irritability"
+        ],
+        "totals": {
+          "PHQ9": 14,
+          "GAD7": 10
+        },
+        "safety": {
+          "level": "none",
+          "cues": [],
+          "rationale": null,
+          "needs_human_review": false
+        },
+        "coverage": {
+          "total_items": 16,
+          "touched_items": 11,
+          "resolved_items": [
+            "phq_q5_appetite",
+            "phq_q6_worthlessness",
+            "phq_q7_concentration",
+            "phq_q9_self_harm",
+            "gad_q2_control_worry",
+            "gad_q3_excessive_worry",
+            "gad_q4_trouble_relaxing",
+            "gad_q5_restlessness"
+          ],
+          "partial_items": [
+            "phq_q3_sleep",
+            "phq_q4_fatigue",
+            "gad_q6_irritability"
+          ],
+          "contradicted_items": [],
+          "abstained_items": [],
+          "unresolved_items": [
+            "phq_q1_anhedonia",
+            "phq_q2_low_mood",
+            "phq_q8_psychomotor",
+            "gad_q1_nervous",
+            "gad_q7_afraid"
+          ],
+          "review_items": [],
+          "next_items": [
+            "phq_q3_sleep",
+            "gad_q6_irritability",
+            "gad_q1_nervous",
+            "phq_q4_fatigue",
+            "gad_q7_afraid"
+          ],
+          "completion_ratio": 0.5,
+          "review_required": false,
+          "topic_states": [
+            {
+              "topic_id": "mood",
+              "label": "Mood and interest",
+              "item_ids": [
+                "phq_q1_anhedonia",
+                "phq_q2_low_mood"
+              ],
+              "touched": false,
+              "priority": 5,
+              "confidence": 0.1,
+              "status": "pending",
+              "resolved_items": [],
+              "unresolved_items": [
+                "phq_q1_anhedonia",
+                "phq_q2_low_mood"
+              ],
+              "review_items": []
+            },
+            {
+              "topic_id": "sleep",
+              "label": "Sleep",
+              "item_ids": [
+                "phq_q3_sleep"
+              ],
+              "touched": true,
+              "priority": 4,
+              "confidence": 0.73,
+              "status": "probing",
+              "resolved_items": [],
+              "unresolved_items": [
+                "phq_q3_sleep"
+              ],
+              "review_items": []
+            },
+            {
+              "topic_id": "energy",
+              "label": "Energy and appetite",
+              "item_ids": [
+                "phq_q4_fatigue",
+                "phq_q5_appetite"
+              ],
+              "touched": true,
+              "priority": 3,
+              "confidence": 0.73,
+              "status": "probing",
+              "resolved_items": [
+                "phq_q5_appetite"
+              ],
+              "unresolved_items": [
+                "phq_q4_fatigue"
+              ],
+              "review_items": []
+            },
+            {
+              "topic_id": "self_view",
+              "label": "Self-worth",
+              "item_ids": [
+                "phq_q6_worthlessness"
+              ],
+              "touched": true,
+              "priority": 4,
+              "confidence": 0.73,
+              "status": "stable",
+              "resolved_items": [
+                "phq_q6_worthlessness"
+              ],
+              "unresolved_items": [],
+              "review_items": []
+            },
+            {
+              "topic_id": "focus",
+              "label": "Focus and activation",
+              "item_ids": [
+                "phq_q7_concentration",
+                "phq_q8_psychomotor"
+              ],
+              "touched": true,
+              "priority": 3,
+              "confidence": 0.52,
+              "status": "probing",
+              "resolved_items": [
+                "phq_q7_concentration"
+              ],
+              "unresolved_items": [
+                "phq_q8_psychomotor"
+              ],
+              "review_items": []
+            },
+            {
+              "topic_id": "anxiety",
+              "label": "Worry and tension",
+              "item_ids": [
+                "gad_q1_nervous",
+                "gad_q2_control_worry",
+                "gad_q3_excessive_worry",
+                "gad_q4_trouble_relaxing",
+                "gad_q5_restlessness",
+                "gad_q6_irritability",
+                "gad_q7_afraid"
+              ],
+              "touched": true,
+              "priority": 5,
+              "confidence": 0.53,
+              "status": "probing",
+              "resolved_items": [
+                "gad_q2_control_worry",
+                "gad_q3_excessive_worry",
+                "gad_q4_trouble_relaxing",
+                "gad_q5_restlessness"
+              ],
+              "unresolved_items": [
+                "gad_q1_nervous",
+                "gad_q6_irritability",
+                "gad_q7_afraid"
+              ],
+              "review_items": []
+            },
+            {
+              "topic_id": "safety",
+              "label": "Safety",
+              "item_ids": [
+                "phq_q9_self_harm"
+              ],
+              "touched": true,
+              "priority": 6,
+              "confidence": 0.73,
+              "status": "stable",
+              "resolved_items": [
+                "phq_q9_self_harm"
+              ],
+              "unresolved_items": [],
+              "review_items": []
+            }
+          ],
+          "dialogue": {
+            "stage": "summary",
+            "next_action": "summarize",
+            "current_topic": "sleep",
+            "target_topic": "sleep",
+            "target_item": "phq_q3_sleep",
+            "target_scene": null,
+            "scene_item_ids": [],
+            "closure_mode": false,
+            "rationale": "Sleep already has partial evidence, so the next turn should stabilize confidence.",
+            "user_turns": 10,
+            "low_confidence_topics": [
+              "mood",
+              "sleep",
+              "energy",
+              "focus",
+              "anxiety"
+            ],
+            "covered_topics": [
+              "sleep",
+              "energy",
+              "self_view",
+              "focus",
+              "anxiety",
+              "safety"
+            ],
+            "held_back_items": [],
+            "transition_hint": "Reflect briefly, then summarize instead of opening a new branch.",
+            "user_style": {
+              "avg_words_per_turn": 16.7,
+              "verbosity": "balanced",
+              "openness": "cautious",
+              "code_mix": "low",
+              "distress_trend": "easing",
+              "empathy_level": "high",
+              "steering_preference": "balanced"
+            },
+            "disclosure": {
+              "user_turns": 10,
+              "touched_items": 11,
+              "resolved_items": 8,
+              "stable_topics": 2,
+              "items_per_user_turn": 1.1,
+              "resolved_per_user_turn": 0.8,
+              "nudge_effectiveness": 0.0
+            },
+            "readiness": "steady",
+            "fatigue": "medium",
+            "coverage_debt": [
+              "safety",
+              "anxiety",
+              "sleep",
+              "energy"
+            ],
+            "continue_intent": false,
+            "reopen_signal": false,
+            "summary_ready": true,
+            "reflective_anchor": "",
+            "continuity_note": "",
+            "recommended_nudges": [
+              "sleep",
+              "timing",
+              "impact"
+            ]
+          }
+        },
+        "mode": "heuristic"
+      },
+      "summary": "Session mv-f045f6c6f7 in hi. Profile context: No user profile context provided.. Observed totals: PHQ-9=14, GAD-7=10. Coverage: 11/16 items touched, 8 resolved, 0 abstained. Safety: none. Dialogue stage: summary; next action: summarize on sleep. User style: balanced, cautious, distress trend easing. Disclosure efficiency: 1.10 items touched per user turn. Mode: heuristic. Evidence summary: Sleep=2 (partial, 0.73); Fatigue=2 (partial, 0.73); Appetite=2 (resolved, 0.73); Worthlessness=3 (resolved, 0.73); Concentration=2 (resolved, 0.73); Self-harm=3 (resolved, 0.73); Control worry=3 (resolved, 0.87); Excessive worry=2 (resolved, 0.73). Follow-up still needed for: Reduced interest, Low mood, Sleep, Fatigue, Psychomotor, Nervousness. Human review focus: None.",
+      "rows": [
+        {
+          "item_id": "gad_q2_control_worry",
+          "questionnaire": "GAD7",
+          "label": "Control worry",
+          "value": 3,
+          "status": "resolved",
+          "confidence": 0.87,
+          "source": "heuristic",
+          "evidence_quotes": [
+            "तीन-चार बजे उठ जाता हूँ और फिर काम की बातें दिमाग में चलती रहती हैं।",
+            "ज़्यादा दिमाग को शांत करना मुश्किल होता है; शरीर वाला हिस्सा है ले"
+          ]
+        },
+        {
+          "item_id": "gad_q3_excessive_worry",
+          "questionnaire": "GAD7",
+          "label": "Excessive worry",
+          "value": 2,
+          "status": "resolved",
+          "confidence": 0.73,
+          "source": "heuristic",
+          "evidence_quotes": [
+            "चिंता काम, पैसों और भविष्य के बीच घूमती रहती है।"
+          ]
+        },
+        {
+          "item_id": "gad_q6_irritability",
+          "questionnaire": "GAD7",
+          "label": "Irritability",
+          "value": 1,
+          "status": "partial",
+          "confidence": 0.45,
+          "source": "heuristic",
+          "evidence_quotes": [
+            "कुछ शामों में बेचैनी और चिड़चिड़ापन दोनों बढ़ जाते हैं।"
+          ]
+        },
+        {
+          "item_id": "gad_q1_nervous",
+          "questionnaire": "GAD7",
+          "label": "Nervousness",
+          "value": null,
+          "status": "unresolved",
+          "confidence": 0.1,
+          "source": "heuristic",
+          "evidence_quotes": []
+        },
+        {
+          "item_id": "gad_q4_trouble_relaxing",
+          "questionnaire": "GAD7",
+          "label": "Relaxing",
+          "value": 2,
+          "status": "resolved",
+          "confidence": 0.73,
+          "source": "heuristic",
+          "evidence_quotes": [
+            "ज़्यादा दिमाग को शांत करना मुश्किल होता है; शरीर वाला हिस्सा है ले"
+          ]
+        },
+        {
+          "item_id": "gad_q5_restlessness",
+          "questionnaire": "GAD7",
+          "label": "Restlessness",
+          "value": 2,
+          "status": "resolved",
+          "confidence": 0.73,
+          "source": "heuristic",
+          "evidence_quotes": [
+            "कुछ शामों में बेचैनी और चिड़चिड़ापन दोनों बढ़ जाते ह"
+          ]
+        },
+        {
+          "item_id": "gad_q7_afraid",
+          "questionnaire": "GAD7",
+          "label": "Something awful",
+          "value": null,
+          "status": "unresolved",
+          "confidence": 0.1,
+          "source": "heuristic",
+          "evidence_quotes": []
+        },
+        {
+          "item_id": "phq_q5_appetite",
+          "questionnaire": "PHQ9",
+          "label": "Appetite",
+          "value": 2,
+          "status": "resolved",
+          "confidence": 0.73,
+          "source": "heuristic",
+          "evidence_quotes": [
+            "िन चढ़ते-चढ़ते आलस बढ़ जाता है, भूख भी कम हो जाती है और कई बार खाना छूट जाता है।"
+          ]
+        },
+        {
+          "item_id": "phq_q7_concentration",
+          "questionnaire": "PHQ9",
+          "label": "Concentration",
+          "value": 2,
+          "status": "resolved",
+          "confidence": 0.73,
+          "source": "heuristic",
+          "evidence_quotes": [
+            "ध्यान बार-बार टूटता है, एक ही लाइन दोबारा पढ़नी पड़ती"
+          ]
+        },
+        {
+          "item_id": "phq_q4_fatigue",
+          "questionnaire": "PHQ9",
+          "label": "Fatigue",
+          "value": 2,
+          "status": "partial",
+          "confidence": 0.73,
+          "source": "heuristic",
+          "evidence_quotes": [
+            "े रात में नींद टूटती रहती है और सुबह शुरू होने में बहुत समय लगता है।"
+          ]
+        },
+        {
+          "item_id": "phq_q2_low_mood",
+          "questionnaire": "PHQ9",
+          "label": "Low mood",
+          "value": null,
+          "status": "unresolved",
+          "confidence": 0.1,
+          "source": "heuristic",
+          "evidence_quotes": []
+        },
+        {
+          "item_id": "phq_q8_psychomotor",
+          "questionnaire": "PHQ9",
+          "label": "Psychomotor",
+          "value": null,
+          "status": "unresolved",
+          "confidence": 0.1,
+          "source": "heuristic",
+          "evidence_quotes": []
+        },
+        {
+          "item_id": "phq_q1_anhedonia",
+          "questionnaire": "PHQ9",
+          "label": "Reduced interest",
+          "value": null,
+          "status": "unresolved",
+          "confidence": 0.1,
+          "source": "heuristic",
+          "evidence_quotes": []
+        },
+        {
+          "item_id": "phq_q9_self_harm",
+          "questionnaire": "PHQ9",
+          "label": "Self-harm",
+          "value": 3,
+          "status": "resolved",
+          "confidence": 0.73,
+          "source": "heuristic",
+          "evidence_quotes": [
+            "खुद को नुकसान पहुंचाने का मन नहीं है, बस अभी तक का सार"
+          ]
+        },
+        {
+          "item_id": "phq_q3_sleep",
+          "questionnaire": "PHQ9",
+          "label": "Sleep",
+          "value": 2,
+          "status": "partial",
+          "confidence": 0.73,
+          "source": "heuristic",
+          "evidence_quotes": [
+            "पिछले दो हफ्तों से रात में नींद टूटती रहती है और सुबह शुरू होने में बहुत समय"
+          ]
+        },
+        {
+          "item_id": "phq_q6_worthlessness",
+          "questionnaire": "PHQ9",
+          "label": "Worthlessness",
+          "value": 3,
+          "status": "resolved",
+          "confidence": 0.73,
+          "source": "heuristic",
+          "evidence_quotes": [
+            "पीछे रह जाऊँ तो मैं खुद को बहुत कोसता हूँ और लगता है मैं सब पर बोझ बन रहा"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "language": "hinglish",
+    "session_id": "mv-81ddc781ee",
+    "rows": [
+      {
+        "turn": 0,
+        "speaker": "assistant",
+        "text": "Thanks for joining. Pichhle do hafton mein sabse zyada kya heavy laga?"
+      },
+      {
+        "turn": 1,
+        "user_text": "Pichhle do hafte se sleep break hoti rehti hai aur morning mein start lena heavy lagta hai.",
+        "assistant_text": "Lag raha hai iska effect sleep par kaafi clearly aa raha hai. Jab sleep disturb hoti hai, kya zyada issue sone ki shuruat mein hota hai, raat mein baar baar uthne mein, ya bahut jaldi uth jaane mein?",
+        "stage": "clarification",
+        "target_topic": "sleep",
+        "target_item": "phq_q3_sleep",
+        "target_scene": null,
+        "closure_mode": false,
+        "touched_items": 2,
+        "resolved_items": 0,
+        "completion_ratio": 0.0,
+        "safety_level": "none",
+        "PHQ9": 3,
+        "GAD7": 0
+      },
+      {
+        "turn": 2,
+        "user_text": "Most nights 3 ya 4 baje aankh khul jaati hai aur phir work wali soch chalti rehti hai.",
+        "assistant_text": "Isse sleep pattern thoda clearer ho raha hai. Roughly week mein kitni raaton mein aisa hota hai?",
+        "stage": "clarification",
+        "target_topic": "sleep",
+        "target_item": "phq_q3_sleep",
+        "target_scene": null,
+        "closure_mode": false,
+        "touched_items": 3,
+        "resolved_items": 1,
+        "completion_ratio": 0.06,
+        "safety_level": "none",
+        "PHQ9": 3,
+        "GAD7": 3
+      },
+      {
+        "turn": 3,
+        "user_text": "Day chadhte chadhte aalas badh jata hai, appetite bhi down ho jaati hai aur lunch miss ho jata hai.",
+        "assistant_text": "Lag raha hai normal day pehle se zyada effort le raha hai. Jab low energy build hoti hai, kya zyada body heavy lagti hai, mind ko start hone mein time lagta hai, ya dono?",
+        "stage": "clarification",
+        "target_topic": "energy",
+        "target_item": "phq_q4_fatigue",
+        "target_scene": null,
+        "closure_mode": false,
+        "touched_items": 4,
+        "resolved_items": 2,
+        "completion_ratio": 0.12,
+        "safety_level": "none",
+        "PHQ9": 5,
+        "GAD7": 3
+      },
+      {
+        "turn": 4,
+        "user_text": "Jo cheezein pehle achhi lagti thi ab start karne se pehle hi mann hat jata hai aur sab flat feel hota hai.",
+        "assistant_text": "Jab low energy build hoti hai, kya zyada body heavy lagti hai, mind ko start hone mein time lagta hai, ya dono?",
+        "stage": "clarification",
+        "target_topic": "energy",
+        "target_item": "phq_q4_fatigue",
+        "target_scene": null,
+        "closure_mode": false,
+        "touched_items": 5,
+        "resolved_items": 3,
+        "completion_ratio": 0.19,
+        "safety_level": "none",
+        "PHQ9": 7,
+        "GAD7": 3
+      },
+      {
+        "turn": 5,
+        "user_text": "Peeche reh jaun to main khud par kaafi harsh ho jata hoon aur burden jaisa feel hota hai.",
+        "assistant_text": "Lag raha hai emotional weight khud hi kaafi heavy ho gaya hai. Rough sleep ya low-energy days ke baad sabse pehle kya slip karta hai: start lene ki energy, appetite, ek task par tikna, ya pace ka noticeably slow ya keyed up ho jana?",
+        "stage": "clarification",
+        "target_topic": "mood",
+        "target_item": "phq_q7_concentration",
+        "target_scene": "sleep_functioning",
+        "closure_mode": true,
+        "touched_items": 6,
+        "resolved_items": 4,
+        "completion_ratio": 0.25,
+        "safety_level": "none",
+        "PHQ9": 10,
+        "GAD7": 3
+      },
+      {
+        "turn": 6,
+        "user_text": "Focus toot jata hai, same line dobara padhni padti hai, aur small tasks slow lagte hain.",
+        "assistant_text": "Lag raha hai normal day pehle se zyada effort le raha hai. Jab low energy build hoti hai, kya zyada body heavy lagti hai, mind ko start hone mein time lagta hai, ya dono?",
+        "stage": "clarification",
+        "target_topic": "energy",
+        "target_item": "phq_q4_fatigue",
+        "target_scene": null,
+        "closure_mode": true,
+        "touched_items": 7,
+        "resolved_items": 5,
+        "completion_ratio": 0.31,
+        "safety_level": "none",
+        "PHQ9": 12,
+        "GAD7": 3
+      },
+      {
+        "turn": 7,
+        "user_text": "Worry work mistakes, paise, aur future ke beech jump karti rehti hai.",
+        "assistant_text": "Lag raha hai worry tab bhi active rehti hai jab bahar sab quiet ho. Aur jab yeh peak karti hai, tab kya zyada stand out karta hai: mind ko quiet karna tough hona, restlessness, irritability, ya yeh feel ki aage kuch galat ho sakta hai?",
+        "stage": "clarification",
+        "target_topic": "anxiety",
+        "target_item": "gad_q4_trouble_relaxing",
+        "target_scene": "worry_activation",
+        "closure_mode": true,
+        "touched_items": 8,
+        "resolved_items": 6,
+        "completion_ratio": 0.38,
+        "safety_level": "none",
+        "PHQ9": 12,
+        "GAD7": 5
+      },
+      {
+        "turn": 8,
+        "user_text": "Mind ko quiet karna tough hota hai; body tension hai but smaller lagti hai.",
+        "assistant_text": "Jab anxiety peak karti hai, kya zyada lagta hai ki kuch specific galat ho sakta hai, koi bad news mil sakti hai, ya cheezein control se bahar ja sakti hain?",
+        "stage": "clarification",
+        "target_topic": "anxiety",
+        "target_item": "gad_q7_afraid",
+        "target_scene": "worry_activation",
+        "closure_mode": true,
+        "touched_items": 9,
+        "resolved_items": 7,
+        "completion_ratio": 0.44,
+        "safety_level": "none",
+        "PHQ9": 12,
+        "GAD7": 7
+      },
+      {
+        "turn": 9,
+        "user_text": "Kuch evenings mein restlessness aur irritability dono badh jaate hain.",
+        "assistant_text": "Yeh timing helpful hai. Us waqt, kya fear zyada kisi specific problem ka hota hai, bad news ka, ya cheezon ke control se bahar jaane ka?",
+        "stage": "clarification",
+        "target_topic": "anxiety",
+        "target_item": "gad_q7_afraid",
+        "target_scene": null,
+        "closure_mode": true,
+        "touched_items": 11,
+        "resolved_items": 8,
+        "completion_ratio": 0.5,
+        "safety_level": "none",
+        "PHQ9": 12,
+        "GAD7": 10
+      },
+      {
+        "turn": 10,
+        "user_text": "Khud ko hurt karne ka plan nahi hai, bas abhi ka working summary chahiye.",
+        "assistant_text": "Ab tak jo picture ban rahi hai, usme kaam start karne se pehle hi mann hatne lagta hai; sleep theek se settle nahi ho pa rahi hai; worry thoughts aur body tension dono ko saath kheench rahi hai. Agar ek cheez abhi bhi clarify karni ho, to next best jagah anxiety rahegi.",
+        "stage": "summary",
+        "target_topic": "anxiety",
+        "target_item": "gad_q6_irritability",
+        "target_scene": null,
+        "closure_mode": false,
+        "touched_items": 12,
+        "resolved_items": 9,
+        "completion_ratio": 0.56,
+        "safety_level": "none",
+        "PHQ9": 15,
+        "GAD7": 10
+      }
+    ],
+    "final": {
+      "session_id": "mv-81ddc781ee",
+      "assistant_turn": {
+        "turn_id": 21,
+        "speaker": "assistant",
+        "text": "Ab tak jo picture ban rahi hai, usme kaam start karne se pehle hi mann hatne lagta hai; sleep theek se settle nahi ho pa rahi hai; worry thoughts aur body tension dono ko saath kheench rahi hai. Agar ek cheez abhi bhi clarify karni ho, to next best jagah anxiety rahegi.",
+        "language_tag": "hinglish",
+        "notes": "source:template",
+        "created_at": "2026-04-25T07:27:22.488739"
+      },
+      "snapshot": {
+        "language": "hinglish",
+        "items": {
+          "phq_q1_anhedonia": {
+            "item_id": "phq_q1_anhedonia",
+            "questionnaire": "PHQ9",
+            "value": 2,
+            "status": "resolved",
+            "confidence": 0.73,
+            "stable": true,
+            "evidence_span_ids": [
+              "EV-8-5"
+            ],
+            "contradiction_note": null,
+            "source": "heuristic",
+            "review_recommended": false
+          },
+          "phq_q2_low_mood": {
+            "item_id": "phq_q2_low_mood",
+            "questionnaire": "PHQ9",
+            "value": null,
+            "status": "unresolved",
+            "confidence": 0.1,
+            "stable": false,
+            "evidence_span_ids": [],
+            "contradiction_note": null,
+            "source": "heuristic",
+            "review_recommended": false
+          },
+          "phq_q3_sleep": {
+            "item_id": "phq_q3_sleep",
+            "questionnaire": "PHQ9",
+            "value": 2,
+            "status": "partial",
+            "confidence": 0.73,
+            "stable": false,
+            "evidence_span_ids": [
+              "EV-2-1"
+            ],
+            "contradiction_note": null,
+            "source": "heuristic",
+            "review_recommended": false
+          },
+          "phq_q4_fatigue": {
+            "item_id": "phq_q4_fatigue",
+            "questionnaire": "PHQ9",
+            "value": 1,
+            "status": "partial",
+            "confidence": 0.37,
+            "stable": false,
+            "evidence_span_ids": [
+              "EV-2-2"
+            ],
+            "contradiction_note": "Indirect evidence only.",
+            "source": "heuristic",
+            "review_recommended": false
+          },
+          "phq_q5_appetite": {
+            "item_id": "phq_q5_appetite",
+            "questionnaire": "PHQ9",
+            "value": 2,
+            "status": "resolved",
+            "confidence": 0.73,
+            "stable": true,
+            "evidence_span_ids": [
+              "EV-6-4"
+            ],
+            "contradiction_note": null,
+            "source": "heuristic",
+            "review_recommended": false
+          },
+          "phq_q6_worthlessness": {
+            "item_id": "phq_q6_worthlessness",
+            "questionnaire": "PHQ9",
+            "value": 3,
+            "status": "resolved",
+            "confidence": 0.73,
+            "stable": true,
+            "evidence_span_ids": [
+              "EV-10-6"
+            ],
+            "contradiction_note": null,
+            "source": "heuristic",
+            "review_recommended": false
+          },
+          "phq_q7_concentration": {
+            "item_id": "phq_q7_concentration",
+            "questionnaire": "PHQ9",
+            "value": 2,
+            "status": "resolved",
+            "confidence": 0.73,
+            "stable": true,
+            "evidence_span_ids": [
+              "EV-12-7"
+            ],
+            "contradiction_note": null,
+            "source": "heuristic",
+            "review_recommended": false
+          },
+          "phq_q8_psychomotor": {
+            "item_id": "phq_q8_psychomotor",
+            "questionnaire": "PHQ9",
+            "value": null,
+            "status": "unresolved",
+            "confidence": 0.1,
+            "stable": false,
+            "evidence_span_ids": [],
+            "contradiction_note": null,
+            "source": "heuristic",
+            "review_recommended": false
+          },
+          "phq_q9_self_harm": {
+            "item_id": "phq_q9_self_harm",
+            "questionnaire": "PHQ9",
+            "value": 3,
+            "status": "resolved",
+            "confidence": 0.73,
+            "stable": true,
+            "evidence_span_ids": [
+              "EV-20-13"
+            ],
+            "contradiction_note": null,
+            "source": "heuristic",
+            "review_recommended": false
+          },
+          "gad_q1_nervous": {
+            "item_id": "gad_q1_nervous",
+            "questionnaire": "GAD7",
+            "value": null,
+            "status": "unresolved",
+            "confidence": 0.1,
+            "stable": false,
+            "evidence_span_ids": [],
+            "contradiction_note": null,
+            "source": "heuristic",
+            "review_recommended": false
+          },
+          "gad_q2_control_worry": {
+            "item_id": "gad_q2_control_worry",
+            "questionnaire": "GAD7",
+            "value": 3,
+            "status": "resolved",
+            "confidence": 0.87,
+            "stable": true,
+            "evidence_span_ids": [
+              "EV-4-3",
+              "EV-16-9"
+            ],
+            "contradiction_note": null,
+            "source": "heuristic",
+            "review_recommended": false
+          },
+          "gad_q3_excessive_worry": {
+            "item_id": "gad_q3_excessive_worry",
+            "questionnaire": "GAD7",
+            "value": 2,
+            "status": "resolved",
+            "confidence": 0.73,
+            "stable": true,
+            "evidence_span_ids": [
+              "EV-14-8"
+            ],
+            "contradiction_note": null,
+            "source": "heuristic",
+            "review_recommended": false
+          },
+          "gad_q4_trouble_relaxing": {
+            "item_id": "gad_q4_trouble_relaxing",
+            "questionnaire": "GAD7",
+            "value": 2,
+            "status": "resolved",
+            "confidence": 0.73,
+            "stable": true,
+            "evidence_span_ids": [
+              "EV-16-10"
+            ],
+            "contradiction_note": null,
+            "source": "heuristic",
+            "review_recommended": false
+          },
+          "gad_q5_restlessness": {
+            "item_id": "gad_q5_restlessness",
+            "questionnaire": "GAD7",
+            "value": 2,
+            "status": "resolved",
+            "confidence": 0.73,
+            "stable": true,
+            "evidence_span_ids": [
+              "EV-18-11"
+            ],
+            "contradiction_note": null,
+            "source": "heuristic",
+            "review_recommended": false
+          },
+          "gad_q6_irritability": {
+            "item_id": "gad_q6_irritability",
+            "questionnaire": "GAD7",
+            "value": 1,
+            "status": "partial",
+            "confidence": 0.45,
+            "stable": false,
+            "evidence_span_ids": [
+              "EV-18-12"
+            ],
+            "contradiction_note": null,
+            "source": "heuristic",
+            "review_recommended": false
+          },
+          "gad_q7_afraid": {
+            "item_id": "gad_q7_afraid",
+            "questionnaire": "GAD7",
+            "value": null,
+            "status": "unresolved",
+            "confidence": 0.1,
+            "stable": false,
+            "evidence_span_ids": [],
+            "contradiction_note": null,
+            "source": "heuristic",
+            "review_recommended": false
+          }
+        },
+        "evidence_spans": [
+          {
+            "span_id": "EV-2-1",
+            "questionnaire": "PHQ9",
+            "item_id": "phq_q3_sleep",
+            "turn_id": 2,
+            "text_span": "Pichhle do hafte se sleep break hoti rehti hai aur morning mein star",
+            "polarity": "present",
+            "score_hint": 2,
+            "rationale": "sleep trouble"
+          },
+          {
+            "span_id": "EV-2-2",
+            "questionnaire": "PHQ9",
+            "item_id": "phq_q4_fatigue",
+            "turn_id": 2,
+            "text_span": "sleep break hoti rehti hai aur morning mein start lena heavy lagta hai",
+            "polarity": "uncertain",
+            "score_hint": 1,
+            "rationale": "fatigue"
+          },
+          {
+            "span_id": "EV-4-3",
+            "questionnaire": "GAD7",
+            "item_id": "gad_q2_control_worry",
+            "turn_id": 4,
+            "text_span": "ul jaati hai aur phir work wali soch chalti rehti hai",
+            "polarity": "present",
+            "score_hint": 3,
+            "rationale": "worry control"
+          },
+          {
+            "span_id": "EV-6-4",
+            "questionnaire": "PHQ9",
+            "item_id": "phq_q5_appetite",
+            "turn_id": 6,
+            "text_span": "etite bhi down ho jaati hai aur lunch miss ho jata hai",
+            "polarity": "present",
+            "score_hint": 2,
+            "rationale": "appetite change"
+          },
+          {
+            "span_id": "EV-8-5",
+            "questionnaire": "PHQ9",
+            "item_id": "phq_q1_anhedonia",
+            "turn_id": 8,
+            "text_span": "le hi mann hat jata hai aur sab flat feel hota hai",
+            "polarity": "present",
+            "score_hint": 2,
+            "rationale": "reduced interest"
+          },
+          {
+            "span_id": "EV-10-6",
+            "questionnaire": "PHQ9",
+            "item_id": "phq_q6_worthlessness",
+            "turn_id": 10,
+            "text_span": "ar kaafi harsh ho jata hoon aur burden jaisa feel hota hai",
+            "polarity": "present",
+            "score_hint": 3,
+            "rationale": "worthlessness"
+          },
+          {
+            "span_id": "EV-12-7",
+            "questionnaire": "PHQ9",
+            "item_id": "phq_q7_concentration",
+            "turn_id": 12,
+            "text_span": "Focus toot jata hai, same line dobara padhni padti",
+            "polarity": "present",
+            "score_hint": 2,
+            "rationale": "concentration trouble"
+          },
+          {
+            "span_id": "EV-14-8",
+            "questionnaire": "GAD7",
+            "item_id": "gad_q3_excessive_worry",
+            "turn_id": 14,
+            "text_span": "Worry work mistakes, paise, aur future ke beech jum",
+            "polarity": "present",
+            "score_hint": 2,
+            "rationale": "excessive worry"
+          },
+          {
+            "span_id": "EV-16-9",
+            "questionnaire": "GAD7",
+            "item_id": "gad_q2_control_worry",
+            "turn_id": 16,
+            "text_span": "Mind ko quiet karna tough hota hai; body tension hai but smaller l",
+            "polarity": "present",
+            "score_hint": 3,
+            "rationale": "worry control"
+          },
+          {
+            "span_id": "EV-16-10",
+            "questionnaire": "GAD7",
+            "item_id": "gad_q4_trouble_relaxing",
+            "turn_id": 16,
+            "text_span": "Mind ko quiet karna tough hota hai; body tension hai but smaller l",
+            "polarity": "present",
+            "score_hint": 2,
+            "rationale": "trouble relaxing"
+          },
+          {
+            "span_id": "EV-18-11",
+            "questionnaire": "GAD7",
+            "item_id": "gad_q5_restlessness",
+            "turn_id": 18,
+            "text_span": "Kuch evenings mein restlessness aur irritability dono badh jaate hain",
+            "polarity": "present",
+            "score_hint": 2,
+            "rationale": "restlessness"
+          },
+          {
+            "span_id": "EV-18-12",
+            "questionnaire": "GAD7",
+            "item_id": "gad_q6_irritability",
+            "turn_id": 18,
+            "text_span": "evenings mein restlessness aur irritability dono badh jaate hain",
+            "polarity": "present",
+            "score_hint": 1,
+            "rationale": "irritability"
+          },
+          {
+            "span_id": "EV-20-13",
+            "questionnaire": "PHQ9",
+            "item_id": "phq_q9_self_harm",
+            "turn_id": 20,
+            "text_span": "Khud ko hurt karne ka plan nahi hai, bas abhi ka working s",
+            "polarity": "present",
+            "score_hint": 3,
+            "rationale": "self-harm concern"
+          }
+        ],
+        "unresolved_items": [
+          "phq_q2_low_mood",
+          "phq_q8_psychomotor",
+          "gad_q1_nervous",
+          "gad_q7_afraid",
+          "phq_q3_sleep",
+          "phq_q4_fatigue",
+          "gad_q6_irritability"
+        ],
+        "totals": {
+          "PHQ9": 15,
+          "GAD7": 10
+        },
+        "safety": {
+          "level": "none",
+          "cues": [],
+          "rationale": null,
+          "needs_human_review": false
+        },
+        "coverage": {
+          "total_items": 16,
+          "touched_items": 12,
+          "resolved_items": [
+            "phq_q1_anhedonia",
+            "phq_q5_appetite",
+            "phq_q6_worthlessness",
+            "phq_q7_concentration",
+            "phq_q9_self_harm",
+            "gad_q2_control_worry",
+            "gad_q3_excessive_worry",
+            "gad_q4_trouble_relaxing",
+            "gad_q5_restlessness"
+          ],
+          "partial_items": [
+            "phq_q3_sleep",
+            "phq_q4_fatigue",
+            "gad_q6_irritability"
+          ],
+          "contradicted_items": [],
+          "abstained_items": [],
+          "unresolved_items": [
+            "phq_q2_low_mood",
+            "phq_q8_psychomotor",
+            "gad_q1_nervous",
+            "gad_q7_afraid"
+          ],
+          "review_items": [],
+          "next_items": [
+            "gad_q6_irritability",
+            "gad_q1_nervous",
+            "gad_q7_afraid",
+            "phq_q4_fatigue",
+            "phq_q2_low_mood"
+          ],
+          "completion_ratio": 0.56,
+          "review_required": false,
+          "topic_states": [
+            {
+              "topic_id": "mood",
+              "label": "Mood and interest",
+              "item_ids": [
+                "phq_q1_anhedonia",
+                "phq_q2_low_mood"
+              ],
+              "touched": true,
+              "priority": 5,
+              "confidence": 0.42,
+              "status": "probing",
+              "resolved_items": [
+                "phq_q1_anhedonia"
+              ],
+              "unresolved_items": [
+                "phq_q2_low_mood"
+              ],
+              "review_items": []
+            },
+            {
+              "topic_id": "sleep",
+              "label": "Sleep",
+              "item_ids": [
+                "phq_q3_sleep"
+              ],
+              "touched": true,
+              "priority": 4,
+              "confidence": 0.73,
+              "status": "probing",
+              "resolved_items": [],
+              "unresolved_items": [
+                "phq_q3_sleep"
+              ],
+              "review_items": []
+            },
+            {
+              "topic_id": "energy",
+              "label": "Energy and appetite",
+              "item_ids": [
+                "phq_q4_fatigue",
+                "phq_q5_appetite"
+              ],
+              "touched": true,
+              "priority": 3,
+              "confidence": 0.55,
+              "status": "probing",
+              "resolved_items": [
+                "phq_q5_appetite"
+              ],
+              "unresolved_items": [
+                "phq_q4_fatigue"
+              ],
+              "review_items": []
+            },
+            {
+              "topic_id": "self_view",
+              "label": "Self-worth",
+              "item_ids": [
+                "phq_q6_worthlessness"
+              ],
+              "touched": true,
+              "priority": 4,
+              "confidence": 0.73,
+              "status": "stable",
+              "resolved_items": [
+                "phq_q6_worthlessness"
+              ],
+              "unresolved_items": [],
+              "review_items": []
+            },
+            {
+              "topic_id": "focus",
+              "label": "Focus and activation",
+              "item_ids": [
+                "phq_q7_concentration",
+                "phq_q8_psychomotor"
+              ],
+              "touched": true,
+              "priority": 3,
+              "confidence": 0.52,
+              "status": "probing",
+              "resolved_items": [
+                "phq_q7_concentration"
+              ],
+              "unresolved_items": [
+                "phq_q8_psychomotor"
+              ],
+              "review_items": []
+            },
+            {
+              "topic_id": "anxiety",
+              "label": "Worry and tension",
+              "item_ids": [
+                "gad_q1_nervous",
+                "gad_q2_control_worry",
+                "gad_q3_excessive_worry",
+                "gad_q4_trouble_relaxing",
+                "gad_q5_restlessness",
+                "gad_q6_irritability",
+                "gad_q7_afraid"
+              ],
+              "touched": true,
+              "priority": 5,
+              "confidence": 0.53,
+              "status": "probing",
+              "resolved_items": [
+                "gad_q2_control_worry",
+                "gad_q3_excessive_worry",
+                "gad_q4_trouble_relaxing",
+                "gad_q5_restlessness"
+              ],
+              "unresolved_items": [
+                "gad_q1_nervous",
+                "gad_q6_irritability",
+                "gad_q7_afraid"
+              ],
+              "review_items": []
+            },
+            {
+              "topic_id": "safety",
+              "label": "Safety",
+              "item_ids": [
+                "phq_q9_self_harm"
+              ],
+              "touched": true,
+              "priority": 6,
+              "confidence": 0.73,
+              "status": "stable",
+              "resolved_items": [
+                "phq_q9_self_harm"
+              ],
+              "unresolved_items": [],
+              "review_items": []
+            }
+          ],
+          "dialogue": {
+            "stage": "summary",
+            "next_action": "summarize",
+            "current_topic": "anxiety",
+            "target_topic": "anxiety",
+            "target_item": "gad_q6_irritability",
+            "target_scene": null,
+            "scene_item_ids": [],
+            "closure_mode": false,
+            "rationale": "Worry and tension already has partial evidence, so the next turn should stabilize confidence.",
+            "user_turns": 10,
+            "low_confidence_topics": [
+              "mood",
+              "sleep",
+              "energy",
+              "focus",
+              "anxiety"
+            ],
+            "covered_topics": [
+              "mood",
+              "sleep",
+              "energy",
+              "self_view",
+              "focus",
+              "anxiety",
+              "safety"
+            ],
+            "held_back_items": [],
+            "transition_hint": "Reflect briefly, then summarize instead of opening a new branch.",
+            "user_style": {
+              "avg_words_per_turn": 16.0,
+              "verbosity": "balanced",
+              "openness": "open",
+              "code_mix": "high",
+              "distress_trend": "easing",
+              "empathy_level": "moderate",
+              "steering_preference": "user_led"
+            },
+            "disclosure": {
+              "user_turns": 10,
+              "touched_items": 12,
+              "resolved_items": 9,
+              "stable_topics": 2,
+              "items_per_user_turn": 1.2,
+              "resolved_per_user_turn": 0.9,
+              "nudge_effectiveness": 0.0
+            },
+            "readiness": "steady",
+            "fatigue": "high",
+            "coverage_debt": [
+              "anxiety",
+              "mood",
+              "sleep",
+              "energy"
+            ],
+            "continue_intent": false,
+            "reopen_signal": false,
+            "summary_ready": true,
+            "reflective_anchor": "Lag raha hai worry tab bhi active rehti hai jab bahar sab quiet ho.",
+            "continuity_note": "",
+            "recommended_nudges": [
+              "choice",
+              "anxiety",
+              "body"
+            ]
+          }
+        },
+        "mode": "heuristic"
+      },
+      "summary": "Session mv-81ddc781ee in hinglish. Profile context: No user profile context provided.. Observed totals: PHQ-9=15, GAD-7=10. Coverage: 12/16 items touched, 9 resolved, 0 abstained. Safety: none. Dialogue stage: summary; next action: summarize on anxiety. User style: balanced, open, distress trend easing. Disclosure efficiency: 1.20 items touched per user turn. Mode: heuristic. Evidence summary: Reduced interest=2 (resolved, 0.73); Sleep=2 (partial, 0.73); Fatigue=1 (partial, 0.37); Appetite=2 (resolved, 0.73); Worthlessness=3 (resolved, 0.73); Concentration=2 (resolved, 0.73); Self-harm=3 (resolved, 0.73); Control worry=3 (resolved, 0.87). Follow-up still needed for: Low mood, Sleep, Fatigue, Psychomotor, Nervousness, Irritability. Human review focus: None.",
+      "rows": [
+        {
+          "item_id": "gad_q2_control_worry",
+          "questionnaire": "GAD7",
+          "label": "Control worry",
+          "value": 3,
+          "status": "resolved",
+          "confidence": 0.87,
+          "source": "heuristic",
+          "evidence_quotes": [
+            "ul jaati hai aur phir work wali soch chalti rehti hai",
+            "Mind ko quiet karna tough hota hai; body tension hai but smaller l"
+          ]
+        },
+        {
+          "item_id": "gad_q3_excessive_worry",
+          "questionnaire": "GAD7",
+          "label": "Excessive worry",
+          "value": 2,
+          "status": "resolved",
+          "confidence": 0.73,
+          "source": "heuristic",
+          "evidence_quotes": [
+            "Worry work mistakes, paise, aur future ke beech jum"
+          ]
+        },
+        {
+          "item_id": "gad_q6_irritability",
+          "questionnaire": "GAD7",
+          "label": "Irritability",
+          "value": 1,
+          "status": "partial",
+          "confidence": 0.45,
+          "source": "heuristic",
+          "evidence_quotes": [
+            "evenings mein restlessness aur irritability dono badh jaate hain"
+          ]
+        },
+        {
+          "item_id": "gad_q1_nervous",
+          "questionnaire": "GAD7",
+          "label": "Nervousness",
+          "value": null,
+          "status": "unresolved",
+          "confidence": 0.1,
+          "source": "heuristic",
+          "evidence_quotes": []
+        },
+        {
+          "item_id": "gad_q4_trouble_relaxing",
+          "questionnaire": "GAD7",
+          "label": "Relaxing",
+          "value": 2,
+          "status": "resolved",
+          "confidence": 0.73,
+          "source": "heuristic",
+          "evidence_quotes": [
+            "Mind ko quiet karna tough hota hai; body tension hai but smaller l"
+          ]
+        },
+        {
+          "item_id": "gad_q5_restlessness",
+          "questionnaire": "GAD7",
+          "label": "Restlessness",
+          "value": 2,
+          "status": "resolved",
+          "confidence": 0.73,
+          "source": "heuristic",
+          "evidence_quotes": [
+            "Kuch evenings mein restlessness aur irritability dono badh jaate hain"
+          ]
+        },
+        {
+          "item_id": "gad_q7_afraid",
+          "questionnaire": "GAD7",
+          "label": "Something awful",
+          "value": null,
+          "status": "unresolved",
+          "confidence": 0.1,
+          "source": "heuristic",
+          "evidence_quotes": []
+        },
+        {
+          "item_id": "phq_q5_appetite",
+          "questionnaire": "PHQ9",
+          "label": "Appetite",
+          "value": 2,
+          "status": "resolved",
+          "confidence": 0.73,
+          "source": "heuristic",
+          "evidence_quotes": [
+            "etite bhi down ho jaati hai aur lunch miss ho jata hai"
+          ]
+        },
+        {
+          "item_id": "phq_q7_concentration",
+          "questionnaire": "PHQ9",
+          "label": "Concentration",
+          "value": 2,
+          "status": "resolved",
+          "confidence": 0.73,
+          "source": "heuristic",
+          "evidence_quotes": [
+            "Focus toot jata hai, same line dobara padhni padti"
+          ]
+        },
+        {
+          "item_id": "phq_q4_fatigue",
+          "questionnaire": "PHQ9",
+          "label": "Fatigue",
+          "value": 1,
+          "status": "partial",
+          "confidence": 0.37,
+          "source": "heuristic",
+          "evidence_quotes": [
+            "sleep break hoti rehti hai aur morning mein start lena heavy lagta hai"
+          ]
+        },
+        {
+          "item_id": "phq_q2_low_mood",
+          "questionnaire": "PHQ9",
+          "label": "Low mood",
+          "value": null,
+          "status": "unresolved",
+          "confidence": 0.1,
+          "source": "heuristic",
+          "evidence_quotes": []
+        },
+        {
+          "item_id": "phq_q8_psychomotor",
+          "questionnaire": "PHQ9",
+          "label": "Psychomotor",
+          "value": null,
+          "status": "unresolved",
+          "confidence": 0.1,
+          "source": "heuristic",
+          "evidence_quotes": []
+        },
+        {
+          "item_id": "phq_q1_anhedonia",
+          "questionnaire": "PHQ9",
+          "label": "Reduced interest",
+          "value": 2,
+          "status": "resolved",
+          "confidence": 0.73,
+          "source": "heuristic",
+          "evidence_quotes": [
+            "le hi mann hat jata hai aur sab flat feel hota hai"
+          ]
+        },
+        {
+          "item_id": "phq_q9_self_harm",
+          "questionnaire": "PHQ9",
+          "label": "Self-harm",
+          "value": 3,
+          "status": "resolved",
+          "confidence": 0.73,
+          "source": "heuristic",
+          "evidence_quotes": [
+            "Khud ko hurt karne ka plan nahi hai, bas abhi ka working s"
+          ]
+        },
+        {
+          "item_id": "phq_q3_sleep",
+          "questionnaire": "PHQ9",
+          "label": "Sleep",
+          "value": 2,
+          "status": "partial",
+          "confidence": 0.73,
+          "source": "heuristic",
+          "evidence_quotes": [
+            "Pichhle do hafte se sleep break hoti rehti hai aur morning mein star"
+          ]
+        },
+        {
+          "item_id": "phq_q6_worthlessness",
+          "questionnaire": "PHQ9",
+          "label": "Worthlessness",
+          "value": 3,
+          "status": "resolved",
+          "confidence": 0.73,
+          "source": "heuristic",
+          "evidence_quotes": [
+            "ar kaafi harsh ho jata hoon aur burden jaisa feel hota hai"
+          ]
+        }
+      ]
+    }
+  }
+]

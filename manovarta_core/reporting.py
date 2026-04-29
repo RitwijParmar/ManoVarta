@@ -1,8 +1,8 @@
 from typing import List
 
 from manovarta_core.knowledge import profile_summary
-from manovarta_core.questionnaires import ITEM_INDEX
-from manovarta_core.schemas import ChatSession, ScreeningSnapshot, SummaryRow
+from manovarta_core.questionnaires import GAD7_ITEMS, ITEM_INDEX, PHQ9_ITEMS
+from manovarta_core.schemas import ChatSession, DomainResult, ScreeningSnapshot, SummaryRow
 
 
 def build_summary(session: ChatSession, snapshot: ScreeningSnapshot) -> str:
@@ -62,3 +62,39 @@ def build_rows(snapshot: ScreeningSnapshot) -> List[SummaryRow]:
         )
     rows.sort(key=lambda row: (row.questionnaire, row.label))
     return rows
+
+
+def build_domain_results(snapshot: ScreeningSnapshot) -> tuple[DomainResult, DomainResult]:
+    return (
+        _build_domain_result(snapshot, "phq", PHQ9_ITEMS),
+        _build_domain_result(snapshot, "gad", GAD7_ITEMS),
+    )
+
+
+def _build_domain_result(snapshot: ScreeningSnapshot, domain: str, questionnaire_items) -> DomainResult:
+    item_ids = [item.item_id for item in questionnaire_items]
+    scores = [snapshot.items[item_id] for item_id in item_ids if item_id in snapshot.items]
+    resolved_items = [item.item_id for item in scores if item.status == "resolved"]
+    remaining_items = [item.item_id for item in scores if item.status != "resolved"]
+    denied_items = [item.item_id for item in scores if item.status == "resolved" and item.value == 0]
+    review_items = [
+        item.item_id
+        for item in scores
+        if item.review_recommended or item.status in {"contradicted", "abstained"}
+    ]
+    source_modes = sorted({item.source for item in scores if item.source != "none"})
+    completion_ratio = round(len(resolved_items) / max(len(item_ids), 1), 2)
+    questionnaire = "PHQ9" if domain == "phq" else "GAD7"
+    total_score = snapshot.totals.get(questionnaire, 0) or 0
+    return DomainResult(
+        domain=domain,
+        questionnaire=questionnaire,
+        total_score=total_score,
+        resolved_items=resolved_items,
+        remaining_items=remaining_items,
+        denied_items=denied_items,
+        review_items=review_items,
+        source_modes=source_modes,
+        completion_ratio=completion_ratio,
+        complete=not remaining_items,
+    )
