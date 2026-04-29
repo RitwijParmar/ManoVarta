@@ -82,7 +82,8 @@ The final repository state is not just a notebook experiment. It includes:
 Recommended final runtime split:
 
 - `MANOVARTA_CHAT_PROVIDER=vertex` and `MANOVARTA_CHAT_MODEL=gemini-2.5-flash` for live multilingual replies
-- `MANOVARTA_EXTRACTION_PROVIDER=vertex` and `MANOVARTA_EXTRACTION_MODEL=gemini-2.5-flash` for real-time turn interpretation that keeps steering fast enough for a cheap public runtime
+- `MANOVARTA_EXTRACTION_PROVIDER=remote`, `MANOVARTA_EXTRACTION_MODEL=trained-aya-remote`, and `MANOVARTA_REMOTE_EXTRACTION_URL=https://...` when you want live trained-Aya extraction behind the public runtime
+- `MANOVARTA_EXTRACTION_PROVIDER=vertex` and `MANOVARTA_EXTRACTION_MODEL=gemini-2.5-flash` remain the cheaper fallback for real-time turn interpretation
 - `tools/process_async_score_queue.py` on a separate worker with `MANOVARTA_EXTRACTION_PROVIDER=local`, `MANOVARTA_EXTRACTION_MODEL=/models/aya-expanse-8b`, and `MANOVARTA_LOCAL_EXTRACTION_ADAPTER=/models/aya_bundle` for checkpoint or end-of-session clinical scoring
 
 In other words: the application logic remains the real controller, Gemini/Vertex supplies the live language layer, and trained Aya is preserved for the higher-value clinical scoring pass instead of burning budget on every turn.
@@ -135,9 +136,11 @@ That earlier deployment report described:
 
 Recommended low-cost production path now:
 
-- public runtime: CPU Cloud Run service using our controller/state logic plus Vertex/Gemini for live replies and structured turn updates
+- public runtime: CPU Cloud Run service using our controller/state logic plus Vertex/Gemini for live replies and either Vertex or remote Aya for turn extraction
+- live trained Aya option: dedicated GPU Cloud Run extractor service mounted on the staged Aya base model plus the trained `aya_bundle` adapter
 - async scoring: queue-based Aya worker that drains `artifacts/async_scoring` or a shared bucket-backed queue and writes scored snapshots back to the app
 - deployment helper for the public runtime: `tools/deploy_cloudrun_vertex.sh`
+- deployment helper for the live trained Aya extractor: `tools/deploy_cloudrun_aya_extractor.sh`
 - worker helper for trained Aya scoring: `tools/run_aya_async_worker.sh`
 - async scoring API: `POST /screen/transcript/async`, `POST /chat/sessions/{session_id}/score_async`, `GET /screen/requests/{request_id}`
 

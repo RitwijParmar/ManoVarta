@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Tiro+Devanagari+Hindi:ital@0;1&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Manrope:wght@400;500;600;700;800&family=Tiro+Devanagari+Hindi:ital@0;1&display=swap");
 
 :root {
   --bg: #dfd4c8;
@@ -41,7 +41,7 @@ body {
   margin: 0;
   min-height: 100vh;
   color: var(--surface-ink);
-  font-family: "Plus Jakarta Sans", "Avenir Next", "Segoe UI", sans-serif;
+  font-family: "Manrope", "Avenir Next", "Segoe UI", sans-serif;
   background:
     radial-gradient(circle at 10% 12%, rgba(22, 43, 51, 0.24), transparent 19%),
     radial-gradient(circle at 86% 12%, rgba(183, 145, 88, 0.16), transparent 18%),
@@ -105,6 +105,17 @@ textarea {
   resize: vertical;
   padding: 16px 18px;
   line-height: 1.65;
+}
+
+.language-disclaimer,
+.voice-language-note {
+  font-size: 0.88rem;
+  line-height: 1.55;
+  color: #7a4e21;
+  background: rgba(201, 159, 101, 0.14);
+  border: 1px solid rgba(201, 159, 101, 0.24);
+  border-radius: 16px;
+  padding: 10px 14px;
 }
 
 .page-glow,
@@ -253,8 +264,16 @@ textarea {
 }
 
 .tab-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
   font-size: 0.78rem;
   font-weight: 700;
+}
+
+.tab-asterisk {
+  color: var(--amber);
+  font-size: 0.9em;
 }
 
 .tab-script {
@@ -1112,24 +1131,25 @@ body.session-live .welcome-stage {
 
 .composer {
   display: grid;
-  gap: 14px;
+  gap: 12px;
 }
 
 .composer-panel-head {
-  align-items: start;
+  align-items: center;
   gap: 16px;
 }
 
 .composer-panel {
   position: sticky;
-  bottom: 18px;
+  bottom: 12px;
   z-index: 5;
+  margin-top: 12px;
   box-shadow: 0 22px 44px rgba(29, 32, 35, 0.12);
 }
 
 body.session-live .composer-panel {
   position: sticky;
-  bottom: 18px;
+  bottom: 12px;
   z-index: 5;
 }
 
@@ -1281,12 +1301,12 @@ body.session-live .composer-panel {
 
 .composer-toolbar {
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
   gap: 12px;
 }
 
 .voice-cluster {
-  flex: 1 1 240px;
+  flex: 0 0 auto;
   align-items: center;
   gap: 14px;
 }
@@ -1333,7 +1353,8 @@ body.session-live .composer-panel {
 
 .voice-toggles {
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
+  flex: 1 1 320px;
 }
 
 .toggle {
@@ -1455,6 +1476,7 @@ body.session-live .composer-panel {
 
 .send-button {
   min-width: 124px;
+  margin-left: auto;
 }
 
 .disabled-link {
@@ -1880,19 +1902,35 @@ body {
 }
 
 .language-tabs {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: none;
+  background: rgba(255, 248, 240, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12);
 }
 
 .language-tab {
-  color: rgba(238, 228, 214, 0.72);
+  color: rgba(247, 239, 229, 0.82);
 }
 
 .language-tab.is-active {
-  background: #c48742;
+  background: #355a5f;
   color: #fff8f2;
-  box-shadow: inset 0 0 0 1px rgba(255, 248, 242, 0.18);
+  box-shadow: inset 0 0 0 1px rgba(255, 248, 242, 0.14);
+}
+
+.language-tab[data-language="hinglish"] {
+  color: rgba(255, 232, 205, 0.88);
+}
+
+.language-tab[data-language="hinglish"] .tab-script {
+  color: rgba(255, 206, 153, 0.92);
+}
+
+.language-tab.is-active[data-language="hinglish"] {
+  background: #9b642f;
+}
+
+.language-tab.is-active .tab-asterisk {
+  color: #ffe2b0;
 }
 
 .product-grid {
@@ -2029,10 +2067,10 @@ body.session-live.has-snapshot .product-grid {
 }
 
 .welcome-copy h2 {
-  font-size: clamp(3rem, 6.2vw, 5.8rem);
-  line-height: 0.9;
+  font-size: clamp(2.5rem, 5.2vw, 4.6rem);
+  line-height: 0.94;
   color: var(--surface-ink);
-  max-width: 9ch;
+  max-width: 10ch;
 }
 
 .subtitle {
@@ -2063,6 +2101,10 @@ body.session-live.has-snapshot .product-grid {
   font-weight: 600;
 }
 
+.language-disclaimer {
+  max-width: 56ch;
+}
+
 .trust-strip {
   display: flex;
   flex-wrap: wrap;
@@ -2081,6 +2123,30 @@ body.session-live.has-snapshot .product-grid {
   border: 1px solid rgba(27, 35, 40, 0.09);
   font-size: 0.9rem;
   font-weight: 700;
+}
+
+.trust-item:nth-child(1) {
+  background: rgba(53, 90, 95, 0.08);
+  border-color: rgba(53, 90, 95, 0.16);
+  color: #244248;
+}
+
+.trust-item:nth-child(2) {
+  background: rgba(196, 135, 66, 0.12);
+  border-color: rgba(196, 135, 66, 0.2);
+  color: #7a4e21;
+}
+
+.trust-item:nth-child(3) {
+  background: rgba(166, 93, 78, 0.1);
+  border-color: rgba(166, 93, 78, 0.16);
+  color: #7b4741;
+}
+
+.trust-item:nth-child(4) {
+  background: rgba(91, 166, 128, 0.1);
+  border-color: rgba(91, 166, 128, 0.16);
+  color: #2f6a58;
 }
 
 .trust-icon {
@@ -2151,7 +2217,9 @@ body.session-live.has-snapshot .product-grid {
 }
 
 .companion-summary h3 {
-  font-size: 1.24rem;
+  font-family: "Manrope", "Avenir Next", sans-serif;
+  font-size: 1.08rem;
+  font-weight: 800;
   line-height: 1.05;
   color: var(--surface-ink);
 }
@@ -2212,7 +2280,7 @@ body.session-live.has-snapshot .product-grid {
 }
 
 .chat-stage {
-  min-height: 420px;
+  min-height: 400px;
   border-radius: 30px;
   background: linear-gradient(180deg, rgba(22, 29, 34, 0.98), rgba(17, 23, 27, 0.98));
   border: 1px solid rgba(255, 255, 255, 0.06);
@@ -2220,9 +2288,9 @@ body.session-live.has-snapshot .product-grid {
 }
 
 .chat-log {
-  min-height: 420px;
-  max-height: 56vh;
-  padding: 24px;
+  min-height: 400px;
+  max-height: 50vh;
+  padding: 20px;
   gap: 16px;
 }
 
@@ -2346,8 +2414,9 @@ body.session-live.has-snapshot .product-grid {
 
 .composer-panel {
   position: sticky;
-  bottom: 18px;
+  bottom: 12px;
   z-index: 5;
+  margin-top: 12px;
   box-shadow: var(--shadow-lg);
 }
 
@@ -2355,10 +2424,16 @@ body.session-live .composer-panel {
   box-shadow: var(--shadow-lg);
 }
 
+.chat-stage + .composer-panel {
+  border-top-left-radius: 24px;
+  border-top-right-radius: 24px;
+}
+
 .conversation-mode {
   background: linear-gradient(160deg, #1d262c 0%, #141b20 100%);
   color: #f5ede1;
   box-shadow: none;
+  padding: 14px 16px;
 }
 
 .call-state-card {
@@ -2375,6 +2450,49 @@ body.session-live .composer-panel {
 .call-state-copy {
   display: grid;
   gap: 8px;
+}
+
+.conversation-topbar h2,
+.section-head h3,
+.conversation-mode-copy h3,
+.next-step-title {
+  font-family: "Manrope", "Avenir Next", sans-serif;
+  letter-spacing: -0.02em;
+}
+
+.conversation-mode-copy h3 {
+  font-size: 1.08rem;
+  line-height: 1.35;
+  font-weight: 700;
+  max-width: none;
+}
+
+.conversation-mode-rail {
+  display: none;
+}
+
+#messageInput {
+  min-height: 108px;
+}
+
+.voice-language-note {
+  max-width: 52ch;
+}
+
+body.voice-disabled-language .conversation-mode,
+body.voice-disabled-language .call-state-card,
+body.voice-disabled-language .voice-cluster,
+body.voice-disabled-language .voice-toggles,
+body.voice-disabled-language #composerQuickMic {
+  display: none !important;
+}
+
+body.voice-disabled-language .composer-toolbar {
+  justify-content: flex-end;
+}
+
+body.voice-disabled-language .send-button {
+  margin-left: 0;
 }
 
 .voice-state-pill {
@@ -2505,7 +2623,7 @@ body.lang-hi .next-step-title {
 @media (max-width: 760px) {
   .welcome-copy h2 {
     max-width: none;
-    font-size: clamp(2.6rem, 12vw, 4rem);
+    font-size: clamp(2.2rem, 11vw, 3.4rem);
   }
 
   .trust-strip,
@@ -2522,10 +2640,15 @@ body.lang-hi .next-step-title {
   }
 
   .chat-log {
-    min-height: 340px;
+    min-height: 320px;
   }
 
   .bubble {
     max-width: 92%;
+  }
+
+  .composer-panel {
+    bottom: 0;
+    margin-top: 10px;
   }
 }

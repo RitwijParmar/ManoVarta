@@ -30,21 +30,32 @@ class RuntimeEngine:
 
     def analyze(self, turns: Iterable[Turn], language: str, use_llm: bool = True) -> ScreeningSnapshot:
         turn_list = list(turns)
-        safety_flag = self.safety_monitor.assess(turn_list)
-        if self.semantic_safety_monitor is not None:
-            safety_flag = merge_safety_flags(safety_flag, self.semantic_safety_monitor.assess(turn_list))
-        if self.safety_assessor is not None and self.safety_assessor.enabled and safety_flag.level != "urgent":
+        rule_flag = self.safety_monitor.assess(turn_list)
+        semantic_flag = self.semantic_safety_monitor.assess(turn_list) if self.semantic_safety_monitor is not None else SafetyFlag()
+        checkpoint_flag = SafetyFlag()
+        if self.safety_assessor is not None and self.safety_assessor.enabled and rule_flag.level != "urgent":
             assessed_flag = self.safety_assessor.assess(turn_list, language)
             if assessed_flag is not None:
-                safety_flag = merge_safety_flags(safety_flag, assessed_flag)
+                checkpoint_flag = assessed_flag
+        safety_flag = compose_runtime_safety_flag(
+            extractor_flag=SafetyFlag(),
+            rule_flag=merge_safety_flags(rule_flag, semantic_flag),
+            checkpoint_flag=checkpoint_flag,
+        )
         snapshot = self.scorer.analyze(turn_list, language, safety_flag)
         if not use_llm or self.extractor is None or not self.extractor.enabled:
             return snapshot
 
-        llm_result = self.extractor.extract(turn_list, language)
+        try:
+            llm_result = self.extractor.extract(turn_list, language)
+        except Exception:
+            return snapshot
         if not llm_result:
             return snapshot
-        return self._merge_snapshot(snapshot, turn_list, llm_result)
+        try:
+            return self._merge_snapshot(snapshot, turn_list, llm_result)
+        except Exception:
+            return snapshot
 
     def _merge_snapshot(self, base: ScreeningSnapshot, turns: list[Turn], llm_result: dict) -> ScreeningSnapshot:
         items = {item_id: item.model_copy(deep=True) for item_id, item in base.items.items()}

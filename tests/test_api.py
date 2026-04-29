@@ -36,6 +36,370 @@ def test_root_serves_browser_demo():
     assert 'id="backstagePanel"' not in response.text
 
 
+def test_negated_self_harm_sentence_does_not_trigger_urgent_handoff():
+    start = client.post("/chat/sessions", json={"language": "en"})
+    session_id = start.json()["session_id"]
+
+    client.post(
+        f"/chat/sessions/{session_id}/turns",
+        json={"text": "Sleep has been messy and I feel worn out most days."},
+    )
+    turn = client.post(
+        f"/chat/sessions/{session_id}/turns",
+        json={"text": "I would not say I want to hurt myself, but I do feel stuck and useless sometimes."},
+    )
+
+    assert turn.status_code == 200
+    body = turn.json()
+    assert body["snapshot"]["safety"]["level"] != "urgent"
+    assert "urgent human review" not in body["assistant_turn"]["text"].lower()
+
+
+def test_under_the_weather_after_anxiety_history_uses_physical_clarifier():
+    start = client.post("/chat/sessions", json={"language": "en"})
+    session_id = start.json()["session_id"]
+
+    client.post(
+        f"/chat/sessions/{session_id}/turns",
+        json={"text": "My mind keeps looping about work and I cannot switch it off at night."},
+    )
+    client.post(
+        f"/chat/sessions/{session_id}/turns",
+        json={"text": "It is mostly work and future stuff, and my body stays tense too."},
+    )
+    turn = client.post(
+        f"/chat/sessions/{session_id}/turns",
+        json={"text": "I am feeling a little under the weather today."},
+    )
+
+    assert turn.status_code == 200
+    body = turn.json()
+    assert body["assistant_turn"]["text"] == "When you say you are a little under the weather, does it feel more physical, more emotional, or a mix of both today?"
+    assert "worry" not in body["assistant_turn"]["text"].lower()
+
+
+def test_hindi_summary_request_returns_working_summary_via_chat_flow():
+    start = client.post("/chat/sessions", json={"language": "hi"})
+    session_id = start.json()["session_id"]
+
+    client.post(
+        f"/chat/sessions/{session_id}/turns",
+        json={"text": "काफी आलस रहता है और किसी काम में मन नहीं लगता।"},
+    )
+    turn = client.post(
+        f"/chat/sessions/{session_id}/turns",
+        json={"text": "अब तक जो समझा है उसका summary बता दो।"},
+    )
+
+    assert turn.status_code == 200
+    body = turn.json()
+    dialogue = body["snapshot"]["coverage"]["dialogue"]
+    assert body["assistant_turn"]["text"].count("?") >= 1
+    assert dialogue["stage"] in {"clarification", "exploration"}
+    assert dialogue["closure_mode"] is True
+
+
+def test_hinglish_flat_interest_opener_stays_with_mood_not_anxiety():
+    start = client.post("/chat/sessions", json={"language": "hinglish"})
+    session_id = start.json()["session_id"]
+
+    turn = client.post(
+        f"/chat/sessions/{session_id}/turns",
+        json={"text": "Jo cheezein pehle achhi lagti thi unmein start karne se pehle hi mann hat jata hai aur sab flat sa lagta hai."},
+    )
+
+    assert turn.status_code == 200
+    body = turn.json()
+    assert body["snapshot"]["coverage"]["dialogue"]["target_topic"] == "mood"
+    assert body["snapshot"]["coverage"]["dialogue"]["target_item"] in {"phq_q1_anhedonia", "phq_q2_low_mood"}
+    assert "worry" not in body["assistant_turn"]["text"].lower()
+    assert (
+        "mann hat jata hai" in body["assistant_turn"]["text"].lower()
+        or "feel very little" in body["assistant_turn"]["text"].lower()
+        or "sadness" in body["assistant_turn"]["text"].lower()
+        or "heavy" in body["assistant_turn"]["text"].lower()
+    )
+
+
+def test_hindi_sleep_opening_starts_with_real_coverage():
+    start = client.post("/chat/sessions", json={"language": "hi"})
+    session_id = start.json()["session_id"]
+
+    turn = client.post(
+        f"/chat/sessions/{session_id}/turns",
+        json={"text": "नींद बिगड़ गई है, देर से नींद आती है और सुबह उठकर शरीर टूटा सा लगता है"},
+    )
+
+    body = turn.json()
+    assert body["snapshot"]["coverage"]["touched_items"] >= 1
+    assert body["snapshot"]["coverage"]["dialogue"]["target_topic"] == "sleep"
+
+
+def test_hinglish_negated_panic_opening_prefers_mood_over_anxiety():
+    start = client.post("/chat/sessions", json={"language": "hinglish"})
+    session_id = start.json()["session_id"]
+
+    turn = client.post(
+        f"/chat/sessions/{session_id}/turns",
+        json={"text": "Panic jaisa exactly nahi hota, zyada flat aur low lagta hai."},
+    )
+
+    body = turn.json()
+    assert body["snapshot"]["coverage"]["dialogue"]["target_topic"] == "mood"
+    assert "worry" not in body["assistant_turn"]["text"].lower()
+
+
+def test_english_negated_panic_with_delay_and_guilt_prefers_mood_or_self_view():
+    start = client.post("/chat/sessions", json={"language": "en"})
+    session_id = start.json()["session_id"]
+
+    turn = client.post(
+        f"/chat/sessions/{session_id}/turns",
+        json={"text": "It's not really panic exactly. More like I delay starting things and then feel guilty."},
+    )
+
+    body = turn.json()
+    assert body["snapshot"]["coverage"]["dialogue"]["target_topic"] in {"mood", "self_view"}
+    assert "worry" not in body["assistant_turn"]["text"].lower()
+
+
+def test_explicit_anxious_opening_starts_in_anxiety_not_mood():
+    start = client.post("/chat/sessions", json={"language": "en"})
+    session_id = start.json()["session_id"]
+
+    turn = client.post(
+        f"/chat/sessions/{session_id}/turns",
+        json={"text": "Hi I am feeling very anxious today"},
+    )
+
+    body = turn.json()
+    dialogue = body["snapshot"]["coverage"]["dialogue"]
+    reply = body["assistant_turn"]["text"].lower()
+    assert dialogue["target_topic"] == "anxiety"
+    assert dialogue["target_item"] in {"gad_q1_nervous", "gad_q2_control_worry", "gad_q4_trouble_relaxing"}
+    assert "usually enjoy" not in reply
+    assert "interest drop" not in reply
+
+
+def test_hindi_negated_ghabrahat_with_no_desire_to_start_work_prefers_mood():
+    start = client.post("/chat/sessions", json={"language": "hi"})
+    session_id = start.json()["session_id"]
+
+    turn = client.post(
+        f"/chat/sessions/{session_id}/turns",
+        json={"text": "घबराहट जैसा नहीं है, ज़्यादा ऐसा है कि कोई काम शुरू करने का मन नहीं करता।"},
+    )
+
+    body = turn.json()
+    assert body["snapshot"]["coverage"]["dialogue"]["target_topic"] == "mood"
+    assert "चिंता" not in body["assistant_turn"]["text"]
+
+
+def test_summary_breadth_request_rotates_away_from_repeated_sleep_functioning_lane():
+    start = client.post("/chat/sessions", json={"language": "en"})
+    session_id = start.json()["session_id"]
+
+    script = [
+        "Sleep has been delayed and I wake up feeling worn out.",
+        "By afternoon I drag through the day and meals get delayed too.",
+        "When I sit to work I reread the same lines because focus slips.",
+        "What else do you still need to know before you summarize?",
+    ]
+
+    last = None
+    for text in script:
+        last = client.post(f"/chat/sessions/{session_id}/turns", json={"text": text})
+        assert last.status_code == 200
+
+    body = last.json()
+    dialogue = body["snapshot"]["coverage"]["dialogue"]
+    assert dialogue["target_topic"] not in {"sleep", "energy", "focus"}
+    assert dialogue["target_scene"] != "sleep_functioning"
+
+
+def test_hindi_mood_self_view_trace_does_not_repeat_same_compare_prompt():
+    start = client.post("/chat/sessions", json={"language": "hi"})
+    session_id = start.json()["session_id"]
+
+    turns = [
+        "नींद का पैटर्न बदल गया है नींद काफी देर से आती है और काफी कम समय के लिए",
+        "यह कुछ दिनों से ऐसा ही है नींद कम आती है किसी काम में मन नहीं लगता है",
+        "नींद का पैटर्न बदल गया काफी देर से जाता हूं काम में मन नहीं लगता",
+        "मन पहले से ही हट जाता है कोई काम करने की इच्छा करती ही नहीं है",
+        "मैं कभी कुछ सकारात्मक रूप से भविष्य के बारे में सोचता हूं तो अच्छा लगता है परंतु जब मैं वर्तमान देखता हूं तो उदासी आती है",
+        "उदासी और किसी काम से मन हट जाना",
+    ]
+
+    final_turn = None
+    for text in turns:
+        final_turn = client.post(f"/chat/sessions/{session_id}/turns", json={"text": text})
+
+    assert final_turn is not None
+    assert final_turn.status_code == 200
+    body = final_turn.json()
+    reply = body["assistant_turn"]["text"]
+    assert "ज़्यादातर दिनों में यह ज़्यादा उदास मन जैसा लगता है" not in reply
+    assert "पहले जो चीज़ें अच्छी लगती थीं उनमें दिल कम लगता है" not in reply
+    assert (
+        "ऊर्जा की कमी" in reply
+        or "शरीर भारी" in reply
+        or "दिमाग शुरू" in reply
+        or "ध्यान" in reply
+        or "भूख" in reply
+        or "शुरू होने की ताकत" in reply
+        or "रफ्तार" in reply
+    )
+    assert body["snapshot"]["coverage"]["dialogue"]["target_topic"] in {"energy", "focus"}
+
+
+def test_hindi_sleep_then_mood_trace_does_not_repeat_generic_sleep_topic_prompt():
+    start = client.post("/chat/sessions", json={"language": "hi"})
+    session_id = start.json()["session_id"]
+
+    client.post(
+        f"/chat/sessions/{session_id}/turns",
+        json={"text": "नींद का पैटर्न बदल गया है नींद काफी देर से आती है और काफी कम समय के लिए"},
+    )
+    second = client.post(
+        f"/chat/sessions/{session_id}/turns",
+        json={"text": "यह कुछ दिनों से ऐसा ही है नींद कम आती है किसी काम में मन नहीं लगता है"},
+    )
+    third = client.post(
+        f"/chat/sessions/{session_id}/turns",
+        json={"text": "नींद का पैटर्न बदल गया काफी देर से जाता हूं काम में मन नहीं लगता"},
+    )
+
+    assert second.status_code == 200
+    assert third.status_code == 200
+    generic_sleep_topic = "नींद में ज़्यादा दिक्कत सोने की शुरुआत में है, बीच-बीच में उठने में, या ज़रूरत से ज़्यादा नींद आ रही है?"
+    assert second.json()["assistant_turn"]["text"] != generic_sleep_topic
+    assert third.json()["assistant_turn"]["text"] != generic_sleep_topic
+    assert third.json()["snapshot"]["coverage"]["dialogue"]["target_topic"] in {"mood", "energy", "focus"}
+
+
+def test_english_sleep_followup_yields_to_daytime_functioning_signal():
+    start = client.post("/chat/sessions", json={"language": "en"})
+    session_id = start.json()["session_id"]
+
+    client.post(
+        f"/chat/sessions/{session_id}/turns",
+        json={"text": "Sleep has been delayed and I wake up tired most mornings."},
+    )
+    turn = client.post(
+        f"/chat/sessions/{session_id}/turns",
+        json={"text": "Even when I finally sleep, I still drag through the day and skip meals sometimes."},
+    )
+
+    assert turn.status_code == 200
+    body = turn.json()
+    assert body["snapshot"]["coverage"]["dialogue"]["target_topic"] == "energy"
+    assert body["snapshot"]["coverage"]["dialogue"]["target_item"] in {None, "phq_q4_fatigue", "phq_q5_appetite"}
+    assert "fall asleep" not in body["assistant_turn"]["text"].lower()
+    assert "waking during the night" not in body["assistant_turn"]["text"].lower()
+
+
+def test_hinglish_sleep_followup_yields_to_daytime_functioning_signal():
+    start = client.post("/chat/sessions", json={"language": "hinglish"})
+    session_id = start.json()["session_id"]
+
+    client.post(
+        f"/chat/sessions/{session_id}/turns",
+        json={"text": "Sleep late aati hai aur subah uthkar bhi body heavy lagti hai."},
+    )
+    turn = client.post(
+        f"/chat/sessions/{session_id}/turns",
+        json={"text": "Din bhar energy low rehti hai and meals bhi slip ho jaate hain."},
+    )
+
+    assert turn.status_code == 200
+    body = turn.json()
+    assert body["snapshot"]["coverage"]["dialogue"]["target_topic"] == "energy"
+    assert body["snapshot"]["coverage"]["dialogue"]["target_item"] in {None, "phq_q4_fatigue", "phq_q5_appetite", "phq_q7_concentration"}
+    reply = body["assistant_turn"]["text"].lower()
+    assert "sleep start hone" not in reply
+    assert "sleep banaye rakhne" not in reply
+
+
+def test_hinglish_low_energy_downplay_keeps_mixed_trace_out_of_early_anxiety():
+    start = client.post("/chat/sessions", json={"language": "hinglish"})
+    session_id = start.json()["session_id"]
+
+    client.post(
+        f"/chat/sessions/{session_id}/turns",
+        json={"text": "Pichhle do hafte se sleep late aati hai aur next day body heavy lagti hai."},
+    )
+    client.post(
+        f"/chat/sessions/{session_id}/turns",
+        json={"text": "Kaam start karne se pehle hi mann hat jata hai aur focus toot jata hai."},
+    )
+    turn = client.post(
+        f"/chat/sessions/{session_id}/turns",
+        json={"text": "Kabhi kabhi future ko lekar worry bhi loop karti hai but zyada low energy jaisa lagta hai."},
+    )
+
+    assert turn.status_code == 200
+    body = turn.json()
+    assert body["snapshot"]["coverage"]["dialogue"]["target_topic"] in {"energy", "focus", "mood"}
+    assert "quiet karna" not in body["assistant_turn"]["text"].lower()
+
+
+def test_hindi_repeat_anhedonia_trace_advances_to_self_view_not_same_low_mood_probe():
+    start = client.post("/chat/sessions", json={"language": "hi"})
+    session_id = start.json()["session_id"]
+
+    turns = [
+        "नीम का पैटर्न बदल गया है नींद काफी देर से आती है और काफी कम समय के लिए",
+        "यह कुछ दिनों से ऐसा ही है नींद कम आती है किसी काम में मन नहीं लगता है",
+        "नींद का पैटर्न बदल गया काफी देर से जाता हूं काम में मन नहीं लगता",
+        "मां पहले से ही है जाता है कोई काम करने की इच्छा करती ही नहीं है",
+    ]
+
+    final_turn = None
+    for text in turns:
+        final_turn = client.post(f"/chat/sessions/{session_id}/turns", json={"text": text})
+
+    assert final_turn is not None
+    assert final_turn.status_code == 200
+    body = final_turn.json()
+    dialogue = body["snapshot"]["coverage"]["dialogue"]
+    reply = body["assistant_turn"]["text"]
+    assert dialogue["target_topic"] in {"mood", "self_view"}
+    assert dialogue["target_scene"] == "mood_selfview"
+    assert dialogue["target_item"] == "phq_q6_worthlessness"
+    assert "दिन भर का लगातार भारी मन" not in reply
+    assert ("अपने बारे में" in reply) or ("खुद" in reply) or ("बोझ" in reply)
+
+
+def test_recent_anxiety_history_does_not_anchor_new_opening_or_first_probe():
+    start = client.post(
+        "/chat/sessions",
+        json={
+            "language": "en",
+            "profile": {
+                "recent_checkins": [
+                    {"topic": "anxiety", "language": "en", "summary": "Recent anxiety check-in."}
+                ]
+            },
+        },
+    )
+
+    assert start.status_code == 200
+    opening = start.json()["assistant_turn"]["text"].lower()
+    assert "anxiety" not in opening
+    assert "check-in" not in opening
+
+    session_id = start.json()["session_id"]
+    turn = client.post(
+        f"/chat/sessions/{session_id}/turns",
+        json={"text": "I have been feeling flat and low through most days lately."},
+    )
+
+    assert turn.status_code == 200
+    reply = turn.json()["assistant_turn"]["text"].lower()
+    assert "recent anxiety" not in reply
+    assert "check-in" not in reply
+
+
 def test_review_route_serves_hidden_presenter_surface():
     response = client.get("/review")
 
@@ -58,9 +422,14 @@ def test_runtime_config_reports_component_providers_and_async_support():
     assert "safety_provider" in body
     assert "controller_model" in body
     assert "extractor_model" in body
+    assert "chat_fallback_model" in body
+    assert "live_chat_analysis_model" in body
+    assert "vertex_chat_location" in body
     assert "huggingface_enabled" in body
     assert "self_hosted_inference_enabled" in body
     assert "vertex_enabled" in body
+    assert "remote_extraction_enabled" in body
+    assert "remote_extraction_url_configured" in body
     assert "async_scoring_enabled" in body
     assert "async_scoring_dir" in body
 
@@ -86,6 +455,51 @@ def test_add_turn_skips_prior_analysis_without_nudge(monkeypatch):
 
     assert turn.status_code == 200
     assert call_count == 1
+
+
+def test_add_turn_returns_recovery_reply_when_planner_raises(monkeypatch):
+    original_next_reply = api_module.planner.next_reply
+
+    def broken_next_reply(*args, **kwargs):
+        raise RuntimeError("planner exploded")
+
+    monkeypatch.setattr(api_module.planner, "next_reply", broken_next_reply)
+
+    start = client.post("/chat/sessions", json={"language": "en"})
+    session_id = start.json()["session_id"]
+    turn = client.post(
+        f"/chat/sessions/{session_id}/turns",
+        json={"text": "Sleep has been broken and I feel flat most days."},
+    )
+
+    monkeypatch.setattr(api_module.planner, "next_reply", original_next_reply)
+
+    assert turn.status_code == 200
+    body = turn.json()
+    assert body["assistant_turn"]["text"] == api_module.TURN_RECOVERY_MESSAGES["en"]
+    assert body["assistant_turn"]["notes"] == "source:recovery"
+
+
+def test_add_turn_returns_200_when_summary_builder_raises(monkeypatch):
+    original_build_summary = api_module.build_summary
+
+    def broken_build_summary(*args, **kwargs):
+        raise RuntimeError("summary exploded")
+
+    monkeypatch.setattr(api_module, "build_summary", broken_build_summary)
+
+    start = client.post("/chat/sessions", json={"language": "en"})
+    session_id = start.json()["session_id"]
+    turn = client.post(
+        f"/chat/sessions/{session_id}/turns",
+        json={"text": "Sleep has been broken and I feel worn out through most days."},
+    )
+
+    monkeypatch.setattr(api_module, "build_summary", original_build_summary)
+
+    assert turn.status_code == 200
+    body = turn.json()
+    assert body["summary"] == api_module.SUMMARY_RECOVERY_MESSAGES["en"]
 
 
 def test_demo_bootstrap_exposes_runtime_profiles_and_links():
@@ -374,6 +788,82 @@ def test_substantive_first_turn_gets_targeted_followup_not_generic_mix_prompt():
     assert dialogue["target_item"] in {"gad_q5_restlessness", "gad_q4_trouble_relaxing"}
 
 
+def test_under_the_weather_opening_stays_off_recent_anxiety_continuity_and_returns_neutral_clarifier():
+    start = client.post(
+        "/chat/sessions",
+        json={
+            "language": "en",
+            "profile": {
+                "recent_checkins": [
+                    {"topic": "anxiety", "language": "en", "safety": "none", "completion": 0.7, "summary": "Recent anxiety check-in."}
+                ]
+            },
+        },
+    )
+    session_id = start.json()["session_id"]
+
+    turn = client.post(
+        f"/chat/sessions/{session_id}/turns",
+        json={"text": "I am feeling a little under the weather today."},
+    )
+
+    assert turn.status_code == 200
+    reply = turn.json()["assistant_turn"]["text"].lower()
+    dialogue = turn.json()["snapshot"]["coverage"]["dialogue"]
+    assert dialogue["target_topic"] == "mood"
+    assert dialogue["continuity_note"] == ""
+    assert "recent anxiety check-in" not in reply
+    assert "worry" not in reply
+    assert "physical" in reply and "emotional" in reply
+
+
+def test_under_the_weather_with_duplicate_word_still_uses_physical_clarifier():
+    start = client.post(
+        "/chat/sessions",
+        json={
+            "language": "en",
+            "profile": {
+                "recent_checkins": [
+                    {"topic": "anxiety", "language": "en", "safety": "none", "completion": 0.7, "summary": "Recent anxiety check-in."}
+                ]
+            },
+        },
+    )
+    session_id = start.json()["session_id"]
+
+    turn = client.post(
+        f"/chat/sessions/{session_id}/turns",
+        json={"text": "hi I'm feeling a little under the weather weather today"},
+    )
+
+    assert turn.status_code == 200
+    reply = turn.json()["assistant_turn"]["text"].lower()
+    assert "physical" in reply and "emotional" in reply
+    assert "recent anxiety check-in" not in reply
+    assert "worry" not in reply
+
+
+def test_keyboard_near_duplicate_retry_reuses_last_assistant_turn():
+    start = client.post("/chat/sessions", json={"language": "en"})
+    session_id = start.json()["session_id"]
+
+    first = client.post(
+        f"/chat/sessions/{session_id}/turns",
+        json={"text": "I am feeling a little under the weather today."},
+    )
+    second = client.post(
+        f"/chat/sessions/{session_id}/turns",
+        json={"text": "I am feeling a little under the weather weather today."},
+    )
+    exported = client.get(f"/chat/sessions/{session_id}/export")
+
+    assert first.status_code == 200
+    assert second.status_code == 200
+    assert second.json()["assistant_turn"]["text"] == first.json()["assistant_turn"]["text"]
+    turns = exported.json()["turns"]
+    assert len(turns) == 3
+
+
 def test_english_mood_opening_stays_on_mood_not_generic_anxiety():
     start = client.post("/chat/sessions", json={"language": "en"})
     session_id = start.json()["session_id"]
@@ -401,6 +891,71 @@ def test_safety_sensitive_first_disclosure_skips_full_llm_when_rule_safety_is_en
     )
 
     assert api_module._should_use_live_llm(session) is False
+
+
+def test_remote_live_llm_waits_for_later_turns(monkeypatch):
+    config = replace(
+        api_module.runtime_config,
+        live_chat_llm_analysis_enabled=True,
+        live_llm_turn_threshold=1,
+        extraction_provider="remote",
+    )
+    monkeypatch.setattr(api_module, "runtime_config", config)
+
+    session = ChatSession(
+        session_id="remote-llm-early",
+        language="en",
+        turns=[
+            Turn(turn_id=1, speaker="assistant", text="Opening", language_tag="en"),
+            Turn(turn_id=2, speaker="user", text="Sleep is off.", language_tag="en"),
+            Turn(turn_id=3, speaker="assistant", text="Follow-up", language_tag="en"),
+            Turn(turn_id=4, speaker="user", text="I feel tired in the afternoon.", language_tag="en"),
+        ],
+    )
+
+    assert api_module._should_use_live_llm(session) is False
+
+
+def test_remote_live_llm_samples_periodically_after_threshold(monkeypatch):
+    config = replace(
+        api_module.runtime_config,
+        live_chat_llm_analysis_enabled=True,
+        live_llm_turn_threshold=1,
+        extraction_provider="remote",
+    )
+    monkeypatch.setattr(api_module, "runtime_config", config)
+
+    session = ChatSession(
+        session_id="remote-llm-later",
+        language="en",
+        turns=[
+            Turn(turn_id=1, speaker="assistant", text="Opening", language_tag="en"),
+            Turn(turn_id=2, speaker="user", text="Sleep is patchy.", language_tag="en"),
+            Turn(turn_id=3, speaker="assistant", text="Follow-up", language_tag="en"),
+            Turn(turn_id=4, speaker="user", text="Low energy too.", language_tag="en"),
+            Turn(turn_id=5, speaker="assistant", text="Follow-up", language_tag="en"),
+            Turn(turn_id=6, speaker="user", text="Meals get delayed.", language_tag="en"),
+            Turn(turn_id=7, speaker="assistant", text="Follow-up", language_tag="en"),
+            Turn(turn_id=8, speaker="user", text="Concentration drops later in the day.", language_tag="en"),
+        ],
+    )
+
+    assert api_module._should_use_live_llm(session) is True
+
+    session.turns.append(Turn(turn_id=9, speaker="assistant", text="Follow-up", language_tag="en"))
+    session.turns.append(Turn(turn_id=10, speaker="user", text="Body feels heavy by afternoon.", language_tag="en"))
+
+    assert api_module._should_use_live_llm(session) is False
+
+    session.turns.append(Turn(turn_id=11, speaker="assistant", text="Follow-up", language_tag="en"))
+    session.turns.append(Turn(turn_id=12, speaker="user", text="My appetite is off too.", language_tag="en"))
+
+    assert api_module._should_use_live_llm(session) is False
+
+    session.turns.append(Turn(turn_id=13, speaker="assistant", text="Follow-up", language_tag="en"))
+    session.turns.append(Turn(turn_id=14, speaker="user", text="It takes longer to get going most mornings.", language_tag="en"))
+
+    assert api_module._should_use_live_llm(session) is True
 
 
 def test_nudge_metadata_updates_feedback_loop_and_recommended_nudges():
@@ -691,7 +1246,7 @@ def test_hinglish_sleep_pattern_then_frequency_pivots_to_fatigue():
     assert "low energy" in reply or "body heavy" in reply or "mind ko start hone" in reply
 
 
-def test_english_energy_followup_acknowledges_frequency_answer():
+def test_english_sleep_followup_acknowledges_frequency_answer():
     start = client.post("/chat/sessions", json={"language": "en"})
     session_id = start.json()["session_id"]
 
@@ -709,10 +1264,10 @@ def test_english_energy_followup_acknowledges_frequency_answer():
     assert second_turn.status_code == 200
     reply = second_turn.json()["assistant_turn"]["text"]
     dialogue = second_turn.json()["snapshot"]["coverage"]["dialogue"]
-    assert dialogue["target_topic"] == "energy"
-    assert dialogue["target_item"] == "phq_q4_fatigue"
+    assert dialogue["target_topic"] == "sleep"
+    assert dialogue["target_item"] == "phq_q3_sleep"
     assert "how often it happens" in reply
-    assert "body heaviness" in reply or "slow-starting mind" in reply
+    assert "hard to start" in reply or "hard to stay in" in reply or "wake up too early" in reply
 
 
 def test_soft_disappearance_language_triggers_first_turn_safety_check_in_english():
@@ -1101,6 +1656,57 @@ def test_english_low_energy_followup_stays_on_focus_or_energy_live_flow():
     assert "mindfulness" not in reply
 
 
+def test_english_under_weather_energy_then_appetite_moves_on_to_next_scene():
+    start = client.post("/chat/sessions", json={"language": "en"})
+    session_id = start.json()["session_id"]
+
+    script = [
+        "I am feeling a little under the weather today.",
+        "Mostly physically off, tired, and slower than usual.",
+        "Sleep has been patchy and by afternoon I feel heavy and drag through the day.",
+        "Meals get delayed too and I lose track of hunger cues.",
+        "It is harder to focus on one thing once the afternoon hits.",
+    ]
+
+    last = None
+    for text in script:
+        last = client.post(f"/chat/sessions/{session_id}/turns", json={"text": text})
+        assert last.status_code == 200
+
+    assert last is not None
+    body = last.json()
+    dialogue = body["snapshot"]["coverage"]["dialogue"]
+    reply = body["assistant_turn"]["text"].lower()
+    assert dialogue["target_item"] in {"phq_q7_concentration", "phq_q8_psychomotor", "phq_q2_low_mood"}
+    assert "changes in appetite" not in reply
+    assert "low energy through the day" not in reply
+
+
+def test_hinglish_low_energy_with_negated_panic_does_not_jump_to_anxiety():
+    start = client.post("/chat/sessions", json={"language": "hinglish"})
+    session_id = start.json()["session_id"]
+
+    script = [
+        "Sleep thodi messy ho gayi hai aur low energy rehti hai.",
+        "Afternoon tak body heavy lagti hai aur routine slip ho jata hai.",
+        "Meals bhi delay ho jate hain aur kaam start karna hard lagta hai.",
+        "Mind slow start hota hai but panic jaisa nahi hota.",
+    ]
+
+    last = None
+    for text in script:
+        last = client.post(f"/chat/sessions/{session_id}/turns", json={"text": text})
+        assert last.status_code == 200
+
+    assert last is not None
+    body = last.json()
+    dialogue = body["snapshot"]["coverage"]["dialogue"]
+    reply = body["assistant_turn"]["text"].lower()
+    assert dialogue["target_topic"] in {"focus", "energy", "mood"}
+    assert dialogue["target_item"] != "gad_q2_control_worry"
+    assert "worry" not in reply
+
+
 def test_english_anxiety_body_tension_pivots_to_relaxation_live_flow():
     start = client.post("/chat/sessions", json={"language": "en"})
     session_id = start.json()["session_id"]
@@ -1421,8 +2027,13 @@ def test_hinglish_day_end_energy_answer_stays_on_energy_in_long_mood_flow():
     reply = seventh_turn.json()["assistant_turn"]["text"].lower()
     dialogue = seventh_turn.json()["snapshot"]["coverage"]["dialogue"]
     assert dialogue["target_topic"] == "energy"
-    assert dialogue["target_item"] == "phq_q4_fatigue"
-    assert "timing helpful" in reply or "us waqt ke around" in reply
+    assert dialogue["target_item"] in {"phq_q4_fatigue", "phq_q8_psychomotor"}
+    assert (
+        "start lene ki energy" in reply
+        or "body heavy" in reply
+        or "pace ka noticeably slow" in reply
+        or "din ke end" in reply
+    )
     assert "flat ya heavy feeling" not in reply
 
 
@@ -1848,6 +2459,191 @@ def test_hindi_close_prompt_followed_by_garbled_detail_stays_on_hold():
     assert "जब चिंता शुरू होती है" not in reply
 
 
+def test_duplicate_voice_retry_reuses_previous_assistant_turn_instead_of_stacking_replies():
+    start = client.post("/chat/sessions", json={"language": "hi"})
+    session_id = start.json()["session_id"]
+
+    first = client.post(
+        f"/chat/sessions/{session_id}/turns",
+        json={"text": "नींद काफी देर से आती है और किसी काम में मन नहीं लगता है।", "from_voice": True},
+    )
+    second = client.post(
+        f"/chat/sessions/{session_id}/turns",
+        json={"text": "नींद देर से आती है और किसी काम में मन नहीं लगता है।", "from_voice": True},
+    )
+    detail = client.get(f"/chat/sessions/{session_id}")
+
+    assert first.status_code == 200
+    assert second.status_code == 200
+    assert second.json()["assistant_turn"]["turn_id"] == first.json()["assistant_turn"]["turn_id"]
+    assert len(detail.json()["turns"]) == 3
+
+
+def test_typed_paraphrase_is_not_treated_as_duplicate_retry():
+    start = client.post("/chat/sessions", json={"language": "hi"})
+    session_id = start.json()["session_id"]
+
+    first = client.post(
+        f"/chat/sessions/{session_id}/turns",
+        json={"text": "नींद काफी देर से आती है और किसी काम में मन नहीं लगता है।"},
+    )
+    second = client.post(
+        f"/chat/sessions/{session_id}/turns",
+        json={"text": "नींद देर से आती है और किसी काम में मन नहीं लगता है।"},
+    )
+    detail = client.get(f"/chat/sessions/{session_id}")
+
+    assert first.status_code == 200
+    assert second.status_code == 200
+    assert second.json()["assistant_turn"]["turn_id"] > first.json()["assistant_turn"]["turn_id"]
+    assert len(detail.json()["turns"]) == 5
+
+
+def test_hinglish_downplayed_worry_stays_with_energy_or_mood_not_anxiety():
+    start = client.post("/chat/sessions", json={"language": "hinglish"})
+    session_id = start.json()["session_id"]
+
+    client.post(
+        f"/chat/sessions/{session_id}/turns",
+        json={"text": "Kal se body thodi down lag rahi hai aur neend bhi theek nahi hai."},
+    )
+    turn = client.post(
+        f"/chat/sessions/{session_id}/turns",
+        json={"text": "Worry utni nahi hai, bas thakan aur udasi zyada lagti hai."},
+    )
+
+    assert turn.status_code == 200
+    body = turn.json()
+    dialogue = body["snapshot"]["coverage"]["dialogue"]
+    assert dialogue["target_topic"] in {"energy", "mood", "self_view"}
+    assert "worry" not in body["assistant_turn"]["text"].lower()
+
+
+def test_english_work_future_worry_opening_stays_on_anxiety_not_sleep():
+    start = client.post("/chat/sessions", json={"language": "en"})
+    session_id = start.json()["session_id"]
+
+    turn = client.post(
+        f"/chat/sessions/{session_id}/turns",
+        json={"text": "My mind keeps looping about work and the future late at night."},
+    )
+
+    assert turn.status_code == 200
+    body = turn.json()
+    dialogue = body["snapshot"]["coverage"]["dialogue"]
+    assert dialogue["target_topic"] == "anxiety"
+    assert dialogue["target_item"] in {"gad_q2_control_worry", "gad_q3_excessive_worry", "gad_q4_trouble_relaxing"}
+    assert "sleep" not in body["assistant_turn"]["text"].lower()
+
+
+def test_english_early_summary_request_keeps_closing_gaps_instead_of_ending():
+    start = client.post("/chat/sessions", json={"language": "en"})
+    session_id = start.json()["session_id"]
+
+    client.post(
+        f"/chat/sessions/{session_id}/turns",
+        json={"text": "My mind keeps looping about work and the future, and it is hard to quiet it."},
+    )
+    turn = client.post(
+        f"/chat/sessions/{session_id}/turns",
+        json={"text": "If you have enough, please summarize the pattern."},
+    )
+
+    assert turn.status_code == 200
+    body = turn.json()
+    dialogue = body["snapshot"]["coverage"]["dialogue"]
+    assert "working picture so far" not in body["assistant_turn"]["text"].lower()
+    assert body["assistant_turn"]["text"].count("?") >= 1
+    assert dialogue["stage"] in {"clarification", "exploration"}
+    assert dialogue["closure_mode"] is True
+
+
+def test_english_snappy_anxiety_turn_redirects_to_irritability_instead_of_repeating_fear():
+    start = client.post("/chat/sessions", json={"language": "en"})
+    session_id = start.json()["session_id"]
+
+    script = [
+        "Sleep has shifted later lately.",
+        "The next day I drag through everything.",
+        "Lunch just slips and I realize way too late that I skipped it.",
+        "Worry is mostly around work and future stuff.",
+        "My mind keeps circling old conversations even when I want it to stop.",
+        "Body side is there but smaller; evenings I get snappy.",
+    ]
+
+    last = None
+    for text in script:
+        last = client.post(f"/chat/sessions/{session_id}/turns", json={"text": text})
+        assert last.status_code == 200
+
+    body = last.json()
+    dialogue = body["snapshot"]["coverage"]["dialogue"]
+    assert dialogue["target_topic"] == "anxiety"
+    assert dialogue["target_item"] in {"gad_q4_trouble_relaxing", "gad_q6_irritability"}
+    assert "working picture so far" not in body["assistant_turn"]["text"].lower()
+    assert body["assistant_turn"]["text"].count("?") >= 1
+
+
+def test_physical_clarifier_physical_answer_uses_neutral_bridge_not_mood_or_anxiety():
+    start = client.post(
+        "/chat/sessions",
+        json={
+            "language": "en",
+            "profile": {
+                "recent_checkins": [
+                    {"topic": "anxiety", "language": "en", "summary": "Recent anxiety check-in."}
+                ]
+            },
+        },
+    )
+    session_id = start.json()["session_id"]
+
+    first = client.post(
+        f"/chat/sessions/{session_id}/turns",
+        json={"text": "I am feeling a little under the weather today."},
+    )
+    second = client.post(
+        f"/chat/sessions/{session_id}/turns",
+        json={"text": "It feels more physical than emotional honestly."},
+    )
+
+    assert first.status_code == 200
+    assert second.status_code == 200
+    reply = second.json()["assistant_turn"]["text"].lower()
+    assert "sleep" in reply
+    assert "energy" in reply
+    assert "appetite" in reply
+    assert "interest drop" not in reply
+    assert "worry starts" not in reply
+
+
+def test_english_self_judging_phrase_stays_with_self_view_not_sleep():
+    start = client.post("/chat/sessions", json={"language": "en"})
+    session_id = start.json()["session_id"]
+
+    client.post(
+        f"/chat/sessions/{session_id}/turns",
+        json={"text": "Sleep has been taking forever and I wake up tired."},
+    )
+    client.post(
+        f"/chat/sessions/{session_id}/turns",
+        json={"text": "Even when I sleep, I drag through the day and meals get irregular too."},
+    )
+    turn = client.post(
+        f"/chat/sessions/{session_id}/turns",
+        json={"text": "I keep judging myself because basic tasks feel harder than they should."},
+    )
+
+    assert turn.status_code == 200
+    body = turn.json()
+    dialogue = body["snapshot"]["coverage"]["dialogue"]
+    reply = body["assistant_turn"]["text"].lower()
+    assert dialogue["target_topic"] in {"mood", "self_view"}
+    assert dialogue["target_item"] in {None, "phq_q6_worthlessness"}
+    assert "sleep" not in reply
+    assert "yourself" in reply or "self" in reply
+
+
 def test_hinglish_scope_answer_closes_instead_of_reopening_old_loop():
     start = client.post("/chat/sessions", json={"language": "hinglish"})
     session_id = start.json()["session_id"]
@@ -1916,3 +2712,58 @@ def test_hindi_anxiety_loop_break_closes_after_repeated_generic_rotation():
     reply = body["assistant_turn"]["text"]
 
     assert reply.startswith("अब मेरे पास मुख्य पैटर्न पकड़ने लायक") or reply.startswith("ठीक है। अभी") or reply.startswith("मैं थोड़ा रुककर")
+
+
+def test_exact_hindi_sleep_mood_trace_keeps_moving_and_does_not_repeat_same_prompt():
+    start = client.post("/chat/sessions", json={"language": "hi"})
+    session_id = start.json()["session_id"]
+
+    script = [
+        "नीम का पैटर्न बदल गया है नींद काफी देर से आती है और काफी कम समय के लिए",
+        "यह कुछ दिनों से ऐसा ही है नींद कम आती है किसी काम में मन नहीं लगता है",
+        "नींद का पैटर्न बदल गया काफी देर से जाता हूं काम में मन नहीं लगता",
+        "मां पहले से ही है जाता है कोई काम करने की इच्छा करती ही नहीं है",
+        "मैं कभी कुछ सकारात्मक रूप से भविष्य के बारे में सोचता हूं तो अच्छा लगता है परंतु जब मैं वर्तमान देखता हूं तो उदासी आती है",
+        "उदासी और किसी काम से मन है जाना",
+    ]
+
+    replies = []
+    for text in script:
+        turn = client.post(f"/chat/sessions/{session_id}/turns", json={"text": text})
+        assert turn.status_code == 200
+        replies.append(turn.json()["assistant_turn"]["text"])
+
+    assert replies[-1] != replies[-2]
+    assert "जब यह सपाट या भारी एहसास रहता है" not in replies[-1]
+    assert any(token in replies[-1] for token in ("थकान", "ऊर्जा", "शरीर भारी", "दिमाग शुरू"))
+
+
+def test_hindi_explicit_work_future_worry_switches_out_of_mood_track():
+    start = client.post("/chat/sessions", json={"language": "hi"})
+    session_id = start.json()["session_id"]
+
+    client.post(
+        f"/chat/sessions/{session_id}/turns",
+        json={"text": "पता नहीं क्या असर पड़ता है"},
+    )
+    client.post(
+        f"/chat/sessions/{session_id}/turns",
+        json={"text": "वह चलाते रहती है कितना भी प्रयास करो"},
+    )
+    turn = client.post(
+        f"/chat/sessions/{session_id}/turns",
+        json={"text": "हम फिलहाल में जब मैं किसी काम को करने जाता हूं तब मुझे ज्यादा चिंता होती है भविष्य को लेकर"},
+    )
+
+    assert turn.status_code == 200
+    body = turn.json()
+    dialogue = body["snapshot"]["coverage"]["dialogue"]
+    reply = body["assistant_turn"]["text"]
+    assert dialogue["target_topic"] == "anxiety"
+    assert dialogue["target_item"] in {"gad_q2_control_worry", "gad_q4_trouble_relaxing"}
+    assert (
+        "जब चिंता शुरू होती है" in reply
+        or "दिमाग को शांत" in reply
+        or "शरीर को ढीला" in reply
+        or "दोनों" in reply
+    )

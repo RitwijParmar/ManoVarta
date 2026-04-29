@@ -2,11 +2,14 @@ import re
 from typing import Iterable, Optional
 
 
-WORD_RE = re.compile(r"[^\w\s]+", re.UNICODE)
+# Preserve Devanagari letters and combining marks so Hindi text does not get
+# split into character fragments during normalization.
+WORD_RE = re.compile(r"[^\w\s\u0900-\u097F]+", re.UNICODE)
 
 
 def normalize_text(text: str) -> str:
-    cleaned = WORD_RE.sub(" ", text.lower())
+    lowered = text.lower().replace("।", " ").replace("॥", " ")
+    cleaned = WORD_RE.sub(" ", lowered)
     return " ".join(cleaned.split())
 
 

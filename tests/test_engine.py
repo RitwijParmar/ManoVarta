@@ -60,6 +60,13 @@ class StubSafetyAssessor:
         )
 
 
+class FailingExtractor:
+    enabled = True
+
+    def extract(self, turns, language):
+        raise RuntimeError("extractor failed")
+
+
 def test_runtime_engine_merges_llm_output_into_snapshot():
     turns = [
         Turn(turn_id=1, speaker="assistant", text="What has been hardest lately?", language_tag="en"),
@@ -164,3 +171,26 @@ def test_runtime_engine_keeps_rule_signal_when_extractor_overcalls_safety():
 
     assert snapshot.safety.level == "review"
     assert "extractor_advisory:review" in snapshot.safety.cues
+
+
+def test_runtime_engine_falls_back_to_heuristic_snapshot_when_extractor_raises():
+    turns = [
+        Turn(turn_id=1, speaker="assistant", text="What has felt heaviest?", language_tag="hinglish"),
+        Turn(
+            turn_id=2,
+            speaker="user",
+            text="Kaafi time se low aur disconnected feel ho raha hai.",
+            language_tag="hinglish",
+        ),
+    ]
+    engine = RuntimeEngine(
+        scorer=ConversationScorer(),
+        safety_monitor=SafetyMonitor(),
+        extractor=FailingExtractor(),
+    )
+
+    snapshot = engine.analyze(turns, "hinglish")
+
+    assert snapshot.mode == "heuristic"
+    assert snapshot.items["phq_q1_anhedonia"].status == "partial"
+    assert snapshot.items["phq_q2_low_mood"].status == "partial"

@@ -37,6 +37,8 @@ class RuntimeConfig:
     semantic_safety_urgent_threshold: float
     live_chat_llm_analysis_enabled: bool = False
     live_llm_turn_threshold: int = 2
+    live_chat_extraction_provider: str = ""
+    live_chat_extraction_model: Optional[str] = None
     local_safety_checkpoint: Optional[str] = None
     local_load_in_4bit: bool = False
     local_chat_adapter: Optional[str] = None
@@ -47,6 +49,15 @@ class RuntimeConfig:
     safety_provider: str = ""
     vertex_project: Optional[str] = None
     vertex_location: str = "us-central1"
+    chat_fallback_model: Optional[str] = None
+    live_chat_analysis_model: Optional[str] = None
+    live_chat_analysis_fallback_model: Optional[str] = None
+    vertex_chat_location: Optional[str] = None
+    vertex_chat_fallback_location: Optional[str] = None
+    vertex_live_chat_analysis_location: Optional[str] = None
+    vertex_live_chat_analysis_fallback_location: Optional[str] = None
+    remote_extraction_url: Optional[str] = None
+    remote_extraction_timeout: float = 120.0
     async_scoring_enabled: bool = False
     async_scoring_dir: str = str(PROJECT_ROOT / "artifacts" / "async_scoring")
 
@@ -99,8 +110,46 @@ class RuntimeConfig:
         return (self.safety_provider or self.model_provider).strip().lower()
 
     @property
+    def live_chat_extraction_model_provider(self) -> str:
+        return (self.live_chat_extraction_provider or self.extraction_model_provider).strip().lower()
+
+    @property
     def semantic_safety_enabled(self) -> bool:
         return bool(self.semantic_safety_model)
+
+    @property
+    def resolved_chat_fallback_model(self) -> Optional[str]:
+        fallback = (self.chat_fallback_model or "").strip()
+        if not fallback or fallback == self.chat_model:
+            return None
+        return fallback
+
+    @property
+    def resolved_live_chat_analysis_model(self) -> str:
+        return (self.live_chat_analysis_model or self.chat_model).strip()
+
+    @property
+    def resolved_live_chat_analysis_fallback_model(self) -> Optional[str]:
+        fallback = (self.live_chat_analysis_fallback_model or self.resolved_chat_fallback_model or "").strip()
+        if not fallback or fallback == self.resolved_live_chat_analysis_model:
+            return None
+        return fallback
+
+    @property
+    def resolved_vertex_chat_location(self) -> str:
+        return (self.vertex_chat_location or self.vertex_location).strip()
+
+    @property
+    def resolved_vertex_chat_fallback_location(self) -> str:
+        return (self.vertex_chat_fallback_location or self.resolved_vertex_chat_location).strip()
+
+    @property
+    def resolved_vertex_live_chat_analysis_location(self) -> str:
+        return (self.vertex_live_chat_analysis_location or self.resolved_vertex_chat_location).strip()
+
+    @property
+    def resolved_vertex_live_chat_analysis_fallback_location(self) -> str:
+        return (self.vertex_live_chat_analysis_fallback_location or self.resolved_vertex_chat_fallback_location).strip()
 
 
 def _is_checkpoint_dir(path: Path) -> bool:
@@ -190,6 +239,8 @@ def get_runtime_config() -> RuntimeConfig:
         semantic_safety_urgent_threshold=float(os.getenv("MANOVARTA_SEMANTIC_URGENT_THRESHOLD", "0.72")),
         live_chat_llm_analysis_enabled=os.getenv("MANOVARTA_LIVE_CHAT_LLM_ANALYSIS", "false").strip().lower() in {"1", "true", "yes", "on"},
         live_llm_turn_threshold=int(os.getenv("MANOVARTA_LIVE_LLM_TURN_THRESHOLD", "2")),
+        live_chat_extraction_provider=os.getenv("MANOVARTA_LIVE_CHAT_EXTRACTION_PROVIDER", ""),
+        live_chat_extraction_model=os.getenv("MANOVARTA_LIVE_CHAT_EXTRACTION_MODEL"),
         local_safety_checkpoint=discover_local_safety_checkpoint(),
         local_load_in_4bit=os.getenv("MANOVARTA_LOCAL_LOAD_IN_4BIT", "false").strip().lower() in {"1", "true", "yes", "on"},
         local_chat_adapter=os.getenv("MANOVARTA_LOCAL_CHAT_ADAPTER"),
@@ -200,6 +251,15 @@ def get_runtime_config() -> RuntimeConfig:
         safety_provider=os.getenv("MANOVARTA_SAFETY_PROVIDER", ""),
         vertex_project=os.getenv("MANOVARTA_VERTEX_PROJECT") or os.getenv("GOOGLE_CLOUD_PROJECT") or os.getenv("GCP_PROJECT"),
         vertex_location=os.getenv("MANOVARTA_VERTEX_LOCATION", os.getenv("GOOGLE_CLOUD_LOCATION", "us-central1")),
+        chat_fallback_model=os.getenv("MANOVARTA_CHAT_FALLBACK_MODEL"),
+        live_chat_analysis_model=os.getenv("MANOVARTA_LIVE_CHAT_ANALYSIS_MODEL"),
+        live_chat_analysis_fallback_model=os.getenv("MANOVARTA_LIVE_CHAT_ANALYSIS_FALLBACK_MODEL"),
+        vertex_chat_location=os.getenv("MANOVARTA_VERTEX_CHAT_LOCATION"),
+        vertex_chat_fallback_location=os.getenv("MANOVARTA_VERTEX_CHAT_FALLBACK_LOCATION"),
+        vertex_live_chat_analysis_location=os.getenv("MANOVARTA_VERTEX_LIVE_CHAT_ANALYSIS_LOCATION"),
+        vertex_live_chat_analysis_fallback_location=os.getenv("MANOVARTA_VERTEX_LIVE_CHAT_ANALYSIS_FALLBACK_LOCATION"),
+        remote_extraction_url=os.getenv("MANOVARTA_REMOTE_EXTRACTION_URL"),
+        remote_extraction_timeout=float(os.getenv("MANOVARTA_REMOTE_EXTRACTION_TIMEOUT", "120")),
         async_scoring_enabled=os.getenv("MANOVARTA_ASYNC_SCORING_ENABLED", "false").strip().lower() in {"1", "true", "yes", "on"},
         async_scoring_dir=os.getenv("MANOVARTA_ASYNC_SCORING_DIR", str(PROJECT_ROOT / "artifacts" / "async_scoring")),
     )

@@ -1,0 +1,1417 @@
+{
+  "en": {
+    "final": {
+      "stage": "summary",
+      "target_topic": "safety",
+      "target_item": "phq_q9_self_harm",
+      "target_scene": null,
+      "closure_mode": false,
+      "touched_items": 5,
+      "resolved_items": 0,
+      "unresolved_items": [
+        "phq_q2_low_mood",
+        "phq_q6_worthlessness",
+        "phq_q7_concentration",
+        "phq_q8_psychomotor",
+        "gad_q1_nervous",
+        "gad_q2_control_worry",
+        "gad_q3_excessive_worry",
+        "gad_q4_trouble_relaxing",
+        "gad_q5_restlessness",
+        "gad_q6_irritability",
+        "gad_q7_afraid"
+      ],
+      "totals": {
+        "PHQ9": 8,
+        "GAD7": 0
+      },
+      "safety": "none"
+    },
+    "turns": [
+      {
+        "user": "I've been dragging myself through the day and sleep has been broken for the last couple of weeks.",
+        "assistant": "It sounds like sleep is getting hit in a real way. When sleep gets disrupted, is it mostly hard to fall asleep, waking during the night, or waking too early?",
+        "asked_item": "phq_q3_sleep",
+        "stage": "clarification",
+        "target_topic": "sleep",
+        "target_item": "phq_q3_sleep",
+        "target_scene": null,
+        "scene_item_ids": [],
+        "closure_mode": false,
+        "touched_items": 2,
+        "resolved_items": 0,
+        "unresolved_items": [
+          "phq_q1_anhedonia",
+          "phq_q2_low_mood",
+          "phq_q5_appetite",
+          "phq_q6_worthlessness",
+          "phq_q7_concentration",
+          "phq_q8_psychomotor",
+          "phq_q9_self_harm",
+          "gad_q1_nervous",
+          "gad_q2_control_worry",
+          "gad_q3_excessive_worry",
+          "gad_q4_trouble_relaxing",
+          "gad_q5_restlessness",
+          "gad_q6_irritability",
+          "gad_q7_afraid"
+        ],
+        "totals": {
+          "PHQ9": 4,
+          "GAD7": 0
+        },
+        "safety": "none"
+      },
+      {
+        "user": "Most nights I wake around 3 or 4 and then lie there replaying work stuff.",
+        "assistant": "It sounds like sleep is taking a real hit here. When sleep gets disrupted, is it mostly hard to fall asleep, waking during the night, or waking too early?",
+        "asked_item": "phq_q3_sleep",
+        "stage": "clarification",
+        "target_topic": "sleep",
+        "target_item": "phq_q3_sleep",
+        "target_scene": null,
+        "scene_item_ids": [],
+        "closure_mode": false,
+        "touched_items": 2,
+        "resolved_items": 0,
+        "unresolved_items": [
+          "phq_q1_anhedonia",
+          "phq_q2_low_mood",
+          "phq_q5_appetite",
+          "phq_q6_worthlessness",
+          "phq_q7_concentration",
+          "phq_q8_psychomotor",
+          "phq_q9_self_harm",
+          "gad_q1_nervous",
+          "gad_q2_control_worry",
+          "gad_q3_excessive_worry",
+          "gad_q4_trouble_relaxing",
+          "gad_q5_restlessness",
+          "gad_q6_irritability",
+          "gad_q7_afraid"
+        ],
+        "totals": {
+          "PHQ9": 4,
+          "GAD7": 0
+        },
+        "safety": "none"
+      },
+      {
+        "user": "By the afternoon my body feels heavy, my appetite is off, and lunch just slips.",
+        "assistant": "Has appetite mostly been lower than usual, higher than usual, or more irregular because meals get skipped or delayed?",
+        "asked_item": "phq_q5_appetite",
+        "stage": "clarification",
+        "target_topic": "energy",
+        "target_item": "phq_q5_appetite",
+        "target_scene": null,
+        "scene_item_ids": [],
+        "closure_mode": false,
+        "touched_items": 3,
+        "resolved_items": 0,
+        "unresolved_items": [
+          "phq_q1_anhedonia",
+          "phq_q2_low_mood",
+          "phq_q6_worthlessness",
+          "phq_q7_concentration",
+          "phq_q8_psychomotor",
+          "phq_q9_self_harm",
+          "gad_q1_nervous",
+          "gad_q2_control_worry",
+          "gad_q3_excessive_worry",
+          "gad_q4_trouble_relaxing",
+          "gad_q5_restlessness",
+          "gad_q6_irritability",
+          "gad_q7_afraid"
+        ],
+        "totals": {
+          "PHQ9": 6,
+          "GAD7": 0
+        },
+        "safety": "none"
+      },
+      {
+        "user": "I still get through things but everything feels flat underneath before I even start.",
+        "assistant": "It sounds like the emotional weight itself has been hard to carry. When you try to do things you usually care about, does the interest drop before you start, or do you go through with them but feel very little from them?",
+        "asked_item": "phq_q1_anhedonia",
+        "stage": "clarification",
+        "target_topic": "mood",
+        "target_item": "phq_q1_anhedonia",
+        "target_scene": null,
+        "scene_item_ids": [],
+        "closure_mode": false,
+        "touched_items": 4,
+        "resolved_items": 0,
+        "unresolved_items": [
+          "phq_q2_low_mood",
+          "phq_q6_worthlessness",
+          "phq_q7_concentration",
+          "phq_q8_psychomotor",
+          "phq_q9_self_harm",
+          "gad_q1_nervous",
+          "gad_q2_control_worry",
+          "gad_q3_excessive_worry",
+          "gad_q4_trouble_relaxing",
+          "gad_q5_restlessness",
+          "gad_q6_irritability",
+          "gad_q7_afraid"
+        ],
+        "totals": {
+          "PHQ9": 8,
+          "GAD7": 0
+        },
+        "safety": "none"
+      },
+      {
+        "user": "When I fall behind I get pretty harsh on myself and feel like I am letting people down.",
+        "assistant": "When the harder days hit, what lands most in the foreground: feeling low, losing interest before you even start, or getting harsher on yourself?",
+        "asked_item": "phq_q2_low_mood",
+        "stage": "clarification",
+        "target_topic": "mood",
+        "target_item": "phq_q2_low_mood",
+        "target_scene": "mood_selfview",
+        "scene_item_ids": [
+          "phq_q1_anhedonia",
+          "phq_q2_low_mood",
+          "phq_q6_worthlessness"
+        ],
+        "closure_mode": true,
+        "touched_items": 4,
+        "resolved_items": 0,
+        "unresolved_items": [
+          "phq_q2_low_mood",
+          "phq_q6_worthlessness",
+          "phq_q7_concentration",
+          "phq_q8_psychomotor",
+          "phq_q9_self_harm",
+          "gad_q1_nervous",
+          "gad_q2_control_worry",
+          "gad_q3_excessive_worry",
+          "gad_q4_trouble_relaxing",
+          "gad_q5_restlessness",
+          "gad_q6_irritability",
+          "gad_q7_afraid"
+        ],
+        "totals": {
+          "PHQ9": 8,
+          "GAD7": 0
+        },
+        "safety": "none"
+      },
+      {
+        "user": "Focus breaks a lot, so I reread the same line and small tasks take forever.",
+        "assistant": "It sounds like this is getting in the way of staying with tasks. When you try to work or study, is it more that your attention slips away, or that you keep coming back to the same line and it still does not stick?",
+        "asked_item": "phq_q7_concentration",
+        "stage": "clarification",
+        "target_topic": "focus",
+        "target_item": "phq_q7_concentration",
+        "target_scene": null,
+        "scene_item_ids": [],
+        "closure_mode": true,
+        "touched_items": 4,
+        "resolved_items": 0,
+        "unresolved_items": [
+          "phq_q2_low_mood",
+          "phq_q6_worthlessness",
+          "phq_q7_concentration",
+          "phq_q8_psychomotor",
+          "phq_q9_self_harm",
+          "gad_q1_nervous",
+          "gad_q2_control_worry",
+          "gad_q3_excessive_worry",
+          "gad_q4_trouble_relaxing",
+          "gad_q5_restlessness",
+          "gad_q6_irritability",
+          "gad_q7_afraid"
+        ],
+        "totals": {
+          "PHQ9": 8,
+          "GAD7": 0
+        },
+        "safety": "none"
+      },
+      {
+        "user": "The worry jumps between work mistakes, money, and what that means for my future.",
+        "assistant": "It sounds like the worry is staying active even when things are quiet. When the worry starts, which shape fits it best: a keyed-up feeling in the background, one thought-loop you cannot shake, or several work or future worries piling together?",
+        "asked_item": "gad_q2_control_worry",
+        "stage": "clarification",
+        "target_topic": "anxiety",
+        "target_item": "gad_q2_control_worry",
+        "target_scene": "worry_shape",
+        "scene_item_ids": [
+          "gad_q1_nervous",
+          "gad_q2_control_worry",
+          "gad_q3_excessive_worry"
+        ],
+        "closure_mode": true,
+        "touched_items": 4,
+        "resolved_items": 0,
+        "unresolved_items": [
+          "phq_q2_low_mood",
+          "phq_q6_worthlessness",
+          "phq_q7_concentration",
+          "phq_q8_psychomotor",
+          "phq_q9_self_harm",
+          "gad_q1_nervous",
+          "gad_q2_control_worry",
+          "gad_q3_excessive_worry",
+          "gad_q4_trouble_relaxing",
+          "gad_q5_restlessness",
+          "gad_q6_irritability",
+          "gad_q7_afraid"
+        ],
+        "totals": {
+          "PHQ9": 8,
+          "GAD7": 0
+        },
+        "safety": "none"
+      },
+      {
+        "user": "Mostly it is hard to quiet my mind; the body tension is there but smaller.",
+        "assistant": "It sounds like settling down is taking more effort than it should. And when it peaks, what stands out more: hard to quiet the mind, restlessness, irritability, or a sense that something may go wrong next?",
+        "asked_item": "gad_q4_trouble_relaxing",
+        "stage": "clarification",
+        "target_topic": "anxiety",
+        "target_item": "gad_q4_trouble_relaxing",
+        "target_scene": "worry_activation",
+        "scene_item_ids": [
+          "gad_q4_trouble_relaxing",
+          "gad_q5_restlessness",
+          "gad_q6_irritability",
+          "gad_q7_afraid"
+        ],
+        "closure_mode": true,
+        "touched_items": 4,
+        "resolved_items": 0,
+        "unresolved_items": [
+          "phq_q2_low_mood",
+          "phq_q6_worthlessness",
+          "phq_q7_concentration",
+          "phq_q8_psychomotor",
+          "phq_q9_self_harm",
+          "gad_q1_nervous",
+          "gad_q2_control_worry",
+          "gad_q3_excessive_worry",
+          "gad_q4_trouble_relaxing",
+          "gad_q5_restlessness",
+          "gad_q6_irritability",
+          "gad_q7_afraid"
+        ],
+        "totals": {
+          "PHQ9": 8,
+          "GAD7": 0
+        },
+        "safety": "none"
+      },
+      {
+        "user": "Some evenings I feel restless and snappy even though I know nobody is doing anything wrong.",
+        "assistant": "It sounds like the worry is staying active even when things are quiet. When that restless feeling shows up, is it more that your body cannot sit still, or that your mind feels agitated even if you stay still?",
+        "asked_item": "gad_q5_restlessness",
+        "stage": "clarification",
+        "target_topic": "anxiety",
+        "target_item": "gad_q5_restlessness",
+        "target_scene": "worry_activation",
+        "scene_item_ids": [
+          "gad_q4_trouble_relaxing",
+          "gad_q5_restlessness",
+          "gad_q6_irritability",
+          "gad_q7_afraid"
+        ],
+        "closure_mode": true,
+        "touched_items": 4,
+        "resolved_items": 0,
+        "unresolved_items": [
+          "phq_q2_low_mood",
+          "phq_q6_worthlessness",
+          "phq_q7_concentration",
+          "phq_q8_psychomotor",
+          "phq_q9_self_harm",
+          "gad_q1_nervous",
+          "gad_q2_control_worry",
+          "gad_q3_excessive_worry",
+          "gad_q4_trouble_relaxing",
+          "gad_q5_restlessness",
+          "gad_q6_irritability",
+          "gad_q7_afraid"
+        ],
+        "totals": {
+          "PHQ9": 8,
+          "GAD7": 0
+        },
+        "safety": "none"
+      },
+      {
+        "user": "I do not want to hurt myself or die, I just want a working summary.",
+        "assistant": "Here is the working picture so far: interest tends to drop before getting started; sleep looks disrupted rather than settled; the worry seems to pull both thoughts and body tension together. If one detail still matters to clarify, anxiety is the next best place to tighten.",
+        "asked_item": null,
+        "stage": "summary",
+        "target_topic": "safety",
+        "target_item": "phq_q9_self_harm",
+        "target_scene": null,
+        "scene_item_ids": [],
+        "closure_mode": false,
+        "touched_items": 5,
+        "resolved_items": 0,
+        "unresolved_items": [
+          "phq_q2_low_mood",
+          "phq_q6_worthlessness",
+          "phq_q7_concentration",
+          "phq_q8_psychomotor",
+          "gad_q1_nervous",
+          "gad_q2_control_worry",
+          "gad_q3_excessive_worry",
+          "gad_q4_trouble_relaxing",
+          "gad_q5_restlessness",
+          "gad_q6_irritability",
+          "gad_q7_afraid"
+        ],
+        "totals": {
+          "PHQ9": 8,
+          "GAD7": 0
+        },
+        "safety": "none"
+      }
+    ],
+    "transcript": [
+      {
+        "speaker": "assistant",
+        "text": "It sounds like the worry is hard to switch off once it starts. Has it been feeling more like low mood, constant worry, poor sleep, or a mix of those?",
+        "asked_item": "gad_q2_control_worry",
+        "stage": "rapport",
+        "target_scene": null
+      },
+      {
+        "speaker": "user",
+        "text": "I've been dragging myself through the day and sleep has been broken for the last couple of weeks."
+      },
+      {
+        "speaker": "assistant",
+        "text": "It sounds like sleep is getting hit in a real way. When sleep gets disrupted, is it mostly hard to fall asleep, waking during the night, or waking too early?",
+        "asked_item": "phq_q3_sleep"
+      },
+      {
+        "speaker": "user",
+        "text": "Most nights I wake around 3 or 4 and then lie there replaying work stuff."
+      },
+      {
+        "speaker": "assistant",
+        "text": "It sounds like sleep is taking a real hit here. When sleep gets disrupted, is it mostly hard to fall asleep, waking during the night, or waking too early?",
+        "asked_item": "phq_q3_sleep"
+      },
+      {
+        "speaker": "user",
+        "text": "By the afternoon my body feels heavy, my appetite is off, and lunch just slips."
+      },
+      {
+        "speaker": "assistant",
+        "text": "Has appetite mostly been lower than usual, higher than usual, or more irregular because meals get skipped or delayed?",
+        "asked_item": "phq_q5_appetite"
+      },
+      {
+        "speaker": "user",
+        "text": "I still get through things but everything feels flat underneath before I even start."
+      },
+      {
+        "speaker": "assistant",
+        "text": "It sounds like the emotional weight itself has been hard to carry. When you try to do things you usually care about, does the interest drop before you start, or do you go through with them but feel very little from them?",
+        "asked_item": "phq_q1_anhedonia"
+      },
+      {
+        "speaker": "user",
+        "text": "When I fall behind I get pretty harsh on myself and feel like I am letting people down."
+      },
+      {
+        "speaker": "assistant",
+        "text": "When the harder days hit, what lands most in the foreground: feeling low, losing interest before you even start, or getting harsher on yourself?",
+        "asked_item": "phq_q2_low_mood"
+      },
+      {
+        "speaker": "user",
+        "text": "Focus breaks a lot, so I reread the same line and small tasks take forever."
+      },
+      {
+        "speaker": "assistant",
+        "text": "It sounds like this is getting in the way of staying with tasks. When you try to work or study, is it more that your attention slips away, or that you keep coming back to the same line and it still does not stick?",
+        "asked_item": "phq_q7_concentration"
+      },
+      {
+        "speaker": "user",
+        "text": "The worry jumps between work mistakes, money, and what that means for my future."
+      },
+      {
+        "speaker": "assistant",
+        "text": "It sounds like the worry is staying active even when things are quiet. When the worry starts, which shape fits it best: a keyed-up feeling in the background, one thought-loop you cannot shake, or several work or future worries piling together?",
+        "asked_item": "gad_q2_control_worry"
+      },
+      {
+        "speaker": "user",
+        "text": "Mostly it is hard to quiet my mind; the body tension is there but smaller."
+      },
+      {
+        "speaker": "assistant",
+        "text": "It sounds like settling down is taking more effort than it should. And when it peaks, what stands out more: hard to quiet the mind, restlessness, irritability, or a sense that something may go wrong next?",
+        "asked_item": "gad_q4_trouble_relaxing"
+      },
+      {
+        "speaker": "user",
+        "text": "Some evenings I feel restless and snappy even though I know nobody is doing anything wrong."
+      },
+      {
+        "speaker": "assistant",
+        "text": "It sounds like the worry is staying active even when things are quiet. When that restless feeling shows up, is it more that your body cannot sit still, or that your mind feels agitated even if you stay still?",
+        "asked_item": "gad_q5_restlessness"
+      },
+      {
+        "speaker": "user",
+        "text": "I do not want to hurt myself or die, I just want a working summary."
+      },
+      {
+        "speaker": "assistant",
+        "text": "Here is the working picture so far: interest tends to drop before getting started; sleep looks disrupted rather than settled; the worry seems to pull both thoughts and body tension together. If one detail still matters to clarify, anxiety is the next best place to tighten.",
+        "asked_item": null
+      }
+    ]
+  },
+  "hi": {
+    "final": {
+      "stage": "clarification",
+      "target_topic": "anxiety",
+      "target_item": "gad_q4_trouble_relaxing",
+      "target_scene": "worry_activation",
+      "closure_mode": true,
+      "touched_items": 4,
+      "resolved_items": 0,
+      "unresolved_items": [
+        "phq_q1_anhedonia",
+        "phq_q2_low_mood",
+        "phq_q5_appetite",
+        "phq_q6_worthlessness",
+        "phq_q7_concentration",
+        "phq_q8_psychomotor",
+        "phq_q9_self_harm",
+        "gad_q1_nervous",
+        "gad_q3_excessive_worry",
+        "gad_q5_restlessness",
+        "gad_q6_irritability",
+        "gad_q7_afraid"
+      ],
+      "totals": {
+        "PHQ9": 4,
+        "GAD7": 5
+      },
+      "safety": "none"
+    },
+    "turns": [
+      {
+        "user": "पिछले दो हफ्तों से रात में नींद टूटती रहती है और सुबह शुरू होने में बहुत समय लगता है।",
+        "assistant": "लगता है इसका असर नींद पर साफ़ पड़ रहा है। जब नींद बिगड़ती है, क्या ज़्यादा दिक्कत सोने की शुरुआत में होती है, रात में बार-बार उठने में, या बहुत जल्दी उठ जाने में?",
+        "asked_item": "phq_q3_sleep",
+        "stage": "clarification",
+        "target_topic": "sleep",
+        "target_item": "phq_q3_sleep",
+        "target_scene": null,
+        "scene_item_ids": [],
+        "closure_mode": false,
+        "touched_items": 2,
+        "resolved_items": 0,
+        "unresolved_items": [
+          "phq_q1_anhedonia",
+          "phq_q2_low_mood",
+          "phq_q5_appetite",
+          "phq_q6_worthlessness",
+          "phq_q7_concentration",
+          "phq_q8_psychomotor",
+          "phq_q9_self_harm",
+          "gad_q1_nervous",
+          "gad_q2_control_worry",
+          "gad_q3_excessive_worry",
+          "gad_q4_trouble_relaxing",
+          "gad_q5_restlessness",
+          "gad_q6_irritability",
+          "gad_q7_afraid"
+        ],
+        "totals": {
+          "PHQ9": 4,
+          "GAD7": 0
+        },
+        "safety": "none"
+      },
+      {
+        "user": "ज़्यादातर 3-4 बजे आंख खुल जाती है और फिर काम की बातें दिमाग में चलती रहती हैं।",
+        "assistant": "क्या भूख ज़्यादा कम हुई है, ज़्यादा बढ़ी है, या बात ज़्यादा अनियमित खाने की है क्योंकि खाना छूट या देर से हो रहा है?",
+        "asked_item": "phq_q5_appetite",
+        "stage": "clarification",
+        "target_topic": "energy",
+        "target_item": "phq_q5_appetite",
+        "target_scene": null,
+        "scene_item_ids": [],
+        "closure_mode": false,
+        "touched_items": 2,
+        "resolved_items": 0,
+        "unresolved_items": [
+          "phq_q1_anhedonia",
+          "phq_q2_low_mood",
+          "phq_q5_appetite",
+          "phq_q6_worthlessness",
+          "phq_q7_concentration",
+          "phq_q8_psychomotor",
+          "phq_q9_self_harm",
+          "gad_q1_nervous",
+          "gad_q2_control_worry",
+          "gad_q3_excessive_worry",
+          "gad_q4_trouble_relaxing",
+          "gad_q5_restlessness",
+          "gad_q6_irritability",
+          "gad_q7_afraid"
+        ],
+        "totals": {
+          "PHQ9": 4,
+          "GAD7": 0
+        },
+        "safety": "none"
+      },
+      {
+        "user": "दिन चढ़ते-चढ़ते आलस बढ़ जाता है, भूख भी कम हो जाती है और कई बार खाना छूट जाता है।",
+        "assistant": "क्या भूख ज़्यादा कम हुई है, ज़्यादा बढ़ी है, या बात ज़्यादा अनियमित खाने की है क्योंकि खाना छूट या देर से हो रहा है?",
+        "asked_item": "phq_q5_appetite",
+        "stage": "clarification",
+        "target_topic": "energy",
+        "target_item": "phq_q5_appetite",
+        "target_scene": null,
+        "scene_item_ids": [],
+        "closure_mode": false,
+        "touched_items": 2,
+        "resolved_items": 0,
+        "unresolved_items": [
+          "phq_q1_anhedonia",
+          "phq_q2_low_mood",
+          "phq_q5_appetite",
+          "phq_q6_worthlessness",
+          "phq_q7_concentration",
+          "phq_q8_psychomotor",
+          "phq_q9_self_harm",
+          "gad_q1_nervous",
+          "gad_q2_control_worry",
+          "gad_q3_excessive_worry",
+          "gad_q4_trouble_relaxing",
+          "gad_q5_restlessness",
+          "gad_q6_irritability",
+          "gad_q7_afraid"
+        ],
+        "totals": {
+          "PHQ9": 4,
+          "GAD7": 0
+        },
+        "safety": "none"
+      },
+      {
+        "user": "जो चीज़ें पहले अच्छी लगती थीं अब शुरू करने से पहले ही मन हट जाता है।",
+        "assistant": "क्या भूख ज़्यादा कम हुई है, ज़्यादा बढ़ी है, या बात ज़्यादा अनियमित खाने की है क्योंकि खाना छूट या देर से हो रहा है?",
+        "asked_item": "phq_q5_appetite",
+        "stage": "clarification",
+        "target_topic": "energy",
+        "target_item": "phq_q5_appetite",
+        "target_scene": null,
+        "scene_item_ids": [],
+        "closure_mode": false,
+        "touched_items": 2,
+        "resolved_items": 0,
+        "unresolved_items": [
+          "phq_q1_anhedonia",
+          "phq_q2_low_mood",
+          "phq_q5_appetite",
+          "phq_q6_worthlessness",
+          "phq_q7_concentration",
+          "phq_q8_psychomotor",
+          "phq_q9_self_harm",
+          "gad_q1_nervous",
+          "gad_q2_control_worry",
+          "gad_q3_excessive_worry",
+          "gad_q4_trouble_relaxing",
+          "gad_q5_restlessness",
+          "gad_q6_irritability",
+          "gad_q7_afraid"
+        ],
+        "totals": {
+          "PHQ9": 4,
+          "GAD7": 0
+        },
+        "safety": "none"
+      },
+      {
+        "user": "पीछे रह जाऊँ तो मैं खुद को बहुत कोसता हूँ और लगता है मैं सब पर बोझ बन रहा हूँ।",
+        "assistant": "लगता है इसका असर इस बात पर भी पड़ रहा है कि आप अपने-आप से कैसे बात कर रहे हैं। जब चीज़ें इतनी भारी लगती हैं, क्या आप खुद को ज़्यादा दोष देने लगते हैं या बोझ जैसा महसूस होता है?",
+        "asked_item": "phq_q6_worthlessness",
+        "stage": "clarification",
+        "target_topic": "self_view",
+        "target_item": "phq_q6_worthlessness",
+        "target_scene": null,
+        "scene_item_ids": [],
+        "closure_mode": true,
+        "touched_items": 2,
+        "resolved_items": 0,
+        "unresolved_items": [
+          "phq_q1_anhedonia",
+          "phq_q2_low_mood",
+          "phq_q5_appetite",
+          "phq_q6_worthlessness",
+          "phq_q7_concentration",
+          "phq_q8_psychomotor",
+          "phq_q9_self_harm",
+          "gad_q1_nervous",
+          "gad_q2_control_worry",
+          "gad_q3_excessive_worry",
+          "gad_q4_trouble_relaxing",
+          "gad_q5_restlessness",
+          "gad_q6_irritability",
+          "gad_q7_afraid"
+        ],
+        "totals": {
+          "PHQ9": 4,
+          "GAD7": 0
+        },
+        "safety": "none"
+      },
+      {
+        "user": "ध्यान बार-बार टूटता है, एक ही लाइन दोबारा पढ़नी पड़ती है और छोटे काम भी लंबे लगते हैं।",
+        "assistant": "लगता है इसकी वजह से काम या पढ़ाई पर टिके रहना मुश्किल हो रहा है। जब आप काम या पढ़ाई पर बैठते हैं, क्या ज़्यादा ऐसा होता है कि ध्यान बार-बार भटक जाता है, या एक ही बात पर लौटते रहते हैं लेकिन वह टिकती नहीं?",
+        "asked_item": "phq_q7_concentration",
+        "stage": "clarification",
+        "target_topic": "focus",
+        "target_item": "phq_q7_concentration",
+        "target_scene": null,
+        "scene_item_ids": [],
+        "closure_mode": true,
+        "touched_items": 2,
+        "resolved_items": 0,
+        "unresolved_items": [
+          "phq_q1_anhedonia",
+          "phq_q2_low_mood",
+          "phq_q5_appetite",
+          "phq_q6_worthlessness",
+          "phq_q7_concentration",
+          "phq_q8_psychomotor",
+          "phq_q9_self_harm",
+          "gad_q1_nervous",
+          "gad_q2_control_worry",
+          "gad_q3_excessive_worry",
+          "gad_q4_trouble_relaxing",
+          "gad_q5_restlessness",
+          "gad_q6_irritability",
+          "gad_q7_afraid"
+        ],
+        "totals": {
+          "PHQ9": 4,
+          "GAD7": 0
+        },
+        "safety": "none"
+      },
+      {
+        "user": "चिंता काम, पैसों और भविष्य के बीच घूमती रहती है।",
+        "assistant": "लगता है चिंता शुरू होने के बाद उसे रोकना आसान नहीं पड़ रहा। जब चिंता शुरू होती है, किस तरह ज़्यादा फिट बैठती है: अंदर-ही-अंदर घबराया-सा एहसास, एक ही विचार की लूप जो छूटती नहीं, या काम/भविष्य की कई चिंताएँ एक साथ जमा होना?",
+        "asked_item": "gad_q2_control_worry",
+        "stage": "clarification",
+        "target_topic": "anxiety",
+        "target_item": "gad_q2_control_worry",
+        "target_scene": "worry_shape",
+        "scene_item_ids": [
+          "gad_q1_nervous",
+          "gad_q2_control_worry",
+          "gad_q3_excessive_worry"
+        ],
+        "closure_mode": true,
+        "touched_items": 2,
+        "resolved_items": 0,
+        "unresolved_items": [
+          "phq_q1_anhedonia",
+          "phq_q2_low_mood",
+          "phq_q5_appetite",
+          "phq_q6_worthlessness",
+          "phq_q7_concentration",
+          "phq_q8_psychomotor",
+          "phq_q9_self_harm",
+          "gad_q1_nervous",
+          "gad_q2_control_worry",
+          "gad_q3_excessive_worry",
+          "gad_q4_trouble_relaxing",
+          "gad_q5_restlessness",
+          "gad_q6_irritability",
+          "gad_q7_afraid"
+        ],
+        "totals": {
+          "PHQ9": 4,
+          "GAD7": 0
+        },
+        "safety": "none"
+      },
+      {
+        "user": "ज़्यादा दिमाग को शांत करना मुश्किल होता है; शरीर वाला हिस्सा है लेकिन उतना बड़ा नहीं।",
+        "assistant": "और जब यह सबसे तेज़ होती है, तब क्या ज़्यादा सामने आता है: दिमाग को शांत करना मुश्किल होना, बेचैनी, चिड़चिड़ापन, या यह एहसास कि आगे कुछ गलत हो सकता है?",
+        "asked_item": "gad_q4_trouble_relaxing",
+        "stage": "clarification",
+        "target_topic": "anxiety",
+        "target_item": "gad_q4_trouble_relaxing",
+        "target_scene": "worry_activation",
+        "scene_item_ids": [
+          "gad_q4_trouble_relaxing",
+          "gad_q5_restlessness",
+          "gad_q6_irritability",
+          "gad_q7_afraid"
+        ],
+        "closure_mode": true,
+        "touched_items": 4,
+        "resolved_items": 0,
+        "unresolved_items": [
+          "phq_q1_anhedonia",
+          "phq_q2_low_mood",
+          "phq_q5_appetite",
+          "phq_q6_worthlessness",
+          "phq_q7_concentration",
+          "phq_q8_psychomotor",
+          "phq_q9_self_harm",
+          "gad_q1_nervous",
+          "gad_q3_excessive_worry",
+          "gad_q5_restlessness",
+          "gad_q6_irritability",
+          "gad_q7_afraid"
+        ],
+        "totals": {
+          "PHQ9": 4,
+          "GAD7": 5
+        },
+        "safety": "none"
+      },
+      {
+        "user": "कुछ शामों में बेचैनी और चिड़चिड़ापन दोनों बढ़ जाते हैं।",
+        "assistant": "जब यह बेचैनी आती है, क्या ज़्यादा ऐसा लगता है कि शरीर चैन से बैठ नहीं पा रहा, या दिमाग बेचैन रहता है चाहे आप शांत बैठे हों?",
+        "asked_item": "gad_q5_restlessness",
+        "stage": "clarification",
+        "target_topic": "anxiety",
+        "target_item": "gad_q5_restlessness",
+        "target_scene": "worry_activation",
+        "scene_item_ids": [
+          "gad_q4_trouble_relaxing",
+          "gad_q5_restlessness",
+          "gad_q6_irritability",
+          "gad_q7_afraid"
+        ],
+        "closure_mode": true,
+        "touched_items": 4,
+        "resolved_items": 0,
+        "unresolved_items": [
+          "phq_q1_anhedonia",
+          "phq_q2_low_mood",
+          "phq_q5_appetite",
+          "phq_q6_worthlessness",
+          "phq_q7_concentration",
+          "phq_q8_psychomotor",
+          "phq_q9_self_harm",
+          "gad_q1_nervous",
+          "gad_q3_excessive_worry",
+          "gad_q5_restlessness",
+          "gad_q6_irritability",
+          "gad_q7_afraid"
+        ],
+        "totals": {
+          "PHQ9": 4,
+          "GAD7": 5
+        },
+        "safety": "none"
+      },
+      {
+        "user": "खुद को नुकसान पहुंचाने का मन नहीं है, बस अभी तक का सार चाहिए।",
+        "assistant": "और जब यह सबसे तेज़ होती है, तब क्या ज़्यादा सामने आता है: दिमाग को शांत करना मुश्किल होना, बेचैनी, चिड़चिड़ापन, या यह एहसास कि आगे कुछ गलत हो सकता है?",
+        "asked_item": "gad_q4_trouble_relaxing",
+        "stage": "clarification",
+        "target_topic": "anxiety",
+        "target_item": "gad_q4_trouble_relaxing",
+        "target_scene": "worry_activation",
+        "scene_item_ids": [
+          "gad_q4_trouble_relaxing",
+          "gad_q5_restlessness",
+          "gad_q6_irritability",
+          "gad_q7_afraid"
+        ],
+        "closure_mode": true,
+        "touched_items": 4,
+        "resolved_items": 0,
+        "unresolved_items": [
+          "phq_q1_anhedonia",
+          "phq_q2_low_mood",
+          "phq_q5_appetite",
+          "phq_q6_worthlessness",
+          "phq_q7_concentration",
+          "phq_q8_psychomotor",
+          "phq_q9_self_harm",
+          "gad_q1_nervous",
+          "gad_q3_excessive_worry",
+          "gad_q5_restlessness",
+          "gad_q6_irritability",
+          "gad_q7_afraid"
+        ],
+        "totals": {
+          "PHQ9": 4,
+          "GAD7": 5
+        },
+        "safety": "none"
+      }
+    ],
+    "transcript": [
+      {
+        "speaker": "assistant",
+        "text": "लगता है चिंता शुरू होने के बाद उसे रोकना आसान नहीं पड़ रहा। क्या यह ज़्यादा उदासी, लगातार चिंता, नींद की दिक्कत, या इनका मिश्रण लग रहा है?",
+        "asked_item": "gad_q2_control_worry",
+        "stage": "rapport",
+        "target_scene": null
+      },
+      {
+        "speaker": "user",
+        "text": "पिछले दो हफ्तों से रात में नींद टूटती रहती है और सुबह शुरू होने में बहुत समय लगता है।"
+      },
+      {
+        "speaker": "assistant",
+        "text": "लगता है इसका असर नींद पर साफ़ पड़ रहा है। जब नींद बिगड़ती है, क्या ज़्यादा दिक्कत सोने की शुरुआत में होती है, रात में बार-बार उठने में, या बहुत जल्दी उठ जाने में?",
+        "asked_item": "phq_q3_sleep"
+      },
+      {
+        "speaker": "user",
+        "text": "ज़्यादातर 3-4 बजे आंख खुल जाती है और फिर काम की बातें दिमाग में चलती रहती हैं।"
+      },
+      {
+        "speaker": "assistant",
+        "text": "क्या भूख ज़्यादा कम हुई है, ज़्यादा बढ़ी है, या बात ज़्यादा अनियमित खाने की है क्योंकि खाना छूट या देर से हो रहा है?",
+        "asked_item": "phq_q5_appetite"
+      },
+      {
+        "speaker": "user",
+        "text": "दिन चढ़ते-चढ़ते आलस बढ़ जाता है, भूख भी कम हो जाती है और कई बार खाना छूट जाता है।"
+      },
+      {
+        "speaker": "assistant",
+        "text": "क्या भूख ज़्यादा कम हुई है, ज़्यादा बढ़ी है, या बात ज़्यादा अनियमित खाने की है क्योंकि खाना छूट या देर से हो रहा है?",
+        "asked_item": "phq_q5_appetite"
+      },
+      {
+        "speaker": "user",
+        "text": "जो चीज़ें पहले अच्छी लगती थीं अब शुरू करने से पहले ही मन हट जाता है।"
+      },
+      {
+        "speaker": "assistant",
+        "text": "क्या भूख ज़्यादा कम हुई है, ज़्यादा बढ़ी है, या बात ज़्यादा अनियमित खाने की है क्योंकि खाना छूट या देर से हो रहा है?",
+        "asked_item": "phq_q5_appetite"
+      },
+      {
+        "speaker": "user",
+        "text": "पीछे रह जाऊँ तो मैं खुद को बहुत कोसता हूँ और लगता है मैं सब पर बोझ बन रहा हूँ।"
+      },
+      {
+        "speaker": "assistant",
+        "text": "लगता है इसका असर इस बात पर भी पड़ रहा है कि आप अपने-आप से कैसे बात कर रहे हैं। जब चीज़ें इतनी भारी लगती हैं, क्या आप खुद को ज़्यादा दोष देने लगते हैं या बोझ जैसा महसूस होता है?",
+        "asked_item": "phq_q6_worthlessness"
+      },
+      {
+        "speaker": "user",
+        "text": "ध्यान बार-बार टूटता है, एक ही लाइन दोबारा पढ़नी पड़ती है और छोटे काम भी लंबे लगते हैं।"
+      },
+      {
+        "speaker": "assistant",
+        "text": "लगता है इसकी वजह से काम या पढ़ाई पर टिके रहना मुश्किल हो रहा है। जब आप काम या पढ़ाई पर बैठते हैं, क्या ज़्यादा ऐसा होता है कि ध्यान बार-बार भटक जाता है, या एक ही बात पर लौटते रहते हैं लेकिन वह टिकती नहीं?",
+        "asked_item": "phq_q7_concentration"
+      },
+      {
+        "speaker": "user",
+        "text": "चिंता काम, पैसों और भविष्य के बीच घूमती रहती है।"
+      },
+      {
+        "speaker": "assistant",
+        "text": "लगता है चिंता शुरू होने के बाद उसे रोकना आसान नहीं पड़ रहा। जब चिंता शुरू होती है, किस तरह ज़्यादा फिट बैठती है: अंदर-ही-अंदर घबराया-सा एहसास, एक ही विचार की लूप जो छूटती नहीं, या काम/भविष्य की कई चिंताएँ एक साथ जमा होना?",
+        "asked_item": "gad_q2_control_worry"
+      },
+      {
+        "speaker": "user",
+        "text": "ज़्यादा दिमाग को शांत करना मुश्किल होता है; शरीर वाला हिस्सा है लेकिन उतना बड़ा नहीं।"
+      },
+      {
+        "speaker": "assistant",
+        "text": "और जब यह सबसे तेज़ होती है, तब क्या ज़्यादा सामने आता है: दिमाग को शांत करना मुश्किल होना, बेचैनी, चिड़चिड़ापन, या यह एहसास कि आगे कुछ गलत हो सकता है?",
+        "asked_item": "gad_q4_trouble_relaxing"
+      },
+      {
+        "speaker": "user",
+        "text": "कुछ शामों में बेचैनी और चिड़चिड़ापन दोनों बढ़ जाते हैं।"
+      },
+      {
+        "speaker": "assistant",
+        "text": "जब यह बेचैनी आती है, क्या ज़्यादा ऐसा लगता है कि शरीर चैन से बैठ नहीं पा रहा, या दिमाग बेचैन रहता है चाहे आप शांत बैठे हों?",
+        "asked_item": "gad_q5_restlessness"
+      },
+      {
+        "speaker": "user",
+        "text": "खुद को नुकसान पहुंचाने का मन नहीं है, बस अभी तक का सार चाहिए।"
+      },
+      {
+        "speaker": "assistant",
+        "text": "और जब यह सबसे तेज़ होती है, तब क्या ज़्यादा सामने आता है: दिमाग को शांत करना मुश्किल होना, बेचैनी, चिड़चिड़ापन, या यह एहसास कि आगे कुछ गलत हो सकता है?",
+        "asked_item": "gad_q4_trouble_relaxing"
+      }
+    ]
+  },
+  "hinglish": {
+    "final": {
+      "stage": "summary",
+      "target_topic": "anxiety",
+      "target_item": "gad_q2_control_worry",
+      "target_scene": null,
+      "closure_mode": false,
+      "touched_items": 6,
+      "resolved_items": 0,
+      "unresolved_items": [
+        "phq_q2_low_mood",
+        "phq_q5_appetite",
+        "phq_q6_worthlessness",
+        "phq_q8_psychomotor",
+        "phq_q9_self_harm",
+        "gad_q1_nervous",
+        "gad_q3_excessive_worry",
+        "gad_q5_restlessness",
+        "gad_q6_irritability",
+        "gad_q7_afraid"
+      ],
+      "totals": {
+        "PHQ9": 7,
+        "GAD7": 5
+      },
+      "safety": "none"
+    },
+    "turns": [
+      {
+        "user": "Pichhle do hafte se sleep break hoti rehti hai aur morning mein start lena heavy lagta hai.",
+        "assistant": "Lag raha hai iska effect sleep par kaafi clearly aa raha hai. Jab sleep disturb hoti hai, kya zyada issue sone ki shuruat mein hota hai, raat mein baar baar uthne mein, ya bahut jaldi uth jaane mein?",
+        "asked_item": "phq_q3_sleep",
+        "stage": "clarification",
+        "target_topic": "sleep",
+        "target_item": "phq_q3_sleep",
+        "target_scene": null,
+        "scene_item_ids": [],
+        "closure_mode": false,
+        "touched_items": 2,
+        "resolved_items": 0,
+        "unresolved_items": [
+          "phq_q1_anhedonia",
+          "phq_q2_low_mood",
+          "phq_q5_appetite",
+          "phq_q6_worthlessness",
+          "phq_q7_concentration",
+          "phq_q8_psychomotor",
+          "phq_q9_self_harm",
+          "gad_q1_nervous",
+          "gad_q2_control_worry",
+          "gad_q3_excessive_worry",
+          "gad_q4_trouble_relaxing",
+          "gad_q5_restlessness",
+          "gad_q6_irritability",
+          "gad_q7_afraid"
+        ],
+        "totals": {
+          "PHQ9": 3,
+          "GAD7": 0
+        },
+        "safety": "none"
+      },
+      {
+        "user": "Mostly 3 ya 4 baje aankh khul jaati hai aur phir work wali soch chalti rehti hai.",
+        "assistant": "Lag raha hai worry tab bhi active rehti hai jab bahar sab quiet ho. Jab worry start hoti hai, kya aap mind ko usse hata paate ho, ya rokne ki koshish ke baad bhi woh loop hoti rehti hai?",
+        "asked_item": "gad_q2_control_worry",
+        "stage": "clarification",
+        "target_topic": "anxiety",
+        "target_item": "gad_q2_control_worry",
+        "target_scene": null,
+        "scene_item_ids": [],
+        "closure_mode": false,
+        "touched_items": 3,
+        "resolved_items": 0,
+        "unresolved_items": [
+          "phq_q1_anhedonia",
+          "phq_q2_low_mood",
+          "phq_q5_appetite",
+          "phq_q6_worthlessness",
+          "phq_q7_concentration",
+          "phq_q8_psychomotor",
+          "phq_q9_self_harm",
+          "gad_q1_nervous",
+          "gad_q3_excessive_worry",
+          "gad_q4_trouble_relaxing",
+          "gad_q5_restlessness",
+          "gad_q6_irritability",
+          "gad_q7_afraid"
+        ],
+        "totals": {
+          "PHQ9": 3,
+          "GAD7": 3
+        },
+        "safety": "none"
+      },
+      {
+        "user": "Day chadhte chadhte aalas badh jata hai, appetite bhi down ho jaati hai aur lunch miss ho jata hai.",
+        "assistant": "Lag raha hai normal day pehle se zyada effort le raha hai. Kya appetite zyada kam hui hai, zyada badhi hai, ya meals skip ya delay hone ki wajah se zyada irregular ho gayi hai?",
+        "asked_item": "phq_q5_appetite",
+        "stage": "clarification",
+        "target_topic": "energy",
+        "target_item": "phq_q5_appetite",
+        "target_scene": null,
+        "scene_item_ids": [],
+        "closure_mode": false,
+        "touched_items": 3,
+        "resolved_items": 0,
+        "unresolved_items": [
+          "phq_q1_anhedonia",
+          "phq_q2_low_mood",
+          "phq_q5_appetite",
+          "phq_q6_worthlessness",
+          "phq_q7_concentration",
+          "phq_q8_psychomotor",
+          "phq_q9_self_harm",
+          "gad_q1_nervous",
+          "gad_q3_excessive_worry",
+          "gad_q4_trouble_relaxing",
+          "gad_q5_restlessness",
+          "gad_q6_irritability",
+          "gad_q7_afraid"
+        ],
+        "totals": {
+          "PHQ9": 3,
+          "GAD7": 3
+        },
+        "safety": "none"
+      },
+      {
+        "user": "Jo cheezein pehle achhi lagti thi ab start karne se pehle hi mann hat jata hai.",
+        "assistant": "Lag raha hai emotional weight khud hi kaafi heavy ho gaya hai. Jab yeh feel hota hai, kya yeh zyada poore din ki sadness ya heaviness jaisa rehta hai, ya kuch specific times par waves mein aata hai?",
+        "asked_item": "phq_q2_low_mood",
+        "stage": "clarification",
+        "target_topic": "mood",
+        "target_item": "phq_q2_low_mood",
+        "target_scene": null,
+        "scene_item_ids": [],
+        "closure_mode": false,
+        "touched_items": 4,
+        "resolved_items": 0,
+        "unresolved_items": [
+          "phq_q2_low_mood",
+          "phq_q5_appetite",
+          "phq_q6_worthlessness",
+          "phq_q7_concentration",
+          "phq_q8_psychomotor",
+          "phq_q9_self_harm",
+          "gad_q1_nervous",
+          "gad_q3_excessive_worry",
+          "gad_q4_trouble_relaxing",
+          "gad_q5_restlessness",
+          "gad_q6_irritability",
+          "gad_q7_afraid"
+        ],
+        "totals": {
+          "PHQ9": 5,
+          "GAD7": 3
+        },
+        "safety": "none"
+      },
+      {
+        "user": "Peeche reh jaun to main khud par kaafi harsh ho jata hoon aur burden jaisa feel hota hai.",
+        "assistant": "Lag raha hai iska effect aap apne aap se kaise baat karte ho us par bhi aa raha hai. Jab cheezein itni heavy lagti hain, kya aap khud ko zyada blame karte ho ya burden jaisa feel hota hai?",
+        "asked_item": "phq_q6_worthlessness",
+        "stage": "clarification",
+        "target_topic": "self_view",
+        "target_item": "phq_q6_worthlessness",
+        "target_scene": null,
+        "scene_item_ids": [],
+        "closure_mode": true,
+        "touched_items": 4,
+        "resolved_items": 0,
+        "unresolved_items": [
+          "phq_q2_low_mood",
+          "phq_q5_appetite",
+          "phq_q6_worthlessness",
+          "phq_q7_concentration",
+          "phq_q8_psychomotor",
+          "phq_q9_self_harm",
+          "gad_q1_nervous",
+          "gad_q3_excessive_worry",
+          "gad_q4_trouble_relaxing",
+          "gad_q5_restlessness",
+          "gad_q6_irritability",
+          "gad_q7_afraid"
+        ],
+        "totals": {
+          "PHQ9": 5,
+          "GAD7": 3
+        },
+        "safety": "none"
+      },
+      {
+        "user": "Focus toot jata hai, same line dobara padhni padti hai, aur small tasks slow lagte hain.",
+        "assistant": "Lag raha hai tasks par tikna is wajah se mushkil ho raha hai. Jab aap work ya study par baithte ho, kya zyada aisa hota hai ki attention baar baar slip ho jata hai, ya same line par wapas aate rehte ho lekin woh stick nahi karti?",
+        "asked_item": "phq_q7_concentration",
+        "stage": "clarification",
+        "target_topic": "focus",
+        "target_item": "phq_q7_concentration",
+        "target_scene": null,
+        "scene_item_ids": [],
+        "closure_mode": true,
+        "touched_items": 5,
+        "resolved_items": 0,
+        "unresolved_items": [
+          "phq_q2_low_mood",
+          "phq_q5_appetite",
+          "phq_q6_worthlessness",
+          "phq_q8_psychomotor",
+          "phq_q9_self_harm",
+          "gad_q1_nervous",
+          "gad_q3_excessive_worry",
+          "gad_q4_trouble_relaxing",
+          "gad_q5_restlessness",
+          "gad_q6_irritability",
+          "gad_q7_afraid"
+        ],
+        "totals": {
+          "PHQ9": 7,
+          "GAD7": 3
+        },
+        "safety": "none"
+      },
+      {
+        "user": "Worry work mistakes, paise, aur future ke beech jump karti rehti hai.",
+        "assistant": "Lag raha hai worry tab bhi active rehti hai jab bahar sab quiet ho. Jab worry start hoti hai, kaunsi shape zyada fit baithti hai: background mein keyed-up feeling, ek thought-loop jo chhootti nahi, ya work aur future ki kai worries saath mein pile hona?",
+        "asked_item": "gad_q2_control_worry",
+        "stage": "clarification",
+        "target_topic": "anxiety",
+        "target_item": "gad_q2_control_worry",
+        "target_scene": "worry_shape",
+        "scene_item_ids": [
+          "gad_q1_nervous",
+          "gad_q2_control_worry",
+          "gad_q3_excessive_worry"
+        ],
+        "closure_mode": true,
+        "touched_items": 5,
+        "resolved_items": 0,
+        "unresolved_items": [
+          "phq_q2_low_mood",
+          "phq_q5_appetite",
+          "phq_q6_worthlessness",
+          "phq_q8_psychomotor",
+          "phq_q9_self_harm",
+          "gad_q1_nervous",
+          "gad_q3_excessive_worry",
+          "gad_q4_trouble_relaxing",
+          "gad_q5_restlessness",
+          "gad_q6_irritability",
+          "gad_q7_afraid"
+        ],
+        "totals": {
+          "PHQ9": 7,
+          "GAD7": 3
+        },
+        "safety": "none"
+      },
+      {
+        "user": "Mind ko quiet karna tough hota hai; body side hai but smaller lagti hai.",
+        "assistant": "Aur jab yeh peak karti hai, tab kya zyada stand out karta hai: mind ko quiet karna tough hona, restlessness, irritability, ya yeh feel ki aage kuch galat ho sakta hai?",
+        "asked_item": "gad_q4_trouble_relaxing",
+        "stage": "clarification",
+        "target_topic": "anxiety",
+        "target_item": "gad_q4_trouble_relaxing",
+        "target_scene": "worry_activation",
+        "scene_item_ids": [
+          "gad_q4_trouble_relaxing",
+          "gad_q5_restlessness",
+          "gad_q6_irritability",
+          "gad_q7_afraid"
+        ],
+        "closure_mode": true,
+        "touched_items": 6,
+        "resolved_items": 0,
+        "unresolved_items": [
+          "phq_q2_low_mood",
+          "phq_q5_appetite",
+          "phq_q6_worthlessness",
+          "phq_q8_psychomotor",
+          "phq_q9_self_harm",
+          "gad_q1_nervous",
+          "gad_q3_excessive_worry",
+          "gad_q5_restlessness",
+          "gad_q6_irritability",
+          "gad_q7_afraid"
+        ],
+        "totals": {
+          "PHQ9": 7,
+          "GAD7": 5
+        },
+        "safety": "none"
+      },
+      {
+        "user": "Kuch evenings mein restlessness aur irritability dono badh jaate hain.",
+        "assistant": "Jab yeh restlessness aati hai, kya zyada body chain se baith nahi paati, ya mind agitated rehta hai chahe aap still baithe ho?",
+        "asked_item": "gad_q5_restlessness",
+        "stage": "clarification",
+        "target_topic": "anxiety",
+        "target_item": "gad_q5_restlessness",
+        "target_scene": "worry_activation",
+        "scene_item_ids": [
+          "gad_q4_trouble_relaxing",
+          "gad_q5_restlessness",
+          "gad_q6_irritability",
+          "gad_q7_afraid"
+        ],
+        "closure_mode": true,
+        "touched_items": 6,
+        "resolved_items": 0,
+        "unresolved_items": [
+          "phq_q2_low_mood",
+          "phq_q5_appetite",
+          "phq_q6_worthlessness",
+          "phq_q8_psychomotor",
+          "phq_q9_self_harm",
+          "gad_q1_nervous",
+          "gad_q3_excessive_worry",
+          "gad_q5_restlessness",
+          "gad_q6_irritability",
+          "gad_q7_afraid"
+        ],
+        "totals": {
+          "PHQ9": 7,
+          "GAD7": 5
+        },
+        "safety": "none"
+      },
+      {
+        "user": "Khud ko hurt karne ka plan nahi hai, bas abhi ka working summary chahiye.",
+        "assistant": "Ab tak jo picture ban rahi hai, usme kaam start karne se pehle hi mann hatne lagta hai; sleep theek se settle nahi ho pa rahi hai; worry thoughts aur body tension dono ko saath kheench rahi hai. Agar ek cheez abhi bhi clarify karni ho, to next best jagah anxiety rahegi.",
+        "asked_item": null,
+        "stage": "summary",
+        "target_topic": "anxiety",
+        "target_item": "gad_q2_control_worry",
+        "target_scene": null,
+        "scene_item_ids": [],
+        "closure_mode": false,
+        "touched_items": 6,
+        "resolved_items": 0,
+        "unresolved_items": [
+          "phq_q2_low_mood",
+          "phq_q5_appetite",
+          "phq_q6_worthlessness",
+          "phq_q8_psychomotor",
+          "phq_q9_self_harm",
+          "gad_q1_nervous",
+          "gad_q3_excessive_worry",
+          "gad_q5_restlessness",
+          "gad_q6_irritability",
+          "gad_q7_afraid"
+        ],
+        "totals": {
+          "PHQ9": 7,
+          "GAD7": 5
+        },
+        "safety": "none"
+      }
+    ],
+    "transcript": [
+      {
+        "speaker": "assistant",
+        "text": "Lag raha hai worry ek baar start ho jaaye to switch off karna easy nahi pad raha. Kya yeh zyada low mood, constant worry, sleep issue, ya in sab ka mix lag raha hai?",
+        "asked_item": "gad_q2_control_worry",
+        "stage": "rapport",
+        "target_scene": null
+      },
+      {
+        "speaker": "user",
+        "text": "Pichhle do hafte se sleep break hoti rehti hai aur morning mein start lena heavy lagta hai."
+      },
+      {
+        "speaker": "assistant",
+        "text": "Lag raha hai iska effect sleep par kaafi clearly aa raha hai. Jab sleep disturb hoti hai, kya zyada issue sone ki shuruat mein hota hai, raat mein baar baar uthne mein, ya bahut jaldi uth jaane mein?",
+        "asked_item": "phq_q3_sleep"
+      },
+      {
+        "speaker": "user",
+        "text": "Mostly 3 ya 4 baje aankh khul jaati hai aur phir work wali soch chalti rehti hai."
+      },
+      {
+        "speaker": "assistant",
+        "text": "Lag raha hai worry tab bhi active rehti hai jab bahar sab quiet ho. Jab worry start hoti hai, kya aap mind ko usse hata paate ho, ya rokne ki koshish ke baad bhi woh loop hoti rehti hai?",
+        "asked_item": "gad_q2_control_worry"
+      },
+      {
+        "speaker": "user",
+        "text": "Day chadhte chadhte aalas badh jata hai, appetite bhi down ho jaati hai aur lunch miss ho jata hai."
+      },
+      {
+        "speaker": "assistant",
+        "text": "Lag raha hai normal day pehle se zyada effort le raha hai. Kya appetite zyada kam hui hai, zyada badhi hai, ya meals skip ya delay hone ki wajah se zyada irregular ho gayi hai?",
+        "asked_item": "phq_q5_appetite"
+      },
+      {
+        "speaker": "user",
+        "text": "Jo cheezein pehle achhi lagti thi ab start karne se pehle hi mann hat jata hai."
+      },
+      {
+        "speaker": "assistant",
+        "text": "Lag raha hai emotional weight khud hi kaafi heavy ho gaya hai. Jab yeh feel hota hai, kya yeh zyada poore din ki sadness ya heaviness jaisa rehta hai, ya kuch specific times par waves mein aata hai?",
+        "asked_item": "phq_q2_low_mood"
+      },
+      {
+        "speaker": "user",
+        "text": "Peeche reh jaun to main khud par kaafi harsh ho jata hoon aur burden jaisa feel hota hai."
+      },
+      {
+        "speaker": "assistant",
+        "text": "Lag raha hai iska effect aap apne aap se kaise baat karte ho us par bhi aa raha hai. Jab cheezein itni heavy lagti hain, kya aap khud ko zyada blame karte ho ya burden jaisa feel hota hai?",
+        "asked_item": "phq_q6_worthlessness"
+      },
+      {
+        "speaker": "user",
+        "text": "Focus toot jata hai, same line dobara padhni padti hai, aur small tasks slow lagte hain."
+      },
+      {
+        "speaker": "assistant",
+        "text": "Lag raha hai tasks par tikna is wajah se mushkil ho raha hai. Jab aap work ya study par baithte ho, kya zyada aisa hota hai ki attention baar baar slip ho jata hai, ya same line par wapas aate rehte ho lekin woh stick nahi karti?",
+        "asked_item": "phq_q7_concentration"
+      },
+      {
+        "speaker": "user",
+        "text": "Worry work mistakes, paise, aur future ke beech jump karti rehti hai."
+      },
+      {
+        "speaker": "assistant",
+        "text": "Lag raha hai worry tab bhi active rehti hai jab bahar sab quiet ho. Jab worry start hoti hai, kaunsi shape zyada fit baithti hai: background mein keyed-up feeling, ek thought-loop jo chhootti nahi, ya work aur future ki kai worries saath mein pile hona?",
+        "asked_item": "gad_q2_control_worry"
+      },
+      {
+        "speaker": "user",
+        "text": "Mind ko quiet karna tough hota hai; body side hai but smaller lagti hai."
+      },
+      {
+        "speaker": "assistant",
+        "text": "Aur jab yeh peak karti hai, tab kya zyada stand out karta hai: mind ko quiet karna tough hona, restlessness, irritability, ya yeh feel ki aage kuch galat ho sakta hai?",
+        "asked_item": "gad_q4_trouble_relaxing"
+      },
+      {
+        "speaker": "user",
+        "text": "Kuch evenings mein restlessness aur irritability dono badh jaate hain."
+      },
+      {
+        "speaker": "assistant",
+        "text": "Jab yeh restlessness aati hai, kya zyada body chain se baith nahi paati, ya mind agitated rehta hai chahe aap still baithe ho?",
+        "asked_item": "gad_q5_restlessness"
+      },
+      {
+        "speaker": "user",
+        "text": "Khud ko hurt karne ka plan nahi hai, bas abhi ka working summary chahiye."
+      },
+      {
+        "speaker": "assistant",
+        "text": "Ab tak jo picture ban rahi hai, usme kaam start karne se pehle hi mann hatne lagta hai; sleep theek se settle nahi ho pa rahi hai; worry thoughts aur body tension dono ko saath kheench rahi hai. Agar ek cheez abhi bhi clarify karni ho, to next best jagah anxiety rahegi.",
+        "asked_item": null
+      }
+    ]
+  }
+}

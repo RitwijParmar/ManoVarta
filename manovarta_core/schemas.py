@@ -23,6 +23,7 @@ ReadinessLevel = Literal["opening", "building", "steady", "ready_to_close"]
 FatigueLevel = Literal["low", "medium", "high"]
 NudgeOutcome = Literal["unknown", "helpful", "unhelpful"]
 AsyncScoreStatus = Literal["pending", "running", "completed", "failed"]
+DomainTrack = Literal["phq", "gad", "safety", "rapport"]
 
 
 class Turn(BaseModel):
@@ -98,12 +99,42 @@ class DisclosureMetrics(BaseModel):
     nudge_effectiveness: float = Field(default=0.0, ge=-1.0, le=1.0)
 
 
+class DialogueAnalyzerEvidence(BaseModel):
+    item: str
+    status: Literal["resolved", "partial", "contradicted", "none"] = "none"
+    confidence: float = Field(default=0.0, ge=0.0, le=1.0)
+    quote_span: str = ""
+    polarity: Literal["positive", "negative", "mixed"] = "positive"
+
+
+class DialogueAnalyzerSafety(BaseModel):
+    level: SafetyLevel = "none"
+    reason: str = ""
+
+
+class DialogueAnalyzerResult(BaseModel):
+    active_domain: Literal["phq", "gad", "mixed", "safety"] = "mixed"
+    domain_confidence: float = Field(default=0.0, ge=0.0, le=1.0)
+    stay_in_domain: bool = True
+    user_intents: List[str] = Field(default_factory=list)
+    evidence_updates: List[DialogueAnalyzerEvidence] = Field(default_factory=list)
+    scene_candidates: List[str] = Field(default_factory=list)
+    blocked_pivots: List[str] = Field(default_factory=list)
+    negations: List[str] = Field(default_factory=list)
+    safety: DialogueAnalyzerSafety = Field(default_factory=DialogueAnalyzerSafety)
+
+
 class DialoguePlan(BaseModel):
     stage: DialogueStage = "rapport"
     next_action: DialogueAction = "open_question"
     current_topic: str = "rapport"
     target_topic: str = "rapport"
+    active_domain: DomainTrack = "rapport"
+    domain_locked: bool = False
     target_item: Optional[str] = None
+    target_scene: Optional[str] = None
+    scene_item_ids: List[str] = Field(default_factory=list)
+    closure_mode: bool = False
     rationale: str = ""
     user_turns: int = 0
     low_confidence_topics: List[str] = Field(default_factory=list)
@@ -121,6 +152,11 @@ class DialoguePlan(BaseModel):
     reflective_anchor: str = ""
     continuity_note: str = ""
     recommended_nudges: List[str] = Field(default_factory=list)
+    phq_queue: List[str] = Field(default_factory=list)
+    gad_queue: List[str] = Field(default_factory=list)
+    blocked_items: List[str] = Field(default_factory=list)
+    recent_scenes: List[str] = Field(default_factory=list)
+    recent_items: List[str] = Field(default_factory=list)
 
 
 class CoveragePlan(BaseModel):
@@ -177,6 +213,9 @@ class ChatSession(BaseModel):
     profile: UserProfileContext = Field(default_factory=UserProfileContext)
     turns: List[Turn] = Field(default_factory=list)
     asked_items: List[str] = Field(default_factory=list)
+    domain_history: List[DomainTrack] = Field(default_factory=list)
+    scene_history: List[str] = Field(default_factory=list)
+    blocked_items: List[str] = Field(default_factory=list)
     nudge_events: List[NudgeEvent] = Field(default_factory=list)
     created_at: datetime = Field(default_factory=datetime.utcnow)
 

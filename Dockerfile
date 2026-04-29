@@ -15,18 +15,15 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     MANOVARTA_LIVE_LLM_TURN_THRESHOLD=1 \
     MANOVARTA_ASYNC_SCORING_ENABLED=true \
     MANOVARTA_ASYNC_SCORING_DIR=/app/artifacts/async_scoring \
-    MANOVARTA_LOCAL_SAFETY_CHECKPOINT=/app/outputs/local_safety_boost/safety-indicbert-best-infer-fp16 \
+    MANOVARTA_LOCAL_SAFETY_CHECKPOINT= \
     HF_HUB_DISABLE_TELEMETRY=1
 
 WORKDIR /app
 
-COPY pyproject.toml README.md manage.py .env.example ./
+COPY pyproject.toml README.md ./
 COPY manovarta_core ./manovarta_core
-COPY manovarta_admin ./manovarta_admin
-COPY screening ./screening
 COPY training ./training
-COPY data ./data
-COPY outputs/local_safety_boost ./outputs/local_safety_boost
+COPY data/seed ./data/seed
 
 RUN pip install --upgrade pip \
     && pip install --index-url https://download.pytorch.org/whl/cpu "torch>=2.2" \
