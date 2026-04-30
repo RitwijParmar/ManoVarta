@@ -43,18 +43,18 @@ class RuntimeEngine:
             rule_flag=merge_safety_flags(rule_flag, semantic_flag),
             checkpoint_flag=checkpoint_flag,
         )
-        snapshot = self.scorer.analyze(analysis_turns, language, safety_flag)
+        snapshot = self.scorer.analyze(turn_list, language, safety_flag)
         if not use_llm or self.extractor is None or not self.extractor.enabled:
             return snapshot
 
         try:
-            llm_result = self.extractor.extract(analysis_turns, language)
+            llm_result = self.extractor.extract(turn_list, language)
         except Exception:
             return snapshot
         if not llm_result:
             return snapshot
         try:
-            return self._merge_snapshot(snapshot, analysis_turns, llm_result)
+            return self._merge_snapshot(snapshot, turn_list, llm_result)
         except Exception:
             return snapshot
 
@@ -213,12 +213,18 @@ class RuntimeEngine:
 
         if abs(base.value - llm_value) <= 1:
             calibrated_value = self._calibrate_value(base.value, llm_value, base.confidence, llm_confidence)
-            if base.stable:
+            corroborated_resolution = (
+                not base.review_recommended
+                and llm_span_ids
+                and base.confidence >= 0.78
+                and len(evidence_ids) >= 2
+            )
+            if base.stable or corroborated_resolution:
                 return base.model_copy(
                     update={
-                        "value": calibrated_value if llm_confidence > 0.78 and llm_span_ids else base.value,
+                        "value": calibrated_value if (llm_confidence > 0.78 and llm_span_ids) or corroborated_resolution else base.value,
                         "status": "resolved",
-                        "confidence": round(max(base.confidence, llm_confidence) - 0.02, 2),
+                        "confidence": round(max(base.confidence, llm_confidence) - (0.01 if corroborated_resolution and not base.stable else 0.02), 2),
                         "stable": True,
                         "evidence_span_ids": evidence_ids,
                         "source": "hybrid",
