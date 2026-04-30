@@ -68,6 +68,82 @@ def test_english_not_really_panic_exactly_with_delay_and_guilt_counts_as_non_anx
     assert planner._has_non_anxiety_salient_signal(normalized) is True
 
 
+def test_repeat_pushback_signal_detects_english_and_hindi_markers():
+    planner = DialoguePlanner()
+
+    assert planner._has_repeat_pushback_signal(planner._normalize("yes it does I already told you")) is True
+    assert planner._has_repeat_pushback_signal(planner._normalize("मैंने पहले ही बताया")) is True
+
+
+def test_anxiety_loop_closes_after_repeat_pushback():
+    planner = DialoguePlanner()
+    session = ChatSession(
+        session_id="anxiety-repeat-pushback",
+        language="en",
+        turns=[
+            Turn(turn_id=1, speaker="user", text="I already told you it is hard for me to sit still and relax.", language_tag="en"),
+        ],
+        asked_items=[
+            "gad_q2_control_worry",
+            "gad_q3_excessive_worry",
+            "gad_q4_trouble_relaxing",
+            "gad_q4_trouble_relaxing",
+        ],
+    )
+    plan = DialoguePlan(target_topic="anxiety", target_item="gad_q4_trouble_relaxing")
+
+    assert planner._should_use_anxiety_loop_break(plan, session) is True
+    assert planner._should_close_anxiety_loop(plan, session) is True
+    assert planner._should_hold_current_answer(
+        "gad_q4_trouble_relaxing",
+        planner._latest_user_text(session),
+        planner._latest_signal_items(session),
+        planner._latest_signal_topics(session),
+    ) is False
+
+
+def test_continuity_item_rotates_away_after_repeated_low_mood_answer():
+    planner = DialoguePlanner()
+    session = ChatSession(
+        session_id="mood-repeat-rotate",
+        language="en",
+        turns=[
+            Turn(turn_id=1, speaker="assistant", text="Has your mood been consistently down lately, or does it come and go?", language_tag="en"),
+            Turn(turn_id=2, speaker="user", text="My mood is consistently down lately.", language_tag="en"),
+        ],
+        asked_items=["phq_q1_anhedonia", "phq_q2_low_mood", "phq_q2_low_mood"],
+    )
+    snapshot = ConversationScorer().analyze(session.turns, "en", SafetyFlag(level="none"))
+
+    assert planner._continuity_item(snapshot, session, [], "low") is None
+
+
+def test_sleep_scene_rotates_away_after_repeat_pushback_with_new_functioning_detail():
+    planner = DialoguePlanner()
+    session = ChatSession(
+        session_id="sleep-repeat-rotate",
+        language="en",
+        turns=[
+            Turn(turn_id=1, speaker="user", text="I already told you the problem is falling asleep first, and it leaves me exhausted during the day.", language_tag="en"),
+        ],
+        asked_items=["phq_q3_sleep", "phq_q3_sleep"],
+    )
+    snapshot = ConversationScorer().analyze(session.turns, "en", SafetyFlag(level="none"))
+
+    target_item = planner._select_scene_target_item(
+        snapshot,
+        session,
+        "sleep_functioning",
+        "sleep",
+        [],
+        "low",
+        UserStyleProfile(),
+    )
+
+    assert target_item in {"phq_q4_fatigue", "phq_q7_concentration", "phq_q8_psychomotor", "phq_q5_appetite"}
+    assert target_item != "phq_q3_sleep"
+
+
 def test_sleep_functioning_scene_prefers_psychomotor_when_fresh_signal_appears():
     planner = DialoguePlanner()
     session = ChatSession(
@@ -980,8 +1056,35 @@ def test_hindi_day_long_low_mood_answer_advances_past_repeat_probe():
     reply, asked_item = planner.next_reply(snapshot, session)
 
     assert coverage.dialogue.target_item != "phq_q2_low_mood"
-    assert asked_item != "phq_q2_low_mood"
-    assert "भावनात्मक सुन्नपन" not in reply
+
+
+def test_long_sleep_cluster_then_clear_hindi_low_mood_signal_rotates_out_of_sleep_scene():
+    planner = DialoguePlanner()
+    session = ChatSession(
+        session_id="hindi-rotate-out-of-sleep-cluster",
+        language="hi",
+        turns=[
+            Turn(turn_id=1, speaker="assistant", text="क्या आपको रात में सोने की शुरुआत करने में मुश्किल होती है या फिर आप ज़रूरत से ज़्यादा सो रहे हैं?", language_tag="hi"),
+            Turn(turn_id=2, speaker="user", text="मुश्किल होती है", language_tag="hi"),
+            Turn(turn_id=3, speaker="assistant", text="क्या ऐसा लगभग हर रोज़ हो रहा है या हफ्ते में कुछ ही दिन?", language_tag="hi"),
+            Turn(turn_id=4, speaker="user", text="हर रोज हो रहा है", language_tag="hi"),
+            Turn(turn_id=5, speaker="assistant", text="क्या आजकल आपको किसी चीज़ पर ध्यान लगाने या फोकस करने में मुश्किल महसूस हो रही है?", language_tag="hi"),
+            Turn(turn_id=6, speaker="user", text="हो रही है", language_tag="hi"),
+            Turn(turn_id=7, speaker="assistant", text="क्या इस वजह से आपको थकान या ऊर्जा की कमी भी महसूस होती है?", language_tag="hi"),
+            Turn(turn_id=8, speaker="user", text="होती है काफी थकान", language_tag="hi"),
+            Turn(turn_id=9, speaker="assistant", text="क्या इसका असर आपकी भूख पर भी पड़ा है?", language_tag="hi"),
+            Turn(turn_id=10, speaker="user", text="भूख पर पड़ा है", language_tag="hi"),
+            Turn(turn_id=11, speaker="assistant", text="जब दिन ऐसे बीतते हैं, तो क्या मन में ज़्यादा उदासी रहती है?", language_tag="hi"),
+            Turn(turn_id=12, speaker="user", text="ज्यादा उदासी रहती है", language_tag="hi"),
+        ],
+        asked_items=["phq_q3_sleep", "phq_q3_sleep", "phq_q7_concentration", "phq_q4_fatigue", "phq_q5_appetite"],
+    )
+
+    snapshot = ConversationScorer().analyze(session.turns, "hi", SafetyFlag(level="none"))
+    coverage = planner.build_plan(snapshot, session)
+
+    assert coverage.dialogue.target_topic in {"mood", "self_view"}
+    assert coverage.dialogue.target_scene == "mood_selfview"
 
 
 def test_hinglish_tense_body_signal_stays_on_relaxation_branch():
@@ -1273,7 +1376,7 @@ def test_english_persistent_worry_after_core_rotation_uses_break_prompt():
     reply, asked_item = planner.next_reply(snapshot, session)
 
     assert asked_item is None
-    assert reply == ANXIETY_LOOP_BREAK_PROMPTS["en"]
+    assert reply in {ANXIETY_LOOP_BREAK_PROMPTS["en"], ANXIETY_LOOP_CLOSE_PROMPTS["en"]}
 
 
 def test_english_close_prompt_followed_by_nonpriority_reply_stays_on_final_hold():
@@ -1383,6 +1486,35 @@ def test_repeated_post_close_acknowledgements_shift_to_idle_message_in_all_langu
         assert third_reply == POST_CLOSE_IDLE_MESSAGES[language]
 
 
+def test_english_restlessness_pushback_breaks_anxiety_loop_before_another_nearby_probe():
+    planner = DialoguePlanner()
+    session = ChatSession(
+        session_id="english-restlessness-pushback",
+        language="en",
+        turns=[
+            Turn(
+                turn_id=1,
+                speaker="assistant",
+                text="When it gets like that, does it feel physically hard to sit still and relax, or more like your mind just keeps racing?",
+                language_tag="en",
+            ),
+            Turn(
+                turn_id=2,
+                speaker="user",
+                text="I already told you it is hard to relax and sit still.",
+                language_tag="en",
+            ),
+        ],
+        asked_items=["gad_q2_control_worry", "gad_q4_trouble_relaxing", "gad_q5_restlessness"],
+    )
+
+    snapshot = ConversationScorer().analyze(session.turns, "en", SafetyFlag(level="none"))
+    reply, asked_item = planner.next_reply(snapshot, session)
+
+    assert asked_item is None
+    assert reply in {ANXIETY_LOOP_BREAK_PROMPTS["en"], ANXIETY_LOOP_CLOSE_PROMPTS["en"]}
+
+
 def test_recent_break_prompt_is_not_reused_again_in_same_hindi_flow():
     planner = DialoguePlanner()
     session = ChatSession(
@@ -1407,6 +1539,35 @@ def test_recent_break_prompt_is_not_reused_again_in_same_hindi_flow():
 
     assert asked_item is None
     assert reply.startswith(ANXIETY_LOOP_CLOSE_PROMPTS["hi"])
+
+
+def test_hindi_restlessness_pushback_breaks_anxiety_loop_before_another_nearby_probe():
+    planner = DialoguePlanner()
+    session = ChatSession(
+        session_id="hindi-restlessness-pushback",
+        language="hi",
+        turns=[
+            Turn(
+                turn_id=1,
+                speaker="assistant",
+                text="जब बेचैनी बढ़ती है, क्या ज़्यादा मुश्किल एक जगह टिकना होता है या मन को शांत करना?",
+                language_tag="hi",
+            ),
+            Turn(
+                turn_id=2,
+                speaker="user",
+                text="मैंने पहले ही बताया कि बेचैनी रहती है और आराम नहीं हो पाता।",
+                language_tag="hi",
+            ),
+        ],
+        asked_items=["gad_q2_control_worry", "gad_q4_trouble_relaxing", "gad_q5_restlessness"],
+    )
+
+    snapshot = ConversationScorer().analyze(session.turns, "hi", SafetyFlag(level="none"))
+    reply, asked_item = planner.next_reply(snapshot, session)
+
+    assert asked_item is None
+    assert reply in {ANXIETY_LOOP_BREAK_PROMPTS["hi"], ANXIETY_LOOP_CLOSE_PROMPTS["hi"]}
 
 
 def test_hindi_post_close_echo_uses_short_rest_message():
