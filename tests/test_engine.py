@@ -109,6 +109,25 @@ class RecordingExtractor:
         }
 
 
+class CorroboratingSleepExtractor:
+    enabled = True
+
+    def extract(self, turns, language):
+        return {
+            "items": [
+                {
+                    "item_id": "phq_q3_sleep",
+                    "value": 3,
+                    "evidence_quote": "Mostly waking during the night and then too early, probably five nights a week.",
+                    "confidence_note": "Repeated nighttime waking and early waking most nights.",
+                }
+            ],
+            "safety_level": "none",
+            "safety_cues": [],
+            "notes": "Corroborated sleep evidence.",
+        }
+
+
 def test_runtime_engine_merges_llm_output_into_snapshot():
     turns = [
         Turn(turn_id=1, speaker="assistant", text="What has been hardest lately?", language_tag="en"),
@@ -260,7 +279,7 @@ def test_runtime_engine_resolves_explicit_negative_closure_items():
     assert snapshot.items["phq_q9_self_harm"].status == "resolved"
 
 
-def test_runtime_engine_passes_only_user_turns_into_extractor():
+def test_runtime_engine_passes_full_conversation_into_extractor_for_contextual_scoring():
     turns = [
         Turn(turn_id=1, speaker="assistant", text="How has your mood been?", language_tag="en"),
         Turn(turn_id=2, speaker="user", text="My mood stays heavy most of the day.", language_tag="en"),
@@ -275,5 +294,47 @@ def test_runtime_engine_passes_only_user_turns_into_extractor():
 
     snapshot = engine.analyze(turns, "en")
 
-    assert extractor.seen_speakers == ["user"]
+    assert extractor.seen_speakers == ["assistant", "user", "assistant"]
     assert snapshot.items["phq_q2_low_mood"].value == 2
+
+
+def test_runtime_engine_uses_assistant_question_context_for_brief_hindi_answers():
+    turns = [
+        Turn(turn_id=1, speaker="assistant", text="क्या आपको रात में सोने की शुरुआत करने में मुश्किल होती है?", language_tag="hi"),
+        Turn(turn_id=2, speaker="user", text="मुश्किल होती है", language_tag="hi"),
+        Turn(turn_id=3, speaker="assistant", text="क्या आजकल आपको किसी चीज़ पर ध्यान लगाने या फोकस करने में मुश्किल महसूस हो रही है?", language_tag="hi"),
+        Turn(turn_id=4, speaker="user", text="हो रही है जब मैं पढ़ाई के लिए बैठता हूं नहीं कर पाता", language_tag="hi"),
+        Turn(turn_id=5, speaker="assistant", text="क्या इस वजह से आपको थकान या ऊर्जा की कमी भी महसूस होती है?", language_tag="hi"),
+        Turn(turn_id=6, speaker="user", text="होती है काफी थकान और ऊर्जा की कमी महसूस होती है", language_tag="hi"),
+    ]
+    engine = RuntimeEngine(
+        scorer=ConversationScorer(),
+        safety_monitor=SafetyMonitor(),
+        extractor=None,
+    )
+
+    snapshot = engine.analyze(turns, "hi", use_llm=False)
+
+    assert snapshot.items["phq_q3_sleep"].value is not None
+    assert snapshot.items["phq_q7_concentration"].value is not None
+    assert snapshot.items["phq_q4_fatigue"].value is not None
+
+
+def test_runtime_engine_resolves_correlated_one_step_sleep_difference_when_evidence_is_shared():
+    turns = [
+        Turn(turn_id=1, speaker="assistant", text="What has sleep been like?", language_tag="en"),
+        Turn(turn_id=2, speaker="user", text="Sleep has been broken for the last two weeks. I wake around 3 or 4 and drag through the next day.", language_tag="en"),
+        Turn(turn_id=3, speaker="assistant", text="What tends to happen once you wake up?", language_tag="en"),
+        Turn(turn_id=4, speaker="user", text="Mostly waking during the night and then too early, probably five nights a week.", language_tag="en"),
+    ]
+    engine = RuntimeEngine(
+        scorer=ConversationScorer(),
+        safety_monitor=SafetyMonitor(),
+        extractor=CorroboratingSleepExtractor(),
+    )
+
+    snapshot = engine.analyze(turns, "en")
+
+    assert snapshot.items["phq_q3_sleep"].status == "resolved"
+    assert snapshot.items["phq_q3_sleep"].value in {2, 3}
+    assert snapshot.items["phq_q3_sleep"].source == "hybrid"
