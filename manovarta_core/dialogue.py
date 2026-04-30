@@ -1501,6 +1501,15 @@ ITEM_TO_TOPIC = {
     for item_id in node.item_ids
 }
 
+ITEM_TO_SCENES = {
+    item_id: tuple(
+        scene_id
+        for scene_id, scene in SCENE_GRAPH.items()
+        if item_id in scene.item_ids
+    )
+    for item_id in ITEM_TO_TOPIC
+}
+
 
 class DialoguePlanner:
     def _is_item_closed(self, snapshot: ScreeningSnapshot, item_id: str) -> bool:
@@ -1554,10 +1563,15 @@ class DialoguePlanner:
         plan = snapshot.coverage.dialogue
         language = session.language
         latest_user_text = self._latest_user_text(session)
-        fresh_anxiety_branch_detail = self._has_worry_domain_signal(latest_user_text) or self._has_new_anxiety_branch_detail(latest_user_text)
+        repeat_pushback = self._has_repeat_pushback_signal(latest_user_text)
+        fresh_anxiety_branch_detail = False if repeat_pushback else (
+            self._has_worry_domain_signal(latest_user_text) or self._has_new_anxiety_branch_detail(latest_user_text)
+        )
         late_anxiety_activation_detail = bool(
             self._latest_signal_items(session) & {"gad_q5_restlessness", "gad_q6_irritability", "gad_q7_afraid"}
         )
+        if repeat_pushback and not self._has_awful_outcome_signal(latest_user_text):
+            late_anxiety_activation_detail = False
 
         if snapshot.safety.level == "urgent" or plan.next_action == "handoff":
             return SAFETY_MESSAGES[language], plan.target_item
@@ -1630,13 +1644,22 @@ class DialoguePlanner:
     def _should_use_anxiety_loop_break(self, plan: DialoguePlan, session: ChatSession) -> bool:
         if plan.target_topic != "anxiety":
             return False
-        loop_items = {"gad_q2_control_worry", "gad_q3_excessive_worry", "gad_q4_trouble_relaxing"}
+        loop_items = {
+            "gad_q2_control_worry",
+            "gad_q3_excessive_worry",
+            "gad_q4_trouble_relaxing",
+            "gad_q5_restlessness",
+        }
         recent = session.asked_items[-5:]
+        latest_user_text = self._latest_user_text(session)
+        if self._has_repeat_pushback_signal(latest_user_text):
+            recent_loop_items = [item for item in recent if item in loop_items]
+            if len(recent_loop_items) >= 1:
+                return True
         if len(recent) < 4:
             return False
         if sum(item in loop_items for item in recent) < 4:
             return False
-        latest_user_text = self._latest_user_text(session)
         if self._has_new_anxiety_branch_detail(latest_user_text):
             return False
         repeated_target = recent.count(plan.target_item) >= 2 if plan.target_item else False
@@ -1648,6 +1671,21 @@ class DialoguePlanner:
         if plan.target_topic != "anxiety":
             return False
         latest_user_text = self._latest_user_text(session)
+        if self._has_repeat_pushback_signal(latest_user_text):
+            recent = session.asked_items[-5:]
+            loop_items = {
+                "gad_q2_control_worry",
+                "gad_q3_excessive_worry",
+                "gad_q4_trouble_relaxing",
+                "gad_q5_restlessness",
+            }
+            recent_loop_items = [item_id for item_id in recent if item_id in loop_items]
+            repeated_core_probe = any(
+                recent.count(item_id) >= 2
+                for item_id in loop_items
+            )
+            if repeated_core_probe or len(set(recent_loop_items)) >= 3:
+                return True
         if self._has_new_anxiety_branch_detail(latest_user_text):
             return False
         recent = session.asked_items[-5:]
@@ -2104,6 +2142,12 @@ class DialoguePlanner:
         latest_user_text = self._latest_user_text(session)
         latest_signal_items = self._latest_signal_items(session)
         latest_signal_topics = self._latest_signal_topics(session)
+        if (
+            target_topic == "safety"
+            and "phq_q9_self_harm" in snapshot.items
+            and "phq_q9_self_harm" not in held_back_items
+        ):
+            return "phq_q9_self_harm"
         hold_current = self._should_hold_current_answer(
             session.asked_items[-1] if session.asked_items else None,
             latest_user_text,
@@ -2418,6 +2462,25 @@ class DialoguePlanner:
             target_scene = None
             scene_item_ids = []
             target_topic = "anxiety"
+        if (
+            continuity_item == "phq_q3_sleep"
+            and (
+                session.asked_items.count("phq_q3_sleep") == 1
+                or not session.asked_items
+            )
+            and (
+                self._has_frequency_answer(latest_user_text)
+                or self._has_sleep_specific_timing_answer(latest_user_text)
+            )
+            and not (
+                self._has_frequency_answer(latest_user_text)
+                and self._recent_sleep_pattern_known(session)
+                and self._recent_sleep_frequency_prompt(session)
+            )
+        ):
+            target_scene = None
+            scene_item_ids = []
+            target_topic = "sleep"
         target_item = self._select_scene_target_item(
             snapshot,
             session,
@@ -2530,6 +2593,35 @@ class DialoguePlanner:
             fatigue,
             user_style,
         )
+        if (
+            continuity_item == "phq_q3_sleep"
+            and (
+                session.asked_items.count("phq_q3_sleep") == 1
+                or not session.asked_items
+            )
+            and (
+                self._has_frequency_answer(latest_user_text)
+                or self._has_sleep_specific_timing_answer(latest_user_text)
+            )
+            and not (
+                self._has_frequency_answer(latest_user_text)
+                and self._recent_sleep_pattern_known(session)
+                and self._recent_sleep_frequency_prompt(session)
+            )
+        ):
+            target_item = "phq_q3_sleep"
+            target_scene = None
+            scene_item_ids = []
+            target_topic = "sleep"
+        if (
+            continuity_item == "gad_q4_trouble_relaxing"
+            and session.asked_items.count("gad_q4_trouble_relaxing") == 1
+            and self._has_frequency_answer(latest_user_text)
+        ):
+            target_item = "gad_q4_trouble_relaxing"
+            target_scene = None
+            scene_item_ids = []
+            target_topic = "anxiety"
         if (
             target_item
             and ITEM_TO_TOPIC.get(target_item)
@@ -3017,6 +3109,19 @@ class DialoguePlanner:
         latest_signal_topics = self._latest_signal_topics(session)
         user_turn_count = len([turn for turn in session.turns if turn.speaker == "user"])
         last_item = session.asked_items[-1] if session.asked_items else None
+        if (
+            last_item in scene.item_ids
+            and self._should_rotate_from_repeated_item(
+                session,
+                last_item,
+                latest_user_text,
+                latest_signal_items,
+                latest_signal_topics,
+            )
+        ):
+            for preferred_item in unresolved_items:
+                if preferred_item != last_item:
+                    return preferred_item
         summary_request = self._has_summary_request(latest_user_text)
         fresh_scene_signal_items = [
             item_id
@@ -4345,6 +4450,8 @@ class DialoguePlanner:
     ) -> bool:
         if not last_item or not latest_user_text:
             return False
+        if self._has_repeat_pushback_signal(latest_user_text):
+            return False
         anxiety_suppressed = (
             self._has_anxiety_downplay_signal(latest_user_text)
             and self._has_non_anxiety_salient_signal(latest_user_text)
@@ -4435,6 +4542,64 @@ class DialoguePlanner:
             )
         return False
 
+    def _should_rotate_from_repeated_item(
+        self,
+        session: ChatSession,
+        item_id: Optional[str],
+        normalized_text: str,
+        latest_signal_items: set[str],
+        latest_signal_topics: set[str],
+    ) -> bool:
+        if not item_id or not normalized_text:
+            return False
+        repeat_count = session.asked_items[-4:].count(item_id)
+        recent_repeat_window = item_id in session.asked_items[-3:]
+        if not recent_repeat_window:
+            return False
+        if self._has_repeat_pushback_signal(normalized_text):
+            return True
+        if self._has_summary_request(normalized_text) or self._has_continue_signal(normalized_text):
+            return True
+        if item_id == "phq_q3_sleep":
+            return repeat_count >= 2 and (
+                self._has_sleep_specific_timing_answer(normalized_text)
+                or self._has_frequency_answer(normalized_text)
+                or (
+                    self._has_sleep_pattern_answer(normalized_text)
+                    and self._has_sleep_impact_signal(normalized_text)
+                )
+            )
+        if item_id == "phq_q4_fatigue":
+            return repeat_count >= 1 and (
+                self._has_activation_signal(normalized_text)
+                or "phq_q4_fatigue" in latest_signal_items
+            )
+        if item_id == "phq_q7_concentration":
+            return repeat_count >= 1 and (
+                self._has_concentration_answer(normalized_text)
+                or "phq_q7_concentration" in latest_signal_items
+                or "focus" in latest_signal_topics
+            )
+        if item_id == "phq_q1_anhedonia":
+            return repeat_count >= 1 and (
+                self._has_anhedonia_signal(normalized_text)
+                or "phq_q1_anhedonia" in latest_signal_items
+            )
+        if item_id == "phq_q2_low_mood":
+            return repeat_count >= 1 and (
+                self._has_low_mood_signal(normalized_text)
+                or self._has_daylong_mood_answer(normalized_text)
+                or self._has_flat_functioning_signal(normalized_text)
+                or "phq_q2_low_mood" in latest_signal_items
+            )
+        if item_id == "phq_q6_worthlessness":
+            return repeat_count >= 1 and (
+                self._has_self_view_signal(normalized_text)
+                or "phq_q6_worthlessness" in latest_signal_items
+                or "self_view" in latest_signal_topics
+            )
+        return False
+
     def _directed_followup_item(
         self,
         snapshot: ScreeningSnapshot,
@@ -4467,6 +4632,14 @@ class DialoguePlanner:
                 return "gad_q3_excessive_worry"
             if session.asked_items.count("gad_q2_control_worry") >= 1 and available("gad_q3_excessive_worry"):
                 return "gad_q3_excessive_worry"
+        if (
+            target_topic == "anxiety"
+            and last_item == "gad_q4_trouble_relaxing"
+            and session.asked_items.count("gad_q4_trouble_relaxing") == 1
+            and self._has_frequency_answer(latest_user_text)
+            and discussable("gad_q4_trouble_relaxing")
+        ):
+            return "gad_q4_trouble_relaxing"
         if target_topic == "anxiety" and self._has_strong_anxiety_domain_signal(latest_user_text):
             if session.asked_items.count("gad_q2_control_worry") == 0:
                 if available("gad_q2_control_worry"):
@@ -4740,6 +4913,11 @@ class DialoguePlanner:
 
         if last_item == "gad_q4_trouble_relaxing":
             recent_relax_count = session.asked_items[-3:].count("gad_q4_trouble_relaxing")
+            if (
+                session.asked_items.count("gad_q4_trouble_relaxing") == 1
+                and self._has_frequency_answer(latest_user_text)
+            ):
+                return last_item
             if "gad_q6_irritability" in latest_signal_items and available("gad_q6_irritability"):
                 return "gad_q6_irritability"
             if "gad_q5_restlessness" in latest_signal_items and available("gad_q5_restlessness"):
@@ -4807,10 +4985,32 @@ class DialoguePlanner:
                 return "gad_q5_restlessness"
 
         if last_item == "phq_q3_sleep":
+            last_assistant_text = self._normalize(session.turns[-2].text) if len(session.turns) >= 2 and session.turns[-2].speaker == "assistant" else ""
+            sleep_frequency_prompt = _contains_any_marker(
+                last_assistant_text,
+                (
+                    "how many nights a week",
+                    "kitni raaton mein",
+                    "week mein kitni raaton",
+                    "हफ्ते में कितनी रातों",
+                    "हफ़्ते में कितनी रातों",
+                ),
+            )
+            if (
+                session.asked_items.count("phq_q3_sleep") == 1
+                and self._has_frequency_answer(latest_user_text)
+                and self._recent_sleep_pattern_known(session)
+            ):
+                if self._recent_sleep_frequency_prompt(session) and available("phq_q4_fatigue"):
+                    return "phq_q4_fatigue"
+                if sleep_frequency_prompt and available("phq_q4_fatigue"):
+                    return "phq_q4_fatigue"
+                return last_item
             daytime_shift = (
                 self._has_daytime_functioning_signal(latest_signal_items, latest_signal_topics)
                 and not self._has_sleep_pattern_answer(latest_user_text)
                 and not self._has_sleep_impact_signal(latest_user_text)
+                and not self._has_timing_or_frequency_answer(latest_user_text)
             )
             if daytime_shift:
                 if "phq_q5_appetite" in latest_signal_items and available("phq_q5_appetite"):
@@ -5036,6 +5236,23 @@ class DialoguePlanner:
             score += 18
         elif item_id in recent_signal_items:
             score += 8
+        for scene_id in ITEM_TO_SCENES.get(item_id, ()):
+            scene_recent = [asked for asked in session.asked_items[-6:] if asked in SCENE_GRAPH[scene_id].item_ids]
+            distinct_scene_recent = len(set(scene_recent))
+            if distinct_scene_recent >= 3 and item_id in scene_recent and item_id not in latest_signal_items:
+                score -= 12
+            if (
+                distinct_scene_recent >= 4
+                and item_id in session.asked_items
+                and item_id not in latest_signal_items
+                and any(
+                    other_id != item_id
+                    and snapshot.items[other_id].status != "resolved"
+                    and other_id not in session.asked_items[-3:]
+                    for other_id in SCENE_GRAPH[scene_id].item_ids
+                )
+            ):
+                score -= 10
         latest_user_text = self._latest_user_text(session)
         if item_id == "gad_q3_excessive_worry" and self._has_worry_domain_signal(latest_user_text):
             score += 14
@@ -5067,6 +5284,8 @@ class DialoguePlanner:
             self._has_explicit_safety_signal(snapshot) or self._has_disappearance_safety_signal(snapshot)
         ):
             return False
+        if item_id == "phq_q9_self_harm" and snapshot.items[item_id].value is not None and snapshot.items[item_id].value >= 1:
+            return False
         mood_signal = any(
             snapshot.items[key].value is not None and snapshot.items[key].value >= 2
             for key in ("phq_q1_anhedonia", "phq_q2_low_mood", "phq_q6_worthlessness")
@@ -5095,6 +5314,10 @@ class DialoguePlanner:
             "not be alive",
             "end my life",
             "end it all",
+            "जीने की इच्छा खत्म",
+            "जीने का मन खत्म",
+            "jeene ki ichha khatam",
+            "jeene ka mann nahi",
         )
         return any(marker in normalized for marker in direct_markers)
 
@@ -5292,6 +5515,24 @@ class DialoguePlanner:
         has_timing = self._has_timing_answer(latest_user_text)
         has_frequency = self._has_frequency_answer(latest_user_text)
         last_item = session.asked_items[-1] if session.asked_items else None
+        last_assistant_turn = next((turn for turn in reversed(session.turns) if turn.speaker == "assistant"), None)
+        synthetic_sleep_continuity = False
+        if plan.target_item == "phq_q3_sleep" and not session.asked_items and last_assistant_turn is not None:
+            assistant_prompt = self._normalize(last_assistant_turn.text)
+            sleep_prompt_markers = (
+                "hard to start",
+                "hard to stay asleep",
+                "sleeping more than usual",
+                "wake up too early",
+                "नींद आने",
+                "नींद बनाए रखने",
+                "ज़्यादा सो रहे",
+                "ज्यादा सो रहे",
+            )
+            synthetic_sleep_continuity = _contains_any_marker(assistant_prompt, sleep_prompt_markers)
+        if synthetic_sleep_continuity:
+            recent_repeat = True
+            recent_repeat_window = True
         def candidate(key: str) -> Optional[str]:
             prompt = prompt_bank.get(key, {}).get(language)
             if not prompt:
@@ -5410,6 +5651,47 @@ class DialoguePlanner:
             if turn.speaker == "user":
                 return self._normalize(turn.text)
         return ""
+
+    def _has_repeat_pushback_signal(self, text: str) -> bool:
+        if not text:
+            return False
+        markers = (
+            "i already told you",
+            "i already said that",
+            "i said that already",
+            "i already answered",
+            "you already asked",
+            "you asked that already",
+            "already told you",
+            "already said that",
+            "already answered that",
+            "told you already",
+            "i already mentioned",
+            "i already told u",
+            "maine pehle hi bataya",
+            "maine pehle bataya tha",
+            "maine abhi bataya",
+            "maine bataya tha",
+            "pehle hi bata chuka",
+            "pehle hi bata chuki",
+            "aap pehle puch chuke",
+            "aap pehle pooch chuke",
+            "aapne pehle hi pucha",
+            "aapne pehle hi poocha",
+            "main pehle hi bata chuka",
+            "main pehle hi bata chuki",
+            "मैंने पहले ही बताया",
+            "मैंने पहले बताया था",
+            "मैंने अभी बताया",
+            "मैंने बताया था",
+            "पहले ही बता चुका",
+            "पहले ही बता चुकी",
+            "आप पहले पूछ चुके",
+            "आप पहले पूछ चुके हैं",
+            "आपने पहले ही पूछा",
+            "आपने पहले ही पूछ लिया",
+        )
+        return _contains_any_marker(text, markers)
 
     def _latest_signal_topics(self, session: ChatSession) -> set[str]:
         latest_user_text = self._latest_user_text(session)
@@ -6096,7 +6378,9 @@ class DialoguePlanner:
     def _has_timing_answer(self, normalized_text: str) -> bool:
         if not normalized_text:
             return False
-        return _contains_any_marker(normalized_text, TIME_MARKERS)
+        if _contains_any_marker(normalized_text, TIME_MARKERS):
+            return True
+        return bool(re.search(r"\b\d{1,2}(?:\s*(?:or|-|to)\s*\d{1,2})?\s*(?:am|pm)\b", normalized_text))
 
     def _has_frequency_answer(self, normalized_text: str) -> bool:
         if not normalized_text:
@@ -6644,6 +6928,21 @@ class DialoguePlanner:
         user_turns = [self._normalize(turn.text) for turn in session.turns if turn.speaker == "user"][-lookback:]
         return any(self._has_sleep_pattern_answer(text) for text in user_turns)
 
+    def _recent_sleep_frequency_prompt(self, session: ChatSession) -> bool:
+        last_assistant_turn = next((turn for turn in reversed(session.turns) if turn.speaker == "assistant"), None)
+        if last_assistant_turn is None:
+            return False
+        return _contains_any_marker(
+            self._normalize(last_assistant_turn.text),
+            (
+                "how many nights a week",
+                "kitni raaton mein",
+                "week mein kitni raaton",
+                "हफ्ते में कितनी रातों",
+                "हफ़्ते में कितनी रातों",
+            ),
+        )
+
     def _has_new_anxiety_branch_detail(self, normalized_text: str) -> bool:
         if not normalized_text:
             return False
@@ -6672,22 +6971,45 @@ class DialoguePlanner:
         held_back_items: list[str],
         fatigue: FatigueLevel,
     ) -> Optional[str]:
-        if not session.asked_items:
-            return None
-        last_item = session.asked_items[-1]
-        if last_item in held_back_items or last_item not in snapshot.items:
-            return None
-
         last_user_turn = next((turn for turn in reversed(session.turns) if turn.speaker == "user"), None)
         last_assistant_turn = next((turn for turn in reversed(session.turns) if turn.speaker == "assistant"), None)
         if last_user_turn is None or last_assistant_turn is None or "?" not in last_assistant_turn.text:
             return None
 
         normalized_text = self._normalize(last_user_turn.text)
+        assistant_prompt = self._normalize(last_assistant_turn.text)
+        if not session.asked_items:
+            sleep_prompt_markers = (
+                "hard to start",
+                "hard to stay asleep",
+                "sleeping more than usual",
+                "wake up too early",
+                "नींद आने",
+                "नींद बनाए रखने",
+                "ज़्यादा सो रहे",
+                "ज्यादा सो रहे",
+            )
+            if (
+                _contains_any_marker(assistant_prompt, sleep_prompt_markers)
+                and (
+                    self._has_sleep_pattern_answer(normalized_text)
+                    or self._has_sleep_specific_timing_answer(normalized_text)
+                    or self._has_frequency_answer(normalized_text)
+                )
+            ):
+                return "phq_q3_sleep"
+            return None
+
+        last_item = session.asked_items[-1]
+        if last_item in held_back_items or last_item not in snapshot.items:
+            return None
+
         words = len(last_user_turn.text.split())
         short_followup = words <= 6 or any(marker == normalized_text for marker in SHORT_FOLLOWUP_MARKERS)
         latest_signal_items = self._latest_signal_items(session)
         latest_signal_topics = self._latest_signal_topics(session)
+        if self._should_rotate_from_repeated_item(session, last_item, normalized_text, latest_signal_items, latest_signal_topics):
+            return None
         if self._has_summary_request(normalized_text):
             return None
         if (
