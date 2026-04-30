@@ -380,7 +380,7 @@ def _should_use_live_llm(session: ChatSession) -> bool:
     if runtime_config.live_chat_llm_analysis_enabled:
         if not live_chat_extractor.enabled:
             return False
-        threshold = 1
+        threshold = max(int(runtime_config.live_llm_turn_threshold or 1), 1)
         if user_turns < threshold:
             return False
         return True
@@ -423,8 +423,14 @@ def runtime_settings() -> dict:
         "extractor_model": runtime_config.extraction_model,
         "chat_model": runtime_config.chat_model,
         "chat_fallback_model": runtime_config.resolved_chat_fallback_model,
+        "live_chat_reply_model": runtime_config.resolved_live_chat_reply_model,
+        "live_chat_reply_fallback_model": runtime_config.resolved_live_chat_reply_fallback_model,
+        "live_chat_reply_timeout": runtime_config.live_chat_reply_timeout,
+        "live_chat_reply_thinking_budget": runtime_config.live_chat_reply_thinking_budget,
         "live_chat_analysis_model": runtime_config.resolved_live_chat_analysis_model,
         "live_chat_analysis_fallback_model": runtime_config.resolved_live_chat_analysis_fallback_model,
+        "live_chat_analysis_timeout": runtime_config.live_chat_analysis_timeout,
+        "live_chat_analysis_thinking_budget": runtime_config.live_chat_analysis_thinking_budget,
         "extraction_model": runtime_config.extraction_model,
         "safety_model": runtime_config.safety_model,
         "huggingface_enabled": runtime_config.huggingface_enabled,
