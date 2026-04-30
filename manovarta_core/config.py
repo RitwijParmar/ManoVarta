@@ -50,8 +50,14 @@ class RuntimeConfig:
     vertex_project: Optional[str] = None
     vertex_location: str = "us-central1"
     chat_fallback_model: Optional[str] = None
+    live_chat_reply_model: Optional[str] = None
+    live_chat_reply_fallback_model: Optional[str] = None
     live_chat_analysis_model: Optional[str] = None
     live_chat_analysis_fallback_model: Optional[str] = None
+    live_chat_reply_timeout: float = 20.0
+    live_chat_analysis_timeout: float = 12.0
+    live_chat_reply_thinking_budget: int = 0
+    live_chat_analysis_thinking_budget: int = 0
     vertex_chat_location: Optional[str] = None
     vertex_chat_fallback_location: Optional[str] = None
     vertex_live_chat_analysis_location: Optional[str] = None
@@ -130,6 +136,19 @@ class RuntimeConfig:
     @property
     def resolved_live_chat_analysis_model(self) -> str:
         return (self.live_chat_analysis_model or self.chat_model).strip()
+
+    @property
+    def resolved_live_chat_reply_model(self) -> str:
+        return (self.live_chat_reply_model or self.chat_model).strip()
+
+    @property
+    def resolved_live_chat_reply_fallback_model(self) -> Optional[str]:
+        fallback = (self.live_chat_reply_fallback_model or "").strip()
+        if not fallback and self.resolved_live_chat_reply_model == self.chat_model.strip():
+            fallback = (self.resolved_chat_fallback_model or "").strip()
+        if not fallback or fallback == self.resolved_live_chat_reply_model:
+            return None
+        return fallback
 
     @property
     def resolved_live_chat_analysis_fallback_model(self) -> Optional[str]:
@@ -256,8 +275,14 @@ def get_runtime_config() -> RuntimeConfig:
         vertex_project=os.getenv("MANOVARTA_VERTEX_PROJECT") or os.getenv("GOOGLE_CLOUD_PROJECT") or os.getenv("GCP_PROJECT"),
         vertex_location=os.getenv("MANOVARTA_VERTEX_LOCATION", os.getenv("GOOGLE_CLOUD_LOCATION", "us-central1")),
         chat_fallback_model=os.getenv("MANOVARTA_CHAT_FALLBACK_MODEL"),
+        live_chat_reply_model=os.getenv("MANOVARTA_LIVE_CHAT_REPLY_MODEL"),
+        live_chat_reply_fallback_model=os.getenv("MANOVARTA_LIVE_CHAT_REPLY_FALLBACK_MODEL"),
         live_chat_analysis_model=os.getenv("MANOVARTA_LIVE_CHAT_ANALYSIS_MODEL"),
         live_chat_analysis_fallback_model=os.getenv("MANOVARTA_LIVE_CHAT_ANALYSIS_FALLBACK_MODEL"),
+        live_chat_reply_timeout=float(os.getenv("MANOVARTA_LIVE_CHAT_REPLY_TIMEOUT", "20")),
+        live_chat_analysis_timeout=float(os.getenv("MANOVARTA_LIVE_CHAT_ANALYSIS_TIMEOUT", "12")),
+        live_chat_reply_thinking_budget=int(os.getenv("MANOVARTA_LIVE_CHAT_REPLY_THINKING_BUDGET", "0")),
+        live_chat_analysis_thinking_budget=int(os.getenv("MANOVARTA_LIVE_CHAT_ANALYSIS_THINKING_BUDGET", "0")),
         vertex_chat_location=os.getenv("MANOVARTA_VERTEX_CHAT_LOCATION"),
         vertex_chat_fallback_location=os.getenv("MANOVARTA_VERTEX_CHAT_FALLBACK_LOCATION"),
         vertex_live_chat_analysis_location=os.getenv("MANOVARTA_VERTEX_LIVE_CHAT_ANALYSIS_LOCATION"),
