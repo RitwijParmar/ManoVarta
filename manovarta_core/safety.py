@@ -104,6 +104,10 @@ REVIEW_CUES = (
     "kahin nikal jaun",
     "जहाँ कोई मुझे जानता ही न हो",
     "jeene ka mann nahi",
+    "jeene ki ichha khatam",
+    "jiine ki ichha khatam",
+    "जीने की इच्छा खत्म",
+    "जीने का मन खत्म",
     "कुछ समय के लिए गायब हो जाऊँ",
     "काश मैं कुछ समय के लिए गायब हो जाऊँ",
     "बोझ हूँ",
@@ -117,6 +121,9 @@ REVIEW_PATTERNS = (
     r"\bi\s+feel\s+like\s+i\s+am\s+(?:such\s+an?\s+|an?\s+extra\s+)?burden\b",
     r"\bthodi\s+der\s+ke\s+liye\s+gayab\s+ho\s+ja(?:u|un|oon)\b",
     r"\bextra\s+burden\s+hoon\b",
+    r"\bjee?ne\s+ki\s+ichha\s+khatam\s+ho\s+rah(?:i|a)\b",
+    r"जीने\s+की\s+इच्छा\s+खत्म\s+हो\s+रह(?:ी|ा)",
+    r"जीने\s+का\s+मन\s+खत्म\s+हो\s+रह(?:ी|ा)",
 )
 
 PROTECTIVE_CUES = (
@@ -170,6 +177,9 @@ PROTECTIVE_NEGATION_PATTERNS = (
     r"खुद\s+को\s+नुकसान\s+पहुंचाने\s+का\s+मन\s+नहीं\s+है",
     r"खुद\s+को\s+नुकसान\s+पहुंचाने\s+या\s+मरने\s+जैसा\s+कुछ\s+नहीं\s+सोच\s+रह(?:ा|ी)",
     r"मुझे\s+(?:खुद\s+को\s+)?(?:हर्ट|हार्म)\s+करने\s+का\s+प्लान\s+नहीं\s+है",
+    r"नहीं.{0,64}खुद\s+को\s+hurt",
+    r"खुद\s+को\s+hurt.{0,64}नहीं",
+    r"ज़िंदा\s+न\s+रहने.{0,64}नहीं",
 )
 
 

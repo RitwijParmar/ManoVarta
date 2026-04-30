@@ -78,6 +78,9 @@
               After your first conversation, ManoVarta will keep a lightweight private memory here so returning feels gentler, not repetitive.
             </p>
 
+            <section id="historyCurrent" class="history-current-panel is-hidden" aria-live="polite"></section>
+            <p id="historyArchiveHeading" class="mini-label history-archive-heading is-hidden">Earlier check-ins</p>
+
             <div id="historyList" class="history-list">
               <article class="history-card empty">
                 <p class="history-meta">No check-ins yet</p>
@@ -244,6 +247,26 @@
                       <span class="signal-pill">Voice available</span>
                       <span class="signal-pill">Safety checks on</span>
                     </div>
+                  </article>
+                </div>
+
+                <div class="outcome-grid">
+                  <article class="outcome-card">
+                    <p class="mini-label">PHQ-9 live result</p>
+                    <strong id="phqScoreHero">0</strong>
+                    <p id="phqScaleHero" class="score-scale-note">Scale 0-27</p>
+                    <p id="phqResultHero" class="summary-text">No PHQ result yet.</p>
+                  </article>
+                  <article class="outcome-card">
+                    <p class="mini-label">GAD-7 live result</p>
+                    <strong id="gadScoreHero">0</strong>
+                    <p id="gadScaleHero" class="score-scale-note">Scale 0-21</p>
+                    <p id="gadResultHero" class="summary-text">No GAD result yet.</p>
+                  </article>
+                  <article class="outcome-card">
+                    <p class="mini-label">Coverage status</p>
+                    <strong id="coverageHero">0/16</strong>
+                    <p id="coverageHeroText" class="summary-text">Nothing explored yet.</p>
                   </article>
                 </div>
               </details>
@@ -621,6 +644,31 @@
           </div>
 
           <div class="detail-grid">
+            <section class="summary-block">
+              <div class="summary-header">
+                <h3>Domain results</h3>
+                <span class="chip soft">PHQ and GAD split</span>
+              </div>
+              <div class="planner-grid">
+                <article class="planner-card">
+                  <p class="planner-label">PHQ-9 result</p>
+                  <p id="phqResultSummary" class="planner-value">No PHQ result yet.</p>
+                </article>
+                <article class="planner-card">
+                  <p class="planner-label">PHQ-9 remaining</p>
+                  <p id="phqRemainingSummary" class="planner-value">none</p>
+                </article>
+                <article class="planner-card">
+                  <p class="planner-label">GAD-7 result</p>
+                  <p id="gadResultSummary" class="planner-value">No GAD result yet.</p>
+                </article>
+                <article class="planner-card">
+                  <p class="planner-label">GAD-7 remaining</p>
+                  <p id="gadRemainingSummary" class="planner-value">none</p>
+                </article>
+              </div>
+            </section>
+
             <section class="summary-block">
               <div class="summary-header">
                 <h3>Priority follow-up</h3>

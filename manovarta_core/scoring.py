@@ -1,11 +1,13 @@
 from __future__ import annotations
 
 from collections import defaultdict
+import re
 from typing import Dict, Iterable, List, Optional, Tuple
 
 from manovarta_core.lexicon import HIGH_INTENSITY_CUES, LOW_INTENSITY_CUES, NEGATION_CUES, RULES, UNCERTAINTY_CUES
 from manovarta_core.questionnaires import ITEM_INDEX, all_items
 from manovarta_core.schemas import CoveragePlan, EvidenceSpan, ItemScore, ScreeningSnapshot, Turn
+from manovarta_core.safety import PROTECTIVE_NEGATION_PATTERNS
 from manovarta_core.text import extract_window, normalize_text
 
 GENERIC_MOOD_OPENING_CUES: Tuple[str, ...] = (
@@ -52,11 +54,180 @@ SCENE_COHORTS: Dict[str, Tuple[str, ...]] = {
     "gad_q7_afraid": ("gad_q3_excessive_worry", "gad_q5_restlessness", "gad_q6_irritability"),
 }
 
+SLEEP_PROMPT_MARKERS: Tuple[str, ...] = (
+    "so ne ki shuruat",
+    "सोने की शुरुआत",
+    "सोने में परेशानी",
+    "नींद आने में मुश्किल",
+    "sleep mostly been hard to start",
+    "hard to fall asleep",
+    "sleeping more than usual",
+    "ज़रूरत से ज़्यादा सो",
+    "जरूरत से ज्यादा सो",
+    "ज़्यादा सो रहे",
+)
+SLEEP_FREQUENCY_PROMPT_MARKERS: Tuple[str, ...] = (
+    "हर रोज़",
+    "हर रोज",
+    "हफ्ते में",
+    "week",
+    "nights a week",
+    "every day",
+    "almost every day",
+)
+FOCUS_PROMPT_MARKERS: Tuple[str, ...] = (
+    "ध्यान लगाने",
+    "ध्यान",
+    "फोकस",
+    "focus",
+    "concentrat",
+)
+FATIGUE_PROMPT_MARKERS: Tuple[str, ...] = (
+    "थकान",
+    "ऊर्जा की कमी",
+    "कमज़ोरी",
+    "कमजोरी",
+    "low energy",
+    "fatigue",
+    "heavyness",
+    "body heavy",
+)
+NERVOUS_PROMPT_MARKERS: Tuple[str, ...] = (
+    "घबराया हुआ",
+    "घबराए हुए",
+    "नर्वस",
+    "nervous",
+    "घबराहट",
+)
+CONTROL_WORRY_PROMPT_MARKERS: Tuple[str, ...] = (
+    "कंट्रोल",
+    "काबू",
+    "रोक पाते",
+    "रोक पाती",
+    "control",
+    "stop worrying",
+    "बस में",
+)
+EXCESSIVE_WORRY_PROMPT_MARKERS: Tuple[str, ...] = (
+    "ज़रूरत से ज़्यादा चिंता",
+    "जरूरत से ज्यादा चिंता",
+    "excessive worry",
+    "कई छोटी-बड़ी बातें",
+    "छोटी-बड़ी बातें",
+    "कई छोटी बड़ी बातें",
+    "future",
+    "भविष्य",
+    "रोज़मर्रा",
+    "रोजमर्रा",
+)
+RELAX_PROMPT_MARKERS: Tuple[str, ...] = (
+    "रिलैक्स",
+    "आराम नहीं दे",
+    "आराम नहीं दे पा",
+    "शांत होकर बैठ",
+    "relax",
+    "calm down",
+    "switch off",
+)
+APPETITE_PROMPT_MARKERS: Tuple[str, ...] = (
+    "भूख",
+    "खा पा रहे",
+    "खाना",
+    "meals",
+    "appetite",
+)
+PSYCHOMOTOR_PROMPT_MARKERS: Tuple[str, ...] = (
+    "धीरे चलने",
+    "धीरे बोलने",
+    "रफ्तार",
+    "बेचैन",
+    "छटपटाहट",
+    "restless",
+    "restlessness",
+)
+MOOD_PROMPT_MARKERS: Tuple[str, ...] = (
+    "उदासी",
+    "low mood",
+    "mood",
+    "कमी या बोझ",
+    "बोझ",
+    "worthless",
+)
+ANHEDONIA_PROMPT_MARKERS: Tuple[str, ...] = (
+    "दिलचस्पी कम",
+    "शुरू करने की हिम्मत",
+    "मन नहीं",
+    "interest",
+    "start them",
+)
+YES_NO_AFFIRMATIONS: Tuple[str, ...] = (
+    "haan",
+    "हाँ",
+    "हां",
+    "haan ji",
+    "yes",
+    "yep",
+    "हो रही",
+    "होता है",
+    "होती है",
+    "हो रहा है",
+    "हो रहा",
+    "हो रही है",
+    "मुश्किल होती",
+    "दोनों",
+    "भटक जाता",
+    "काफी ज्यादा",
+    "रहता हूं",
+    "रहती हूं",
+    "रहता है",
+    "रहती है",
+    "रोज बनी है",
+    "रोज बनी रही",
+    "हमेशा",
+)
+FREQUENT_SEVERITY_MARKERS: Tuple[str, ...] = (
+    "हर रोज",
+    "हर रोज़",
+    "रोज",
+    "every day",
+    "daily",
+    "almost every day",
+    "कई घंटे",
+    "आधे दिन",
+    "half day",
+    "most days",
+)
+NEGATING_RESPONSE_MARKERS: Tuple[str, ...] = (
+    "नहीं",
+    "nahin",
+    "nahi",
+    "not really",
+    "no",
+    "none",
+)
+INABILITY_AFFIRMATION_MARKERS: Tuple[str, ...] = (
+    "नहीं हो पाती",
+    "नहीं हो पाता",
+    "नहीं कर पाता",
+    "नहीं कर पाती",
+    "नहीं दे पाता",
+    "नहीं दे पाती",
+    "नहीं रहती",
+    "काबू में नहीं",
+    "बस में नहीं",
+    "नहीं टिकता",
+    "नहीं टिकती",
+    "not able to",
+    "cannot",
+    "can't",
+    "hard to",
+)
+
 
 class ConversationScorer:
     def analyze(self, turns: Iterable[Turn], language: str, safety_flag) -> ScreeningSnapshot:
-        user_turns = [turn for turn in turns if turn.speaker == "user"]
-        evidence_spans = self._collect_evidence(user_turns)
+        turn_list = list(turns)
+        evidence_spans = self._collect_evidence(turn_list)
         items = self._build_item_scores(evidence_spans)
         coverage = self.build_coverage(items)
         unresolved_items = coverage.unresolved_items + coverage.partial_items + coverage.contradicted_items + coverage.abstained_items
@@ -74,7 +245,8 @@ class ConversationScorer:
     def _collect_evidence(self, turns: List[Turn]) -> List[EvidenceSpan]:
         spans: List[EvidenceSpan] = []
         seen_keys = set()
-        for turn in turns:
+        user_turns = [turn for turn in turns if turn.speaker == "user"]
+        for turn in user_turns:
             normalized = normalize_text(turn.text)
             for rule in RULES:
                 phrase = self._match_phrase(normalized, rule.phrases)
@@ -86,6 +258,8 @@ class ConversationScorer:
                     continue
                 seen_keys.add(span_key)
                 polarity = self._resolve_polarity(normalized, phrase, local_window)
+                if rule.item_id == "phq_q9_self_harm" and self._is_protective_self_harm_denial(normalized):
+                    polarity = "absent"
                 score_hint = self._resolve_score(rule.score_hint, local_window, polarity)
                 spans.append(
                     EvidenceSpan(
@@ -99,7 +273,159 @@ class ConversationScorer:
                         rationale=rule.rationale,
                     )
                 )
+        spans.extend(self._collect_contextual_evidence(turns, seen_keys))
         return spans
+
+    def _collect_contextual_evidence(self, turns: List[Turn], seen_keys: set[tuple]) -> List[EvidenceSpan]:
+        spans: List[EvidenceSpan] = []
+        for index, turn in enumerate(turns):
+            if turn.speaker != "user":
+                continue
+            prev_assistant = self._previous_assistant_question(turns, index)
+            if prev_assistant is None:
+                continue
+            answer = normalize_text(turn.text)
+            question = normalize_text(prev_assistant.text)
+            if not self._is_contextual_affirmation(answer):
+                continue
+
+            def add(item_id: str, score_hint: int, rationale: str) -> None:
+                span_key = (turn.turn_id, item_id, "contextual")
+                if span_key in seen_keys:
+                    return
+                seen_keys.add(span_key)
+                spans.append(
+                    EvidenceSpan(
+                        span_id=f"EV-{turn.turn_id}-CTX-{len(spans) + 1}",
+                        questionnaire=ITEM_INDEX[item_id].questionnaire,
+                        item_id=item_id,
+                        turn_id=turn.turn_id,
+                        text_span=turn.text,
+                        polarity="present",
+                        score_hint=score_hint,
+                        rationale=rationale,
+                    )
+                )
+
+            if self._contains_any(question, SLEEP_PROMPT_MARKERS):
+                add(
+                    "phq_q3_sleep",
+                    self._contextual_support_value(answer, default=2),
+                    "Short answer interpreted in the context of a direct sleep-pattern question.",
+                )
+            if self._contains_any(question, SLEEP_FREQUENCY_PROMPT_MARKERS):
+                add(
+                    "phq_q3_sleep",
+                    self._contextual_support_value(answer, default=2),
+                    "Short answer interpreted in the context of sleep frequency.",
+                )
+            if self._contains_any(question, FOCUS_PROMPT_MARKERS):
+                add(
+                    "phq_q7_concentration",
+                    self._contextual_support_value(answer, default=2),
+                    "Short answer interpreted in the context of a concentration question.",
+                )
+            if self._contains_any(question, FATIGUE_PROMPT_MARKERS):
+                add(
+                    "phq_q4_fatigue",
+                    self._contextual_support_value(answer, default=2),
+                    "Short answer interpreted in the context of fatigue or low-energy follow-up.",
+                )
+            if self._contains_any(question, NERVOUS_PROMPT_MARKERS):
+                add(
+                    "gad_q1_nervous",
+                    self._contextual_support_value(answer, default=2),
+                    "Short answer interpreted in the context of nervousness or feeling on edge.",
+                )
+            if self._contains_any(question, CONTROL_WORRY_PROMPT_MARKERS):
+                add(
+                    "gad_q2_control_worry",
+                    self._contextual_support_value(answer, default=2),
+                    "Short answer interpreted in the context of difficulty controlling worry.",
+                )
+            if self._contains_any(question, EXCESSIVE_WORRY_PROMPT_MARKERS):
+                add(
+                    "gad_q3_excessive_worry",
+                    self._contextual_support_value(answer, default=2),
+                    "Short answer interpreted in the context of excessive or wide-scope worry.",
+                )
+            if self._contains_any(question, RELAX_PROMPT_MARKERS):
+                add(
+                    "gad_q4_trouble_relaxing",
+                    self._contextual_support_value(answer, default=2),
+                    "Short answer interpreted in the context of not being able to relax or settle.",
+                )
+            if self._contains_any(question, APPETITE_PROMPT_MARKERS):
+                add(
+                    "phq_q5_appetite",
+                    self._contextual_support_value(answer, default=2),
+                    "Short answer interpreted in the context of appetite or eating-pattern change.",
+                )
+            if self._contains_any(question, PSYCHOMOTOR_PROMPT_MARKERS):
+                severity = self._contextual_support_value(answer, default=2)
+                add(
+                    "phq_q8_psychomotor",
+                    severity,
+                    "Short answer interpreted in the context of slowed or keyed-up body pace.",
+                )
+                if self._contains_any(question, ("बेचैन", "छटपटाहट", "restless", "restlessness")):
+                    add(
+                        "gad_q5_restlessness",
+                        severity,
+                        "Short answer interpreted in the context of restlessness or agitation.",
+                    )
+            if self._contains_any(question, MOOD_PROMPT_MARKERS) and self._contains_any(answer, ("उदासी", "sad", "low", "mood")):
+                add(
+                    "phq_q2_low_mood",
+                    self._contextual_support_value(answer, default=2),
+                    "Short answer interpreted in the context of low-mood follow-up.",
+                )
+            if self._contains_any(question, MOOD_PROMPT_MARKERS) and self._contains_any(answer, ("बोझ", "कमी", "worthless", "burden", "guilty")):
+                add(
+                    "phq_q6_worthlessness",
+                    self._contextual_support_value(answer, default=2),
+                    "Short answer interpreted in the context of self-worth follow-up.",
+                )
+            if self._contains_any(question, ANHEDONIA_PROMPT_MARKERS):
+                add(
+                    "phq_q1_anhedonia",
+                    self._contextual_support_value(answer, default=2),
+                    "Short answer interpreted in the context of interest or getting-started difficulty.",
+                )
+        return spans
+
+    def _previous_assistant_question(self, turns: List[Turn], user_index: int) -> Optional[Turn]:
+        for back_index in range(user_index - 1, -1, -1):
+            previous = turns[back_index]
+            if previous.speaker != "assistant":
+                continue
+            if "?" in previous.text:
+                return previous
+            return None
+        return None
+
+    def _contains_any(self, text: str, markers: Tuple[str, ...]) -> bool:
+        return any(normalize_text(marker) in text for marker in markers)
+
+    def _is_contextual_affirmation(self, normalized_text: str) -> bool:
+        if not normalized_text:
+            return False
+        if any(re.search(pattern, normalized_text) for pattern in PROTECTIVE_NEGATION_PATTERNS):
+            return False
+        if self._contains_any(normalized_text, NEGATING_RESPONSE_MARKERS) and not self._contains_any(normalized_text, INABILITY_AFFIRMATION_MARKERS):
+            return False
+        if self._contains_any(normalized_text, INABILITY_AFFIRMATION_MARKERS):
+            return True
+        if self._contains_any(normalized_text, YES_NO_AFFIRMATIONS):
+            return True
+        return len(normalized_text.split()) <= 8
+
+    def _contextual_support_value(self, normalized_text: str, *, default: int = 2) -> int:
+        if self._contains_any(normalized_text, FREQUENT_SEVERITY_MARKERS):
+            return 3
+        if self._contains_any(normalized_text, ("कई", "often", "usually", "both", "दोनों", "अक्सर")):
+            return max(default, 2)
+        return default
 
     def _match_phrase(self, normalized_text: str, phrases: Tuple[str, ...]) -> Optional[str]:
         for phrase in phrases:
@@ -122,6 +448,9 @@ class ConversationScorer:
         if any(cue in local_window for cue in UNCERTAINTY_CUES):
             return "uncertain"
         return "present"
+
+    def _is_protective_self_harm_denial(self, normalized_text: str) -> bool:
+        return any(re.search(pattern, normalized_text) for pattern in PROTECTIVE_NEGATION_PATTERNS)
 
     def _contains_cue(self, text: str, cues: Tuple[str, ...]) -> bool:
         padded = f" {text.strip()} "

@@ -1995,6 +1995,64 @@ body {
   width: 100%;
 }
 
+.history-current-panel {
+  display: grid;
+  gap: 10px;
+}
+
+.history-archive-heading {
+  margin-top: 4px;
+}
+
+.history-current-card {
+  display: grid;
+  gap: 12px;
+  padding: 16px;
+  border-radius: 18px;
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+  border: 1px solid rgba(255, 255, 255, 0.14);
+}
+
+.history-current-head,
+.history-card-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.history-current-status {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 58px;
+  min-height: 34px;
+  padding: 0 12px;
+  border-radius: 999px;
+  background: rgba(196, 135, 66, 0.2);
+  color: #f6eadb;
+  font-size: 0.92rem;
+  font-weight: 800;
+}
+
+.history-current-metrics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.history-current-pill {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+  padding: 0 12px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.09);
+  color: var(--surface);
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
 .history-card {
   background: rgba(255, 255, 255, 0.06);
   color: var(--surface);
@@ -2005,6 +2063,11 @@ body {
 .history-card strong,
 .history-card .history-meta {
   color: inherit;
+}
+
+.history-session-line {
+  font-size: 0.84rem;
+  color: rgba(238, 228, 214, 0.76);
 }
 
 .history-tag,
@@ -2019,6 +2082,14 @@ body {
 .care-plan-card .chip {
   background: rgba(255, 255, 255, 0.1);
   color: var(--surface);
+}
+
+.history-card.compact {
+  gap: 8px;
+}
+
+.history-card.compact p {
+  margin: 0;
 }
 
 .chip.soft {
@@ -2261,6 +2332,29 @@ body.session-live.has-snapshot .product-grid {
   border: 1px solid rgba(27, 35, 40, 0.08);
   display: grid;
   gap: 10px;
+}
+
+.outcome-card strong {
+  font-size: 1.9rem;
+  line-height: 0.95;
+  color: var(--surface-ink);
+}
+
+.score-scale-note {
+  color: #40352d;
+  font-size: 0.78rem;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.outcome-card .mini-label {
+  color: #54473d;
+  font-weight: 800;
+}
+
+.outcome-card .summary-text {
+  color: #4b423a;
+  font-weight: 600;
 }
 
 .companion-card-primary {

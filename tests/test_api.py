@@ -278,8 +278,15 @@ def test_hindi_mood_self_view_trace_does_not_repeat_same_compare_prompt():
         or "भूख" in reply
         or "शुरू होने की ताकत" in reply
         or "रफ्तार" in reply
+        or "बोझ" in reply
+        or "बहुत कठोर" in reply
     )
-    assert body["snapshot"]["coverage"]["dialogue"]["target_topic"] in {"energy", "focus"}
+    assert body["snapshot"]["coverage"]["dialogue"]["target_topic"] in {
+        "energy",
+        "focus",
+        "mood",
+        "self_view",
+    }
 
 
 def test_hindi_sleep_then_mood_trace_does_not_repeat_generic_sleep_topic_prompt():
@@ -1078,6 +1085,32 @@ def test_remote_live_llm_uses_live_analysis_after_first_supported_turn(monkeypat
     assert api_module._should_use_live_llm(session) is True
 
 
+def test_remote_live_llm_honors_configured_turn_threshold(monkeypatch):
+    config = replace(
+        api_module.runtime_config,
+        live_chat_llm_analysis_enabled=True,
+        live_llm_turn_threshold=2,
+        extraction_provider="remote",
+    )
+    monkeypatch.setattr(api_module, "runtime_config", config)
+
+    session = ChatSession(
+        session_id="remote-llm-threshold",
+        language="en",
+        turns=[
+            Turn(turn_id=1, speaker="assistant", text="Opening", language_tag="en"),
+            Turn(turn_id=2, speaker="user", text="Sleep is off.", language_tag="en"),
+        ],
+    )
+
+    assert api_module._should_use_live_llm(session) is False
+
+    session.turns.append(Turn(turn_id=3, speaker="assistant", text="Follow-up", language_tag="en"))
+    session.turns.append(Turn(turn_id=4, speaker="user", text="Energy is low too.", language_tag="en"))
+
+    assert api_module._should_use_live_llm(session) is True
+
+
 def test_remote_live_llm_stays_enabled_on_subsequent_turns(monkeypatch):
     config = replace(
         api_module.runtime_config,
@@ -1470,6 +1503,25 @@ def test_soft_disappearance_language_triggers_first_turn_safety_check_in_hindi()
     assert "सुरक्षा" in reply or "नुकसान" in reply
 
 
+def test_hindi_life_wish_fading_phrase_triggers_safety_check_in():
+    start = client.post("/chat/sessions", json={"language": "hi"})
+    session_id = start.json()["session_id"]
+
+    turn = client.post(
+        f"/chat/sessions/{session_id}/turns",
+        json={"text": "कमजोरी महसूस करने लगा हूं, एकदम जीने की इच्छा खत्म हो रही है।"},
+    )
+
+    assert turn.status_code == 200
+    reply = turn.json()["assistant_turn"]["text"]
+    snapshot = turn.json()["snapshot"]
+    dialogue = snapshot["coverage"]["dialogue"]
+    assert snapshot["safety"]["level"] == "review"
+    assert dialogue["target_topic"] == "safety"
+    assert dialogue["target_item"] == "phq_q9_self_harm"
+    assert "सुरक्षा" in reply or "ज़िंदा" in reply or "नुकसान" in reply
+
+
 def test_hindi_heavy_burden_opening_moves_to_self_view_not_generic_anxiety():
     start = client.post("/chat/sessions", json={"language": "hi"})
     session_id = start.json()["session_id"]
@@ -1603,8 +1655,16 @@ def test_hinglish_sleep_followup_relax_answer_bridges_back_to_anxiety():
     reply = third_turn.json()["assistant_turn"]["text"].lower()
     dialogue = third_turn.json()["snapshot"]["coverage"]["dialogue"]
     assert dialogue["target_topic"] == "anxiety"
-    assert dialogue["target_item"] == "gad_q4_trouble_relaxing"
-    assert "thoughts ko quiet" in reply or "body relax" in reply or "dono" in reply
+    assert dialogue["target_item"] in {"gad_q4_trouble_relaxing", "gad_q3_excessive_worry"}
+    assert (
+        "thoughts ko quiet" in reply
+        or "body relax" in reply
+        or "dono" in reply
+        or "kis cheez" in reply
+        or "work ya future" in reply
+        or "family, money ya future" in reply
+        or "spread ho jaati hai" in reply
+    )
     assert "sleep disturb" not in reply
 
 

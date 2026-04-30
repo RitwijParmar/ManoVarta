@@ -46,6 +46,32 @@ def test_scoring_picks_up_hindi_worry_and_sleep():
     assert snapshot.items["phq_q3_sleep"].value == 2
 
 
+def test_scoring_uses_previous_assistant_question_context_for_brief_hindi_answers():
+    turns = [
+        Turn(turn_id=1, speaker="assistant", text="क्या आपको रात में सोने की शुरुआत करने में मुश्किल होती है या फिर आप ज़रूरत से ज़्यादा सो रहे हैं?", language_tag="hi"),
+        Turn(turn_id=2, speaker="user", text="मुश्किल होती है", language_tag="hi"),
+        Turn(turn_id=3, speaker="assistant", text="क्या ऐसा लगभग हर रोज़ हो रहा है या हफ्ते में कुछ ही दिन?", language_tag="hi"),
+        Turn(turn_id=4, speaker="user", text="हर रोज हो रहा है", language_tag="hi"),
+        Turn(turn_id=5, speaker="assistant", text="क्या आजकल आपको किसी चीज़ पर ध्यान लगाने या फोकस करने में मुश्किल महसूस हो रही है?", language_tag="hi"),
+        Turn(turn_id=6, speaker="user", text="हो रही है", language_tag="hi"),
+        Turn(turn_id=7, speaker="assistant", text="क्या इस वजह से आपको थकान या ऊर्जा की कमी भी महसूस होती है?", language_tag="hi"),
+        Turn(turn_id=8, speaker="user", text="होती है", language_tag="hi"),
+        Turn(turn_id=9, speaker="assistant", text="क्या इसका असर आपकी भूख पर भी पड़ा है?", language_tag="hi"),
+        Turn(turn_id=10, speaker="user", text="भूख पर पड़ा है", language_tag="hi"),
+        Turn(turn_id=11, speaker="assistant", text="क्या मन में ज़्यादा उदासी रहती है या बस उन्हें शुरू करने की हिम्मत नहीं हो पाती?", language_tag="hi"),
+        Turn(turn_id=12, speaker="user", text="ज्यादा उदासी रहती है", language_tag="hi"),
+    ]
+
+    snapshot = ConversationScorer().analyze(turns, "hi", SafetyMonitor().assess(turns))
+
+    assert snapshot.items["phq_q3_sleep"].status == "resolved"
+    assert snapshot.items["phq_q3_sleep"].value >= 2
+    assert snapshot.items["phq_q7_concentration"].status in {"resolved", "partial"}
+    assert snapshot.items["phq_q4_fatigue"].status in {"resolved", "partial"}
+    assert snapshot.items["phq_q5_appetite"].status in {"resolved", "partial"}
+    assert snapshot.items["phq_q2_low_mood"].status == "resolved"
+
+
 def test_scoring_picks_up_live_english_worry_loop_and_sleep_badly_phrasing():
     turns = [
         Turn(turn_id=1, speaker="user", text="I have been sleeping badly and worrying a lot for the last two weeks.", language_tag="en"),
@@ -615,6 +641,47 @@ def test_scoring_picks_up_devanagari_hindi_review_and_urgent_cues():
     assert snapshot.items["gad_q7_afraid"].value >= 1
 
 
+def test_scoring_picks_up_hindi_life_wish_fading_phrase_as_self_harm_review():
+    turns = [
+        Turn(turn_id=1, speaker="assistant", text="अभी सबसे ज़्यादा क्या भारी लग रहा है?", language_tag="hi"),
+        Turn(
+            turn_id=2,
+            speaker="user",
+            text="कमजोरी महसूस करने लगा हूं, एकदम जीने की इच्छा खत्म हो रही है।",
+            language_tag="hi",
+        ),
+    ]
+
+    safety = SafetyMonitor().assess(turns)
+    snapshot = ConversationScorer().analyze(turns, "hi", safety)
+
+    assert safety.level == "review"
+    assert snapshot.items["phq_q9_self_harm"].value >= 1
+
+
+def test_scoring_keeps_hindi_appetite_as_appetite_and_maps_short_anxiety_answers():
+    turns = [
+        Turn(turn_id=1, speaker="assistant", text="क्या इसे कंट्रोल करना मुश्किल हो जाता है या आप उसे रोक पाते हैं?", language_tag="hi"),
+        Turn(turn_id=2, speaker="user", text="काबू में नहीं रहती", language_tag="hi"),
+        Turn(turn_id=3, speaker="assistant", text="क्या आपके लिए शांत होकर बैठना या रिलैक्स कर पाना मुश्किल हो जाता है?", language_tag="hi"),
+        Turn(turn_id=4, speaker="user", text="हाँ, चाह कर भी खुद को आराम नहीं दे पाता", language_tag="hi"),
+        Turn(turn_id=5, speaker="assistant", text="क्या यह चिंता भविष्य और रोज़मर्रा की कई छोटी-बड़ी बातों को लेकर होती है?", language_tag="hi"),
+        Turn(turn_id=6, speaker="user", text="भविष्य की रोजमर्रा की चिंता परेशान करती है", language_tag="hi"),
+        Turn(turn_id=7, speaker="assistant", text="क्या आप लगभग हर दिन घबराया हुआ या नर्वस महसूस करते हैं?", language_tag="hi"),
+        Turn(turn_id=8, speaker="user", text="रहता हूं", language_tag="hi"),
+        Turn(turn_id=9, speaker="user", text="खाने का मन नहीं करता", language_tag="hi"),
+    ]
+
+    snapshot = ConversationScorer().analyze(turns, "hi", SafetyMonitor().assess(turns))
+
+    assert snapshot.items["phq_q5_appetite"].value >= 2
+    assert snapshot.items["phq_q1_anhedonia"].status != "resolved"
+    assert snapshot.items["gad_q1_nervous"].value >= 2
+    assert snapshot.items["gad_q2_control_worry"].value >= 2
+    assert snapshot.items["gad_q3_excessive_worry"].value >= 2
+    assert snapshot.items["gad_q4_trouble_relaxing"].value >= 2
+
+
 def test_scoring_picks_up_hinglish_worry_relaxing_and_restlessness():
     turns = [
         Turn(turn_id=1, speaker="assistant", text="Aajkal sabse zyada kya chal raha hai?", language_tag="hinglish"),
@@ -835,6 +902,17 @@ def test_scoring_captures_dense_human_style_followups_across_languages():
     assert hinglish_snapshot.items["gad_q5_restlessness"].value >= 1
     assert hinglish_snapshot.items["gad_q6_irritability"].value >= 1
     assert hinglish_snapshot.items["phq_q9_self_harm"].status == "resolved"
+
+
+def test_scoring_treats_hindi_hinglish_self_harm_denial_as_absent_not_present():
+    turns = [
+        Turn(turn_id=1, speaker="user", text="नहीं, खुद को hurt करने या ज़िंदा न रहने वाले thoughts नहीं आए हैं।", language_tag="hi"),
+    ]
+    snapshot = ConversationScorer().analyze(turns, "hi", SafetyMonitor().assess(turns))
+    item = snapshot.items["phq_q9_self_harm"]
+    assert item.value == 0
+    assert item.status == "resolved"
+    assert item.review_recommended is False
 
 
 def test_scoring_resolves_indirect_scene_style_followups_more_completely():

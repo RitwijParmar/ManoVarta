@@ -14,6 +14,7 @@ const state = {
   voiceState: "idle",
   currentNextSteps: [],
   latestDialogue: null,
+  maxTouchedItems: 0,
   savedVoicePreferences: {
     autoSend: true,
     speak: true,
@@ -1004,6 +1005,8 @@ const ritualCopy = document.getElementById("ritualCopy");
 const ritualTheme = document.getElementById("ritualTheme");
 const ritualPattern = document.getElementById("ritualPattern");
 const ritualRestartButton = document.getElementById("ritualRestartButton");
+const historyCurrent = document.getElementById("historyCurrent");
+const historyArchiveHeading = document.getElementById("historyArchiveHeading");
 const historyList = document.getElementById("historyList");
 const reflectionPrompt = document.getElementById("reflectionPrompt");
 const nextStepTitle = document.getElementById("nextStepTitle");
@@ -1037,6 +1040,14 @@ const apiLinkList = document.getElementById("apiLinkList");
 const summaryText = document.getElementById("summaryText");
 const phqTotal = document.getElementById("phqTotal");
 const gadTotal = document.getElementById("gadTotal");
+const phqScoreHero = document.getElementById("phqScoreHero");
+const gadScoreHero = document.getElementById("gadScoreHero");
+const phqScaleHero = document.getElementById("phqScaleHero");
+const gadScaleHero = document.getElementById("gadScaleHero");
+const phqResultHero = document.getElementById("phqResultHero");
+const gadResultHero = document.getElementById("gadResultHero");
+const coverageHero = document.getElementById("coverageHero");
+const coverageHeroText = document.getElementById("coverageHeroText");
 const safetyLevel = document.getElementById("safetyLevel");
 const snapshotMode = document.getElementById("snapshotMode");
 const coverageText = document.getElementById("coverageText");
@@ -1059,6 +1070,10 @@ const personalizationBlend = document.getElementById("personalizationBlend");
 const personalizationPacing = document.getElementById("personalizationPacing");
 const personalizationSummary = document.getElementById("personalizationSummary");
 const detailModeLabel = document.getElementById("detailModeLabel");
+const phqResultSummary = document.getElementById("phqResultSummary");
+const phqRemainingSummary = document.getElementById("phqRemainingSummary");
+const gadResultSummary = document.getElementById("gadResultSummary");
+const gadRemainingSummary = document.getElementById("gadRemainingSummary");
 const demoPanel = document.getElementById("demoPanel");
 const insightPanel = document.getElementById("insightPanel");
 const demoToggle = document.getElementById("demoToggle");
@@ -1074,6 +1089,8 @@ const languageTabs = Array.from(document.querySelectorAll(".language-tab"));
 const SpeechRecognitionCtor = window.SpeechRecognition || window.webkitSpeechRecognition || null;
 const speechSynthesisApi = window.speechSynthesis || null;
 const VOICE_AUTO_SEND_DELAY_MS = 1200;
+const VOICE_LOOP_RESUME_DELAY_MS = 900;
+const VOICE_OUTPUT_COOLDOWN_MS = 900;
 
 let recognition = null;
 let listening = false;
@@ -1084,6 +1101,11 @@ let currentAudio = null;
 let pendingVoiceTranscript = "";
 let pendingVoiceAutoSendTimer = null;
 let pendingVoiceAutoSendSource = "voice";
+let voiceLoopResumeTimer = null;
+let browserCapturePending = false;
+let backendRecordingPending = false;
+let recognitionStopRequested = false;
+let voiceOutputCooldownUntil = 0;
 const reviewMode = window.location.pathname.startsWith("/review");
 
 function setBusy(isBusy) {
@@ -1100,6 +1122,36 @@ function clearVoiceAutoSendTimer() {
   if (pendingVoiceAutoSendTimer) {
     window.clearTimeout(pendingVoiceAutoSendTimer);
     pendingVoiceAutoSendTimer = null;
+  }
+}
+
+function clearVoiceLoopResumeTimer() {
+  if (voiceLoopResumeTimer) {
+    window.clearTimeout(voiceLoopResumeTimer);
+    voiceLoopResumeTimer = null;
+  }
+}
+
+function armVoiceOutputCooldown(durationMs = VOICE_OUTPUT_COOLDOWN_MS) {
+  voiceOutputCooldownUntil = Date.now() + Math.max(0, Number(durationMs) || 0);
+}
+
+function voiceOutputCoolingDown() {
+  return Date.now() < voiceOutputCooldownUntil;
+}
+
+function stopAssistantAudioPlayback({ armCooldown = false } = {}) {
+  clearVoiceLoopResumeTimer();
+  if (speechSynthesisApi) {
+    speechSynthesisApi.cancel();
+  }
+  if (currentAudio) {
+    currentAudio.pause();
+    currentAudio.currentTime = 0;
+    currentAudio = null;
+  }
+  if (armCooldown) {
+    armVoiceOutputCooldown();
   }
 }
 
@@ -1702,7 +1754,7 @@ function updateSessionBadge() {
     sessionBadge.className = "chip soft";
     return;
   }
-  sessionBadge.textContent = `${state.language.toUpperCase()} · ${state.sessionId.slice(0, 8)}`;
+  sessionBadge.textContent = `${state.language.toUpperCase()} · ${state.sessionId.slice(0, 11)}`;
   sessionBadge.className = "chip";
 }
 
@@ -1881,17 +1933,198 @@ function formatCheckinDate(isoString) {
   return date.toLocaleDateString(undefined, { month: "short", day: "numeric" });
 }
 
+function domainScaleMax(domain) {
+  return domain === "phq" ? 27 : 21;
+}
+
+function domainItemCount(domain) {
+  return domain === "phq" ? 9 : 7;
+}
+
+function scoreBandLabel(domain, score, language = state.language) {
+  const uiLanguage = resolveUiLanguage(language);
+  if (!Number.isFinite(score)) {
+    return uiLanguage === "hi" ? "अभी बन रहा है" : "Still building";
+  }
+  const band = domain === "phq"
+    ? (score <= 4 ? "minimal" : score <= 9 ? "mild" : score <= 14 ? "moderate" : score <= 19 ? "moderately severe" : "severe")
+    : (score <= 4 ? "minimal" : score <= 9 ? "mild" : score <= 14 ? "moderate" : "severe");
+  if (uiLanguage !== "hi") {
+    return band;
+  }
+  return band === "minimal"
+    ? "न्यूनतम"
+    : band === "mild"
+      ? "हल्का"
+      : band === "moderate"
+        ? "मध्यम"
+        : band === "moderately severe"
+          ? "मध्यम से गंभीर"
+          : "गंभीर";
+}
+
+function formatDomainScore(domain, score) {
+  const safeScore = Number.isFinite(score) ? score : 0;
+  return `${safeScore}/${domainScaleMax(domain)}`;
+}
+
+function summarizeDomainProgress(result, domain, language = state.language) {
+  const uiLanguage = resolveUiLanguage(language);
+  if (!result) {
+    return uiLanguage === "hi" ? "अभी परिणाम उपलब्ध नहीं है।" : "No result yet.";
+  }
+  const resolved = result.resolved_items?.length || 0;
+  const remaining = result.remaining_items?.length || 0;
+  const total = domainItemCount(domain);
+  if (uiLanguage === "hi") {
+    return `${resolved}/${total} साफ़ · ${remaining} खुले`;
+  }
+  return `${resolved}/${total} closed · ${remaining} open`;
+}
+
+function coverageTouchedPercent(coverage) {
+  const total = Number(coverage?.total_items || 0);
+  const touched = Number(coverage?.touched_items || 0);
+  if (!total) {
+    return 0;
+  }
+  return Math.round((touched / total) * 100);
+}
+
+function displayTouchedItems(coverage) {
+  const touched = Number(coverage?.touched_items || 0);
+  return Math.max(touched, Number(state.maxTouchedItems || 0));
+}
+
+function buildHistoryEntrySummary(entry, language = state.language) {
+  const uiLanguage = resolveUiLanguage(language);
+  const bits = [];
+  const phq = Number(entry.phqTotal);
+  const gad = Number(entry.gadTotal);
+  if (Number.isFinite(phq)) {
+    bits.push(`PHQ-9 ${formatDomainScore("phq", phq)}`);
+  }
+  if (Number.isFinite(gad)) {
+    bits.push(`GAD-7 ${formatDomainScore("gad", gad)}`);
+  }
+  const completion = Math.round(Number(entry.completion || 0) * 100);
+  bits.push(uiLanguage === "hi" ? `${completion}% पूरा` : `${completion}% complete`);
+  return bits.join(" · ");
+}
+
+function buildCurrentHistoryEntry() {
+  const snapshot = state.exportPayload?.snapshot;
+  if (!state.sessionId && !snapshot) {
+    return null;
+  }
+  if (!snapshot) {
+    return {
+      sessionId: state.sessionId,
+      language: state.language,
+      topic: "check_in",
+      safety: "none",
+      completion: 0,
+      phqTotal: null,
+      gadTotal: null,
+      phqResult: null,
+      gadResult: null,
+      isLive: true,
+    };
+  }
+  return {
+    sessionId: state.sessionId,
+    language: snapshot.language || state.language,
+    topic: snapshot.coverage?.dialogue?.target_topic || "check_in",
+    safety: snapshot.safety?.level || "none",
+    completion: coverageTouchedPercent({
+      ...snapshot.coverage,
+      touched_items: displayTouchedItems(snapshot.coverage),
+    }) / 100,
+    phqTotal: snapshot.totals?.PHQ9 ?? null,
+    gadTotal: snapshot.totals?.GAD7 ?? null,
+    phqResult: snapshot.phq_result || null,
+    gadResult: snapshot.gad_result || null,
+    touchedItems: displayTouchedItems(snapshot.coverage),
+    totalItems: Number(snapshot.coverage?.total_items || 0),
+    isLive: true,
+  };
+}
+
+function renderCurrentHistoryCard(entry) {
+  if (!historyCurrent) {
+    return;
+  }
+  if (!entry) {
+    historyCurrent.classList.add("is-hidden");
+    historyCurrent.innerHTML = "";
+    return;
+  }
+  const language = entry.language || state.language;
+  const uiLanguage = resolveUiLanguage(language);
+  const heading = entry.isLive
+    ? (uiLanguage === "hi" ? "अभी की बातचीत" : "Current session")
+    : (uiLanguage === "hi" ? "हाल का सहेजा गया सत्र" : "Latest saved session");
+  const sessionLabel = entry.sessionId
+    ? `${String(language || "en").toUpperCase()} · ${entry.sessionId.slice(0, 11)}`
+    : String(language || "en").toUpperCase();
+  const completion = Math.round(Number(entry.completion || 0) * 100);
+  const focusLabel = humanizeToken(entry.topic || "check_in", uiLanguage);
+  const phqScore = Number(entry.phqTotal);
+  const gadScore = Number(entry.gadTotal);
+  const phqDetail = Number.isFinite(phqScore)
+    ? `PHQ-9 ${formatDomainScore("phq", phqScore)} · ${scoreBandLabel("phq", phqScore, uiLanguage)}`
+    : (uiLanguage === "hi" ? "PHQ-9 अभी बन रहा है" : "PHQ-9 still building");
+  const gadDetail = Number.isFinite(gadScore)
+    ? `GAD-7 ${formatDomainScore("gad", gadScore)} · ${scoreBandLabel("gad", gadScore, uiLanguage)}`
+    : (uiLanguage === "hi" ? "GAD-7 अभी बन रहा है" : "GAD-7 still building");
+  const safetyDetail = uiLanguage === "hi"
+    ? `${humanizeToken(entry.safety || "none", "hi")} सुरक्षा`
+    : `${humanizeToken(entry.safety || "none")} safety`;
+  const exploredLabel = entry.totalItems
+    ? (uiLanguage === "hi"
+        ? `${entry.touchedItems}/${entry.totalItems} छुए गए`
+        : `${entry.touchedItems}/${entry.totalItems} explored`)
+    : (uiLanguage === "hi" ? `${completion}% कवर` : `${completion}% covered`);
+  const coverageDetail = uiLanguage === "hi"
+    ? `${exploredLabel} · ${summarizeDomainProgress(entry.phqResult, "phq", uiLanguage)}`
+    : `${exploredLabel} · ${summarizeDomainProgress(entry.phqResult, "phq", uiLanguage)}`;
+
+  historyCurrent.classList.remove("is-hidden");
+  historyCurrent.innerHTML = `
+    <article class="history-current-card">
+      <div class="history-current-head">
+        <div>
+          <p class="history-meta">${escapeHtml(heading)}</p>
+          <strong>${escapeHtml(focusLabel)}</strong>
+          <p class="history-session-line">${escapeHtml(sessionLabel)}</p>
+        </div>
+        <span class="history-current-status">${escapeHtml(String(completion))}%</span>
+      </div>
+      <div class="history-current-metrics">
+        <span class="history-current-pill">${escapeHtml(phqDetail)}</span>
+        <span class="history-current-pill">${escapeHtml(gadDetail)}</span>
+        <span class="history-current-pill">${escapeHtml(safetyDetail)}</span>
+      </div>
+      <p class="summary-text">${escapeHtml(coverageDetail)}</p>
+    </article>
+  `;
+}
+
 function renderHistory() {
   if (!historyList || !ritualCount || !ritualStreak || !ritualCopy) {
     return;
   }
 
   const entries = state.recentCheckins || [];
-  setHasHistory(entries.length > 0);
+  const currentEntry = buildCurrentHistoryEntry();
+  const archivedEntries = entries
+    .filter((entry) => !currentEntry?.sessionId || entry.sessionId !== currentEntry.sessionId)
+    .slice(0, 3);
+  setHasHistory(Boolean(entries.length || currentEntry));
   ritualCount.textContent = String(entries.length);
   ritualStreak.textContent = String(computeCheckinStreak(entries));
 
-  if (!entries.length) {
+  if (!entries.length && !currentEntry) {
     ritualCopy.textContent = "After your first conversation, ManoVarta will keep a lightweight private memory here so returning feels gentler, not repetitive.";
     if (ritualTheme) {
       ritualTheme.textContent = state.language === "hi"
@@ -1913,10 +2146,14 @@ function renderHistory() {
         <p>Start one conversation and your recent reflections will appear here.</p>
       </article>
     `;
+    if (historyArchiveHeading) {
+      historyArchiveHeading.classList.add("is-hidden");
+    }
+    renderCurrentHistoryCard(null);
     return;
   }
 
-  const latest = entries[0];
+  const latest = entries[0] || currentEntry;
   if (ritualTheme) {
     ritualTheme.textContent = state.language === "hi"
       ? `हाल का मुख्य फोकस: ${humanizeToken(latest.topic || "check_in", "hi")}`
@@ -1927,21 +2164,44 @@ function renderHistory() {
   if (ritualPattern) {
     ritualPattern.textContent = describeTimePattern(entries, state.language);
   }
-  ritualCopy.textContent = state.language === "hi"
-    ? `हाल में सहेजा गया मुख्य फोकस: ${humanizeToken(latest.topic || "check_in", "hi")} (${String(latest.language || "en").toUpperCase()}).`
-    : `Latest saved focus: ${humanizeToken(latest.topic || "check_in").toLowerCase()} in ${String(latest.language || "en").toUpperCase()}.`;
+  if (Number.isFinite(Number(latest.phqTotal)) || Number.isFinite(Number(latest.gadTotal))) {
+    ritualCopy.textContent = state.language === "hi"
+      ? `सबसे हाल का संकेत: ${buildHistoryEntrySummary(latest, "hi")}.`
+      : `Latest signal: ${buildHistoryEntrySummary(latest, state.language)}.`;
+  } else {
+    ritualCopy.textContent = state.language === "hi"
+      ? `हाल में सहेजा गया मुख्य फोकस: ${humanizeToken(latest.topic || "check_in", "hi")} (${String(latest.language || "en").toUpperCase()}).`
+      : `Latest saved focus: ${humanizeToken(latest.topic || "check_in").toLowerCase()} in ${String(latest.language || "en").toUpperCase()}.`;
+  }
 
+  renderCurrentHistoryCard(currentEntry);
   historyList.innerHTML = "";
-  entries.slice(0, 4).forEach((entry) => {
+  if (historyArchiveHeading) {
+    historyArchiveHeading.textContent = state.language === "hi" ? "पहले के सहेजे गए चेक-इन" : "Earlier check-ins";
+    historyArchiveHeading.classList.toggle("is-hidden", archivedEntries.length === 0);
+  }
+  if (!archivedEntries.length) {
+    historyList.innerHTML = `
+      <article class="history-card empty compact">
+        <p class="history-meta">${state.language === "hi" ? "अभी यही सबसे हाल का सत्र है" : "This is the latest session"}</p>
+        <p>${state.language === "hi" ? "जैसे ही नए चेक-इन सहेजे जाएंगे, वे यहाँ छोटे सार के रूप में दिखेंगे।" : "Newer saved check-ins will appear here as compact summaries."}</p>
+      </article>
+    `;
+    return;
+  }
+  archivedEntries.forEach((entry) => {
     const card = document.createElement("article");
-    card.className = "history-card";
-    const summary = String(entry.summary || "A private check-in was saved on this device.").slice(0, 140);
+    card.className = "history-card compact";
+    const summary = buildHistoryEntrySummary(entry, state.language);
     card.innerHTML = `
-      <p class="history-meta">${escapeHtml(formatCheckinDate(entry.savedAt))} · ${escapeHtml(String(entry.language || "en").toUpperCase())}</p>
+      <div class="history-card-head">
+        <p class="history-meta">${escapeHtml(formatCheckinDate(entry.savedAt))} · ${escapeHtml(String(entry.language || "en").toUpperCase())}</p>
+        <span class="history-tag">${escapeHtml(Math.round(Number(entry.completion || 0) * 100))}%</span>
+      </div>
       <strong>${escapeHtml(humanizeToken(entry.topic || "check_in", state.language))}</strong>
-      <p>${escapeHtml(summary)}${summary.length >= 140 ? "..." : ""}</p>
+      <p class="history-session-line">${escapeHtml(entry.sessionId ? entry.sessionId.slice(0, 11) : "saved")}</p>
       <div class="history-tags">
-        <span class="history-tag">${escapeHtml(Math.round(Number(entry.completion || 0) * 100))}% complete</span>
+        <span class="history-tag">${escapeHtml(summary)}</span>
         <span class="history-tag">${escapeHtml(state.language === "hi" ? `${humanizeToken(entry.safety || "none", "hi")} सुरक्षा` : `${humanizeToken(entry.safety || "none")} safety`)}</span>
       </div>
     `;
@@ -2004,6 +2264,10 @@ function rememberCheckin(payload) {
     topic: snapshot.coverage?.dialogue?.target_topic || "check_in",
     safety: snapshot.safety?.level || "none",
     completion: Number(snapshot.coverage?.completion_ratio || 0),
+    phqTotal: snapshot.totals?.PHQ9 ?? null,
+    gadTotal: snapshot.totals?.GAD7 ?? null,
+    phqResult: snapshot.phq_result || null,
+    gadResult: snapshot.gad_result || null,
     summary: payload.summary || buildPatientSummary(snapshot.coverage?.dialogue || { stage: "rapport", target_topic: "mood" }, snapshot.safety || { level: "none" }),
   };
 
@@ -2285,6 +2549,7 @@ async function requestSessionStart(options = {}) {
   state.sessionId = payload.session_id;
   state.exportPayload = null;
   state.pendingNudge = null;
+  state.maxTouchedItems = 0;
   setSnapshotLiveState(false);
   if (resetChat) {
     chatLog.innerHTML = "";
@@ -2304,6 +2569,7 @@ async function requestSessionStart(options = {}) {
   sessionMeta.textContent = "Your private check-in is open. Start with whatever feels most real right now.";
   updateSessionBadge();
   setSessionLiveState(true);
+  renderHistory();
   if (downloadButton) {
     downloadButton.disabled = false;
   }
@@ -2383,16 +2649,25 @@ function buildSessionGoal(dialogue, safety) {
   return "Understand the pattern, impact, and intensity of what you are feeling.";
 }
 
-function buildProgressLabel(coverage) {
-  const remaining = Math.max((coverage.total_items || 0) - (coverage.touched_items || 0), 0);
-  return `${coverage.touched_items} of ${coverage.total_items} areas have some clarity so far, with ${remaining} still open.`;
+function buildProgressLabel(coverage, language = state.language) {
+  const uiLanguage = resolveUiLanguage(language);
+  const touched = displayTouchedItems(coverage);
+  const remaining = Math.max((coverage.total_items || 0) - touched, 0);
+  if (uiLanguage === "hi") {
+    return `${touched}/${coverage.total_items} हिस्से अब तक छुए गए हैं, और ${remaining} अभी बाकी हैं।`;
+  }
+  return `${touched}/${coverage.total_items} areas have been explored so far, with ${remaining} still untouched.`;
 }
 
-function buildBonusSignals(dialogue, coverage) {
-  const completion = Math.round((coverage.completion_ratio || 0) * 100);
+function buildBonusSignals(dialogue, coverage, language = state.language) {
+  const uiLanguage = resolveUiLanguage(language);
+  const explored = coverageTouchedPercent({
+    ...coverage,
+    touched_items: displayTouchedItems(coverage),
+  });
   const posture = buildResponsePosture(dialogue.user_style);
   return [
-    `${completion}% covered`,
+    uiLanguage === "hi" ? `${explored}% छुए गए` : `${explored}% explored`,
     `${humanizeToken(dialogue.target_topic)} focus`,
     posture,
     dialogue.fatigue === "high" ? "Low-burden follow-up" : dialogue.next_action === "risk_check" ? "Safety pause" : "Guided follow-up",
@@ -2956,16 +3231,23 @@ function renderSnapshot(payload) {
     reflectionPrompt.textContent = buildReflectionPrompt(snapshot, summary, snapshot.language);
   }
 
-  const completion = Math.round((coverage.completion_ratio || 0) * 100);
-  coverageText.textContent = `${coverage.touched_items}/${coverage.total_items} explored`;
-  progressMeterFill.style.width = `${Math.max(completion, coverage.touched_items ? 8 : 0)}%`;
-  progressMeterLabel.textContent = buildProgressLabel(coverage);
+  state.maxTouchedItems = Math.max(state.maxTouchedItems || 0, Number(coverage.touched_items || 0));
+  const touched = displayTouchedItems(coverage);
+  const completion = coverageTouchedPercent({
+    ...coverage,
+    touched_items: touched,
+  });
+  coverageText.textContent = snapshot.language === "hi"
+    ? `${touched}/${coverage.total_items} छुए गए`
+    : `${touched}/${coverage.total_items} explored`;
+  progressMeterFill.style.width = `${Math.max(completion, touched ? 8 : 0)}%`;
+  progressMeterLabel.textContent = buildProgressLabel(coverage, snapshot.language);
   sessionGoal.textContent = buildSessionGoal(dialogue, snapshot.safety);
   sessionMeta.classList.remove("empty");
   sessionMeta.textContent = buildSessionMetaLine(dialogue, coverage, snapshot.safety, snapshot.language);
 
   bonusSignals.innerHTML = "";
-  buildBonusSignals(dialogue, coverage).forEach((signal) => {
+  buildBonusSignals(dialogue, coverage, snapshot.language).forEach((signal) => {
     const chip = document.createElement("span");
     chip.className = "signal-pill";
     chip.textContent = signal;
@@ -2988,6 +3270,7 @@ function renderSnapshot(payload) {
   }
   renderNudges(snapshot.language, dialogue);
   renderNextSteps(dialogue.target_topic, snapshot.language);
+  renderDomainResults(snapshot, safeRows);
   if (!hasReviewDetails()) {
     return;
   }
@@ -3078,13 +3361,57 @@ function renderSnapshot(payload) {
   }
 }
 
+function renderDomainResults(snapshot, rows) {
+  const phqResult = snapshot.phq_result || null;
+  const gadResult = snapshot.gad_result || null;
+  const completionText = `${snapshot.coverage?.touched_items || 0}/${snapshot.coverage?.total_items || 16}`;
+  const language = snapshot.language || state.language;
+  const labelFor = (itemId) => rows.find((row) => row.item_id === itemId)?.label || itemId;
+  const summarizeRemaining = (result) => {
+    if (!result || !result.remaining_items?.length) {
+      return "none";
+    }
+    return result.remaining_items.slice(0, 4).map(labelFor).join(", ");
+  };
+  const summarizeDomain = (result) => {
+    if (!result) {
+      return language === "hi" ? "अभी परिणाम उपलब्ध नहीं है।" : "No result yet.";
+    }
+    return summarizeDomainProgress(result, result.domain, language);
+  };
+  const summarizeScale = (domain, score) => {
+    const band = scoreBandLabel(domain, score, language);
+    return language === "hi"
+      ? `स्केल ${domain === "phq" ? "0-27" : "0-21"} · ${band}`
+      : `Scale ${domain === "phq" ? "0-27" : "0-21"} · ${band}`;
+  };
+  const coverageSummary = language === "hi"
+    ? `${completionText} हिस्से छुए गए • अलग PHQ/GAD स्कोर दिखते रहेंगे`
+    : `${completionText} explored • separate PHQ/GAD scores update as the conversation progresses`;
+
+  if (phqScoreHero) phqScoreHero.textContent = formatDomainScore("phq", Number(snapshot.totals?.PHQ9 ?? 0));
+  if (gadScoreHero) gadScoreHero.textContent = formatDomainScore("gad", Number(snapshot.totals?.GAD7 ?? 0));
+  if (phqScaleHero) phqScaleHero.textContent = summarizeScale("phq", Number(snapshot.totals?.PHQ9 ?? 0));
+  if (gadScaleHero) gadScaleHero.textContent = summarizeScale("gad", Number(snapshot.totals?.GAD7 ?? 0));
+  if (phqResultHero) phqResultHero.textContent = summarizeDomain(phqResult);
+  if (gadResultHero) gadResultHero.textContent = summarizeDomain(gadResult);
+  if (coverageHero) coverageHero.textContent = completionText;
+  if (coverageHeroText) coverageHeroText.textContent = coverageSummary;
+
+  if (phqResultSummary) phqResultSummary.textContent = summarizeDomain(phqResult);
+  if (phqRemainingSummary) phqRemainingSummary.textContent = summarizeRemaining(phqResult);
+  if (gadResultSummary) gadResultSummary.textContent = summarizeDomain(gadResult);
+  if (gadRemainingSummary) gadRemainingSummary.textContent = summarizeRemaining(gadResult);
+}
+
 function resetInsightPanel() {
   const hindi = state.language === "hi";
   state.latestDialogue = null;
+  state.maxTouchedItems = 0;
   setSnapshotLiveState(false);
-  coverageText.textContent = "Just getting started";
+  coverageText.textContent = hindi ? "अभी शुरुआत है" : "Just getting started";
   progressMeterFill.style.width = "0%";
-  progressMeterLabel.textContent = "Nothing explored yet";
+  progressMeterLabel.textContent = hindi ? "अभी कुछ भी साफ़ नहीं है" : "Nothing explored yet";
   patientSummary.textContent = hindi
     ? "बातचीत शुरू होने पर यहाँ एक सरल सार दिखाई देगा।"
     : "Start a conversation to see a gentle plain-language summary here.";
@@ -3133,6 +3460,14 @@ function resetInsightPanel() {
   if (hasReviewDetails()) {
     phqTotal.textContent = "0";
     gadTotal.textContent = "0";
+    if (phqScoreHero) phqScoreHero.textContent = "0/27";
+    if (gadScoreHero) gadScoreHero.textContent = "0/21";
+    if (phqScaleHero) phqScaleHero.textContent = hindi ? "स्केल 0-27" : "Scale 0-27";
+    if (gadScaleHero) gadScaleHero.textContent = hindi ? "स्केल 0-21" : "Scale 0-21";
+    if (phqResultHero) phqResultHero.textContent = hindi ? "अभी PHQ परिणाम उपलब्ध नहीं है।" : "No PHQ result yet.";
+    if (gadResultHero) gadResultHero.textContent = hindi ? "अभी GAD परिणाम उपलब्ध नहीं है।" : "No GAD result yet.";
+    if (coverageHero) coverageHero.textContent = "0/16";
+    if (coverageHeroText) coverageHeroText.textContent = hindi ? "अभी कुछ भी साफ़ नहीं हुआ है।" : "Nothing explored yet.";
     safetyLevel.textContent = "none";
     safetyLevel.className = "metric-value small none";
     snapshotMode.textContent = "Heuristic";
@@ -3169,6 +3504,10 @@ function resetInsightPanel() {
     personalizationSummary.textContent = hindi
       ? "सत्र शुरू होने पर यहाँ दिखेगा कि मनोवार्ता अपनी गति, मार्गदर्शन-शैली और अगली पूछताछ का दबाव कैसे बदलती है।"
       : "Start a session to see how ManoVarta adapts its pacing, steering style, and follow-up burden.";
+    if (phqResultSummary) phqResultSummary.textContent = hindi ? "अभी PHQ परिणाम उपलब्ध नहीं है।" : "No PHQ result yet.";
+    if (phqRemainingSummary) phqRemainingSummary.textContent = "none";
+    if (gadResultSummary) gadResultSummary.textContent = hindi ? "अभी GAD परिणाम उपलब्ध नहीं है।" : "No GAD result yet.";
+    if (gadRemainingSummary) gadRemainingSummary.textContent = "none";
   }
   renderNextSteps("default", state.language);
   renderNudges(state.language, {
@@ -3237,13 +3576,7 @@ async function sendMessageText(text, options = {}) {
     setVoicePreview("", { visible: false });
     state.voiceLoopArmed = fromVoice && handsFreeVoiceEnabled();
     setVoiceState("thinking");
-    if (speechSynthesisApi) {
-      speechSynthesisApi.cancel();
-    }
-    if (currentAudio) {
-      currentAudio.pause();
-      currentAudio = null;
-    }
+    stopAssistantAudioPlayback({ armCooldown: false });
 
     renderTurn({ speaker: "user", text: cleaned });
     messageInput.value = "";
@@ -3388,13 +3721,24 @@ function startBrowserVoiceCapture(statusMessage = "Requesting microphone access.
     updateVoiceStatus("Browser voice is not available here.", true);
     return false;
   }
+  if (listening || browserCapturePending) {
+    return true;
+  }
+  clearVoiceLoopResumeTimer();
+  if (assistantAudioActive() || voiceOutputCoolingDown()) {
+    maybeResumeVoiceLoop();
+    return false;
+  }
   try {
+    browserCapturePending = true;
+    recognitionStopRequested = false;
     recognition.lang = mapVoiceLanguage(languageSelect.value);
     setVoicePreview("", { visible: false });
     updateVoiceStatus(statusMessage);
     recognition.start();
     return true;
   } catch (error) {
+    browserCapturePending = false;
     console.error(error);
     updateVoiceStatus("Microphone could not start. Please check browser mic permission and try again.", true);
     return false;
@@ -3424,8 +3768,22 @@ function maybeResumeVoiceLoop() {
   if (!state.voiceLoopArmed || !handsFreeVoiceEnabled() || state.isBusy || assistantAudioActive()) {
     return;
   }
-  window.setTimeout(() => {
-    if (!state.voiceLoopArmed || !handsFreeVoiceEnabled() || state.isBusy || listening || assistantAudioActive()) {
+  clearVoiceLoopResumeTimer();
+  const delayMs = Math.max(
+    VOICE_LOOP_RESUME_DELAY_MS,
+    voiceOutputCoolingDown() ? voiceOutputCooldownUntil - Date.now() : 0
+  );
+  voiceLoopResumeTimer = window.setTimeout(() => {
+    voiceLoopResumeTimer = null;
+    if (
+      !state.voiceLoopArmed
+      || !handsFreeVoiceEnabled()
+      || state.isBusy
+      || listening
+      || assistantAudioActive()
+      || browserCapturePending
+      || backendRecordingPending
+    ) {
       return;
     }
     if (shouldPreferBrowserVoice()) {
@@ -3445,7 +3803,7 @@ function maybeResumeVoiceLoop() {
         updateVoiceStatus("Voice conversation could not restart. Tap the mic to continue.", true);
       });
     }
-  }, 450);
+  }, delayMs);
 }
 
 function cleanupMediaStream() {
@@ -3497,60 +3855,74 @@ async function startBackendRecording() {
   if (!navigator.mediaDevices?.getUserMedia || typeof MediaRecorder === "undefined") {
     throw new Error("Voice recording is not available in this browser.");
   }
+  if (backendRecordingPending || (mediaRecorder && mediaRecorder.state !== "inactive")) {
+    return;
+  }
 
   const mimeType = detectRecordingMimeType();
   if (!mimeType) {
     throw new Error("No supported recording format is available in this browser.");
   }
 
-  mediaStream = await navigator.mediaDevices.getUserMedia({
-    audio: {
-      echoCancellation: true,
-      noiseSuppression: true,
-      autoGainControl: true,
-    },
-  });
-  recordedChunks = [];
-  mediaRecorder = new MediaRecorder(mediaStream, mimeType ? { mimeType } : undefined);
-  mediaRecorder.ondataavailable = (event) => {
-    if (event.data && event.data.size > 0) {
-      recordedChunks.push(event.data);
-    }
-  };
-  mediaRecorder.onstop = async () => {
-    listening = false;
-    updateMicButtonLabel();
-    updateVoiceStatus("Transcribing your voice...");
-    const blob = new Blob(recordedChunks, { type: mimeType || "audio/webm" });
+  clearVoiceLoopResumeTimer();
+  backendRecordingPending = true;
+  try {
+    mediaStream = await navigator.mediaDevices.getUserMedia({
+      audio: {
+        echoCancellation: true,
+        noiseSuppression: true,
+        autoGainControl: true,
+        channelCount: 1,
+      },
+    });
     recordedChunks = [];
+    mediaRecorder = new MediaRecorder(mediaStream, mimeType ? { mimeType } : undefined);
+    mediaRecorder.ondataavailable = (event) => {
+      if (event.data && event.data.size > 0) {
+        recordedChunks.push(event.data);
+      }
+    };
+    mediaRecorder.onstop = async () => {
+      backendRecordingPending = false;
+      listening = false;
+      updateMicButtonLabel();
+      updateVoiceStatus("Transcribing your voice...");
+      const blob = new Blob(recordedChunks, { type: mimeType || "audio/webm" });
+      recordedChunks = [];
+      cleanupMediaStream();
+      try {
+        const formData = new FormData();
+        const extension = mimeType.includes("ogg") ? "ogg" : mimeType.includes("wav") ? "wav" : "webm";
+        formData.append("audio", blob, `voice.${extension}`);
+        const response = await fetch(`/voice/transcribe?language=${encodeURIComponent(state.language)}`, {
+          method: "POST",
+          body: formData,
+        });
+        if (!response.ok) {
+          throw new Error(`Voice transcription failed (${response.status})`);
+        }
+        const payload = await response.json();
+        handleCapturedTranscript(payload.transcript || "", "cloud voice");
+      } catch (error) {
+        console.error(error);
+        if (recognition) {
+          updateVoiceStatus("Cloud transcription struggled. Try speaking once more and I’ll capture it live in the browser.");
+          return;
+        }
+        updateVoiceStatus("Voice transcription failed. Please try typing instead.", true);
+      }
+    };
+    mediaRecorder.start();
+    backendRecordingPending = false;
+    listening = true;
+    setVoiceState("listening");
+    updateMicButtonLabel();
+    updateVoiceStatus("Recording for cloud transcription...", false, true);
+  } catch (error) {
+    backendRecordingPending = false;
     cleanupMediaStream();
-    try {
-      const formData = new FormData();
-      const extension = mimeType.includes("ogg") ? "ogg" : mimeType.includes("wav") ? "wav" : "webm";
-      formData.append("audio", blob, `voice.${extension}`);
-      const response = await fetch(`/voice/transcribe?language=${encodeURIComponent(state.language)}`, {
-        method: "POST",
-        body: formData,
-      });
-      if (!response.ok) {
-        throw new Error(`Voice transcription failed (${response.status})`);
-      }
-      const payload = await response.json();
-      handleCapturedTranscript(payload.transcript || "", "cloud voice");
-    } catch (error) {
-      console.error(error);
-      if (recognition) {
-        updateVoiceStatus("Cloud transcription struggled. Try speaking once more and I’ll capture it live in the browser.");
-        return;
-      }
-      updateVoiceStatus("Voice transcription failed. Please try typing instead.", true);
-    }
-  };
-  mediaRecorder.start();
-  listening = true;
-  setVoiceState("listening");
-  updateMicButtonLabel();
-  updateVoiceStatus("Recording for cloud transcription...", false, true);
+    throw error;
+  }
 }
 
 function stopBackendRecording() {
@@ -3566,8 +3938,11 @@ function setupVoice() {
     recognition.lang = mapVoiceLanguage(languageSelect.value);
 
     recognition.onstart = () => {
+      browserCapturePending = false;
+      recognitionStopRequested = false;
       listening = true;
       clearVoiceAutoSendTimer();
+      clearVoiceLoopResumeTimer();
       setVoiceState("listening");
       updateMicButtonLabel();
       setVoicePreview("", { visible: false });
@@ -3597,6 +3972,7 @@ function setupVoice() {
     };
 
     recognition.onerror = (event) => {
+      browserCapturePending = false;
       listening = false;
       clearVoiceAutoSendTimer();
       updateMicButtonLabel();
@@ -3616,15 +3992,37 @@ function setupVoice() {
         updateVoiceStatus("I did not catch speech that time. Try once more.", true);
         return;
       }
+      if (event.error === "aborted") {
+        const expectedAbort = recognitionStopRequested || assistantAudioActive() || state.isBusy || voiceOutputCoolingDown();
+        recognitionStopRequested = false;
+        if (handsFreeVoiceEnabled() && state.voiceLoopArmed) {
+          setVoiceState("idle");
+          updateVoiceStatus("Listening paused for a moment. Starting the mic again...");
+          maybeResumeVoiceLoop();
+          return;
+        }
+        setVoiceState("idle");
+        updateVoiceStatus(expectedAbort ? "Voice ready." : "Voice paused. Tap the mic when you want to continue.");
+        return;
+      }
+      recognitionStopRequested = false;
       setVoiceState("error");
       updateVoiceStatus(`Voice error: ${event.error}`, true);
     };
 
     recognition.onend = () => {
+      browserCapturePending = false;
       listening = false;
+      const stoppedOnPurpose = recognitionStopRequested;
+      recognitionStopRequested = false;
       updateMicButtonLabel();
       if (handsFreeVoiceEnabled() && state.voiceLoopArmed && !state.isBusy && !pendingVoiceTranscript) {
         maybeResumeVoiceLoop();
+        return;
+      }
+      if (stoppedOnPurpose) {
+        setVoiceState("idle");
+        updateVoiceStatus("Voice ready.");
         return;
       }
       if (!voiceStatus.classList.contains("error")) {
@@ -3720,10 +4118,11 @@ function toggleListening() {
     updateVoiceStatus(voiceExtensionNote(state.language) || "Voice is off for this language.");
     return;
   }
-  if (listening) {
+  if (listening || browserCapturePending || backendRecordingPending) {
     stopListening();
     return;
   }
+  stopAssistantAudioPlayback({ armCooldown: false });
   if (shouldPreferBrowserVoice()) {
     startBrowserVoiceCapture("Requesting microphone access...");
     return;
@@ -3744,19 +4143,24 @@ function toggleListening() {
     updateVoiceStatus("Voice is not available in this browser.", true);
     return;
   }
-  configureRecognitionMode();
-  recognition.lang = mapVoiceLanguage(languageSelect.value);
-  updateVoiceStatus("Requesting microphone access...");
-  recognition.start();
+  startBrowserVoiceCapture("Requesting microphone access...");
 }
 
-function stopListening() {
-  state.voiceLoopArmed = false;
+function stopListening({ disarmLoop = true } = {}) {
+  if (disarmLoop) {
+    state.voiceLoopArmed = false;
+  }
   clearVoiceAutoSendTimer();
+  clearVoiceLoopResumeTimer();
   setVoiceState("idle");
-  if (recognition && listening) {
-    recognition.stop();
-    return;
+  if (recognition && (listening || browserCapturePending)) {
+    recognitionStopRequested = true;
+    try {
+      recognition.stop();
+      return;
+    } catch (error) {
+      console.warn("Recognition stop failed", error);
+    }
   }
   if (backendVoiceAvailable() && mediaRecorder && mediaRecorder.state !== "inactive") {
     stopBackendRecording();
@@ -3775,11 +4179,11 @@ function maybeSpeak(turn) {
     return;
   }
 
-  if (currentAudio) {
-    currentAudio.pause();
-    currentAudio = null;
+  stopAssistantAudioPlayback({ armCooldown: false });
+  if (listening || browserCapturePending || backendRecordingPending) {
+    stopListening({ disarmLoop: false });
   }
-
+  clearVoiceLoopResumeTimer();
   if (state.runtime?.text_to_speech_enabled) {
     setVoiceState("speaking");
     updateVoiceStatus("ManoVarta is replying aloud...");
@@ -3801,6 +4205,7 @@ function maybeSpeak(turn) {
         currentAudio.onended = () => {
           URL.revokeObjectURL(url);
           currentAudio = null;
+          armVoiceOutputCooldown();
           setVoiceState("idle");
           updateVoiceStatus("Your turn. Speak when ready.");
           maybeResumeVoiceLoop();
@@ -3808,12 +4213,14 @@ function maybeSpeak(turn) {
         currentAudio.onerror = () => {
           URL.revokeObjectURL(url);
           currentAudio = null;
+          armVoiceOutputCooldown();
           setVoiceState("idle");
           fallbackSpeak(turn.text);
         };
         currentAudio.play().catch(() => {
           URL.revokeObjectURL(url);
           currentAudio = null;
+          armVoiceOutputCooldown();
           setVoiceState("idle");
           fallbackSpeak(turn.text);
         });
@@ -3848,7 +4255,7 @@ function fallbackSpeak(text) {
     return;
   }
 
-  speechSynthesisApi.cancel();
+  stopAssistantAudioPlayback();
   setVoiceState("speaking");
   updateVoiceStatus("ManoVarta is replying aloud...");
   const utterance = new SpeechSynthesisUtterance(text);
@@ -3858,11 +4265,13 @@ function fallbackSpeak(text) {
     utterance.voice = voice;
   }
   utterance.onend = () => {
+    armVoiceOutputCooldown();
     setVoiceState("idle");
     updateVoiceStatus("Your turn. Speak when ready.");
     maybeResumeVoiceLoop();
   };
   utterance.onerror = () => {
+    armVoiceOutputCooldown();
     state.voiceLoopArmed = false;
     setVoiceState("error");
   };
@@ -3986,13 +4395,8 @@ architectureModal?.addEventListener("click", (event) => {
 voiceInterruptButton?.addEventListener("click", () => {
   state.voiceLoopArmed = false;
   clearVoiceAutoSendTimer();
-  if (speechSynthesisApi) {
-    speechSynthesisApi.cancel();
-  }
-  if (currentAudio) {
-    currentAudio.pause();
-    currentAudio = null;
-  }
+  clearVoiceLoopResumeTimer();
+  stopAssistantAudioPlayback();
   stopListening();
   setVoicePreview("", { visible: false });
   setVoiceState("idle");
