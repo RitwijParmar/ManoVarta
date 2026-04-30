@@ -62,7 +62,7 @@ def test_local_responder_uses_self_hosted_provider(monkeypatch):
         def chat_completion(self, *, messages, temperature, max_tokens):
             return _Response("Take your time. What feels heaviest right now?")
 
-    monkeypatch.setattr("manovarta_core.llm._build_text_generation_client", lambda config, provider, model_name, adapter_path=None: _FakeClient())
+    monkeypatch.setattr("manovarta_core.llm._build_text_generation_client", lambda config, provider, model_name, adapter_path=None, **kwargs: _FakeClient())
     responder = HuggingFaceResponder(_local_config())
     session = ChatSession(session_id="local-session", language="en", turns=[Turn(turn_id=1, speaker="user", text="I feel overwhelmed.", language_tag="en")])
     snapshot = ScreeningSnapshot(
@@ -112,8 +112,14 @@ def test_component_provider_overrides_can_split_chat_and_extractor():
 def test_runtime_config_loads_chat_fallback_and_analysis_overrides(monkeypatch):
     monkeypatch.setenv("MANOVARTA_CHAT_MODEL", "gemini-3-pro-preview")
     monkeypatch.setenv("MANOVARTA_CHAT_FALLBACK_MODEL", "gemini-2.5-pro")
+    monkeypatch.setenv("MANOVARTA_LIVE_CHAT_REPLY_MODEL", "gemini-2.5-flash")
+    monkeypatch.setenv("MANOVARTA_LIVE_CHAT_REPLY_FALLBACK_MODEL", "gemini-2.5-pro")
     monkeypatch.setenv("MANOVARTA_LIVE_CHAT_ANALYSIS_MODEL", "gemini-3-pro-preview")
     monkeypatch.setenv("MANOVARTA_LIVE_CHAT_ANALYSIS_FALLBACK_MODEL", "gemini-2.5-pro")
+    monkeypatch.setenv("MANOVARTA_LIVE_CHAT_REPLY_TIMEOUT", "9")
+    monkeypatch.setenv("MANOVARTA_LIVE_CHAT_ANALYSIS_TIMEOUT", "7")
+    monkeypatch.setenv("MANOVARTA_LIVE_CHAT_REPLY_THINKING_BUDGET", "0")
+    monkeypatch.setenv("MANOVARTA_LIVE_CHAT_ANALYSIS_THINKING_BUDGET", "0")
     monkeypatch.setenv("MANOVARTA_VERTEX_LOCATION", "us-central1")
     monkeypatch.setenv("MANOVARTA_VERTEX_CHAT_LOCATION", "global")
     monkeypatch.setenv("MANOVARTA_VERTEX_CHAT_FALLBACK_LOCATION", "us-central1")
@@ -124,14 +130,66 @@ def test_runtime_config_loads_chat_fallback_and_analysis_overrides(monkeypatch):
     try:
         config = get_runtime_config()
         assert config.resolved_chat_fallback_model == "gemini-2.5-pro"
+        assert config.resolved_live_chat_reply_model == "gemini-2.5-flash"
+        assert config.resolved_live_chat_reply_fallback_model == "gemini-2.5-pro"
         assert config.resolved_live_chat_analysis_model == "gemini-3-pro-preview"
         assert config.resolved_live_chat_analysis_fallback_model == "gemini-2.5-pro"
+        assert config.live_chat_reply_timeout == 9.0
+        assert config.live_chat_analysis_timeout == 7.0
+        assert config.live_chat_reply_thinking_budget == 0
+        assert config.live_chat_analysis_thinking_budget == 0
         assert config.resolved_vertex_chat_location == "global"
         assert config.resolved_vertex_chat_fallback_location == "us-central1"
         assert config.resolved_vertex_live_chat_analysis_location == "global"
         assert config.resolved_vertex_live_chat_analysis_fallback_location == "us-central1"
     finally:
         get_runtime_config.cache_clear()
+
+
+def test_responder_uses_live_reply_model_and_timeout_overrides(monkeypatch):
+    captured = []
+
+    class _FakeClient:
+        def chat_completion(self, *, messages, temperature, max_tokens):
+            return type("Response", (), {"choices": [type("Choice", (), {"message": type("Message", (), {"content": "Quick reply"})()})()]})()
+
+    def _builder(config, provider, model_name, adapter_path=None, **kwargs):
+        captured.append((model_name, kwargs.get("request_timeout"), kwargs.get("thinking_budget_override")))
+        return _FakeClient()
+
+    monkeypatch.setattr("manovarta_core.llm._build_text_generation_client", _builder)
+    config = RuntimeConfig(
+        model_provider="vertex",
+        chat_model="gemini-2.5-pro",
+        extraction_model="gemini-2.5-flash",
+        safety_model="/models/safety",
+        hf_token=None,
+        hf_timeout=30.0,
+        assistant_temperature=0.2,
+        assistant_max_tokens=180,
+        extraction_max_tokens=900,
+        safety_max_tokens=180,
+        semantic_safety_model=None,
+        semantic_safety_review_threshold=0.64,
+        semantic_safety_urgent_threshold=0.72,
+        chat_provider="vertex",
+        extraction_provider="local",
+        safety_provider="local",
+        vertex_project="demo-project",
+        vertex_location="us-central1",
+        live_chat_reply_model="gemini-2.5-flash",
+        live_chat_reply_timeout=8.0,
+        live_chat_reply_thinking_budget=0,
+        live_chat_analysis_model="gemini-2.5-pro",
+        live_chat_analysis_timeout=6.0,
+        live_chat_analysis_thinking_budget=0,
+    )
+
+    responder = HuggingFaceResponder(config)
+
+    assert responder.enabled is True
+    assert ("gemini-2.5-flash", 8.0, 0) in captured
+    assert ("gemini-2.5-pro", 6.0, 0) in captured
 
 
 def test_vertex_chat_provider_is_reported_as_reply_source(monkeypatch):
@@ -143,7 +201,7 @@ def test_vertex_chat_provider_is_reported_as_reply_source(monkeypatch):
         def chat_completion(self, *, messages, temperature, max_tokens):
             return _Response("If easier, pick one part of today that felt the heaviest.")
 
-    monkeypatch.setattr("manovarta_core.llm._build_text_generation_client", lambda config, provider, model_name, adapter_path=None: _FakeClient())
+    monkeypatch.setattr("manovarta_core.llm._build_text_generation_client", lambda config, provider, model_name, adapter_path=None, **kwargs: _FakeClient())
     config = RuntimeConfig(
         model_provider="local",
         chat_model="gemini-2.5-flash",
@@ -195,7 +253,7 @@ def test_huggingface_responder_uses_secondary_generation_client_when_primary_fai
         def chat_completion(self, *, messages, temperature, max_tokens):
             return _Response("If easier, was the anxiety more like a busy mind, a tense body, or both together?")
 
-    def _builder(config, provider, model_name, adapter_path=None):
+    def _builder(config, provider, model_name, adapter_path=None, **kwargs):
         if model_name == "gemini-3-pro-preview":
             return _FailClient()
         if model_name == "gemini-2.5-pro":
@@ -399,7 +457,7 @@ def test_huggingface_responder_uses_secondary_analysis_client_when_primary_analy
             captured_generation["messages"] = messages
             return _Response("When that low stretch hits, does it feel more like a steady low mood underneath, or more like interest dropping out of things?")
 
-    def _builder(config, provider, model_name, adapter_path=None):
+    def _builder(config, provider, model_name, adapter_path=None, **kwargs):
         if model_name == "analysis-primary":
             return _PrimaryAnalysisClient()
         if model_name == "analysis-fallback":
@@ -476,7 +534,7 @@ def test_huggingface_responder_rejects_generation_that_violates_analyzer_domain_
             call_order.append("fallback_generation")
             return _Response("When that low stretch hits, does it feel more like sadness sitting there all day, or interest fading before you even start things?")
 
-    def _builder(config, provider, model_name, adapter_path=None):
+    def _builder(config, provider, model_name, adapter_path=None, **kwargs):
         if model_name == "analysis-primary":
             return _AnalysisClient()
         if model_name == "reply-primary":
@@ -548,7 +606,7 @@ def test_huggingface_responder_rejects_repeated_opener_and_uses_fallback_generat
         def chat_completion(self, *, messages, temperature, max_tokens):
             return _Response("When the day gets harder, what slips first for you: interest, pace, or focus?")
 
-    def _builder(config, provider, model_name, adapter_path=None):
+    def _builder(config, provider, model_name, adapter_path=None, **kwargs):
         if model_name == "analysis-primary":
             return _AnalysisClient()
         if model_name == "reply-primary":
@@ -908,6 +966,100 @@ def test_remote_extractor_hybrid_postprocesses_nuanced_english_screening(monkeyp
     assert "english_screening_refined" in payload["notes"]
 
 
+def test_remote_extractor_hybrid_keeps_early_evidence_in_long_natural_conversation(monkeypatch):
+    class _FakeRemoteExtractor:
+        def __init__(self, base_url, timeout):
+            self.enabled = True
+
+        def extract(self, turns, language):
+            return {
+                "items": [
+                    {
+                        "item_id": "gad_q6_irritability",
+                        "value": 2,
+                        "evidence_quote": "I get snappy with people.",
+                        "confidence_note": "Remote Aya caught irritability.",
+                    }
+                ],
+                "safety_level": "none",
+                "safety_cues": [],
+                "notes": "remote_aya",
+            }
+
+    monkeypatch.setattr("manovarta_core.llm._RemoteExtractorClient", _FakeRemoteExtractor)
+    config = RuntimeConfig(
+        model_provider="vertex",
+        chat_model="gemini-2.5-flash",
+        extraction_model="trained-aya-remote",
+        safety_model="/models/safety",
+        hf_token=None,
+        hf_timeout=30.0,
+        assistant_temperature=0.2,
+        assistant_max_tokens=180,
+        extraction_max_tokens=480,
+        safety_max_tokens=180,
+        semantic_safety_model=None,
+        semantic_safety_review_threshold=0.64,
+        semantic_safety_urgent_threshold=0.72,
+        chat_provider="vertex",
+        extraction_provider="remote",
+        safety_provider="local",
+        remote_extraction_url="https://aya.example.com",
+        remote_extraction_timeout=77.0,
+        remote_extraction_hybrid_enabled=True,
+    )
+    extractor = HuggingFaceExtractor(config)
+    turns = [
+        Turn(turn_id=1, speaker="assistant", text="What has felt heaviest lately?", language_tag="en"),
+        Turn(turn_id=2, speaker="user", text="Sleep has been broken for the last two weeks. I wake around 3 or 4, drag through the day, skip lunch, and reread the same paragraph at work.", language_tag="en"),
+        Turn(turn_id=3, speaker="assistant", text="What has the sleep pattern looked like?", language_tag="en"),
+        Turn(turn_id=4, speaker="user", text="Mostly waking during the night and too early, about five nights a week.", language_tag="en"),
+        Turn(turn_id=5, speaker="assistant", text="What else has changed?", language_tag="en"),
+        Turn(turn_id=6, speaker="user", text="Things I used to enjoy feel flat now and I mostly go through the motions.", language_tag="en"),
+        Turn(turn_id=7, speaker="assistant", text="How has your mood been through the day?", language_tag="en"),
+        Turn(turn_id=8, speaker="user", text="My mood stays heavy most of the day and basic tasks make me feel like I am failing at things that should be easy.", language_tag="en"),
+        Turn(turn_id=9, speaker="assistant", text="Anything in your pace or energy?", language_tag="en"),
+        Turn(turn_id=10, speaker="user", text="I move slower than usual and it takes real effort just to get started.", language_tag="en"),
+        Turn(turn_id=11, speaker="assistant", text="What happens when the worry shows up?", language_tag="en"),
+        Turn(turn_id=12, speaker="user", text="My mind also keeps looping about work, rent, and family even when I try to stop it.", language_tag="en"),
+        Turn(turn_id=13, speaker="assistant", text="How broad does it feel?", language_tag="en"),
+        Turn(turn_id=14, speaker="user", text="It spreads across all of them, around five days a week, and I feel on edge before calls.", language_tag="en"),
+        Turn(turn_id=15, speaker="assistant", text="What happens later in the day?", language_tag="en"),
+        Turn(turn_id=16, speaker="user", text="It feels like both a busy mind and a tense body, especially at night when I cannot relax.", language_tag="en"),
+        Turn(turn_id=17, speaker="assistant", text="Anything else in your body or reactions?", language_tag="en"),
+        Turn(turn_id=18, speaker="user", text="I pace around, get snappy with people, and feel like something is going to go wrong with work or money.", language_tag="en"),
+        Turn(turn_id=19, speaker="assistant", text="Have thoughts of hurting yourself shown up at all?", language_tag="en"),
+        Turn(turn_id=20, speaker="user", text="No, I have not had thoughts of hurting myself or not wanting to be alive.", language_tag="en"),
+    ]
+
+    transcript = extractor._build_extraction_transcript(turns, include_assistant=True)
+    assert "Sleep has been broken for the last two weeks" in transcript
+    assert "Things I used to enjoy feel flat now" in transcript
+    assert "something is going to go wrong with work or money" in transcript
+
+    payload = extractor.extract(turns, "en")
+
+    assert payload is not None
+    items = {item["item_id"]: item for item in payload["items"]}
+    assert items["phq_q1_anhedonia"]["value"] == 2
+    assert items["phq_q2_low_mood"]["value"] == 2
+    assert items["phq_q3_sleep"]["value"] >= 2
+    assert items["phq_q4_fatigue"]["value"] >= 2
+    assert items["phq_q5_appetite"]["value"] >= 2
+    assert items["phq_q6_worthlessness"]["value"] == 2
+    assert items["phq_q7_concentration"]["value"] >= 2
+    assert items["phq_q8_psychomotor"]["value"] >= 2
+    assert items["gad_q1_nervous"]["value"] >= 2
+    assert items["gad_q2_control_worry"]["value"] >= 2
+    assert items["gad_q3_excessive_worry"]["value"] >= 2
+    assert items["gad_q4_trouble_relaxing"]["value"] >= 2
+    assert items["gad_q5_restlessness"]["value"] >= 2
+    assert items["gad_q6_irritability"]["value"] >= 2
+    assert items["gad_q7_afraid"]["value"] >= 2
+    assert items["phq_q9_self_harm"]["value"] == 0
+    assert "english_screening_refined" in payload["notes"]
+
+
 def test_huggingface_extractor_retries_with_compact_prompt_after_failure():
     extractor = HuggingFaceExtractor(_disabled_config())
 
@@ -948,7 +1100,7 @@ def test_vertex_extractor_uses_rule_rescue_when_json_parse_fails(monkeypatch):
         def chat_completion(self, *, messages, temperature, max_tokens):
             return _Response("not valid json")
 
-    monkeypatch.setattr("manovarta_core.llm._build_text_generation_client", lambda config, provider, model_name, adapter_path=None: _FakeClient())
+    monkeypatch.setattr("manovarta_core.llm._build_text_generation_client", lambda config, provider, model_name, adapter_path=None, **kwargs: _FakeClient())
     config = RuntimeConfig(
         model_provider="vertex",
         chat_model="gemini-2.5-flash",
@@ -1110,6 +1262,172 @@ def test_huggingface_extractor_refines_english_mood_and_self_harm_denial_items()
     assert items["phq_q5_appetite"]["value"] == 2
     assert items["phq_q6_worthlessness"]["value"] == 2
     assert items["phq_q9_self_harm"]["value"] == 0
+    assert "english_screening_refined" in refined["notes"]
+
+
+def test_huggingface_extractor_refines_going_through_the_motions_and_natural_appetite_phrasing():
+    extractor = HuggingFaceExtractor(_disabled_config())
+    transcript = (
+        "assistant: What has the last couple of weeks felt like?\n"
+        "user: Things I normally enjoy feel flat, like I am just going through the motions.\n"
+        "assistant: Anything else?\n"
+        "user: Sleep keeps breaking around 3 or 4, I drag through work the next day, and lunch often just does not happen."
+    )
+    payload = {
+        "items": [],
+        "safety_level": "none",
+        "safety_cues": [],
+        "notes": "raw",
+    }
+
+    refined = extractor._refine_english_anxiety_payload(transcript, payload)
+    items = {item["item_id"]: item for item in refined["items"]}
+
+    assert items["phq_q1_anhedonia"]["value"] == 2
+    assert items["phq_q5_appetite"]["value"] >= 2
+    assert "english_screening_refined" in refined["notes"]
+
+
+def test_huggingface_extractor_refines_natural_energy_irritability_and_fear_wording():
+    extractor = HuggingFaceExtractor(_disabled_config())
+    transcript = (
+        "assistant: What has the last couple of weeks felt like?\n"
+        "user: I still do the things I am supposed to do, but I do not really feel much from them.\n"
+        "assistant: What else stands out?\n"
+        "user: By daytime I am dragging, and by evening I have been snappier with people while bracing for something bad."
+    )
+    payload = {
+        "items": [],
+        "safety_level": "none",
+        "safety_cues": [],
+        "notes": "raw",
+    }
+
+    refined = extractor._refine_english_anxiety_payload(transcript, payload)
+    items = {item["item_id"]: item for item in refined["items"]}
+
+    assert items["phq_q1_anhedonia"]["value"] == 2
+    assert items["phq_q4_fatigue"]["value"] >= 2
+    assert items["gad_q6_irritability"]["value"] >= 2
+    assert items["gad_q7_afraid"]["value"] >= 2
+    assert "english_screening_refined" in refined["notes"]
+
+
+def test_huggingface_extractor_refines_hinglish_nuance_and_self_harm_denial():
+    extractor = HuggingFaceExtractor(_disabled_config())
+    transcript = (
+        "assistant: Pichhle do hafton mein sabse zyada kya heavy laga?\n"
+        "user: Pichhle do hafte se neend bahut toot rahi hai aur kaam pe focus nahi hota.\n"
+        "assistant: Aur kya notice hua?\n"
+        "user: Jo cheezein pehle achchi lagti thi unmein ab interest kam ho gaya hai, mood low rehta hai, "
+        "khane ka pattern off hai, energy itni kam hoti hai, aur khud pe bhi kaafi harsh ho gaya hoon.\n"
+        "assistant: Worry ka kya pattern hai?\n"
+        "user: Dimag worry loop mein chalta rehta hai, control nahi hota, body tense rehti hai, "
+        "relax karna mushkil hota hai, idhar udhar chalne lagta hoon, irritate bhi jaldi ho jata hoon, "
+        "aur lagta hai kuch bura hone wala hai.\n"
+        "assistant: Koi self-harm thoughts aaye?\n"
+        "user: Nahi, mujhe khud ko hurt karne ya zinda na rehne wale thoughts nahi aaye hain."
+    )
+    payload = {
+        "items": [],
+        "safety_level": "none",
+        "safety_cues": [],
+        "notes": "raw",
+    }
+
+    refined = extractor._refine_english_anxiety_payload(transcript, payload)
+    items = {item["item_id"]: item for item in refined["items"]}
+
+    assert items["phq_q1_anhedonia"]["value"] == 2
+    assert items["phq_q2_low_mood"]["value"] >= 2
+    assert items["phq_q4_fatigue"]["value"] >= 2
+    assert items["phq_q5_appetite"]["value"] >= 2
+    assert items["phq_q6_worthlessness"]["value"] >= 2
+    assert items["gad_q2_control_worry"]["value"] >= 2
+    assert items["gad_q4_trouble_relaxing"]["value"] >= 2
+    assert items["gad_q5_restlessness"]["value"] >= 2
+    assert items["gad_q6_irritability"]["value"] >= 2
+    assert items["gad_q7_afraid"]["value"] >= 2
+    assert items["phq_q9_self_harm"]["value"] == 0
+    assert "english_screening_refined" in refined["notes"]
+
+
+def test_huggingface_extractor_refines_hindi_nuance_and_self_harm_denial():
+    extractor = HuggingFaceExtractor(_disabled_config())
+    transcript = (
+        "assistant: पिछले दो हफ्तों में सबसे ज़्यादा क्या भारी लगा?\n"
+        "user: नींद टूट रही है, 3 या 4 बजे आंख खुल जाती है और सुबह फ्रेश नहीं लगता।\n"
+        "assistant: और क्या notice हुआ?\n"
+        "user: पहले अच्छी लगती थी उन चीज़ों में अब मन नहीं लगता, मूड लो रहता है, खाने का पैटर्न ऑफ है, "
+        "थकान बनी रहती है और खुद पर बहुत harsh हो गया हूँ।\n"
+        "assistant: चिंता कैसी रहती है?\n"
+        "user: दिमाग में worry loop चलता रहता है, control नहीं होता, body tense रहती है, relax करना मुश्किल होता है, "
+        "इधर उधर चलने लगता हूँ, जल्दी चिड़चिड़ा हो जाता हूँ और लगता है कुछ बुरा होने वाला है।\n"
+        "assistant: कोई self-harm thoughts आए?\n"
+        "user: नहीं, खुद को hurt करने या ज़िंदा न रहने वाले thoughts नहीं आए हैं।"
+    )
+    payload = {
+        "items": [],
+        "safety_level": "none",
+        "safety_cues": [],
+        "notes": "raw",
+    }
+
+    refined = extractor._refine_english_anxiety_payload(transcript, payload)
+    items = {item["item_id"]: item for item in refined["items"]}
+
+    assert items["phq_q1_anhedonia"]["value"] == 2
+    assert items["phq_q2_low_mood"]["value"] >= 2
+    assert items["phq_q3_sleep"]["value"] >= 2
+    assert items["phq_q4_fatigue"]["value"] >= 2
+    assert items["phq_q5_appetite"]["value"] >= 2
+    assert items["phq_q6_worthlessness"]["value"] >= 2
+    assert items["gad_q2_control_worry"]["value"] >= 2
+    assert items["gad_q4_trouble_relaxing"]["value"] >= 2
+    assert items["gad_q5_restlessness"]["value"] >= 2
+    assert items["gad_q6_irritability"]["value"] >= 2
+    assert items["gad_q7_afraid"]["value"] >= 2
+    assert items["phq_q9_self_harm"]["value"] == 0
+    assert "english_screening_refined" in refined["notes"]
+
+
+def test_huggingface_extractor_refines_hindi_passive_self_harm_phrase():
+    extractor = HuggingFaceExtractor(_disabled_config())
+    transcript = (
+        "assistant: अभी सबसे ज़्यादा क्या भारी लग रहा है?\n"
+        "user: काफी कमजोरी महसूस हो रही है और जीने की इच्छा खत्म हो रही है।"
+    )
+    payload = {
+        "items": [],
+        "safety_level": "review",
+        "safety_cues": ["passive death wish language"],
+        "notes": "raw",
+    }
+
+    refined = extractor._refine_english_anxiety_payload(transcript, payload)
+    items = {item["item_id"]: item for item in refined["items"]}
+
+    assert items["phq_q9_self_harm"]["value"] >= 1
+    assert "english_screening_refined" in refined["notes"]
+
+
+def test_huggingface_extractor_refines_feeling_low_most_of_day_wording():
+    extractor = HuggingFaceExtractor(_disabled_config())
+    transcript = (
+        "assistant: How has your mood been through the day?\n"
+        "user: I have been feeling low most of the day, and it is hard to shake."
+    )
+    payload = {
+        "items": [],
+        "safety_level": "none",
+        "safety_cues": [],
+        "notes": "raw",
+    }
+
+    refined = extractor._refine_english_anxiety_payload(transcript, payload)
+    items = {item["item_id"]: item for item in refined["items"]}
+
+    assert items["phq_q2_low_mood"]["value"] >= 2
     assert "english_screening_refined" in refined["notes"]
 
 
@@ -1474,6 +1792,236 @@ def test_huggingface_responder_retries_after_full_reply_repetition():
     assert "It sounds like" not in reply
     assert source == "vertex"
     assert len(responder._client.calls) == 2
+
+
+def test_vertex_responder_uses_model_recovery_before_template_fallback():
+    class _Response:
+        def __init__(self, content):
+            self.choices = [type("Choice", (), {"message": type("Message", (), {"content": content})()})()]
+
+    class _FakeClient:
+        def __init__(self):
+            self.calls = 0
+
+        def chat_completion(self, *, messages, temperature, max_tokens):
+            self.calls += 1
+            if self.calls <= 2:
+                return _Response("At what times do you feel restless the most?")
+            return _Response("When it hits, does it feel more like pacing around, or more like inner agitation even if you stay still?")
+
+    config = RuntimeConfig(
+        model_provider="local",
+        chat_model="gemini-3-pro-preview",
+        extraction_model="/models/aya-expanse-8b",
+        safety_model="/models/safety",
+        hf_token=None,
+        hf_timeout=30.0,
+        assistant_temperature=0.2,
+        assistant_max_tokens=180,
+        extraction_max_tokens=900,
+        safety_max_tokens=180,
+        semantic_safety_model=None,
+        semantic_safety_review_threshold=0.64,
+        semantic_safety_urgent_threshold=0.72,
+        chat_provider="vertex",
+        extraction_provider="local",
+        safety_provider="local",
+        vertex_project="demo-project",
+        vertex_location="us-central1",
+    )
+    responder = HuggingFaceResponder(config)
+    responder._client = _FakeClient()
+    session = ChatSession(
+        session_id="vertex-recovery-session",
+        language="en",
+        turns=[
+            Turn(turn_id=1, speaker="assistant", text="At what times do you feel restless the most?", language_tag="en"),
+            Turn(turn_id=2, speaker="user", text="During night.", language_tag="en"),
+        ],
+    )
+    snapshot = ScreeningSnapshot(
+        language="en",
+        items={},
+        evidence_spans=[],
+        unresolved_items=["gad_q5_restlessness"],
+        totals={"PHQ9": None, "GAD7": None},
+        safety=SafetyFlag(level="none"),
+        coverage=CoveragePlan(
+            total_items=16,
+            touched_items=1,
+            completion_ratio=0.1,
+            dialogue=DialoguePlan(
+                stage="clarification",
+                next_action="clarify",
+                current_topic="anxiety",
+                target_topic="anxiety",
+                target_item="gad_q5_restlessness",
+                rationale="Restlessness still needs a different clarifier.",
+                transition_hint="Move from timing into what the restlessness feels like.",
+                user_style=UserStyleProfile(),
+                disclosure=DisclosureMetrics(),
+            ),
+        ),
+    )
+
+    fallback = "That timing helps. When it shows up then, is it more like pacing or needing to move, or more like inner agitation even while you stay still?"
+    reply, source = responder.compose_reply(session, snapshot, "gad_q5_restlessness", fallback)
+
+    assert "inner agitation" in reply
+    assert source == "vertex"
+    assert responder.last_reply_diagnostics["reason"] == "accepted_recovery"
+    assert responder._client.calls == 3
+
+
+def test_vertex_responder_returns_recovery_instead_of_template_after_exhausting_model_attempts():
+    class _FakeClient:
+        def chat_completion(self, *, messages, temperature, max_tokens):
+            raise RuntimeError("upstream unavailable")
+
+    config = RuntimeConfig(
+        model_provider="local",
+        chat_model="gemini-3-pro-preview",
+        extraction_model="/models/aya-expanse-8b",
+        safety_model="/models/safety",
+        hf_token=None,
+        hf_timeout=30.0,
+        assistant_temperature=0.2,
+        assistant_max_tokens=180,
+        extraction_max_tokens=900,
+        safety_max_tokens=180,
+        semantic_safety_model=None,
+        semantic_safety_review_threshold=0.64,
+        semantic_safety_urgent_threshold=0.72,
+        chat_provider="vertex",
+        extraction_provider="local",
+        safety_provider="local",
+        vertex_project="demo-project",
+        vertex_location="us-central1",
+    )
+    responder = HuggingFaceResponder(config)
+    responder._client = _FakeClient()
+    session = ChatSession(
+        session_id="vertex-recovery-hard-fail",
+        language="en",
+        turns=[
+            Turn(turn_id=1, speaker="assistant", text="When the worry starts, can you pull your mind away from it, or does it keep looping even when you try to stop it?", language_tag="en"),
+            Turn(turn_id=2, speaker="user", text="It keeps looping.", language_tag="en"),
+        ],
+    )
+    snapshot = ScreeningSnapshot(
+        language="en",
+        items={},
+        evidence_spans=[],
+        unresolved_items=["gad_q2_control_worry"],
+        totals={"PHQ9": None, "GAD7": None},
+        safety=SafetyFlag(level="none"),
+        coverage=CoveragePlan(
+            total_items=16,
+            touched_items=1,
+            completion_ratio=0.1,
+            dialogue=DialoguePlan(
+                stage="clarification",
+                next_action="clarify",
+                current_topic="anxiety",
+                target_topic="anxiety",
+                target_item="gad_q2_control_worry",
+                rationale="Keep the turn on controllability without switching topics.",
+                transition_hint="Stay with what it feels like when the looping does not let up.",
+                user_style=UserStyleProfile(),
+                disclosure=DisclosureMetrics(),
+            ),
+        ),
+    )
+
+    fallback = "When it keeps looping like that, does it feel like you can redirect it at all, or does it keep pulling you back in?"
+    reply, source = responder.compose_reply(session, snapshot, "gad_q2_control_worry", fallback)
+
+    assert reply == fallback
+    assert source == "recovery"
+    assert responder.last_reply_diagnostics["source"] == "recovery"
+
+
+def test_vertex_responder_fails_fast_on_timeout_and_skips_analysis_recovery_clients():
+    class _TimeoutClient:
+        def __init__(self, label: str):
+            self.label = label
+            self.calls = 0
+
+        def chat_completion(self, *, messages, temperature, max_tokens):
+            self.calls += 1
+            raise TimeoutError(f"{self.label} timed out")
+
+    config = RuntimeConfig(
+        model_provider="local",
+        chat_model="gemini-3-pro-preview",
+        extraction_model="/models/aya-expanse-8b",
+        safety_model="/models/safety",
+        hf_token=None,
+        hf_timeout=30.0,
+        assistant_temperature=0.2,
+        assistant_max_tokens=180,
+        extraction_max_tokens=900,
+        safety_max_tokens=180,
+        semantic_safety_model=None,
+        semantic_safety_review_threshold=0.64,
+        semantic_safety_urgent_threshold=0.72,
+        chat_provider="vertex",
+        extraction_provider="local",
+        safety_provider="local",
+        vertex_project="demo-project",
+        vertex_location="us-central1",
+        live_chat_reply_timeout=4.0,
+        live_chat_llm_analysis_enabled=True,
+    )
+    responder = HuggingFaceResponder(config)
+    primary_client = _TimeoutClient("primary")
+    fallback_client = _TimeoutClient("fallback")
+    analysis_client = _TimeoutClient("analysis")
+    responder._client = None
+    responder._generation_clients = [primary_client, fallback_client]
+    responder._analysis_clients = [analysis_client]
+    session = ChatSession(
+        session_id="vertex-timeout-fast-fail",
+        language="en",
+        turns=[
+            Turn(turn_id=1, speaker="assistant", text="Is the worry more mental or physical for you?", language_tag="en"),
+            Turn(turn_id=2, speaker="user", text="Mostly mental and it keeps looping.", language_tag="en"),
+        ],
+    )
+    snapshot = ScreeningSnapshot(
+        language="en",
+        items={},
+        evidence_spans=[],
+        unresolved_items=["gad_q2_control_worry"],
+        totals={"PHQ9": None, "GAD7": None},
+        safety=SafetyFlag(level="none"),
+        coverage=CoveragePlan(
+            total_items=16,
+            touched_items=1,
+            completion_ratio=0.1,
+            dialogue=DialoguePlan(
+                stage="clarification",
+                next_action="clarify",
+                current_topic="anxiety",
+                target_topic="anxiety",
+                target_item="gad_q2_control_worry",
+                rationale="Stay on the looping and control question.",
+                transition_hint="Keep the turn moving without stalling on generation retries.",
+                user_style=UserStyleProfile(),
+                disclosure=DisclosureMetrics(),
+            ),
+        ),
+    )
+
+    fallback = "When it loops like that, does it feel possible to redirect at all, or does it keep pulling you back in?"
+    reply, source = responder.compose_reply(session, snapshot, "gad_q2_control_worry", fallback)
+
+    assert reply == fallback
+    assert source == "recovery"
+    assert responder.last_reply_diagnostics["reason"] == "generation_timeout"
+    assert primary_client.calls == 1
+    assert fallback_client.calls == 1
+    assert analysis_client.calls == 1
 
 
 def test_huggingface_responder_prefers_template_for_review_level_safety():
