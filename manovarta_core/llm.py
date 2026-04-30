@@ -74,6 +74,7 @@ EXTRACTOR_ITEM_HINTS = {
 ENGLISH_VERIFIER_FOCUS_ITEMS = (
     "phq_q1_anhedonia",
     "phq_q2_low_mood",
+    "phq_q4_fatigue",
     "phq_q5_appetite",
     "phq_q6_worthlessness",
     "gad_q1_nervous",
@@ -88,11 +89,15 @@ ENGLISH_VERIFIER_FOCUS_ITEMS = (
 )
 ENGLISH_ANHEDONIA_CUES = (
     "go through the motions",
+    "going through the motions",
     "go through motions",
     "do not get much from them",
     "don't get much from them",
+    "do not really feel much from them",
+    "don't really feel much from them",
     "feel very little from them",
     "things i used to enjoy feel flat",
+    "things i normally enjoy feel flat",
     "things i usually care about feel flat",
     "before i even start them",
     "used to enjoy",
@@ -101,9 +106,18 @@ ENGLISH_ANHEDONIA_CUES = (
     "put off starting things",
     "pulling away from people",
     "ignore texts",
+    "interest kam ho gaya",
+    "pehle achchi lagti thi",
+    "bas routine chala raha hoon",
+    "mann nahi lagta",
+    "मन नहीं लगता",
+    "पहले अच्छी लगती थी",
+    "दिलचस्पी कम हो गई",
 )
 ENGLISH_LOW_MOOD_CUES = (
     "low mood",
+    "feeling low most of the day",
+    "mood is low most of the day",
     "feel flat most of the day",
     "emotionally flat underneath",
     "everything feels flat underneath",
@@ -120,6 +134,13 @@ ENGLISH_LOW_MOOD_CUES = (
     "heavy muted feeling",
     "muted feeling that sits underneath everything",
     "heavier than it used to",
+    "mood low rehta hai",
+    "din bhar low rehta hai",
+    "andar se heavy sa feel hota hai",
+    "heavy sa feel hota hai",
+    "मूड लो रहता है",
+    "दिन भर लो रहता है",
+    "अंदर से भारी सा लगता है",
 )
 ENGLISH_SLEEP_CUES = (
     "sleep is messy",
@@ -131,10 +152,14 @@ ENGLISH_SLEEP_CUES = (
     "waking during the night",
     "wake too early",
     "sleep keeps breaking",
+    "नींद टूट रही है",
+    "3 या 4 बजे आंख खुल जाती है",
+    "सुबह फ्रेश नहीं लगता",
 )
 ENGLISH_APPETITE_CUES = (
     "skip lunch",
     "skipped lunch",
+    "lunch often just does not happen",
     "still have not eaten properly",
     "late afternoon before eating",
     "skip meals",
@@ -147,6 +172,11 @@ ENGLISH_APPETITE_CUES = (
     "not eating much",
     "appetite does not really show up",
     "appetite does not show up",
+    "khane ka pattern off",
+    "lunch skip ho jata hai",
+    "खाने का पैटर्न ऑफ है",
+    "लंच स्किप हो जाता है",
+    "भूख कम लगती है",
 )
 ENGLISH_WORTHLESSNESS_CUES = (
     "wasting everyone's time",
@@ -164,6 +194,31 @@ ENGLISH_WORTHLESSNESS_CUES = (
     "not cut out for this",
     "feeling weak",
     "like a burden",
+    "khud pe bhi kaafi harsh ho gaya hoon",
+    "khud par kaafi harsh feel ho raha hai",
+    "simple cheezein bhi theek se nahi ho rahi",
+    "खुद पर बहुत harsh हो गया हूँ",
+    "साधारण चीजें भी ठीक से नहीं हो रही",
+    "लगता है मैं fail हो रहा हूँ",
+)
+ENGLISH_FATIGUE_CUES = (
+    "drag through the day",
+    "dragging through the day",
+    "drag through work",
+    "dragging through work",
+    "by daytime i am dragging",
+    "daytime i am dragging",
+    "dragging by daytime",
+    "drained from the morning onward",
+    "wiped after work",
+    "low stamina",
+    "energy itni kam hoti hai",
+    "basic kaam bhi push karke karne padte hain",
+    "subah fresh bilkul nahi lagta",
+    "energy इतनी कम होती है",
+    "ऊर्जा बहुत कम रहती है",
+    "बेसिक काम भी push करके करने पड़ते हैं",
+    "थकान बनी रहती है",
 )
 ENGLISH_CONTROL_WORRY_CUES = (
     "mind won't stop",
@@ -184,9 +239,18 @@ ENGLISH_CONTROL_WORRY_CUES = (
     "cannot turn it off",
     "turn it off on my own",
     "no real control over it",
+    "worry loop",
+    "control nahi hota",
+    "dimaag mein ghoomta rehta hai",
+    "worry loop में चलता रहता है",
+    "control नहीं होता",
+    "दिमाग में घूमता रहता है",
 )
 ENGLISH_EXCESSIVE_WORRY_CUES = (
     "worrying a lot",
+    "not just one thing",
+    "worry is broad",
+    "work, money, family",
     "get written up",
     "cover rent",
     "wrong thing",
@@ -200,6 +264,10 @@ ENGLISH_EXCESSIVE_WORRY_CUES = (
     "work or money",
     "let people down",
     "miss something important",
+    "kaam, paise aur family",
+    "kaam paise aur family",
+    "काम, पैसे और family",
+    "काम, पैसे और परिवार",
 )
 ENGLISH_TROUBLE_RELAXING_CUES = (
     "can't really switch off",
@@ -218,6 +286,11 @@ ENGLISH_TROUBLE_RELAXING_CUES = (
     "do not feel settled",
     "body still feels revved up",
     "actually unwinding",
+    "relax karna mushkil hota hai",
+    "body tense rehti hai",
+    "relax करना मुश्किल होता है",
+    "body tense रहती है",
+    "आराम करना मुश्किल होता है",
 )
 ENGLISH_NERVOUS_CUES = (
     "always on edge",
@@ -232,6 +305,11 @@ ENGLISH_NERVOUS_CUES = (
     "hands start shaking",
     "keyed up",
     "before difficult calls",
+    "uneasy ho jata hoon",
+    "uneasy हो जाता हूँ",
+    "बेचैनी रहती है",
+    "चिंता घूमती रहती है",
+    "घबराहट रहती है",
 )
 ENGLISH_RESTLESSNESS_CUES = (
     "pace around",
@@ -242,6 +320,19 @@ ENGLISH_RESTLESSNESS_CUES = (
     "need to move around",
     "urge to move around",
     "keep getting up",
+    "idhar udhar chalne lagta hoon",
+    "इधर उधर चलने लगता हूँ",
+    "एक जगह बैठना मुश्किल हो जाता है",
+)
+ENGLISH_IRRITABILITY_CUES = (
+    "snappy with people",
+    "get snappy with people",
+    "snappier with people",
+    "snappier than usual",
+    "snappy faster than i want to",
+    "irritate bhi jaldi ho jata hoon",
+    "irritate भी जल्दी हो जाता हूँ",
+    "जल्दी चिड़चिड़ा हो जाता हूँ",
 )
 ENGLISH_CONCENTRATION_CUES = (
     "reread the same email",
@@ -251,6 +342,9 @@ ENGLISH_CONCENTRATION_CUES = (
     "concentration slips",
     "focus slips",
     "mind not sticking",
+    "focus नहीं होता",
+    "same paragraph दोबारा पढ़ना पड़ता है",
+    "ध्यान नहीं टिकता",
 )
 ENGLISH_PSYCHOMOTOR_CUES = (
     "body feels slowed down",
@@ -260,10 +354,15 @@ ENGLISH_PSYCHOMOTOR_CUES = (
     "takes effort to get myself started",
     "takes real effort just to get started",
     "delay basic tasks",
+    "body bhi slow lagti hai",
+    "start lene mein time lagta hai",
+    "शरीर slow लगता है",
 )
 ENGLISH_AFRAID_CUES = (
+    "bracing for something bad",
     "something bad will happen",
     "something bad is about to happen",
+    "something is going to go wrong",
     "cover rent",
     "get written up",
     "say the wrong thing",
@@ -271,6 +370,16 @@ ENGLISH_AFRAID_CUES = (
     "awful will happen",
     "something is about to go wrong",
     "miss something important",
+    "kuch bura hone wala hai",
+    "कुछ बुरा होने वाला है",
+)
+HINGLISH_SELF_HARM_DENIAL_PATTERNS = (
+    r"\b(?:nahi|nahin)\b.{0,64}\bkhud ko hurt\b",
+    r"\bkhud ko hurt\b.{0,64}\b(?:nahi|nahin|nahi aaye|nahi aaye hain)\b",
+    r"\bzinda na rehne\b.{0,64}\b(?:nahi|nahin|nahi aaye|nahi aaye hain)\b",
+    r"नहीं.{0,64}खुद को hurt",
+    r"खुद को hurt.{0,64}नहीं",
+    r"ज़िंदा न रहने.{0,64}नहीं",
 )
 ENGLISH_SELF_HARM_POSITIVE_CUES = (
     "hurt myself",
@@ -282,6 +391,10 @@ ENGLISH_SELF_HARM_POSITIVE_CUES = (
     "better off without me around",
     "everyone would have an easier life",
     "want to disappear",
+    "jeene ka mann nahi",
+    "jeene ki ichha khatam",
+    "जीने की इच्छा खत्म",
+    "जीने का मन खत्म",
 )
 
 
@@ -515,7 +628,14 @@ class _LocalGenerationClient:
 
 
 class _VertexGenerationClient:
-    def __init__(self, config: RuntimeConfig, model_name: str) -> None:
+    def __init__(
+        self,
+        config: RuntimeConfig,
+        model_name: str,
+        *,
+        request_timeout: float = 180.0,
+        thinking_budget_override: Optional[int] = None,
+    ) -> None:
         if google_auth is None or GoogleAuthRequest is None:
             raise RuntimeError("google auth runtime is not installed")
         if not config.vertex_project:
@@ -524,6 +644,8 @@ class _VertexGenerationClient:
         self._model_name = model_name
         self._lock = Lock()
         self._credentials = None
+        self._request_timeout = max(float(request_timeout), 1.0)
+        self._thinking_budget_override = thinking_budget_override
 
     def chat_completion(self, *, messages, temperature: float, max_tokens: int):
         system_instruction, prompt, wants_json = self._prepare_request(messages)
@@ -631,6 +753,9 @@ class _VertexGenerationClient:
     def _thinking_config(self, *, wants_json: bool) -> Optional[dict[str, int]]:
         if wants_json:
             return None
+        thinking_budget_override = getattr(self, "_thinking_budget_override", None)
+        if thinking_budget_override is not None:
+            return {"thinkingBudget": max(int(thinking_budget_override), 0)}
         normalized_model = self._model_name.strip().lower()
         if normalized_model.startswith("gemini-2.5-pro"):
             return {"thinkingBudget": 128}
@@ -650,7 +775,7 @@ class _VertexGenerationClient:
             method="POST",
         )
         try:
-            with urllib_request.urlopen(request, timeout=180) as response:
+            with urllib_request.urlopen(request, timeout=self._request_timeout) as response:
                 return json.loads(response.read().decode())
         except urllib_error.HTTPError as exc:
             detail = exc.read().decode("utf-8", errors="ignore")
@@ -693,6 +818,8 @@ def _build_text_generation_client(
     model_name: str,
     *,
     adapter_path: Optional[str] = None,
+    request_timeout: Optional[float] = None,
+    thinking_budget_override: Optional[int] = None,
 ):
     normalized_provider = (provider or config.model_provider).strip().lower()
     if normalized_provider == "local":
@@ -707,7 +834,12 @@ def _build_text_generation_client(
             return None
     if normalized_provider == "vertex":
         try:
-            return _VertexGenerationClient(config, model_name)
+            return _VertexGenerationClient(
+                config,
+                model_name,
+                request_timeout=request_timeout or 180.0,
+                thinking_budget_override=thinking_budget_override,
+            )
         except Exception:
             return None
     if normalized_provider == "huggingface" and config.hf_token and InferenceClient is not None:
@@ -725,11 +857,13 @@ class HuggingFaceResponder:
         self._provider = self.config.chat_model_provider
         self._last_reply_diagnostics: dict[str, str] = {}
         self._generation_clients = self._build_client_chain(
-            primary_model=self.config.chat_model,
-            fallback_model=self.config.resolved_chat_fallback_model,
+            primary_model=self.config.resolved_live_chat_reply_model,
+            fallback_model=self.config.resolved_live_chat_reply_fallback_model,
             primary_location=self.config.resolved_vertex_chat_location,
             fallback_location=self.config.resolved_vertex_chat_fallback_location,
             adapter_path=self.config.local_chat_adapter,
+            request_timeout=self.config.live_chat_reply_timeout,
+            thinking_budget_override=self.config.live_chat_reply_thinking_budget,
         )
         self._analysis_clients = self._build_client_chain(
             primary_model=self.config.resolved_live_chat_analysis_model,
@@ -737,6 +871,8 @@ class HuggingFaceResponder:
             primary_location=self.config.resolved_vertex_live_chat_analysis_location,
             fallback_location=self.config.resolved_vertex_live_chat_analysis_fallback_location,
             adapter_path=self.config.local_chat_adapter,
+            request_timeout=self.config.live_chat_analysis_timeout,
+            thinking_budget_override=self.config.live_chat_analysis_thinking_budget,
         )
         self._client = self._generation_clients[0] if self._generation_clients else None
 
@@ -776,14 +912,21 @@ class HuggingFaceResponder:
             self._last_reply_diagnostics = {"source": "template", "reason": "planner_prefers_fallback", "detail": ""}
             return fallback_text, "template"
 
-        analyzer_result = self._analyze_turn(session, snapshot, target_item)
+        deadline = time.monotonic() + self._reply_deadline_seconds()
+        analyzer_result = self._analyze_turn(session, snapshot, target_item, deadline=deadline)
         messages = self._build_messages(session, snapshot, target_item, fallback_text, analyzer_result=analyzer_result)
         last_failure_reason = "no_generation_attempt"
         last_failure_detail = ""
         for client in self._active_generation_clients():
+            if time.monotonic() >= deadline:
+                last_failure_reason = "deadline_exceeded"
+                break
             client_label = self._client_label(client)
             repair_context: tuple[str, str] | None = None
             for attempt_index in range(2):
+                if time.monotonic() >= deadline:
+                    last_failure_reason = "deadline_exceeded"
+                    break
                 prompt_messages = messages
                 if repair_context is not None:
                     prompt_messages = self._build_repair_messages(
@@ -800,7 +943,7 @@ class HuggingFaceResponder:
                     )
                     content = output.choices[0].message.content.strip()
                 except Exception as exc:
-                    last_failure_reason = "generation_error"
+                    last_failure_reason = "generation_timeout" if self._is_timeout_like_error(exc) else "generation_error"
                     last_failure_detail = f"{client_label}:{type(exc).__name__}:{str(exc)[:180]}"
                     logger.warning(
                         "reply_generation_error provider=%s client=%s attempt=%s target_item=%s error=%s",
@@ -841,6 +984,20 @@ class HuggingFaceResponder:
                     repair_context = (rejection_reason, cleaned[:240])
                     continue
                 break
+            if last_failure_reason == "deadline_exceeded":
+                break
+        recovered_reply = self._recover_reply_with_model(
+            messages,
+            session,
+            snapshot,
+            analyzer_result,
+            fallback_text,
+            last_failure_reason,
+            last_failure_detail,
+            deadline=deadline,
+        )
+        if recovered_reply is not None:
+            return recovered_reply, self._provider
         logger.info(
             "reply_generation_fallback provider=%s target_item=%s reason=%s detail=%r",
             self._provider,
@@ -848,6 +1005,13 @@ class HuggingFaceResponder:
             last_failure_reason,
             last_failure_detail,
         )
+        if self._provider == "vertex":
+            self._last_reply_diagnostics = {
+                "source": "recovery",
+                "reason": last_failure_reason,
+                "detail": last_failure_detail,
+            }
+            return fallback_text, "recovery"
         self._last_reply_diagnostics = {
             "source": "template",
             "reason": last_failure_reason,
@@ -867,6 +1031,8 @@ class HuggingFaceResponder:
         primary_location: str,
         fallback_location: str,
         adapter_path: Optional[str],
+        request_timeout: float,
+        thinking_budget_override: Optional[int],
     ) -> list[Any]:
         clients: list[Any] = []
         seen_specs: set[tuple[str, str, str, str]] = set()
@@ -887,10 +1053,28 @@ class HuggingFaceResponder:
                 normalized_model,
                 location=normalized_location,
                 adapter_path=adapter,
+                request_timeout=request_timeout,
+                thinking_budget_override=thinking_budget_override,
             )
             if client is not None:
                 clients.append(client)
         return clients
+
+    def _reply_deadline_seconds(self) -> float:
+        base_timeout = max(float(self.config.live_chat_reply_timeout), 1.0)
+        return max(4.0, min(base_timeout + 2.0, 10.0))
+
+    def _is_timeout_like_error(self, exc: Exception) -> bool:
+        normalized_message = normalize_text(str(exc))
+        return any(
+            marker in normalized_message
+            for marker in (
+                "timed out",
+                "timeout",
+                "deadline exceeded",
+                "read operation timed out",
+            )
+        )
 
     def _active_generation_clients(self) -> list[Any]:
         legacy_client = getattr(self, "_client", None)
@@ -922,6 +1106,8 @@ class HuggingFaceResponder:
         *,
         location: str,
         adapter_path: Optional[str],
+        request_timeout: float,
+        thinking_budget_override: Optional[int],
     ):
         client_config = self.config
         if self._provider == "vertex" and location and location != self.config.vertex_location:
@@ -931,6 +1117,8 @@ class HuggingFaceResponder:
             self._provider,
             model_name,
             adapter_path=adapter_path,
+            request_timeout=request_timeout,
+            thinking_budget_override=thinking_budget_override,
         )
 
     def _build_messages(
@@ -1061,11 +1249,15 @@ class HuggingFaceResponder:
         session: ChatSession,
         snapshot: ScreeningSnapshot,
         target_item: Optional[str],
+        *,
+        deadline: Optional[float] = None,
     ) -> Optional[DialogueAnalyzerResult]:
         if not self._analysis_enabled():
             return None
         messages = self._build_analysis_messages(session, snapshot, target_item)
         for client in self._active_analysis_clients():
+            if deadline is not None and time.monotonic() >= deadline:
+                return None
             try:
                 output = client.chat_completion(
                     messages=messages,
@@ -1228,6 +1420,95 @@ class HuggingFaceResponder:
             f"Recent assistant turns to avoid echoing: {recent_turns}"
         )
         return [*original_messages, {"role": "user", "content": repair_instruction}]
+
+    def _build_recovery_messages(
+        self,
+        original_messages: list[dict[str, str]],
+        session: ChatSession,
+        fallback_text: str,
+        last_failure_reason: str,
+        last_failure_detail: str,
+    ) -> list[dict[str, str]]:
+        recent_turns = " | ".join(
+            turn.text.strip()
+            for turn in [turn for turn in session.turns if turn.speaker == "assistant"][-4:]
+            if turn.text.strip()
+        ) or "none"
+        recovery_instruction = (
+            "The previous assistant drafts were rejected or failed. "
+            "Write one final assistant turn now. "
+            "It must stay natural, clinically focused, and in the user's language. "
+            "Use at most two sentences. "
+            "Do not copy the recent assistant turns, but keep the same screening target. "
+            "Do not produce meta commentary, labels, notes, or markdown. "
+            "If needed, use this fallback turn only as semantic guidance and rewrite it in a fresher way rather than copying it.\n"
+            f"Fallback guidance: {fallback_text}\n"
+            f"Recent assistant turns to avoid echoing: {recent_turns}\n"
+            f"Last failure reason: {last_failure_reason}\n"
+            f"Last failure detail: {last_failure_detail[:220]}"
+        )
+        return [*original_messages, {"role": "user", "content": recovery_instruction}]
+
+    def _recover_reply_with_model(
+        self,
+        messages: list[dict[str, str]],
+        session: ChatSession,
+        snapshot: ScreeningSnapshot,
+        analyzer_result: Optional[DialogueAnalyzerResult],
+        fallback_text: str,
+        last_failure_reason: str,
+        last_failure_detail: str,
+        *,
+        deadline: Optional[float] = None,
+    ) -> Optional[str]:
+        if last_failure_reason == "generation_timeout":
+            return None
+        if deadline is not None and time.monotonic() >= deadline - 0.25:
+            return None
+
+        recovery_clients = list(self._active_generation_clients())
+
+        if not recovery_clients:
+            return None
+
+        recovery_messages = self._build_recovery_messages(
+            messages,
+            session,
+            fallback_text,
+            last_failure_reason,
+            last_failure_detail,
+        )
+        for client in recovery_clients:
+            if deadline is not None and time.monotonic() >= deadline:
+                return None
+            client_label = self._client_label(client)
+            try:
+                output = client.chat_completion(
+                    messages=recovery_messages,
+                    temperature=min(self.config.assistant_temperature, 0.15),
+                    max_tokens=self.config.assistant_max_tokens,
+                )
+                content = output.choices[0].message.content.strip()
+            except Exception as exc:
+                logger.warning(
+                    "reply_recovery_error provider=%s client=%s error=%s",
+                    self._provider,
+                    client_label,
+                    exc,
+                )
+                continue
+            cleaned = self._clean_content(content, fallback_text)
+            if not cleaned:
+                continue
+            rejection_reason = self._reply_rejection_reason(cleaned, session, snapshot, analyzer_result)
+            if rejection_reason is None or rejection_reason in {"duplicate_question", "repetitive_full_reply"}:
+                self._last_reply_diagnostics = {
+                    "source": self._provider,
+                    "reason": "accepted_recovery",
+                    "detail": f"{client_label}:{rejection_reason or 'clean'}",
+                }
+                return cleaned
+        return None
 
     def _violates_analysis_constraints(
         self,
@@ -1748,7 +2029,7 @@ class HuggingFaceExtractor:
                 verifier_payload = self._extract_with_window_verifier(turns, normalized_language)
                 best_payload = self._merge_payloads(payload, verifier_payload) or verifier_payload or payload
                 best_payload = self._build_rule_rescue_payload(turns, normalized_language, best_payload)
-                if normalized_language == "en":
+                if normalized_language in {"en", "hi", "hinglish"}:
                     return self._refine_english_anxiety_payload(full_transcript, best_payload)
                 return best_payload
             return self._build_rule_rescue_payload(turns, normalized_language, best_payload)
@@ -1777,7 +2058,7 @@ class HuggingFaceExtractor:
             return payload
         merged_payload = normalize_extractor_payload(payload) or payload
         merged_payload = self._build_rule_rescue_payload(turns, language, merged_payload) or merged_payload
-        if language == "en":
+        if language in {"en", "hi", "hinglish"}:
             transcript = self._build_extraction_transcript(turns, include_assistant=True)
             refined_payload = self._refine_english_anxiety_payload(transcript, merged_payload)
             if refined_payload:
@@ -1935,8 +2216,34 @@ class HuggingFaceExtractor:
         if self._provider == "local":
             selected_turns = turns[-10:] if include_assistant else [turn for turn in turns if turn.speaker == "user"][-6:]
         else:
-            selected_turns = turns[-12:] if include_assistant else [turn for turn in turns if turn.speaker == "user"][-6:]
+            source_turns = turns if include_assistant else [turn for turn in turns if turn.speaker == "user"]
+            selected_turns = self._select_recent_turns_with_budget(
+                source_turns,
+                max_turns=24 if include_assistant else 16,
+                max_chars=14000 if include_assistant else 9000,
+            )
         return "\n".join(f"{turn.speaker}: {turn.text}" for turn in selected_turns)
+
+    def _select_recent_turns_with_budget(
+        self,
+        turns: list[Turn],
+        *,
+        max_turns: int,
+        max_chars: int,
+    ) -> list[Turn]:
+        if not turns:
+            return []
+
+        selected: list[Turn] = []
+        used_chars = 0
+        for turn in reversed(turns[-max_turns:]):
+            line = f"{turn.speaker}: {turn.text}"
+            line_cost = len(line) + 1
+            if selected and used_chars + line_cost > max_chars:
+                break
+            selected.append(turn)
+            used_chars += line_cost
+        return list(reversed(selected))
 
     def _build_local_fast_transcripts(self, turns: list[Turn]) -> list[str]:
         transcripts: list[str] = []
@@ -2010,6 +2317,7 @@ class HuggingFaceExtractor:
         anhedonia_hit = self._find_first_cue(transcript, ENGLISH_ANHEDONIA_CUES)
         low_mood_hit = self._find_first_cue(transcript, ENGLISH_LOW_MOOD_CUES)
         sleep_hit = self._find_first_cue(transcript, ENGLISH_SLEEP_CUES)
+        fatigue_hit = self._find_first_cue(transcript, ENGLISH_FATIGUE_CUES)
         appetite_hit = self._find_first_cue(transcript, ENGLISH_APPETITE_CUES)
         worthlessness_hit = self._find_first_cue(transcript, ENGLISH_WORTHLESSNESS_CUES)
         concentration_hit = self._find_first_cue(transcript, ENGLISH_CONCENTRATION_CUES)
@@ -2019,8 +2327,11 @@ class HuggingFaceExtractor:
         excessive_hit = self._find_first_cue(transcript, ENGLISH_EXCESSIVE_WORRY_CUES)
         relaxing_hit = self._find_first_cue(transcript, ENGLISH_TROUBLE_RELAXING_CUES)
         restlessness_hit = self._find_first_cue(transcript, ENGLISH_RESTLESSNESS_CUES)
+        irritability_hit = self._find_first_cue(transcript, ENGLISH_IRRITABILITY_CUES)
         afraid_hit = self._find_first_cue(transcript, ENGLISH_AFRAID_CUES)
         self_harm_denial_hit = self._find_first_pattern_match(transcript, PROTECTIVE_NEGATION_PATTERNS)
+        if self_harm_denial_hit is None:
+            self_harm_denial_hit = self._find_first_pattern_match(transcript, HINGLISH_SELF_HARM_DENIAL_PATTERNS)
         if self_harm_denial_hit is None:
             self_harm_denial_hit = self._find_first_cue(transcript, PROTECTIVE_CUES)
         if self_harm_denial_hit is None:
@@ -2062,6 +2373,17 @@ class HuggingFaceExtractor:
                     "value": self._english_support_value(transcript, sleep_hit),
                     "evidence_quote": extract_window(transcript, sleep_hit, radius=72),
                     "confidence_note": "Broken, early, or repeatedly interrupted sleep is clearly described.",
+                },
+            )
+
+        if fatigue_hit:
+            items["phq_q4_fatigue"] = self._prefer_structured_item(
+                items.get("phq_q4_fatigue"),
+                {
+                    "item_id": "phq_q4_fatigue",
+                    "value": self._english_support_value(transcript, fatigue_hit),
+                    "evidence_quote": extract_window(transcript, fatigue_hit, radius=72),
+                    "confidence_note": "Dragging, drained, or low-stamina language is explicitly present.",
                 },
             )
 
@@ -2166,6 +2488,17 @@ class HuggingFaceExtractor:
                 },
             )
 
+        if irritability_hit:
+            items["gad_q6_irritability"] = self._prefer_structured_item(
+                items.get("gad_q6_irritability"),
+                {
+                    "item_id": "gad_q6_irritability",
+                    "value": self._english_support_value(transcript, irritability_hit),
+                    "evidence_quote": extract_window(transcript, irritability_hit, radius=72),
+                    "confidence_note": "Irritability or being snappy with others is clearly described.",
+                },
+            )
+
         if afraid_hit:
             items["gad_q7_afraid"] = self._prefer_structured_item(
                 items.get("gad_q7_afraid"),
@@ -2174,6 +2507,18 @@ class HuggingFaceExtractor:
                     "value": self._english_support_value(transcript, afraid_hit),
                     "evidence_quote": extract_window(transcript, afraid_hit, radius=72),
                     "confidence_note": "Fear of consequences or something awful happening is explicit.",
+                },
+            )
+
+        positive_self_harm_hit = self._find_first_cue(transcript, ENGLISH_SELF_HARM_POSITIVE_CUES)
+        if positive_self_harm_hit:
+            items["phq_q9_self_harm"] = self._prefer_structured_item(
+                items.get("phq_q9_self_harm"),
+                {
+                    "item_id": "phq_q9_self_harm",
+                    "value": max(1, self._english_support_value(transcript, positive_self_harm_hit, default=1)),
+                    "evidence_quote": extract_window(transcript, positive_self_harm_hit, radius=72),
+                    "confidence_note": "Passive or direct self-harm or not-wanting-to-live language is explicitly present.",
                 },
             )
 
@@ -2515,7 +2860,7 @@ class HuggingFaceExtractor:
             "safety_cues": [],
             "notes": "local_fast",
         }
-        if language in {"en", "hinglish"}:
+        if language in {"en", "hi", "hinglish"}:
             refined = self._refine_english_anxiety_payload(transcript, base_payload)
             return refined or base_payload
         return base_payload
