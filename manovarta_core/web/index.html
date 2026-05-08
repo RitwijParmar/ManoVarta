@@ -208,19 +208,19 @@
 
                 <div class="companion-grid">
                   <article class="companion-card companion-card-primary">
-                    <p class="mini-label">What I’m hearing</p>
+                    <p class="mini-label">Current pattern from your words</p>
                     <p id="patientSummary" class="summary-text">
                       Start a conversation to see a gentle summary here.
                     </p>
                   </article>
                   <article class="companion-card">
-                    <p class="mini-label">Why this question</p>
+                    <p class="mini-label">Next missing detail</p>
                     <p id="whyThisQuestion" class="summary-text">
                       ManoVarta will explain the next question in plain language here.
                     </p>
                   </article>
                   <article class="companion-card">
-                    <p class="mini-label">Comfort and safety</p>
+                    <p class="mini-label">Safety and pacing checks</p>
                     <p id="safetyNarrative" class="summary-text">
                       Safety checks are running quietly in the background throughout the conversation.
                     </p>
@@ -231,7 +231,7 @@
                   <article class="companion-card progress-card">
                     <div class="progress-head">
                       <div>
-                        <p class="mini-label">How complete this feels</p>
+                        <p class="mini-label">PHQ/GAD coverage so far</p>
                         <p id="progressMeterLabel" class="summary-text">Nothing explored yet.</p>
                       </div>
                       <span id="sessionGoal" class="chip warm">Comfort first</span>
@@ -241,7 +241,7 @@
                     </div>
                   </article>
                   <article class="companion-card signals-card">
-                    <p class="mini-label">Adaptive support</p>
+                    <p class="mini-label">Live steering signals</p>
                     <div id="bonusSignals" class="bonus-signals">
                       <span class="signal-pill">Gentle pacing</span>
                       <span class="signal-pill">Voice available</span>
@@ -249,6 +249,63 @@
                     </div>
                   </article>
                 </div>
+
+                <article class="companion-card companion-card-branches">
+                  <div class="progress-head">
+                    <div>
+                      <p class="mini-label">PHQ/GAD branch map</p>
+                      <p id="branchSummary" class="summary-text">
+                        This will show which PHQ/GAD branches are already covered enough and which ones are still open.
+                      </p>
+                    </div>
+                    <span id="branchFocusPill" class="chip soft">Active branch: none yet</span>
+                  </div>
+                  <div class="branch-tabs" role="tablist" aria-label="Branch view">
+                    <button
+                      id="branchTabCurrent"
+                      type="button"
+                      class="branch-tab is-active"
+                      data-branch-view="current"
+                      role="tab"
+                      aria-selected="true"
+                    >
+                      Current + queued
+                    </button>
+                    <button
+                      id="branchTabAll"
+                      type="button"
+                      class="branch-tab"
+                      data-branch-view="all"
+                      role="tab"
+                      aria-selected="false"
+                    >
+                      All PHQ/GAD branches
+                    </button>
+                    <button
+                      id="branchTabQuestionnaire"
+                      type="button"
+                      class="branch-tab"
+                      data-branch-view="questionnaire"
+                      role="tab"
+                      aria-selected="false"
+                    >
+                      Questions + answers
+                    </button>
+                  </div>
+                  <div id="visibleTopicMap" class="topic-map branch-topic-map">
+                    <span class="topic-pill">No branch map yet.</span>
+                  </div>
+                  <div id="questionnaireView" class="questionnaire-view is-hidden">
+                    <div id="questionnaireGroups" class="questionnaire-groups">
+                      <div class="questionnaire-empty">
+                        The questionnaire-style answers will appear here after the conversation starts.
+                      </div>
+                    </div>
+                  </div>
+                  <p id="branchQueueText" class="summary-text">
+                    This will show the active branch, the next checks, and what is still open inside each PHQ/GAD branch.
+                  </p>
+                </article>
 
                 <div class="outcome-grid">
                   <article class="outcome-card">
