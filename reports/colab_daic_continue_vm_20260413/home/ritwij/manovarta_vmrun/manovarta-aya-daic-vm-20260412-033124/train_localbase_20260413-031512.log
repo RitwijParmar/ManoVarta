@@ -1,345 +1,0 @@
-Requirement already satisfied: pip in /opt/python/3.10/lib/python3.10/site-packages (25.1.1)
-Collecting pip
-  Downloading pip-26.0.1-py3-none-any.whl.metadata (4.7 kB)
-Downloading pip-26.0.1-py3-none-any.whl (1.8 MB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.8/1.8 MB 34.0 MB/s eta 0:00:00
-Installing collected packages: pip
-  Attempting uninstall: pip
-    Found existing installation: pip 25.1.1
-    Uninstalling pip-25.1.1:
-      Successfully uninstalled pip-25.1.1
-Successfully installed pip-26.0.1
-WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
-Collecting fastapi==0.115.12
-  Downloading fastapi-0.115.12-py3-none-any.whl.metadata (27 kB)
-Collecting pydantic==2.12.3
-  Downloading pydantic-2.12.3-py3-none-any.whl.metadata (87 kB)
-Collecting huggingface_hub==0.34.0
-  Downloading huggingface_hub-0.34.0-py3-none-any.whl.metadata (14 kB)
-Collecting hf_transfer>=0.1.8
-  Downloading hf_transfer-0.1.9-cp38-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (1.7 kB)
-Collecting python-dotenv==1.0.1
-  Downloading python_dotenv-1.0.1-py3-none-any.whl.metadata (23 kB)
-Collecting google-cloud-storage==2.18.0
-  Downloading google_cloud_storage-2.18.0-py2.py3-none-any.whl.metadata (9.1 kB)
-Collecting datasets==3.0.0
-  Downloading datasets-3.0.0-py3-none-any.whl.metadata (19 kB)
-Collecting accelerate==1.0.0
-  Downloading accelerate-1.0.0-py3-none-any.whl.metadata (19 kB)
-Collecting trl==0.11.0
-  Downloading trl-0.11.0-py3-none-any.whl.metadata (12 kB)
-Collecting peft==0.18.1
-  Downloading peft-0.18.1-py3-none-any.whl.metadata (14 kB)
-Collecting transformers==4.45.0
-  Downloading transformers-4.45.0-py3-none-any.whl.metadata (44 kB)
-Collecting numpy==1.26.0
-  Downloading numpy-1.26.0-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (58 kB)
-Collecting sentencepiece==0.2.0
-  Downloading sentencepiece-0.2.0-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (7.7 kB)
-Collecting bitsandbytes==0.45.0
-  Downloading bitsandbytes-0.45.0-py3-none-manylinux_2_24_x86_64.whl.metadata (2.9 kB)
-Requirement already satisfied: starlette<0.47.0,>=0.40.0 in /opt/python/3.10/lib/python3.10/site-packages (from fastapi==0.115.12) (0.46.2)
-Requirement already satisfied: typing-extensions>=4.8.0 in /opt/python/3.10/lib/python3.10/site-packages (from fastapi==0.115.12) (4.14.1)
-Collecting annotated-types>=0.6.0 (from pydantic==2.12.3)
-  Downloading annotated_types-0.7.0-py3-none-any.whl.metadata (15 kB)
-Collecting pydantic-core==2.41.4 (from pydantic==2.12.3)
-  Downloading pydantic_core-2.41.4-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (7.3 kB)
-Collecting typing-inspection>=0.4.2 (from pydantic==2.12.3)
-  Downloading typing_inspection-0.4.2-py3-none-any.whl.metadata (2.6 kB)
-Requirement already satisfied: filelock in /opt/python/3.10/lib/python3.10/site-packages (from huggingface_hub==0.34.0) (3.18.0)
-Requirement already satisfied: fsspec>=2023.5.0 in /opt/python/3.10/lib/python3.10/site-packages (from huggingface_hub==0.34.0) (2025.5.1)
-Requirement already satisfied: packaging>=20.9 in /opt/python/3.10/lib/python3.10/site-packages (from huggingface_hub==0.34.0) (25.0)
-Requirement already satisfied: pyyaml>=5.1 in /opt/python/3.10/lib/python3.10/site-packages (from huggingface_hub==0.34.0) (6.0.2)
-Requirement already satisfied: requests in /opt/python/3.10/lib/python3.10/site-packages (from huggingface_hub==0.34.0) (2.32.4)
-Requirement already satisfied: tqdm>=4.42.1 in /opt/python/3.10/lib/python3.10/site-packages (from huggingface_hub==0.34.0) (4.67.1)
-Collecting hf-xet<2.0.0,>=1.1.3 (from huggingface_hub==0.34.0)
-  Downloading hf_xet-1.4.3-cp37-abi3-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (4.9 kB)
-Requirement already satisfied: google-auth<3.0dev,>=2.26.1 in /opt/python/3.10/lib/python3.10/site-packages (from google-cloud-storage==2.18.0) (2.40.3)
-Collecting google-api-core<3.0.0dev,>=2.15.0 (from google-cloud-storage==2.18.0)
-  Downloading google_api_core-2.30.3-py3-none-any.whl.metadata (3.1 kB)
-Requirement already satisfied: google-cloud-core<3.0dev,>=2.3.0 in /opt/python/3.10/lib/python3.10/site-packages (from google-cloud-storage==2.18.0) (2.4.3)
-Requirement already satisfied: google-resumable-media>=2.6.0 in /opt/python/3.10/lib/python3.10/site-packages (from google-cloud-storage==2.18.0) (2.7.2)
-Requirement already satisfied: google-crc32c<2.0dev,>=1.0 in /opt/python/3.10/lib/python3.10/site-packages (from google-cloud-storage==2.18.0) (1.7.1)
-Collecting pyarrow>=15.0.0 (from datasets==3.0.0)
-  Downloading pyarrow-23.0.1-cp310-cp310-manylinux_2_28_x86_64.whl.metadata (3.1 kB)
-Collecting dill<0.3.9,>=0.3.0 (from datasets==3.0.0)
-  Downloading dill-0.3.8-py3-none-any.whl.metadata (10 kB)
-Requirement already satisfied: pandas in /opt/python/3.10/lib/python3.10/site-packages (from datasets==3.0.0) (2.2.3)
-Requirement already satisfied: xxhash in /opt/python/3.10/lib/python3.10/site-packages (from datasets==3.0.0) (3.5.0)
-Collecting multiprocess (from datasets==3.0.0)
-  Downloading multiprocess-0.70.19-py310-none-any.whl.metadata (7.5 kB)
-Collecting fsspec>=2023.5.0 (from huggingface_hub==0.34.0)
-  Downloading fsspec-2024.6.1-py3-none-any.whl.metadata (11 kB)
-Requirement already satisfied: aiohttp in /opt/python/3.10/lib/python3.10/site-packages (from datasets==3.0.0) (3.9.5)
-Requirement already satisfied: psutil in /opt/python/3.10/lib/python3.10/site-packages (from accelerate==1.0.0) (5.9.3)
-Requirement already satisfied: torch>=1.10.0 in /opt/python/3.10/lib/python3.10/site-packages (from accelerate==1.0.0) (2.4.0+cu124)
-Collecting safetensors>=0.4.3 (from accelerate==1.0.0)
-  Downloading safetensors-0.7.0-cp38-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (4.1 kB)
-Collecting tyro>=0.5.11 (from trl==0.11.0)
-  Downloading tyro-1.0.12-py3-none-any.whl.metadata (12 kB)
-Collecting regex!=2019.12.17 (from transformers==4.45.0)
-  Downloading regex-2026.4.4-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (40 kB)
-Collecting tokenizers<0.21,>=0.20 (from transformers==4.45.0)
-  Downloading tokenizers-0.20.3-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (6.7 kB)
-Requirement already satisfied: googleapis-common-protos<2.0.0,>=1.63.2 in /opt/python/3.10/lib/python3.10/site-packages (from google-api-core<3.0.0dev,>=2.15.0->google-cloud-storage==2.18.0) (1.70.0)
-Collecting protobuf<8.0.0,>=4.25.8 (from google-api-core<3.0.0dev,>=2.15.0->google-cloud-storage==2.18.0)
-  Downloading protobuf-7.34.1-cp310-abi3-manylinux2014_x86_64.whl.metadata (595 bytes)
-Requirement already satisfied: proto-plus<2.0.0,>=1.22.3 in /opt/python/3.10/lib/python3.10/site-packages (from google-api-core<3.0.0dev,>=2.15.0->google-cloud-storage==2.18.0) (1.26.1)
-Requirement already satisfied: cachetools<6.0,>=2.0.0 in /opt/python/3.10/lib/python3.10/site-packages (from google-auth<3.0dev,>=2.26.1->google-cloud-storage==2.18.0) (5.5.2)
-Requirement already satisfied: pyasn1-modules>=0.2.1 in /opt/python/3.10/lib/python3.10/site-packages (from google-auth<3.0dev,>=2.26.1->google-cloud-storage==2.18.0) (0.4.2)
-Requirement already satisfied: rsa<5,>=3.1.4 in /opt/python/3.10/lib/python3.10/site-packages (from google-auth<3.0dev,>=2.26.1->google-cloud-storage==2.18.0) (4.9.1)
-  Downloading protobuf-6.33.6-cp39-abi3-manylinux2014_x86_64.whl.metadata (593 bytes)
-Requirement already satisfied: charset_normalizer<4,>=2 in /opt/python/3.10/lib/python3.10/site-packages (from requests->huggingface_hub==0.34.0) (3.4.2)
-Requirement already satisfied: idna<4,>=2.5 in /opt/python/3.10/lib/python3.10/site-packages (from requests->huggingface_hub==0.34.0) (3.10)
-Requirement already satisfied: urllib3<3,>=1.21.1 in /opt/python/3.10/lib/python3.10/site-packages (from requests->huggingface_hub==0.34.0) (1.26.20)
-Requirement already satisfied: certifi>=2017.4.17 in /opt/python/3.10/lib/python3.10/site-packages (from requests->huggingface_hub==0.34.0) (2025.6.15)
-Requirement already satisfied: pyasn1>=0.1.3 in /opt/python/3.10/lib/python3.10/site-packages (from rsa<5,>=3.1.4->google-auth<3.0dev,>=2.26.1->google-cloud-storage==2.18.0) (0.6.1)
-Requirement already satisfied: anyio<5,>=3.6.2 in /opt/python/3.10/lib/python3.10/site-packages (from starlette<0.47.0,>=0.40.0->fastapi==0.115.12) (4.9.0)
-Requirement already satisfied: exceptiongroup>=1.0.2 in /opt/python/3.10/lib/python3.10/site-packages (from anyio<5,>=3.6.2->starlette<0.47.0,>=0.40.0->fastapi==0.115.12) (1.3.0)
-Requirement already satisfied: sniffio>=1.1 in /opt/python/3.10/lib/python3.10/site-packages (from anyio<5,>=3.6.2->starlette<0.47.0,>=0.40.0->fastapi==0.115.12) (1.3.1)
-Requirement already satisfied: aiosignal>=1.1.2 in /opt/python/3.10/lib/python3.10/site-packages (from aiohttp->datasets==3.0.0) (1.4.0)
-Requirement already satisfied: attrs>=17.3.0 in /opt/python/3.10/lib/python3.10/site-packages (from aiohttp->datasets==3.0.0) (25.3.0)
-Requirement already satisfied: frozenlist>=1.1.1 in /opt/python/3.10/lib/python3.10/site-packages (from aiohttp->datasets==3.0.0) (1.7.0)
-Requirement already satisfied: multidict<7.0,>=4.5 in /opt/python/3.10/lib/python3.10/site-packages (from aiohttp->datasets==3.0.0) (6.6.3)
-Requirement already satisfied: yarl<2.0,>=1.0 in /opt/python/3.10/lib/python3.10/site-packages (from aiohttp->datasets==3.0.0) (1.20.1)
-Requirement already satisfied: async-timeout<5.0,>=4.0 in /opt/python/3.10/lib/python3.10/site-packages (from aiohttp->datasets==3.0.0) (4.0.3)
-Requirement already satisfied: propcache>=0.2.1 in /opt/python/3.10/lib/python3.10/site-packages (from yarl<2.0,>=1.0->aiohttp->datasets==3.0.0) (0.3.2)
-Requirement already satisfied: sympy in /opt/python/3.10/lib/python3.10/site-packages (from torch>=1.10.0->accelerate==1.0.0) (1.14.0)
-Requirement already satisfied: networkx in /opt/python/3.10/lib/python3.10/site-packages (from torch>=1.10.0->accelerate==1.0.0) (3.4.2)
-Requirement already satisfied: jinja2 in /opt/python/3.10/lib/python3.10/site-packages (from torch>=1.10.0->accelerate==1.0.0) (3.1.6)
-Requirement already satisfied: nvidia-cuda-nvrtc-cu12==12.4.99 in /opt/python/3.10/lib/python3.10/site-packages (from torch>=1.10.0->accelerate==1.0.0) (12.4.99)
-Requirement already satisfied: nvidia-cuda-runtime-cu12==12.4.99 in /opt/python/3.10/lib/python3.10/site-packages (from torch>=1.10.0->accelerate==1.0.0) (12.4.99)
-Requirement already satisfied: nvidia-cuda-cupti-cu12==12.4.99 in /opt/python/3.10/lib/python3.10/site-packages (from torch>=1.10.0->accelerate==1.0.0) (12.4.99)
-Requirement already satisfied: nvidia-cudnn-cu12==9.1.0.70 in /opt/python/3.10/lib/python3.10/site-packages (from torch>=1.10.0->accelerate==1.0.0) (9.1.0.70)
-Requirement already satisfied: nvidia-cublas-cu12==12.4.2.65 in /opt/python/3.10/lib/python3.10/site-packages (from torch>=1.10.0->accelerate==1.0.0) (12.4.2.65)
-Requirement already satisfied: nvidia-cufft-cu12==11.2.0.44 in /opt/python/3.10/lib/python3.10/site-packages (from torch>=1.10.0->accelerate==1.0.0) (11.2.0.44)
-Requirement already satisfied: nvidia-curand-cu12==10.3.5.119 in /opt/python/3.10/lib/python3.10/site-packages (from torch>=1.10.0->accelerate==1.0.0) (10.3.5.119)
-Requirement already satisfied: nvidia-cusolver-cu12==11.6.0.99 in /opt/python/3.10/lib/python3.10/site-packages (from torch>=1.10.0->accelerate==1.0.0) (11.6.0.99)
-Requirement already satisfied: nvidia-cusparse-cu12==12.3.0.142 in /opt/python/3.10/lib/python3.10/site-packages (from torch>=1.10.0->accelerate==1.0.0) (12.3.0.142)
-Requirement already satisfied: nvidia-nccl-cu12==2.20.5 in /opt/python/3.10/lib/python3.10/site-packages (from torch>=1.10.0->accelerate==1.0.0) (2.20.5)
-Requirement already satisfied: nvidia-nvtx-cu12==12.4.99 in /opt/python/3.10/lib/python3.10/site-packages (from torch>=1.10.0->accelerate==1.0.0) (12.4.99)
-Requirement already satisfied: nvidia-nvjitlink-cu12==12.4.99 in /opt/python/3.10/lib/python3.10/site-packages (from torch>=1.10.0->accelerate==1.0.0) (12.4.99)
-Requirement already satisfied: triton==3.0.0 in /opt/python/3.10/lib/python3.10/site-packages (from torch>=1.10.0->accelerate==1.0.0) (3.0.0)
-Requirement already satisfied: docstring-parser>=0.15 in /opt/python/3.10/lib/python3.10/site-packages (from tyro>=0.5.11->trl==0.11.0) (0.16)
-Requirement already satisfied: typeguard>=4.0.0 in /opt/python/3.10/lib/python3.10/site-packages (from tyro>=0.5.11->trl==0.11.0) (4.4.4)
-Requirement already satisfied: MarkupSafe>=2.0 in /opt/python/3.10/lib/python3.10/site-packages (from jinja2->torch>=1.10.0->accelerate==1.0.0) (3.0.2)
-INFO: pip is looking at multiple versions of multiprocess to determine which version is compatible with other requirements. This could take a while.
-Collecting multiprocess (from datasets==3.0.0)
-  Downloading multiprocess-0.70.18-py310-none-any.whl.metadata (7.5 kB)
-  Downloading multiprocess-0.70.17-py310-none-any.whl.metadata (7.2 kB)
-  Downloading multiprocess-0.70.16-py310-none-any.whl.metadata (7.2 kB)
-Requirement already satisfied: python-dateutil>=2.8.2 in /opt/python/3.10/lib/python3.10/site-packages (from pandas->datasets==3.0.0) (2.9.0.post0)
-Requirement already satisfied: pytz>=2020.1 in /opt/python/3.10/lib/python3.10/site-packages (from pandas->datasets==3.0.0) (2025.2)
-Requirement already satisfied: tzdata>=2022.7 in /opt/python/3.10/lib/python3.10/site-packages (from pandas->datasets==3.0.0) (2025.2)
-Requirement already satisfied: six>=1.5 in /opt/python/3.10/lib/python3.10/site-packages (from python-dateutil>=2.8.2->pandas->datasets==3.0.0) (1.17.0)
-Requirement already satisfied: mpmath<1.4,>=1.1.0 in /opt/python/3.10/lib/python3.10/site-packages (from sympy->torch>=1.10.0->accelerate==1.0.0) (1.3.0)
-Downloading fastapi-0.115.12-py3-none-any.whl (95 kB)
-Downloading pydantic-2.12.3-py3-none-any.whl (462 kB)
-Downloading huggingface_hub-0.34.0-py3-none-any.whl (558 kB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 558.7/558.7 kB 24.7 MB/s  0:00:00
-Downloading python_dotenv-1.0.1-py3-none-any.whl (19 kB)
-Downloading google_cloud_storage-2.18.0-py2.py3-none-any.whl (130 kB)
-Downloading datasets-3.0.0-py3-none-any.whl (474 kB)
-Downloading accelerate-1.0.0-py3-none-any.whl (330 kB)
-Downloading numpy-1.26.0-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (18.2 MB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 18.2/18.2 MB 149.5 MB/s  0:00:00
-Downloading trl-0.11.0-py3-none-any.whl (316 kB)
-Downloading peft-0.18.1-py3-none-any.whl (556 kB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 557.0/557.0 kB 27.1 MB/s  0:00:00
-Downloading transformers-4.45.0-py3-none-any.whl (9.9 MB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 9.9/9.9 MB 81.1 MB/s  0:00:00
-Downloading sentencepiece-0.2.0-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (1.3 MB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.3/1.3 MB 84.8 MB/s  0:00:00
-Downloading bitsandbytes-0.45.0-py3-none-manylinux_2_24_x86_64.whl (69.1 MB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 69.1/69.1 MB 82.0 MB/s  0:00:00
-Downloading pydantic_core-2.41.4-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (2.1 MB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.1/2.1 MB 99.4 MB/s  0:00:00
-Downloading dill-0.3.8-py3-none-any.whl (116 kB)
-Downloading fsspec-2024.6.1-py3-none-any.whl (177 kB)
-Downloading google_api_core-2.30.3-py3-none-any.whl (173 kB)
-Downloading hf_xet-1.4.3-cp37-abi3-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (4.2 MB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.2/4.2 MB 113.5 MB/s  0:00:00
-Downloading protobuf-6.33.6-cp39-abi3-manylinux2014_x86_64.whl (323 kB)
-Downloading tokenizers-0.20.3-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (3.0 MB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.0/3.0 MB 102.1 MB/s  0:00:00
-Downloading hf_transfer-0.1.9-cp38-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (3.6 MB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.6/3.6 MB 133.2 MB/s  0:00:00
-Downloading annotated_types-0.7.0-py3-none-any.whl (13 kB)
-Downloading pyarrow-23.0.1-cp310-cp310-manylinux_2_28_x86_64.whl (47.6 MB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 47.6/47.6 MB 129.8 MB/s  0:00:00
-Downloading regex-2026.4.4-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (793 kB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 793.6/793.6 kB 39.0 MB/s  0:00:00
-Downloading safetensors-0.7.0-cp38-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (507 kB)
-Downloading typing_inspection-0.4.2-py3-none-any.whl (14 kB)
-Downloading tyro-1.0.12-py3-none-any.whl (185 kB)
-Downloading multiprocess-0.70.16-py310-none-any.whl (134 kB)
-Installing collected packages: sentencepiece, typing-inspection, safetensors, regex, python-dotenv, pydantic-core, pyarrow, protobuf, numpy, hf-xet, hf_transfer, fsspec, dill, annotated-types, tyro, pydantic, multiprocess, huggingface_hub, tokenizers, google-api-core, transformers, fastapi, bitsandbytes, accelerate, peft, google-cloud-storage, datasets, trl
-  Attempting uninstall: python-dotenv
-    Found existing installation: python-dotenv 1.1.1
-    Uninstalling python-dotenv-1.1.1:
-      Successfully uninstalled python-dotenv-1.1.1
-  Attempting uninstall: pyarrow
-    Found existing installation: pyarrow 14.0.2
-    Uninstalling pyarrow-14.0.2:
-      Successfully uninstalled pyarrow-14.0.2
-  Attempting uninstall: protobuf
-    Found existing installation: protobuf 3.20.3
-    Uninstalling protobuf-3.20.3:
-      Successfully uninstalled protobuf-3.20.3
-  Attempting uninstall: numpy
-    Found existing installation: numpy 1.25.2
-    Uninstalling numpy-1.25.2:
-      Successfully uninstalled numpy-1.25.2
-  Attempting uninstall: fsspec
-    Found existing installation: fsspec 2025.5.1
-    Uninstalling fsspec-2025.5.1:
-      Successfully uninstalled fsspec-2025.5.1
-  Attempting uninstall: pydantic
-    Found existing installation: pydantic 1.10.22
-    Uninstalling pydantic-1.10.22:
-      Successfully uninstalled pydantic-1.10.22
-  Attempting uninstall: google-api-core
-    Found existing installation: google-api-core 1.34.1
-    Uninstalling google-api-core-1.34.1:
-      Successfully uninstalled google-api-core-1.34.1
-  Attempting uninstall: fastapi
-    Found existing installation: fastapi 0.115.14
-    Uninstalling fastapi-0.115.14:
-      Successfully uninstalled fastapi-0.115.14
-  Attempting uninstall: google-cloud-storage
-    Found existing installation: google-cloud-storage 2.19.0
-    Uninstalling google-cloud-storage-2.19.0:
-      Successfully uninstalled google-cloud-storage-2.19.0
-
-ERROR: pip's dependency resolver does not currently take into account all the packages that are installed. This behaviour is the source of the following dependency conflicts.
-bigframes 0.22.0 requires pandas<2.1.4,>=1.5.0, but you have pandas 2.2.3 which is incompatible.
-dataproc-jupyter-plugin 0.1.80 requires pydantic~=1.10.0, but you have pydantic 2.12.3 which is incompatible.
-gcsfs 2025.5.1 requires fsspec==2025.5.1, but you have fsspec 2024.6.1 which is incompatible.
-google-api-python-client 1.8.0 requires google-api-core<2dev,>=1.13.0, but you have google-api-core 2.30.3 which is incompatible.
-google-cloud-datastore 1.15.5 requires protobuf<4.0.0dev, but you have protobuf 6.33.6 which is incompatible.
-ibis-framework 7.1.0 requires pyarrow<15,>=2, but you have pyarrow 23.0.1 which is incompatible.
-kfp 2.5.0 requires protobuf<4,>=3.13.0, but you have protobuf 6.33.6 which is incompatible.
-kfp-pipeline-spec 0.2.2 requires protobuf<4,>=3.13.0, but you have protobuf 6.33.6 which is incompatible.
-opentelemetry-proto 1.27.0 requires protobuf<5.0,>=3.19, but you have protobuf 6.33.6 which is incompatible.
-ydata-profiling 4.6.0 requires numpy<1.26,>=1.16.0, but you have numpy 1.26.0 which is incompatible.
-ydata-profiling 4.6.0 requires pandas!=1.4.0,<2.1,>1.1, but you have pandas 2.2.3 which is incompatible.
-ydata-profiling 4.6.0 requires pydantic<2,>=1.8.1, but you have pydantic 2.12.3 which is incompatible.
-Successfully installed accelerate-1.0.0 annotated-types-0.7.0 bitsandbytes-0.45.0 datasets-3.0.0 dill-0.3.8 fastapi-0.115.12 fsspec-2024.6.1 google-api-core-2.30.3 google-cloud-storage-2.18.0 hf-xet-1.4.3 hf_transfer-0.1.9 huggingface_hub-0.34.0 multiprocess-0.70.16 numpy-1.26.0 peft-0.18.1 protobuf-6.33.6 pyarrow-23.0.1 pydantic-2.12.3 pydantic-core-2.41.4 python-dotenv-1.0.1 regex-2026.4.4 safetensors-0.7.0 sentencepiece-0.2.0 tokenizers-0.20.3 transformers-4.45.0 trl-0.11.0 typing-inspection-0.4.2 tyro-1.0.12
-WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
-[preflight] starting checks
-[preflight] gpu: Mon Apr 13 03:15:52 2026       
-[preflight] daic_root exists: /friend_root/daic (csv_files=193)
-[preflight] adapter config: /friend_root/aya_bundle/adapter_config.json
-[preflight] base model path: /friend_root/models/aya-expanse-8b
-[preflight] dev file present: /workspace/data/processed/extractor_dev.jsonl
-[preflight] all checks passed
-+ /opt/python/3.10/bin/python /workspace/tools/export_training_sets.py --extractor-style compact --daic-root /friend_root/daic --best-en-weight 1 --best-hi-weight 2 --best-hinglish-weight 2 --hinglish-hardcase-repeats 1 --daic-ratio 0.5
-train: extractor=84 follow_up=120 safety=126
-dev: extractor=48 follow_up=96 safety=80
-test: extractor=48 follow_up=144 safety=84
-best train: extractor=140
-daic auxiliary: train=107 dev=35 test=47 augmented_train=191 best_augmented_train=210 daic_ratio=0.5
-+ /opt/python/3.10/bin/python -m training.finetune_extractor --model-name CohereLabs/aya-expanse-8b --init-adapter /friend_root/aya_bundle --train-file /workspace/data/processed/extractor_train_best_augmented_daic.jsonl --eval-file /workspace/data/processed/extractor_dev.jsonl --output-dir /friend_root/outputs/extractor-aya-8b-compact-daic-continue-vm --epochs 1 --batch-size 1 --grad-accum 8 --max-length 1536 --device cuda --precision auto --gradient-checkpointing --save-strategy steps --save-steps 10 --eval-strategy no --resume-from-checkpoint last --base-model-path /friend_root/models/aya-expanse-8b --use-4bit
-[finetune] starting extractor fine-tune
-[finetune] model=CohereLabs/aya-expanse-8b init_adapter=/friend_root/aya_bundle train=/workspace/data/processed/extractor_train_best_augmented_daic.jsonl eval=/workspace/data/processed/extractor_dev.jsonl output=/friend_root/outputs/extractor-aya-8b-compact-daic-continue-vm
-[finetune] hf_token_present=no
-[finetune] loading dataset...
-Generating train split: 0 examples [00:00, ? examples/s]Generating train split: 210 examples [00:00, 13177.99 examples/s]
-Generating eval split: 0 examples [00:00, ? examples/s]Generating eval split: 48 examples [00:00, 13933.60 examples/s]
-[finetune] dataset loaded: train=210 eval=48
-[finetune] loading tokenizer from /friend_root/models/aya-expanse-8b...
-[finetune] tokenizer ready
-[finetune] loading base model /friend_root/models/aya-expanse-8b (device=cuda, quant_4bit=yes)...
-Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards:  25%|██▌       | 1/4 [00:13<00:40, 13.54s/it]Loading checkpoint shards:  50%|█████     | 2/4 [00:24<00:23, 11.90s/it]Loading checkpoint shards:  75%|███████▌  | 3/4 [00:28<00:08,  8.37s/it][finetune] still working on base model load (elapsed=30s)
-Loading checkpoint shards: 100%|██████████| 4/4 [00:35<00:00,  7.76s/it]Loading checkpoint shards: 100%|██████████| 4/4 [00:35<00:00,  8.82s/it]
-[finetune] base model loaded
-[finetune] k-bit preparation complete
-[finetune] loading init adapter from /friend_root/aya_bundle...
-[finetune] init adapter loaded
-/opt/python/3.10/lib/python3.10/site-packages/transformers/training_args.py:1545: FutureWarning: `evaluation_strategy` is deprecated and will be removed in version 4.46 of 🤗 Transformers. Use `eval_strategy` instead
-  warnings.warn(
-/opt/python/3.10/lib/python3.10/site-packages/huggingface_hub/utils/_deprecation.py:100: FutureWarning: Deprecated argument(s) used in '__init__': dataset_text_field, max_seq_length. Will not be supported from version '1.0.0'.
-
-Deprecated positional argument(s) used in SFTTrainer, please use the SFTConfig to set these arguments instead.
-  warnings.warn(message, FutureWarning)
-/opt/python/3.10/lib/python3.10/site-packages/transformers/training_args.py:1545: FutureWarning: `evaluation_strategy` is deprecated and will be removed in version 4.46 of 🤗 Transformers. Use `eval_strategy` instead
-  warnings.warn(
-/opt/python/3.10/lib/python3.10/site-packages/trl/trainer/sft_trainer.py:283: UserWarning: You passed a `max_seq_length` argument to the SFTTrainer, the value you passed will override the one in the `SFTConfig`.
-  warnings.warn(
-/opt/python/3.10/lib/python3.10/site-packages/trl/trainer/sft_trainer.py:321: UserWarning: You passed a `dataset_text_field` argument to the SFTTrainer, the value you passed will override the one in the `SFTConfig`.
-  warnings.warn(
-Map:   0%|          | 0/210 [00:00<?, ? examples/s]Map: 100%|██████████| 210/210 [00:00<00:00, 376.03 examples/s]Map: 100%|██████████| 210/210 [00:00<00:00, 372.68 examples/s]
-Map:   0%|          | 0/48 [00:00<?, ? examples/s]Map: 100%|██████████| 48/48 [00:00<00:00, 723.56 examples/s]
-Using auto half precision backend
-[finetune] trainer ready, resume_checkpoint=none; starting train...
-***** Running training *****
-  Num examples = 210
-  Num Epochs = 1
-  Instantaneous batch size per device = 1
-  Total train batch size (w. parallel, distributed & accumulation) = 8
-  Gradient Accumulation steps = 8
-  Total optimization steps = 26
-  Number of trainable parameters = 41,943,040
-  0%|          | 0/26 [00:00<?, ?it/s]/opt/python/3.10/lib/python3.10/site-packages/torch/utils/checkpoint.py:295: FutureWarning: `torch.cpu.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cpu', args...)` instead.
-  with torch.enable_grad(), device_autocast_ctx, torch.cpu.amp.autocast(**ctx.cpu_autocast_kwargs):  # type: ignore[attr-defined]
-  4%|▍         | 1/26 [00:29<12:23, 29.72s/it]  8%|▊         | 2/26 [00:55<11:00, 27.52s/it] 12%|█▏        | 3/26 [01:20<09:59, 26.06s/it] 15%|█▌        | 4/26 [01:45<09:25, 25.70s/it] 19%|█▉        | 5/26 [02:10<08:57, 25.61s/it]                                              {'loss': 0.7853, 'grad_norm': 0.23825602233409882, 'learning_rate': 0.00016153846153846155, 'epoch': 0.19}
- 19%|█▉        | 5/26 [02:10<08:57, 25.61s/it] 23%|██▎       | 6/26 [02:37<08:43, 26.16s/it] 27%|██▋       | 7/26 [03:02<08:05, 25.57s/it] 31%|███       | 8/26 [03:29<07:47, 25.97s/it] 35%|███▍      | 9/26 [03:55<07:24, 26.14s/it] 38%|███▊      | 10/26 [04:18<06:42, 25.17s/it]                                               {'loss': 0.5638, 'grad_norm': 0.32380643486976624, 'learning_rate': 0.0001230769230769231, 'epoch': 0.38}
- 38%|███▊      | 10/26 [04:18<06:42, 25.17s/it]Saving model checkpoint to /friend_root/outputs/extractor-aya-8b-compact-daic-continue-vm/checkpoint-10
-/opt/python/3.10/lib/python3.10/site-packages/peft/utils/other.py:1394: UserWarning: Unable to fetch remote file due to the following error 401 Client Error. (Request ID: Root=1-69dc6121-6b90c48a2cab7475751d1a3d;61689fa2-b51f-44ca-9582-c5ba36bed9e4)
-
-Cannot access gated repo for url https://huggingface.co/CohereLabs/aya-expanse-8b/resolve/main/config.json.
-Access to model CohereLabs/aya-expanse-8b is restricted. You must have access to it and be authenticated to access it. Please log in. - silently ignoring the lookup for the file config.json in CohereLabs/aya-expanse-8b.
-  warnings.warn(
-/opt/python/3.10/lib/python3.10/site-packages/peft/utils/save_and_load.py:295: UserWarning: Could not find a config file in CohereLabs/aya-expanse-8b - will assume that the vocabulary was not modified.
-  warnings.warn(
-tokenizer config file saved in /friend_root/outputs/extractor-aya-8b-compact-daic-continue-vm/checkpoint-10/tokenizer_config.json
-Special tokens file saved in /friend_root/outputs/extractor-aya-8b-compact-daic-continue-vm/checkpoint-10/special_tokens_map.json
-/opt/python/3.10/lib/python3.10/site-packages/torch/utils/checkpoint.py:295: FutureWarning: `torch.cpu.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cpu', args...)` instead.
-  with torch.enable_grad(), device_autocast_ctx, torch.cpu.amp.autocast(**ctx.cpu_autocast_kwargs):  # type: ignore[attr-defined]
- 42%|████▏     | 11/26 [04:48<06:39, 26.65s/it] 46%|████▌     | 12/26 [05:15<06:12, 26.60s/it] 50%|█████     | 13/26 [05:40<05:39, 26.13s/it] 54%|█████▍    | 14/26 [06:05<05:09, 25.77s/it] 58%|█████▊    | 15/26 [06:29<04:40, 25.52s/it]{'loss': 0.5795, 'grad_norm': 0.26645368337631226, 'learning_rate': 8.461538461538461e-05, 'epoch': 0.57}
-                                                58%|█████▊    | 15/26 [06:29<04:40, 25.52s/it] 62%|██████▏   | 16/26 [06:57<04:20, 26.06s/it] 65%|██████▌   | 17/26 [07:24<03:58, 26.47s/it] 69%|██████▉   | 18/26 [07:50<03:30, 26.37s/it] 73%|███████▎  | 19/26 [08:16<03:02, 26.10s/it] 77%|███████▋  | 20/26 [08:43<02:37, 26.31s/it]                                               {'loss': 0.5963, 'grad_norm': 0.3117657005786896, 'learning_rate': 4.615384615384616e-05, 'epoch': 0.76}
- 77%|███████▋  | 20/26 [08:43<02:37, 26.31s/it]Saving model checkpoint to /friend_root/outputs/extractor-aya-8b-compact-daic-continue-vm/checkpoint-20
-/opt/python/3.10/lib/python3.10/site-packages/peft/utils/other.py:1394: UserWarning: Unable to fetch remote file due to the following error 401 Client Error. (Request ID: Root=1-69dc622a-390a6b093a17e23278fb404f;95b54a05-0311-4208-b90c-f54a80538610)
-
-Cannot access gated repo for url https://huggingface.co/CohereLabs/aya-expanse-8b/resolve/main/config.json.
-Access to model CohereLabs/aya-expanse-8b is restricted. You must have access to it and be authenticated to access it. Please log in. - silently ignoring the lookup for the file config.json in CohereLabs/aya-expanse-8b.
-  warnings.warn(
-/opt/python/3.10/lib/python3.10/site-packages/peft/utils/save_and_load.py:295: UserWarning: Could not find a config file in CohereLabs/aya-expanse-8b - will assume that the vocabulary was not modified.
-  warnings.warn(
-tokenizer config file saved in /friend_root/outputs/extractor-aya-8b-compact-daic-continue-vm/checkpoint-20/tokenizer_config.json
-Special tokens file saved in /friend_root/outputs/extractor-aya-8b-compact-daic-continue-vm/checkpoint-20/special_tokens_map.json
-/opt/python/3.10/lib/python3.10/site-packages/torch/utils/checkpoint.py:295: FutureWarning: `torch.cpu.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cpu', args...)` instead.
-  with torch.enable_grad(), device_autocast_ctx, torch.cpu.amp.autocast(**ctx.cpu_autocast_kwargs):  # type: ignore[attr-defined]
- 81%|████████  | 21/26 [09:08<02:10, 26.08s/it] 85%|████████▍ | 22/26 [09:36<01:46, 26.59s/it] 88%|████████▊ | 23/26 [10:01<01:18, 26.03s/it] 92%|█████████▏| 24/26 [10:28<00:52, 26.49s/it] 96%|█████████▌| 25/26 [10:51<00:25, 25.40s/it]{'loss': 0.5105, 'grad_norm': 0.34980207681655884, 'learning_rate': 7.692307692307694e-06, 'epoch': 0.95}
-                                                96%|█████████▌| 25/26 [10:51<00:25, 25.40s/it]100%|██████████| 26/26 [11:17<00:00, 25.46s/it]Saving model checkpoint to /friend_root/outputs/extractor-aya-8b-compact-daic-continue-vm/checkpoint-26
-/opt/python/3.10/lib/python3.10/site-packages/peft/utils/other.py:1394: UserWarning: Unable to fetch remote file due to the following error 401 Client Error. (Request ID: Root=1-69dc62c4-14e929117600813720283508;e83afc7d-ee86-4c69-87a3-29f95b7c3ea8)
-
-Cannot access gated repo for url https://huggingface.co/CohereLabs/aya-expanse-8b/resolve/main/config.json.
-Access to model CohereLabs/aya-expanse-8b is restricted. You must have access to it and be authenticated to access it. Please log in. - silently ignoring the lookup for the file config.json in CohereLabs/aya-expanse-8b.
-  warnings.warn(
-/opt/python/3.10/lib/python3.10/site-packages/peft/utils/save_and_load.py:295: UserWarning: Could not find a config file in CohereLabs/aya-expanse-8b - will assume that the vocabulary was not modified.
-  warnings.warn(
-tokenizer config file saved in /friend_root/outputs/extractor-aya-8b-compact-daic-continue-vm/checkpoint-26/tokenizer_config.json
-Special tokens file saved in /friend_root/outputs/extractor-aya-8b-compact-daic-continue-vm/checkpoint-26/special_tokens_map.json
-
-
-Training completed. Do not forget to share your model on huggingface.co/models =)
-
-
-                                               {'train_runtime': 678.3614, 'train_samples_per_second': 0.31, 'train_steps_per_second': 0.038, 'train_loss': 0.5987291783094406, 'epoch': 0.99}
-100%|██████████| 26/26 [11:18<00:00, 25.46s/it]100%|██████████| 26/26 [11:18<00:00, 26.09s/it]
-[finetune] train completed; saving model...
-Saving model checkpoint to /friend_root/outputs/extractor-aya-8b-compact-daic-continue-vm
-/opt/python/3.10/lib/python3.10/site-packages/peft/utils/other.py:1394: UserWarning: Unable to fetch remote file due to the following error 401 Client Error. (Request ID: Root=1-69dc62c5-74b3be730479fc3c45425680;a1d704f8-adaa-4da3-ab65-33b0b2194f09)
-
-Cannot access gated repo for url https://huggingface.co/CohereLabs/aya-expanse-8b/resolve/main/config.json.
-Access to model CohereLabs/aya-expanse-8b is restricted. You must have access to it and be authenticated to access it. Please log in. - silently ignoring the lookup for the file config.json in CohereLabs/aya-expanse-8b.
-  warnings.warn(
-/opt/python/3.10/lib/python3.10/site-packages/peft/utils/save_and_load.py:295: UserWarning: Could not find a config file in CohereLabs/aya-expanse-8b - will assume that the vocabulary was not modified.
-  warnings.warn(
-tokenizer config file saved in /friend_root/outputs/extractor-aya-8b-compact-daic-continue-vm/tokenizer_config.json
-Special tokens file saved in /friend_root/outputs/extractor-aya-8b-compact-daic-continue-vm/special_tokens_map.json
-tokenizer config file saved in /friend_root/outputs/extractor-aya-8b-compact-daic-continue-vm/tokenizer_config.json
-Special tokens file saved in /friend_root/outputs/extractor-aya-8b-compact-daic-continue-vm/special_tokens_map.json
-saved extractor checkpoint to /friend_root/outputs/extractor-aya-8b-compact-daic-continue-vm
-+ /opt/python/3.10/bin/python /workspace/tools/resumable_extractor_eval.py --model-path /friend_root/outputs/extractor-aya-8b-compact-daic-continue-vm --eval-file /workspace/data/processed/extractor_test.jsonl --output-dir /friend_root/reports/colab_daic_continue_vm/extractor_eval_smoke --max-new-tokens 900 --device cuda --use-rule-safety-monitor --limit 8 --stop-on-parse-failure --max-parse-failures 1

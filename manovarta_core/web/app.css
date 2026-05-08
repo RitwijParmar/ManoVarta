@@ -1595,6 +1595,22 @@ body.review-mode button.review-only {
   color: #9a6a15;
 }
 
+.topic-pill.pending,
+.topic-pill.probing {
+  background: rgba(240, 182, 103, 0.16);
+  color: #8f6616;
+}
+
+.topic-pill.stable {
+  background: rgba(47, 124, 97, 0.14);
+  color: var(--success);
+}
+
+.topic-pill.held_back {
+  background: rgba(23, 39, 44, 0.1);
+  color: var(--surface-soft);
+}
+
 .status-pill.review,
 .topic-pill.review,
 .status-pill.contradicted,
@@ -2334,6 +2350,27 @@ body.session-live.has-snapshot .product-grid {
   gap: 10px;
 }
 
+.companion-summary .eyebrow,
+.companion-card .mini-label,
+.companion-card .eyebrow,
+.outcome-card .mini-label,
+.composer-panel .mini-label,
+.composer-panel .eyebrow,
+.nudge-panel .mini-label,
+.nudge-panel .eyebrow,
+.aftercare-panel .mini-label,
+.aftercare-panel .eyebrow {
+  color: #5f5146;
+}
+
+.companion-summary h3,
+.composer-panel .section-head h3,
+.nudge-panel .section-head h3,
+.aftercare-panel .section-head h3,
+.aftercare-panel .next-step-title {
+  color: var(--surface-ink);
+}
+
 .outcome-card strong {
   font-size: 1.9rem;
   line-height: 0.95;
@@ -2348,7 +2385,6 @@ body.session-live.has-snapshot .product-grid {
 }
 
 .outcome-card .mini-label {
-  color: #54473d;
   font-weight: 800;
 }
 
@@ -2359,6 +2395,268 @@ body.session-live.has-snapshot .product-grid {
 
 .companion-card-primary {
   background: #f5ede1;
+}
+
+.companion-card-branches {
+  margin-top: 14px;
+}
+
+.branch-tabs {
+  display: inline-flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.branch-tab {
+  border: 1px solid rgba(23, 39, 44, 0.08);
+  background: rgba(255, 255, 255, 0.72);
+  color: var(--surface-soft);
+  border-radius: 999px;
+  min-height: 34px;
+  padding: 0 14px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 160ms ease, color 160ms ease, border-color 160ms ease;
+}
+
+.branch-tab.is-active {
+  background: rgba(12, 90, 97, 0.12);
+  color: var(--sea);
+  border-color: rgba(12, 90, 97, 0.18);
+}
+
+.branch-topic-map {
+  margin-top: 2px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 10px;
+}
+
+.branch-topic-map .topic-pill {
+  align-items: flex-start;
+  display: grid;
+  gap: 5px;
+  min-height: 0;
+  padding: 10px 12px;
+  border-radius: 18px;
+  flex-direction: column;
+}
+
+.branch-topic-map .topic-pill strong {
+  font-size: 0.84rem;
+  line-height: 1.2;
+}
+
+.branch-topic-map .topic-pill span {
+  font-size: 0.76rem;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.branch-topic-map .topic-pill small {
+  font-size: 0.73rem;
+  line-height: 1.35;
+  color: rgba(52, 58, 62, 0.8);
+}
+
+.questionnaire-view {
+  margin-top: 6px;
+}
+
+.questionnaire-groups {
+  display: grid;
+  gap: 12px;
+}
+
+.questionnaire-empty {
+  border: 1px dashed rgba(23, 39, 44, 0.14);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.58);
+  color: #4f443c;
+  padding: 16px 18px;
+  font-size: 0.84rem;
+  font-weight: 600;
+  line-height: 1.45;
+}
+
+.questionnaire-section {
+  border: 1px solid rgba(23, 39, 44, 0.08);
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.76);
+  box-shadow: 0 14px 32px rgba(23, 39, 44, 0.06);
+  padding: 16px;
+  display: grid;
+  gap: 14px;
+}
+
+.questionnaire-section-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.questionnaire-section-head .mini-label {
+  color: #5f5146;
+  margin-bottom: 4px;
+}
+
+.questionnaire-section-head h4 {
+  margin: 0;
+  color: var(--surface-ink);
+  font-size: 1rem;
+  line-height: 1.2;
+}
+
+.questionnaire-item-list {
+  display: grid;
+  gap: 12px;
+}
+
+.questionnaire-item {
+  border-radius: 18px;
+  border: 1px solid rgba(23, 39, 44, 0.08);
+  background: rgba(250, 247, 241, 0.92);
+  padding: 14px;
+  display: grid;
+  gap: 10px;
+}
+
+.questionnaire-item.resolved {
+  border-color: rgba(12, 90, 97, 0.18);
+  background: rgba(232, 245, 241, 0.86);
+}
+
+.questionnaire-item.partial,
+.questionnaire-item.contradicted {
+  border-color: rgba(184, 134, 11, 0.22);
+  background: rgba(255, 247, 221, 0.88);
+}
+
+.questionnaire-item.review {
+  border-color: rgba(155, 49, 49, 0.18);
+  background: rgba(255, 239, 239, 0.88);
+}
+
+.questionnaire-item.unresolved {
+  border-style: dashed;
+}
+
+.questionnaire-item-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.questionnaire-item-code {
+  color: #66584c;
+  font-size: 0.74rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.questionnaire-answer-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 28px;
+  padding: 0 10px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: #53463d;
+  background: rgba(88, 75, 63, 0.1);
+}
+
+.questionnaire-answer-pill.resolved {
+  color: #0f605f;
+  background: rgba(12, 90, 97, 0.12);
+}
+
+.questionnaire-answer-pill.partial,
+.questionnaire-answer-pill.contradicted {
+  color: #8d6210;
+  background: rgba(184, 134, 11, 0.16);
+}
+
+.questionnaire-answer-pill.review {
+  color: #8c2e2e;
+  background: rgba(155, 49, 49, 0.14);
+}
+
+.questionnaire-answer-pill.unresolved {
+  color: #5d5046;
+  background: rgba(93, 80, 70, 0.11);
+}
+
+.questionnaire-question {
+  margin: 0;
+  color: var(--surface-ink);
+  font-size: 0.95rem;
+  font-weight: 700;
+  line-height: 1.45;
+}
+
+.questionnaire-scale {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.answer-chip {
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+  padding: 0 10px;
+  border-radius: 999px;
+  background: rgba(88, 75, 63, 0.08);
+  color: #584b3f;
+  border: 1px solid rgba(88, 75, 63, 0.08);
+  font-size: 0.74rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.answer-chip.is-active {
+  color: #fff;
+  background: linear-gradient(135deg, #0c5a61, #1e7a77);
+  border-color: transparent;
+  box-shadow: 0 8px 18px rgba(12, 90, 97, 0.22);
+}
+
+.answer-chip.is-muted {
+  opacity: 0.7;
+}
+
+.questionnaire-note,
+.questionnaire-evidence {
+  margin: 0;
+  color: #4d433b;
+  font-size: 0.8rem;
+  line-height: 1.45;
+}
+
+.questionnaire-note {
+  font-weight: 600;
+}
+
+.questionnaire-evidence {
+  color: #67584d;
+  font-style: italic;
+}
+
+@media (max-width: 720px) {
+  .questionnaire-section {
+    padding: 14px;
+  }
+
+  .questionnaire-section-head {
+    flex-direction: column;
+  }
 }
 
 .signals-card .bonus-signals {

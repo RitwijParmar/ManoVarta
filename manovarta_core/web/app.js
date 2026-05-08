@@ -15,6 +15,7 @@ const state = {
   currentNextSteps: [],
   latestDialogue: null,
   maxTouchedItems: 0,
+  branchView: "current",
   savedVoicePreferences: {
     autoSend: true,
     speak: true,
@@ -123,6 +124,198 @@ const TOKEN_LABELS = {
     easing: "हल्का होता हुआ",
     stable: "स्थिर",
   },
+};
+
+const ITEM_TOPIC_MAP = {
+  phq_q1_anhedonia: "mood",
+  phq_q2_low_mood: "mood",
+  phq_q3_sleep: "sleep",
+  phq_q4_fatigue: "energy",
+  phq_q5_appetite: "energy",
+  phq_q6_worthlessness: "self_view",
+  phq_q7_concentration: "focus",
+  phq_q8_psychomotor: "focus",
+  phq_q9_self_harm: "safety",
+  gad_q1_nervous: "anxiety",
+  gad_q2_control_worry: "anxiety",
+  gad_q3_excessive_worry: "anxiety",
+  gad_q4_trouble_relaxing: "anxiety",
+  gad_q5_restlessness: "anxiety",
+  gad_q6_irritability: "anxiety",
+  gad_q7_afraid: "anxiety",
+};
+
+const ITEM_FALLBACK_LABELS = {
+  en: {
+    phq_q1_anhedonia: "reduced interest",
+    phq_q2_low_mood: "low mood",
+    phq_q3_sleep: "sleep disruption",
+    phq_q4_fatigue: "fatigue",
+    phq_q5_appetite: "appetite changes",
+    phq_q6_worthlessness: "self-worth",
+    phq_q7_concentration: "concentration",
+    phq_q8_psychomotor: "slowing or restlessness",
+    phq_q9_self_harm: "self-harm risk",
+    gad_q1_nervous: "nervousness",
+    gad_q2_control_worry: "control over worry",
+    gad_q3_excessive_worry: "excessive worry",
+    gad_q4_trouble_relaxing: "trouble relaxing",
+    gad_q5_restlessness: "restlessness",
+    gad_q6_irritability: "irritability",
+    gad_q7_afraid: "fear something bad may happen",
+  },
+  hi: {
+    phq_q1_anhedonia: "रुचि कम होना",
+    phq_q2_low_mood: "उदास मन",
+    phq_q3_sleep: "नींद की दिक्कत",
+    phq_q4_fatigue: "थकान",
+    phq_q5_appetite: "भूख में बदलाव",
+    phq_q6_worthlessness: "आत्म-मूल्य",
+    phq_q7_concentration: "ध्यान",
+    phq_q8_psychomotor: "धीमापन या बेचैनी",
+    phq_q9_self_harm: "खुद को नुकसान का जोखिम",
+    gad_q1_nervous: "घबराहट",
+    gad_q2_control_worry: "चिंता पर काबू",
+    gad_q3_excessive_worry: "बहुत ज़्यादा चिंता",
+    gad_q4_trouble_relaxing: "आराम न कर पाना",
+    gad_q5_restlessness: "बेचैनी",
+    gad_q6_irritability: "चिड़चिड़ापन",
+    gad_q7_afraid: "कुछ बुरा होने का डर",
+  },
+  hinglish: {
+    phq_q1_anhedonia: "interest kam hona",
+    phq_q2_low_mood: "low mood",
+    phq_q3_sleep: "sleep issue",
+    phq_q4_fatigue: "fatigue",
+    phq_q5_appetite: "appetite change",
+    phq_q6_worthlessness: "self-worth",
+    phq_q7_concentration: "focus",
+    phq_q8_psychomotor: "slowing ya restlessness",
+    phq_q9_self_harm: "self-harm risk",
+    gad_q1_nervous: "nervousness",
+    gad_q2_control_worry: "worry control",
+    gad_q3_excessive_worry: "too much worry",
+    gad_q4_trouble_relaxing: "relax karne mein dikkat",
+    gad_q5_restlessness: "restlessness",
+    gad_q6_irritability: "irritability",
+    gad_q7_afraid: "kuch bura hone ka fear",
+  },
+};
+
+const TOPIC_SCOPE_COPY = {
+  en: {
+    mood: "Covers low mood and loss of interest.",
+    sleep: "Covers falling asleep, staying asleep, or unrestful sleep.",
+    energy: "Covers fatigue, appetite shifts, and daily heaviness.",
+    self_view: "Covers guilt, harsh self-view, or feeling like a burden.",
+    focus: "Covers concentration, slowing down, or feeling keyed up.",
+    anxiety: "Covers worry, tension, restlessness, irritability, and fear.",
+    safety: "Covers self-harm risk or immediate safety concerns.",
+  },
+  hi: {
+    mood: "यह उदासी और रुचि कम होने वाले हिस्से को कवर करता है।",
+    sleep: "यह सोने, नींद टूटने, या आराम न मिल पाने वाली नींद को कवर करता है।",
+    energy: "यह थकान, भूख में बदलाव, और दिन भर की भारीपन को कवर करता है।",
+    self_view: "यह अपराधबोध, अपने बारे में कठोर सोच, या बोझ जैसा महसूस होना कवर करता है।",
+    focus: "यह ध्यान, धीमापन, या भीतर की बेचैनी को कवर करता है।",
+    anxiety: "यह चिंता, तनाव, बेचैनी, चिड़चिड़ापन, और डर को कवर करता है।",
+    safety: "यह खुद को नुकसान के जोखिम या तुरंत सुरक्षा की ज़रूरत को कवर करता है।",
+  },
+  hinglish: {
+    mood: "Yeh low mood aur interest kam hone wali branch hai.",
+    sleep: "Yeh sleep onset, broken sleep, ya unrestful sleep cover karti hai.",
+    energy: "Yeh fatigue, appetite change, aur daily heaviness cover karti hai.",
+    self_view: "Yeh guilt, harsh self-view, ya burden jaisa feel hona cover karti hai.",
+    focus: "Yeh concentration, slowing, ya inner restlessness cover karti hai.",
+    anxiety: "Yeh worry, tension, restlessness, irritability, aur fear cover karti hai.",
+    safety: "Yeh self-harm risk ya immediate safety concern cover karti hai.",
+  },
+};
+
+const QUESTIONNAIRE_ORDER = {
+  PHQ9: [
+    "phq_q1_anhedonia",
+    "phq_q2_low_mood",
+    "phq_q3_sleep",
+    "phq_q4_fatigue",
+    "phq_q5_appetite",
+    "phq_q6_worthlessness",
+    "phq_q7_concentration",
+    "phq_q8_psychomotor",
+    "phq_q9_self_harm",
+  ],
+  GAD7: [
+    "gad_q1_nervous",
+    "gad_q2_control_worry",
+    "gad_q3_excessive_worry",
+    "gad_q4_trouble_relaxing",
+    "gad_q5_restlessness",
+    "gad_q6_irritability",
+    "gad_q7_afraid",
+  ],
+};
+
+const QUESTIONNAIRE_PROMPTS = {
+  en: {
+    phq_q1_anhedonia: "Interest or pleasure in usual activities",
+    phq_q2_low_mood: "Feeling low, hopeless, or emotionally down",
+    phq_q3_sleep: "Trouble falling asleep, staying asleep, or sleeping too much",
+    phq_q4_fatigue: "Feeling tired or low on energy",
+    phq_q5_appetite: "Eating much less or much more than usual",
+    phq_q6_worthlessness: "Feeling bad about yourself, like a failure, or like a burden",
+    phq_q7_concentration: "Trouble concentrating on reading, work, or everyday tasks",
+    phq_q8_psychomotor: "Moving or speaking unusually slowly, or feeling unusually restless",
+    phq_q9_self_harm: "Thoughts of self-harm or of being better off not being here",
+    gad_q1_nervous: "Feeling nervous, anxious, or on edge",
+    gad_q2_control_worry: "Trouble stopping or controlling worry",
+    gad_q3_excessive_worry: "Worrying about too many different things",
+    gad_q4_trouble_relaxing: "Trouble relaxing or settling down",
+    gad_q5_restlessness: "Feeling so restless that it is hard to stay still",
+    gad_q6_irritability: "Becoming easily irritated or snappy",
+    gad_q7_afraid: "Feeling afraid that something bad may happen",
+  },
+  hi: {
+    phq_q1_anhedonia: "रोज़मर्रा की चीज़ों में रुचि या खुशी कम लगना",
+    phq_q2_low_mood: "मन उदास, खाली, या निराश लगना",
+    phq_q3_sleep: "नींद आने, नींद टिकने, या बहुत ज़्यादा सोने में दिक्कत",
+    phq_q4_fatigue: "थकान या ऊर्जा बहुत कम लगना",
+    phq_q5_appetite: "भूख बहुत कम या बहुत ज़्यादा हो जाना",
+    phq_q6_worthlessness: "अपने बारे में बुरा महसूस होना, असफल लगना, या बोझ जैसा लगना",
+    phq_q7_concentration: "पढ़ने, काम करने, या रोज़मर्रा के कामों में ध्यान की दिक्कत",
+    phq_q8_psychomotor: "बहुत धीमा पड़ जाना, या उल्टा असामान्य बेचैनी महसूस होना",
+    phq_q9_self_harm: "खुद को नुकसान पहुँचाने या न रहने जैसे विचार आना",
+    gad_q1_nervous: "घबराहट, चिंता, या भीतर तनाव बना रहना",
+    gad_q2_control_worry: "चिंता को रोकना या काबू में रखना मुश्किल होना",
+    gad_q3_excessive_worry: "बहुत सी बातों को लेकर ज़्यादा चिंता करना",
+    gad_q4_trouble_relaxing: "आराम करना या ढीला पड़ना मुश्किल होना",
+    gad_q5_restlessness: "इतनी बेचैनी कि टिककर बैठना मुश्किल लगे",
+    gad_q6_irritability: "जल्दी चिड़चिड़ापन या झुंझलाहट आना",
+    gad_q7_afraid: "लगना कि कुछ बुरा हो सकता है",
+  },
+  hinglish: {
+    phq_q1_anhedonia: "Usual cheezon mein interest ya pleasure kam lagna",
+    phq_q2_low_mood: "Low, hopeless, ya emotionally down feel karna",
+    phq_q3_sleep: "Sleep aane, sleep tikne, ya bahut zyada sone mein issue",
+    phq_q4_fatigue: "Bahut tired ya low energy feel karna",
+    phq_q5_appetite: "Bahut kam ya bahut zyada khana",
+    phq_q6_worthlessness: "Khud ke baare mein bura feel karna, failure ya burden jaisa lagna",
+    phq_q7_concentration: "Reading, work, ya daily tasks mein concentration issue",
+    phq_q8_psychomotor: "Bahut slow feel hona, ya ulta unusual restlessness feel hona",
+    phq_q9_self_harm: "Self-harm ya better off not being here jaisi thoughts",
+    gad_q1_nervous: "Nervous, anxious, ya on-edge feel karna",
+    gad_q2_control_worry: "Worry ko stop ya control karna mushkil hona",
+    gad_q3_excessive_worry: "Bahut si cheezon ko lekar zyada worry karna",
+    gad_q4_trouble_relaxing: "Relax ya settle down karna mushkil hona",
+    gad_q5_restlessness: "Itni restlessness ki still rehna mushkil lage",
+    gad_q6_irritability: "Jaldi irritate ya snappy ho jana",
+    gad_q7_afraid: "Lagta rehna ki kuch bura ho sakta hai",
+  },
+};
+
+const ANSWER_SCALE_LABELS = {
+  en: ["Not at all", "Several days", "More than half the days", "Nearly every day"],
+  hi: ["बिल्कुल नहीं", "कुछ दिन", "आधे से ज़्यादा दिन", "लगभग हर दिन"],
+  hinglish: ["Bilkul nahi", "Kuch din", "Aadhe se zyada din", "Lagbhag har din"],
 };
 
 const LANGUAGE_UI = {
@@ -1048,6 +1241,15 @@ const phqResultHero = document.getElementById("phqResultHero");
 const gadResultHero = document.getElementById("gadResultHero");
 const coverageHero = document.getElementById("coverageHero");
 const coverageHeroText = document.getElementById("coverageHeroText");
+const branchSummary = document.getElementById("branchSummary");
+const branchFocusPill = document.getElementById("branchFocusPill");
+const branchTabCurrent = document.getElementById("branchTabCurrent");
+const branchTabAll = document.getElementById("branchTabAll");
+const branchTabQuestionnaire = document.getElementById("branchTabQuestionnaire");
+const visibleTopicMap = document.getElementById("visibleTopicMap");
+const questionnaireView = document.getElementById("questionnaireView");
+const questionnaireGroups = document.getElementById("questionnaireGroups");
+const branchQueueText = document.getElementById("branchQueueText");
 const safetyLevel = document.getElementById("safetyLevel");
 const snapshotMode = document.getElementById("snapshotMode");
 const coverageText = document.getElementById("coverageText");
@@ -2512,6 +2714,7 @@ function applyLanguageDefaults(language) {
   applySurfaceCopy(language);
   messageInput.placeholder = copy.placeholder;
   nudgeSubtitle.textContent = copy.nudgeIntro;
+  updateBranchTabButtons(language);
   syncLanguageTabs(language);
   renderStarterDeck(language);
   renderNextSteps("default", language);
@@ -2649,14 +2852,427 @@ function buildSessionGoal(dialogue, safety) {
   return "Understand the pattern, impact, and intensity of what you are feeling.";
 }
 
-function buildProgressLabel(coverage, language = state.language) {
+function branchTabLabels(language = state.language) {
   const uiLanguage = resolveUiLanguage(language);
-  const touched = displayTouchedItems(coverage);
-  const remaining = Math.max((coverage.total_items || 0) - touched, 0);
   if (uiLanguage === "hi") {
-    return `${touched}/${coverage.total_items} हिस्से अब तक छुए गए हैं, और ${remaining} अभी बाकी हैं।`;
+    return { current: "अभी + अगला", all: "सभी PHQ/GAD शाखाएँ", questionnaire: "प्रश्न + उत्तर" };
   }
-  return `${touched}/${coverage.total_items} areas have been explored so far, with ${remaining} still untouched.`;
+  if (uiLanguage === "hinglish") {
+    return { current: "Current + queued", all: "All PHQ/GAD branches", questionnaire: "Questions + answers" };
+  }
+  return { current: "Current + queued", all: "All PHQ/GAD branches", questionnaire: "Questions + answers" };
+}
+
+function updateBranchTabButtons(language = state.language) {
+  const labels = branchTabLabels(language);
+  if (branchTabCurrent) {
+    branchTabCurrent.textContent = labels.current;
+    branchTabCurrent.classList.toggle("is-active", state.branchView === "current");
+    branchTabCurrent.setAttribute("aria-selected", String(state.branchView === "current"));
+  }
+  if (branchTabAll) {
+    branchTabAll.textContent = labels.all;
+    branchTabAll.classList.toggle("is-active", state.branchView === "all");
+    branchTabAll.setAttribute("aria-selected", String(state.branchView === "all"));
+  }
+  if (branchTabQuestionnaire) {
+    branchTabQuestionnaire.textContent = labels.questionnaire;
+    branchTabQuestionnaire.classList.toggle("is-active", state.branchView === "questionnaire");
+    branchTabQuestionnaire.setAttribute("aria-selected", String(state.branchView === "questionnaire"));
+  }
+}
+
+function setBranchView(view) {
+  const nextView = view === "all" || view === "questionnaire" ? view : "current";
+  if (state.branchView === nextView) {
+    updateBranchTabButtons(state.language);
+    return;
+  }
+  state.branchView = nextView;
+  updateBranchTabButtons(state.language);
+  if (state.exportPayload) {
+    renderSnapshot(state.exportPayload);
+  }
+}
+
+function visibleTopicStates(topicStates = [], currentTopic = null, nextItems = []) {
+  const queuedTopics = new Set(
+    (nextItems || [])
+      .map((itemId) => ITEM_TOPIC_MAP[itemId])
+      .filter(Boolean)
+  );
+  return topicStates
+    .filter((topic) => {
+      if (topic.topic_id === "safety") {
+        return topic.status === "review" || topic.touched || topic.topic_id === currentTopic || queuedTopics.has(topic.topic_id);
+      }
+      return topic.topic_id === currentTopic
+        || queuedTopics.has(topic.topic_id)
+        || topic.touched
+        || (topic.resolved_items || []).length > 0
+        || topic.status === "review";
+    })
+    .sort((left, right) => {
+      const leftOpen = (left.unresolved_items || []).length;
+      const rightOpen = (right.unresolved_items || []).length;
+      const leftResolved = (left.resolved_items || []).length;
+      const rightResolved = (right.resolved_items || []).length;
+      return (
+        Number(right.topic_id === currentTopic) - Number(left.topic_id === currentTopic)
+        || Number(right.touched) - Number(left.touched)
+        || Number(right.topic_id === "safety") - Number(left.topic_id === "safety")
+        || Number(right.status === "review") - Number(left.status === "review")
+        || rightOpen - leftOpen
+        || rightResolved - leftResolved
+        || (right.priority || 0) - (left.priority || 0)
+      );
+    });
+}
+
+function allTopicStates(topicStates = [], currentTopic = null) {
+  return [...topicStates].sort((left, right) => {
+    const leftOpen = (left.unresolved_items || []).length;
+    const rightOpen = (right.unresolved_items || []).length;
+    const leftResolved = (left.resolved_items || []).length;
+    const rightResolved = (right.resolved_items || []).length;
+    return (
+      Number(right.topic_id === currentTopic) - Number(left.topic_id === currentTopic)
+      || Number(right.status === "review") - Number(left.status === "review")
+      || Number(right.touched) - Number(left.touched)
+      || rightOpen - leftOpen
+      || rightResolved - leftResolved
+      || (right.priority || 0) - (left.priority || 0)
+    );
+  });
+}
+
+function topicDisplayLabel(topic, language = state.language) {
+  const uiLanguage = resolveUiLanguage(language);
+  if (uiLanguage === "hi") {
+    return humanizeToken(topic.topic_id, uiLanguage);
+  }
+  return topic.label || humanizeToken(topic.topic_id, uiLanguage);
+}
+
+function branchItemLabel(itemId, rows = [], language = state.language) {
+  const uiLanguage = resolveUiLanguage(language);
+  const rowLabel = rows.find((row) => row.item_id === itemId)?.label;
+  if (rowLabel) {
+    return rowLabel;
+  }
+  return ITEM_FALLBACK_LABELS[uiLanguage]?.[itemId]
+    || ITEM_FALLBACK_LABELS.en[itemId]
+    || itemId;
+}
+
+function branchScopeText(topicId, language = state.language) {
+  const uiLanguage = resolveUiLanguage(language);
+  return TOPIC_SCOPE_COPY[uiLanguage]?.[topicId]
+    || TOPIC_SCOPE_COPY.en[topicId]
+    || "";
+}
+
+function branchStatusText(topic, currentTopic = null, language = state.language) {
+  const uiLanguage = resolveUiLanguage(language);
+  const resolved = (topic.resolved_items || []).length;
+  const unresolved = (topic.unresolved_items || []).length;
+  if (uiLanguage === "hi") {
+    if (topic.topic_id === currentTopic && topic.status !== "held_back") {
+      return "अभी सक्रिय";
+    }
+    if (topic.status === "review") {
+      return "सावधानी से समीक्षा";
+    }
+    if (topic.status === "stable" || (resolved > 0 && unresolved === 0)) {
+      return "काफ़ी हद तक कवर";
+    }
+    if (topic.status === "probing" || (topic.touched && unresolved > 0)) {
+      return "छुआ गया, अभी खुला";
+    }
+    if (topic.status === "held_back") {
+      return "अभी रोका गया";
+    }
+    return "अभी नहीं छुआ";
+  }
+  if (topic.topic_id === currentTopic && topic.status !== "held_back") {
+    return "Active now";
+  }
+  if (topic.status === "review") {
+    return "Needs careful review";
+  }
+  if (topic.status === "stable" || (resolved > 0 && unresolved === 0)) {
+    return "Covered enough";
+  }
+  if (topic.status === "probing" || (topic.touched && unresolved > 0)) {
+    return "Touched, still open";
+  }
+  if (topic.status === "held_back") {
+    return "Held for later";
+  }
+  return "Not explored yet";
+}
+
+function joinNaturalList(values, language = state.language) {
+  const cleaned = values.filter(Boolean);
+  if (!cleaned.length) {
+    return "";
+  }
+  if (cleaned.length === 1) {
+    return cleaned[0];
+  }
+  if (resolveUiLanguage(language) === "hi") {
+    if (cleaned.length === 2) {
+      return `${cleaned[0]} और ${cleaned[1]}`;
+    }
+    return `${cleaned.slice(0, -1).join(", ")}, और ${cleaned[cleaned.length - 1]}`;
+  }
+  if (cleaned.length === 2) {
+    return `${cleaned[0]} and ${cleaned[1]}`;
+  }
+  return `${cleaned.slice(0, -1).join(", ")}, and ${cleaned[cleaned.length - 1]}`;
+}
+
+function summarizeTopicProgress(topic, language = state.language) {
+  const uiLanguage = resolveUiLanguage(language);
+  const resolved = (topic.resolved_items || []).length;
+  const unresolved = (topic.unresolved_items || []).length;
+  if (uiLanguage === "hi") {
+    if (topic.status === "review") {
+      return `${resolved} साफ़ · ${unresolved} समीक्षा`;
+    }
+    if (unresolved > 0) {
+      return `${resolved} साफ़ · ${unresolved} खुले`;
+    }
+    if (resolved > 0) {
+      return `${resolved} साफ़`;
+    }
+    return "अभी संकेत ले रहा है";
+  }
+  if (topic.status === "review") {
+    return `${resolved} resolved · ${unresolved} review`;
+  }
+  if (unresolved > 0) {
+    return `${resolved} resolved · ${unresolved} open`;
+  }
+  if (resolved > 0) {
+    return `${resolved} resolved`;
+  }
+  return "signal just starting";
+}
+
+function topicMetaText(topic, rows = [], currentTopic = null, language = state.language) {
+  const uiLanguage = resolveUiLanguage(language);
+  const resolvedLabels = (topic.resolved_items || []).slice(0, 3).map((itemId) => branchItemLabel(itemId, rows, uiLanguage));
+  const unresolvedLabels = (topic.unresolved_items || []).slice(0, 3).map((itemId) => branchItemLabel(itemId, rows, uiLanguage));
+  const reviewLabels = (topic.review_items || []).slice(0, 3).map((itemId) => branchItemLabel(itemId, rows, uiLanguage));
+  const statusText = branchStatusText(topic, currentTopic, uiLanguage);
+
+  if (uiLanguage === "hi") {
+    if (reviewLabels.length) {
+      return `${statusText} · समीक्षा: ${joinNaturalList(reviewLabels, uiLanguage)}`;
+    }
+    if (resolvedLabels.length && unresolvedLabels.length) {
+      return `${statusText} · कवर: ${joinNaturalList(resolvedLabels, uiLanguage)} · खुले: ${joinNaturalList(unresolvedLabels, uiLanguage)}`;
+    }
+    if (unresolvedLabels.length) {
+      return `${statusText} · अगले चेक: ${joinNaturalList(unresolvedLabels, uiLanguage)}`;
+    }
+    if (resolvedLabels.length) {
+      return `${statusText} · कवर: ${joinNaturalList(resolvedLabels, uiLanguage)}`;
+    }
+    return statusText;
+  }
+
+  if (reviewLabels.length) {
+    return `${statusText} · Review: ${joinNaturalList(reviewLabels, uiLanguage)}`;
+  }
+  if (resolvedLabels.length && unresolvedLabels.length) {
+    return `${statusText} · Covered: ${joinNaturalList(resolvedLabels, uiLanguage)} · Open: ${joinNaturalList(unresolvedLabels, uiLanguage)}`;
+  }
+  if (unresolvedLabels.length) {
+    return `${statusText} · Open checks: ${joinNaturalList(unresolvedLabels, uiLanguage)}`;
+  }
+  if (resolvedLabels.length) {
+    return `${statusText} · Covered: ${joinNaturalList(resolvedLabels, uiLanguage)}`;
+  }
+  return statusText;
+}
+
+function questionnairePrompt(itemId, language = state.language) {
+  const uiLanguage = resolveUiLanguage(language);
+  return QUESTIONNAIRE_PROMPTS[uiLanguage]?.[itemId]
+    || QUESTIONNAIRE_PROMPTS.en[itemId]
+    || itemId;
+}
+
+function questionnaireScaleLabels(language = state.language) {
+  const uiLanguage = resolveUiLanguage(language);
+  return ANSWER_SCALE_LABELS[uiLanguage] || ANSWER_SCALE_LABELS.en;
+}
+
+function questionnaireAnswerLabel(row, language = state.language) {
+  const uiLanguage = resolveUiLanguage(language);
+  const labels = questionnaireScaleLabels(uiLanguage);
+  if (typeof row.value === "number" && row.value >= 0 && row.value < labels.length) {
+    return labels[row.value];
+  }
+  if (uiLanguage === "hi") {
+    if (row.status === "review") {
+      return "समीक्षा चाहिए";
+    }
+    if (row.status === "partial" || row.status === "contradicted") {
+      return "मिला-जुला संकेत";
+    }
+    return "अभी खुला";
+  }
+  if (uiLanguage === "hinglish") {
+    if (row.status === "review") {
+      return "Review needed";
+    }
+    if (row.status === "partial" || row.status === "contradicted") {
+      return "Mixed signal";
+    }
+    return "Still open";
+  }
+  if (row.status === "review") {
+    return "Review needed";
+  }
+  if (row.status === "partial" || row.status === "contradicted") {
+    return "Mixed signal";
+  }
+  return "Still open";
+}
+
+function questionnaireStatusNote(row, language = state.language) {
+  const uiLanguage = resolveUiLanguage(language);
+  if (uiLanguage === "hi") {
+    if (row.status === "resolved") {
+      return "इस उत्तर के लिए अभी पर्याप्त संकेत मिल चुके हैं।";
+    }
+    if (row.status === "partial" || row.status === "contradicted") {
+      return "संकेत मिले हैं, लेकिन उत्तर अभी पूरी तरह स्थिर नहीं है।";
+    }
+    if (row.status === "review") {
+      return "यह बिंदु सावधानी से दोबारा देखने योग्य है।";
+    }
+    return "इस बिंदु पर अभी और स्पष्ट बातचीत की ज़रूरत है।";
+  }
+  if (uiLanguage === "hinglish") {
+    if (row.status === "resolved") {
+      return "There is enough signal for this answer right now.";
+    }
+    if (row.status === "partial" || row.status === "contradicted") {
+      return "There is some signal here, but the answer is not fully stable yet.";
+    }
+    if (row.status === "review") {
+      return "This item needs a more careful review.";
+    }
+    return "This item still needs more conversation before it settles.";
+  }
+  if (row.status === "resolved") {
+    return "There is enough signal for this answer right now.";
+  }
+  if (row.status === "partial" || row.status === "contradicted") {
+    return "There is some signal here, but the answer is not fully stable yet.";
+  }
+  if (row.status === "review") {
+    return "This item needs a more careful review.";
+  }
+  return "This item still needs more conversation before it settles.";
+}
+
+function questionnaireGroupLabel(questionnaire, language = state.language) {
+  const uiLanguage = resolveUiLanguage(language);
+  if (questionnaire === "PHQ9") {
+    return uiLanguage === "hi" ? "PHQ-9 mood questions" : "PHQ-9 mood questions";
+  }
+  return uiLanguage === "hi" ? "GAD-7 anxiety questions" : "GAD-7 anxiety questions";
+}
+
+function buildCoverageChipText(coverage, dialogue, language = state.language) {
+  const touched = displayTouchedItems(coverage);
+  const total = coverage.total_items || 16;
+  const topic = humanizeToken(dialogue.target_topic, language);
+  if (resolveUiLanguage(language) === "hi") {
+    return `${topic} · ${touched}/${total}`;
+  }
+  return `${topic} · ${touched}/${total}`;
+}
+
+function buildProgressLabel(coverage, dialogue = {}, language = state.language) {
+  const uiLanguage = resolveUiLanguage(language);
+  const topicStates = visibleTopicStates(coverage.topic_states || [], dialogue.target_topic || null, coverage.next_items || []);
+  const coveredTopics = topicStates
+    .filter((topic) => (topic.resolved_items || []).length > 0 || topic.status === "stable" || topic.touched)
+    .map((topic) => topicDisplayLabel(topic, uiLanguage));
+  const openTopics = topicStates
+    .filter((topic) => (topic.unresolved_items || []).length > 0 || topic.status === "probing" || topic.status === "review")
+    .map((topic) => topicDisplayLabel(topic, uiLanguage));
+  if (uiLanguage === "hi") {
+    if (!coveredTopics.length && !openTopics.length) {
+      return "अभी PHQ/GAD की कोई शाखा साफ़ नहीं हुई है।";
+    }
+    const covered = coveredTopics.length ? `काफ़ी कवर: ${joinNaturalList(coveredTopics.slice(0, 3), uiLanguage)}` : "काफ़ी कवर: अभी नहीं";
+    const open = openTopics.length ? `अभी खुले: ${joinNaturalList(openTopics.slice(0, 3), uiLanguage)}` : "अभी खुले: कोई नहीं";
+    return `${covered} · ${open}`;
+  }
+  if (!coveredTopics.length && !openTopics.length) {
+    return "No PHQ/GAD branch is clear yet.";
+  }
+  const covered = coveredTopics.length ? `Covered enough: ${joinNaturalList(coveredTopics.slice(0, 3), uiLanguage)}` : "Covered enough: none yet";
+  const open = openTopics.length ? `Still open: ${joinNaturalList(openTopics.slice(0, 3), uiLanguage)}` : "Still open: none";
+  return `${covered} · ${open}`;
+}
+
+function buildBranchSummary(coverage, dialogue, language = state.language) {
+  const uiLanguage = resolveUiLanguage(language);
+  const topicStates = visibleTopicStates(coverage.topic_states || [], dialogue.target_topic || null, coverage.next_items || []);
+  const coveredTopics = topicStates
+    .filter((topic) => (topic.resolved_items || []).length > 0 || topic.status === "stable")
+    .map((topic) => topicDisplayLabel(topic, uiLanguage));
+  const openTopics = topicStates
+    .filter((topic) => (topic.unresolved_items || []).length > 0 || topic.status === "probing" || topic.status === "review")
+    .map((topic) => topicDisplayLabel(topic, uiLanguage));
+  const currentTopic = humanizeToken(dialogue.target_topic, uiLanguage);
+  if (uiLanguage === "hi") {
+    if (!coveredTopics.length && !openTopics.length) {
+      return "अभी सिस्टम यह तय कर रहा है कि PHQ/GAD में पहली मज़बूत शाखा कौन-सी है।";
+    }
+    const coveredLine = coveredTopics.length ? `काफ़ी कवर: ${joinNaturalList(coveredTopics.slice(0, 3), uiLanguage)}` : "काफ़ी कवर: अभी नहीं";
+    const openLine = openTopics.length ? `अभी खुली: ${joinNaturalList(openTopics.slice(0, 3), uiLanguage)}` : `अभी मुख्य शाखा ${currentTopic} है`;
+    return `${coveredLine} · ${openLine}`;
+  }
+  if (!coveredTopics.length && !openTopics.length) {
+    return "The system is still deciding which PHQ/GAD branch is strongest first.";
+  }
+  const coveredLine = coveredTopics.length ? `Covered enough: ${joinNaturalList(coveredTopics.slice(0, 3), uiLanguage)}` : "Covered enough: none yet";
+  const openLine = openTopics.length ? `Still open: ${joinNaturalList(openTopics.slice(0, 3), uiLanguage)}` : `Current branch: ${currentTopic}`;
+  return `${coveredLine} · ${openLine}`;
+}
+
+function buildBranchFocusLabel(dialogue, safety, language = state.language) {
+  const uiLanguage = resolveUiLanguage(language);
+  if (safety.level === "urgent" || safety.level === "review" || dialogue.target_topic === "safety") {
+    return uiLanguage === "hi" ? "सक्रिय शाखा: सुरक्षा" : "Active branch: safety";
+  }
+  const topic = humanizeToken(dialogue.target_topic, uiLanguage);
+  return uiLanguage === "hi" ? `सक्रिय शाखा: ${topic}` : `Active branch: ${topic}`;
+}
+
+function buildBranchQueueText(coverage, rows, dialogue, language = state.language) {
+  const uiLanguage = resolveUiLanguage(language);
+  const nextLabels = (coverage.next_items || []).slice(0, 4).map((itemId) => branchItemLabel(itemId, rows, uiLanguage));
+  const currentTopic = humanizeToken(dialogue.target_topic, uiLanguage);
+  if (uiLanguage === "hi") {
+    if (!nextLabels.length) {
+      return `अभी मुख्य शाखा ${currentTopic} है। फिलहाल इसी शाखा को काफ़ी साफ़ किया जा रहा है और नई कतार नहीं बनी है।`;
+    }
+    return `अभी ${currentTopic} शाखा सक्रिय है। अगली जाँच में ये बिंदु आ सकते हैं: ${joinNaturalList(nextLabels, uiLanguage)}।`;
+  }
+  if (!nextLabels.length) {
+    return `The active branch right now is ${currentTopic.toLowerCase()}, and ManoVarta is still finishing that branch before opening another one.`;
+  }
+  return `The active branch right now is ${currentTopic.toLowerCase()}. The next checks likely to open are ${joinNaturalList(nextLabels, uiLanguage)}.`;
 }
 
 function buildBonusSignals(dialogue, coverage, language = state.language) {
@@ -3197,6 +3813,105 @@ function renderTopicMap(topicStates) {
   });
 }
 
+function renderVisibleTopicMap(topicStates, currentTopic = null, nextItems = [], rows = [], language = state.language) {
+  if (!visibleTopicMap) {
+    return;
+  }
+  const visibleTopics = state.branchView === "all"
+    ? allTopicStates(topicStates, currentTopic)
+    : visibleTopicStates(topicStates, currentTopic, nextItems);
+  const uiLanguage = resolveUiLanguage(language);
+  if (!visibleTopics.length) {
+    visibleTopicMap.innerHTML = `<span class="topic-pill">${uiLanguage === "hi" ? "पहले जवाब के बाद यहाँ शाखाएँ दिखेंगी।" : "Branch detail appears after the first reply."}</span>`;
+    return;
+  }
+
+  visibleTopicMap.innerHTML = "";
+  visibleTopics.forEach((topic) => {
+    const pill = document.createElement("span");
+    pill.className = `topic-pill ${topic.status}`;
+    pill.innerHTML = `
+      <strong>${escapeHtml(topicDisplayLabel(topic, language))}</strong>
+      <span>${escapeHtml(topicMetaText(topic, rows, currentTopic, language))}</span>
+      <small>${escapeHtml(branchScopeText(topic.topic_id, language))}</small>
+    `;
+    visibleTopicMap.appendChild(pill);
+  });
+}
+
+function renderQuestionnaireView(snapshot, rows = [], language = state.language) {
+  if (!questionnaireView || !questionnaireGroups) {
+    return;
+  }
+  const isQuestionnaireView = state.branchView === "questionnaire";
+  questionnaireView.classList.toggle("is-hidden", !isQuestionnaireView);
+  if (visibleTopicMap) {
+    visibleTopicMap.classList.toggle("is-hidden", isQuestionnaireView);
+  }
+  if (!isQuestionnaireView) {
+    return;
+  }
+
+  const uiLanguage = resolveUiLanguage(language);
+  const rowMap = new Map(rows.map((row) => [row.item_id, row]));
+  const groups = [
+    { key: "PHQ9", title: questionnaireGroupLabel("PHQ9", uiLanguage), total: snapshot.totals?.PHQ9 ?? 0, max: 27 },
+    { key: "GAD7", title: questionnaireGroupLabel("GAD7", uiLanguage), total: snapshot.totals?.GAD7 ?? 0, max: 21 },
+  ];
+
+  questionnaireGroups.innerHTML = "";
+  groups.forEach((group) => {
+    const section = document.createElement("section");
+    section.className = "questionnaire-section";
+
+    const items = QUESTIONNAIRE_ORDER[group.key].map((itemId) => rowMap.get(itemId) || {
+      item_id: itemId,
+      questionnaire: group.key,
+      label: branchItemLabel(itemId, rows, uiLanguage),
+      value: null,
+      status: "unresolved",
+      source: "none",
+      evidence_quotes: [],
+    });
+
+    const sectionBody = items.map((row, index) => {
+      const labels = questionnaireScaleLabels(uiLanguage);
+      const scaleHtml = labels.map((label, score) => {
+        const active = row.value === score;
+        return `<span class="answer-chip${active ? " is-active" : ""}${row.value === null ? " is-muted" : ""}">${escapeHtml(label)}</span>`;
+      }).join("");
+      const answerLabel = questionnaireAnswerLabel(row, uiLanguage);
+      const evidence = (row.evidence_quotes || [])[0];
+      return `
+        <article class="questionnaire-item ${escapeHtml(row.status || "unresolved")}">
+          <div class="questionnaire-item-head">
+            <span class="questionnaire-item-code">${group.key === "PHQ9" ? "PHQ-9" : "GAD-7"} · ${index + 1}</span>
+            <span class="questionnaire-answer-pill ${escapeHtml(row.status || "unresolved")}">${escapeHtml(answerLabel)}</span>
+          </div>
+          <p class="questionnaire-question">${escapeHtml(questionnairePrompt(row.item_id, uiLanguage))}</p>
+          <div class="questionnaire-scale">${scaleHtml}</div>
+          <p class="questionnaire-note">${escapeHtml(questionnaireStatusNote(row, uiLanguage))}</p>
+          ${evidence ? `<p class="questionnaire-evidence">“${escapeHtml(evidence)}”</p>` : ""}
+        </article>
+      `;
+    }).join("");
+
+    section.innerHTML = `
+      <div class="questionnaire-section-head">
+        <div>
+          <p class="mini-label">${escapeHtml(group.key === "PHQ9" ? "Mood scale" : "Anxiety scale")}</p>
+          <h4>${escapeHtml(group.title)}</h4>
+        </div>
+        <span class="chip soft">${group.total}/${group.max}</span>
+      </div>
+      <div class="questionnaire-item-list">
+        ${sectionBody}
+      </div>
+    `;
+    questionnaireGroups.appendChild(section);
+  });
+}
+
 function renderSnapshot(payload) {
   const { snapshot, summary, rows } = payload;
   const safeRows = rows || [];
@@ -3237,14 +3952,27 @@ function renderSnapshot(payload) {
     ...coverage,
     touched_items: touched,
   });
-  coverageText.textContent = snapshot.language === "hi"
-    ? `${touched}/${coverage.total_items} छुए गए`
-    : `${touched}/${coverage.total_items} explored`;
+  coverageText.textContent = buildCoverageChipText(coverage, dialogue, snapshot.language);
   progressMeterFill.style.width = `${Math.max(completion, touched ? 8 : 0)}%`;
-  progressMeterLabel.textContent = buildProgressLabel(coverage, snapshot.language);
+  progressMeterLabel.textContent = buildProgressLabel(coverage, dialogue, snapshot.language);
   sessionGoal.textContent = buildSessionGoal(dialogue, snapshot.safety);
   sessionMeta.classList.remove("empty");
   sessionMeta.textContent = buildSessionMetaLine(dialogue, coverage, snapshot.safety, snapshot.language);
+  if (branchSummary) {
+    branchSummary.textContent = buildBranchSummary(coverage, dialogue, snapshot.language);
+  }
+  if (branchFocusPill) {
+    branchFocusPill.textContent = buildBranchFocusLabel(dialogue, snapshot.safety, snapshot.language);
+  }
+  if (branchQueueText) {
+    branchQueueText.textContent = state.branchView === "questionnaire"
+      ? (resolveUiLanguage(snapshot.language) === "hi"
+        ? "ये उत्तर बातचीत से निकाले गए मौजूदा PHQ/GAD अनुमान हैं। जो बिंदु अभी खुले हैं, वे आगे की बातचीत से स्थिर होंगे।"
+        : "These are the current PHQ/GAD answers inferred from the conversation. Items that are still open will settle as more evidence comes in.")
+      : buildBranchQueueText(coverage, safeRows, dialogue, snapshot.language);
+  }
+  renderVisibleTopicMap(coverage.topic_states || [], dialogue.target_topic || null, coverage.next_items || [], safeRows, snapshot.language);
+  renderQuestionnaireView(snapshot, safeRows, snapshot.language);
 
   bonusSignals.innerHTML = "";
   buildBonusSignals(dialogue, coverage, snapshot.language).forEach((signal) => {
@@ -3386,8 +4114,8 @@ function renderDomainResults(snapshot, rows) {
       : `Scale ${domain === "phq" ? "0-27" : "0-21"} · ${band}`;
   };
   const coverageSummary = language === "hi"
-    ? `${completionText} हिस्से छुए गए • अलग PHQ/GAD स्कोर दिखते रहेंगे`
-    : `${completionText} explored • separate PHQ/GAD scores update as the conversation progresses`;
+    ? `${completionText} छुए गए • ${buildBranchSummary(snapshot.coverage || {}, snapshot.coverage?.dialogue || { target_topic: "mood" }, language)}`
+    : `${completionText} explored • ${buildBranchSummary(snapshot.coverage || {}, snapshot.coverage?.dialogue || { target_topic: "mood" }, language)}`;
 
   if (phqScoreHero) phqScoreHero.textContent = formatDomainScore("phq", Number(snapshot.totals?.PHQ9 ?? 0));
   if (gadScoreHero) gadScoreHero.textContent = formatDomainScore("gad", Number(snapshot.totals?.GAD7 ?? 0));
@@ -3412,6 +4140,33 @@ function resetInsightPanel() {
   coverageText.textContent = hindi ? "अभी शुरुआत है" : "Just getting started";
   progressMeterFill.style.width = "0%";
   progressMeterLabel.textContent = hindi ? "अभी कुछ भी साफ़ नहीं है" : "Nothing explored yet";
+  if (branchSummary) {
+    branchSummary.textContent = hindi
+      ? "बातचीत शुरू होने पर यहाँ साफ़ दिखेगा कि कौन-सी शाखाएँ कवर हो चुकी हैं और कौन-सी अभी खुली हैं।"
+      : "Once the conversation starts, this will show which branches are already covered and which ones are still open.";
+  }
+  if (branchFocusPill) {
+    branchFocusPill.textContent = hindi ? "सक्रिय शाखा: अभी नहीं" : "Active branch: none yet";
+  }
+  if (visibleTopicMap) {
+    visibleTopicMap.innerHTML = `<span class="topic-pill">${hindi ? "पहले जवाब के बाद यहाँ शाखाएँ दिखेंगी।" : "Branch detail appears after the first reply."}</span>`;
+    visibleTopicMap.classList.toggle("is-hidden", state.branchView === "questionnaire");
+  }
+  if (questionnaireView) {
+    questionnaireView.classList.toggle("is-hidden", state.branchView !== "questionnaire");
+  }
+  if (questionnaireGroups) {
+    questionnaireGroups.innerHTML = `<div class="questionnaire-empty">${hindi ? "बातचीत शुरू होने पर यहाँ PHQ/GAD प्रश्नों के साथ मौजूदा उत्तर दिखेंगे।" : "The questionnaire-style answers will appear here after the conversation starts."}</div>`;
+  }
+  if (branchQueueText) {
+    branchQueueText.textContent = state.branchView === "questionnaire"
+      ? (hindi
+        ? "बातचीत शुरू होने पर हर PHQ/GAD प्रश्न का मौजूदा उत्तर यहाँ दिखेगा।"
+        : "Once the conversation starts, each PHQ/GAD question will show its current inferred answer here.")
+      : (hindi
+        ? "यहाँ सक्रिय शाखा, अगली जाँच, और हर PHQ/GAD शाखा में क्या खुला है, वह दिखेगा।"
+        : "This will show the active branch, the next checks, and what is still open inside each PHQ/GAD branch.");
+  }
   patientSummary.textContent = hindi
     ? "बातचीत शुरू होने पर यहाँ एक सरल सार दिखाई देगा।"
     : "Start a conversation to see a gentle plain-language summary here.";
@@ -4361,6 +5116,9 @@ composerQuickMic?.addEventListener("click", () => {
 });
 chatForm.addEventListener("submit", sendTurn);
 downloadButton?.addEventListener("click", downloadExport);
+branchTabCurrent?.addEventListener("click", () => setBranchView("current"));
+branchTabAll?.addEventListener("click", () => setBranchView("all"));
+branchTabQuestionnaire?.addEventListener("click", () => setBranchView("questionnaire"));
 backstageToggle?.addEventListener("click", () => {
   toggleDisclosure(backstagePanel, backstageToggle, {
     open: "Presenter tools",
