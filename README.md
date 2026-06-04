@@ -54,7 +54,7 @@ The important design decision is that the application owns the screening flow. T
 
 More detail:
 
-- [docs/architecture.md](/Users/ritwij/Documents/multilingualChatbot/docs/architecture.md)
+- [docs/architecture.md](docs/architecture.md)
 
 ## Current live deployment
 
@@ -76,7 +76,7 @@ Useful runtime endpoints:
 
 More detail:
 
-- [docs/deployment.md](/Users/ritwij/Documents/multilingualChatbot/docs/deployment.md)
+- [docs/deployment.md](docs/deployment.md)
 
 ## Data and training
 
@@ -93,8 +93,8 @@ Training was split across:
 
 More detail:
 
-- [docs/data-and-training.md](/Users/ritwij/Documents/multilingualChatbot/docs/data-and-training.md)
-- [training/README.md](/Users/ritwij/Documents/multilingualChatbot/training/README.md)
+- [docs/data-and-training.md](docs/data-and-training.md)
+- [training/README.md](training/README.md)
 
 ## Running locally
 
@@ -128,7 +128,7 @@ python3 -m pytest -q tests/test_llm.py
 
 More detail:
 
-- [docs/testing.md](/Users/ritwij/Documents/multilingualChatbot/docs/testing.md)
+- [docs/testing.md](docs/testing.md)
 
 ## Final project sources
 
