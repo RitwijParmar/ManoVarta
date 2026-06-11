@@ -43,3 +43,12 @@ The most failure-prone areas have been:
 3. Check `/runtime/config`.
 4. Run short English and Hindi live chat probes.
 5. Only then trust the public behavior change.
+
+## Low-risk PR checklist
+
+Use this checklist for docs-only or test-organization pull requests:
+
+1. Confirm the change does not touch runtime code, secrets, or deployment config.
+2. Link the affected test group or validation command in the PR body.
+3. Request one reviewer for visibility when the change updates contributor-facing docs.
+4. Merge only after the branch diff is limited to the intended documentation or test files.
