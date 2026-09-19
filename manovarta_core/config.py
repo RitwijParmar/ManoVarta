@@ -22,6 +22,7 @@ DEFAULT_LOCAL_SAFETY_CHECKPOINTS = (
 
 @dataclass(frozen=True)
 class RuntimeConfig:
+    environment: str
     model_provider: str
     chat_model: str
     extraction_model: str
@@ -69,6 +70,16 @@ class RuntimeConfig:
     async_scoring_enabled: bool = False
     async_scoring_dir: str = str(PROJECT_ROOT / "artifacts" / "async_scoring")
     startup_warmup_enabled: bool = False
+    require_session_token: bool = True
+    session_ttl_seconds: int = 1800
+    max_active_sessions: int = 200
+    max_voice_bytes: int = 8_000_000
+    internal_api_key: Optional[str] = None
+    demo_tools_enabled: bool = False
+
+    @property
+    def is_production(self) -> bool:
+        return self.environment.strip().lower() in {"prod", "production"}
 
     @property
     def huggingface_enabled(self) -> bool:
@@ -247,6 +258,7 @@ def discover_local_safety_checkpoint(project_root: Path = PROJECT_ROOT) -> Optio
 def get_runtime_config() -> RuntimeConfig:
     startup_warmup_default = "true" if os.getenv("K_SERVICE") else "false"
     return RuntimeConfig(
+        environment=os.getenv("MANOVARTA_ENV", "production" if os.getenv("K_SERVICE") else "development"),
         model_provider=os.getenv("MANOVARTA_MODEL_PROVIDER", "huggingface"),
         chat_model=os.getenv("MANOVARTA_CHAT_MODEL", "Qwen/Qwen2.5-7B-Instruct"),
         extraction_model=os.getenv("MANOVARTA_EXTRACTION_MODEL", "CohereLabs/aya-expanse-32b"),
@@ -294,4 +306,10 @@ def get_runtime_config() -> RuntimeConfig:
         async_scoring_enabled=os.getenv("MANOVARTA_ASYNC_SCORING_ENABLED", "false").strip().lower() in {"1", "true", "yes", "on"},
         async_scoring_dir=os.getenv("MANOVARTA_ASYNC_SCORING_DIR", str(PROJECT_ROOT / "artifacts" / "async_scoring")),
         startup_warmup_enabled=os.getenv("MANOVARTA_STARTUP_WARMUP", startup_warmup_default).strip().lower() in {"1", "true", "yes", "on"},
+        require_session_token=os.getenv("MANOVARTA_REQUIRE_SESSION_TOKEN", "true").strip().lower() in {"1", "true", "yes", "on"},
+        session_ttl_seconds=max(300, int(os.getenv("MANOVARTA_SESSION_TTL_SECONDS", "1800"))),
+        max_active_sessions=max(10, int(os.getenv("MANOVARTA_MAX_ACTIVE_SESSIONS", "200"))),
+        max_voice_bytes=max(256_000, int(os.getenv("MANOVARTA_MAX_VOICE_BYTES", "8000000"))),
+        internal_api_key=os.getenv("MANOVARTA_INTERNAL_API_KEY"),
+        demo_tools_enabled=os.getenv("MANOVARTA_DEMO_TOOLS_ENABLED", "false").strip().lower() in {"1", "true", "yes", "on"},
     )

@@ -195,7 +195,7 @@
             </section>
 
             <section class="companion-panel">
-              <details class="companion-details">
+              <details class="companion-details" open>
                 <summary class="companion-summary">
                   <div>
                     <p class="eyebrow">Conversation guide</p>
@@ -264,10 +264,10 @@
                     <button
                       id="branchTabCurrent"
                       type="button"
-                      class="branch-tab is-active"
+                      class="branch-tab"
                       data-branch-view="current"
                       role="tab"
-                      aria-selected="true"
+                      aria-selected="false"
                     >
                       Current + queued
                     </button>
@@ -284,18 +284,18 @@
                     <button
                       id="branchTabQuestionnaire"
                       type="button"
-                      class="branch-tab"
+                      class="branch-tab is-active"
                       data-branch-view="questionnaire"
                       role="tab"
-                      aria-selected="false"
+                      aria-selected="true"
                     >
                       Questions + answers
                     </button>
                   </div>
-                  <div id="visibleTopicMap" class="topic-map branch-topic-map">
+                  <div id="visibleTopicMap" class="topic-map branch-topic-map is-hidden">
                     <span class="topic-pill">No branch map yet.</span>
                   </div>
-                  <div id="questionnaireView" class="questionnaire-view is-hidden">
+                  <div id="questionnaireView" class="questionnaire-view">
                     <div id="questionnaireGroups" class="questionnaire-groups">
                       <div class="questionnaire-empty">
                         The questionnaire-style answers will appear here after the conversation starts.
