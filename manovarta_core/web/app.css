@@ -2495,6 +2495,27 @@ body.session-live.has-snapshot .product-grid {
   align-items: flex-start;
   justify-content: space-between;
   gap: 12px;
+  cursor: pointer;
+  list-style: none;
+}
+
+.questionnaire-section-head::-webkit-details-marker {
+  display: none;
+}
+
+.questionnaire-section-summary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.questionnaire-progress {
+  color: #3f4845;
+  font-size: 0.78rem;
+  font-weight: 800;
+  white-space: nowrap;
 }
 
 .questionnaire-section-head .mini-label {
@@ -2813,7 +2834,53 @@ body.session-live.has-snapshot .product-grid {
 }
 
 body.session-live .composer-panel {
+  position: static;
   box-shadow: var(--shadow-lg);
+}
+
+/* Keep the actual conversation visible before the reply controls, then place
+   the detailed, separate questionnaire cards directly after the chat. */
+body.session-live .chat-stage {
+  order: 1;
+}
+
+body.session-live .composer-panel {
+  order: 2;
+}
+
+body.session-live .companion-panel {
+  order: 3;
+}
+
+.composer-panel .conversation-mode .eyebrow {
+  color: rgba(245, 237, 225, 0.82);
+}
+
+.composer-panel .conversation-mode .conversation-mode-copy h3 {
+  color: #fffaf3;
+}
+
+.conversation-panel .summary-text,
+.questionnaire-note,
+.questionnaire-evidence {
+  color: #3f4643;
+}
+
+@media (max-width: 760px) {
+  .questionnaire-section-summary {
+    justify-content: flex-start;
+  }
+
+  .questionnaire-question {
+    font-size: 1rem;
+    line-height: 1.5;
+  }
+
+  .questionnaire-note,
+  .questionnaire-evidence {
+    font-size: 0.9rem;
+    line-height: 1.55;
+  }
 }
 
 .chat-stage + .composer-panel {

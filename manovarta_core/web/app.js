@@ -15,7 +15,7 @@ const state = {
   currentNextSteps: [],
   latestDialogue: null,
   maxTouchedItems: 0,
-  branchView: "current",
+  branchView: "questionnaire",
   savedVoicePreferences: {
     autoSend: true,
     speak: true,
@@ -3843,8 +3843,9 @@ function renderQuestionnaireView(snapshot, rows = [], language = state.language)
 
   questionnaireGroups.innerHTML = "";
   groups.forEach((group) => {
-    const section = document.createElement("section");
+    const section = document.createElement("details");
     section.className = "questionnaire-section";
+    section.open = true;
 
     const items = QUESTIONNAIRE_ORDER[group.key].map((itemId) => rowMap.get(itemId) || {
       item_id: itemId,
@@ -3878,14 +3879,22 @@ function renderQuestionnaireView(snapshot, rows = [], language = state.language)
       `;
     }).join("");
 
+    const settledCount = items.filter((row) => row.status === "resolved").length;
+    const progressLabel = uiLanguage === "hi"
+      ? `${settledCount}/${items.length} उत्तर स्थिर`
+      : `${settledCount}/${items.length} settled`;
+
     section.innerHTML = `
-      <div class="questionnaire-section-head">
+      <summary class="questionnaire-section-head">
         <div>
           <p class="mini-label">${escapeHtml(group.key === "PHQ9" ? "Mood scale" : "Anxiety scale")}</p>
           <h4>${escapeHtml(group.title)}</h4>
         </div>
-        <span class="chip soft">${group.total}/${group.max}</span>
-      </div>
+        <div class="questionnaire-section-summary">
+          <span class="questionnaire-progress">${escapeHtml(progressLabel)}</span>
+          <span class="chip soft">${group.total}/${group.max}</span>
+        </div>
+      </summary>
       <div class="questionnaire-item-list">
         ${sectionBody}
       </div>
