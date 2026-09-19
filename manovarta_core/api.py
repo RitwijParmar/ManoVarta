@@ -1,17 +1,20 @@
 from contextlib import asynccontextmanager
 import logging
+import os
 import re
+import secrets
 import time
 from dataclasses import replace
 from datetime import datetime
 from pathlib import Path
 from typing import Optional
 
-from fastapi import FastAPI, File, HTTPException, Response, UploadFile
+from fastapi import FastAPI, File, HTTPException, Request, Response, UploadFile
 from fastapi.responses import FileResponse, HTMLResponse
 from fastapi.staticfiles import StaticFiles
 
 from manovarta_core.async_scoring import AsyncScoringStore
+from manovarta_core.agent_orchestrator import AGENTIC_ARCHITECTURE, ScreeningAgentOrchestrator
 from manovarta_core.config import get_runtime_config
 from manovarta_core.dialogue import DialoguePlanner
 from manovarta_core.engine import RuntimeEngine
@@ -42,23 +45,32 @@ from manovarta_core.schemas import (
     Turn,
 )
 from manovarta_core.sessions import SessionStore
+from manovarta_core.security import SlidingWindowRateLimiter
 from manovarta_core.voice import detect_voice_runtime, synthesize_speech, transcribe_audio
 
 
 logger = logging.getLogger(__name__)
 
 
+_is_production_environment = os.getenv("MANOVARTA_ENV", "").lower() in {"prod", "production"}
+
 app = FastAPI(
     title="ManoVarta Runtime",
     version="0.1.0",
     description="Text-first multilingual screening prototype with evidence extraction and safety checks.",
+    docs_url=None if _is_production_environment else "/docs",
+    redoc_url=None,
 )
 
 WEB_DIR = Path(__file__).resolve().parent / "web"
 voice_runtime = detect_voice_runtime()
 
 runtime_config = get_runtime_config()
-store = SessionStore()
+store = SessionStore(
+    ttl_seconds=runtime_config.session_ttl_seconds,
+    max_sessions=runtime_config.max_active_sessions,
+)
+rate_limiter = SlidingWindowRateLimiter()
 async_scoring_store = AsyncScoringStore(runtime_config.async_scoring_dir)
 planner = DialoguePlanner()
 safety_monitor = SafetyMonitor()
@@ -87,6 +99,7 @@ engine = RuntimeEngine(
     safety_assessor=safety_assessor,
     extractor=extractor,
 )
+agent_orchestrator = ScreeningAgentOrchestrator()
 
 
 def _build_live_chat_analysis_stack():
@@ -132,6 +145,30 @@ if WEB_DIR.exists():
     app.mount("/app-assets", StaticFiles(directory=WEB_DIR), name="app-assets")
 
 
+@app.middleware("http")
+async def security_headers(request: Request, call_next):
+    content_length = request.headers.get("content-length")
+    if content_length and request.url.path != "/voice/transcribe":
+        try:
+            if int(content_length) > 32_000:
+                return Response(status_code=413, content="Request body is too large.")
+        except ValueError:
+            return Response(status_code=400, content="Invalid Content-Length header.")
+
+    response = await call_next(request)
+    response.headers.setdefault("X-Content-Type-Options", "nosniff")
+    response.headers.setdefault("X-Frame-Options", "DENY")
+    response.headers.setdefault("Referrer-Policy", "no-referrer")
+    response.headers.setdefault("Permissions-Policy", "camera=(), geolocation=(), microphone=(self), payment=(), usb=()")
+    response.headers.setdefault(
+        "Content-Security-Policy",
+        "default-src 'self'; connect-src 'self'; img-src 'self' data:; media-src 'self' blob:; script-src 'self'; style-src 'self' 'unsafe-inline'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'",
+    )
+    if request.url.path.startswith(("/chat/", "/screen/", "/voice/")):
+        response.headers.setdefault("Cache-Control", "no-store, max-age=0")
+    return response
+
+
 REVIEW_BUTTON_RE = re.compile(r"\s*<button id=\"architectureButton\".*?</button>", re.DOTALL)
 DUPLICATE_TURN_WINDOW_SECONDS = 12
 TURN_RECOVERY_MESSAGES = {
@@ -144,6 +181,75 @@ SUMMARY_RECOVERY_MESSAGES = {
     "hi": "रनटाइम रुकावट के बाद कामचलाऊ सार फिर से बनाया जा रहा है।",
     "hinglish": "Runtime hiccup ke baad working summary dobara build ho rahi hai.",
 }
+
+
+def _client_key(request: Request) -> str:
+    forwarded = request.headers.get("x-forwarded-for", "")
+    if forwarded:
+        return forwarded.split(",", 1)[0].strip() or "unknown"
+    return request.client.host if request.client else "unknown"
+
+
+def _enforce_rate_limit(request: Request, scope: str, *, limit: int, window_seconds: int = 60) -> None:
+    if not runtime_config.is_production:
+        return
+    decision = rate_limiter.check(
+        f"{scope}:{_client_key(request)}",
+        limit=limit,
+        window_seconds=window_seconds,
+    )
+    if not decision.allowed:
+        raise HTTPException(
+            status_code=429,
+            detail="Too many requests. Please wait before trying again.",
+            headers={"Retry-After": str(decision.retry_after_seconds)},
+        )
+
+
+def _require_operator_key(request: Request) -> None:
+    """Keep diagnostic and batch-scoring endpoints out of the public surface."""
+    expected = runtime_config.internal_api_key
+    if not expected and not runtime_config.is_production:
+        return
+    presented = request.headers.get("x-manovarta-admin-key", "")
+    if not expected or not secrets.compare_digest(presented, expected):
+        # A generic 404 avoids advertising a high-cost internal endpoint.
+        raise HTTPException(status_code=404, detail="Not found.")
+
+
+def _session_token_from_request(request: Request) -> str:
+    return request.headers.get("x-manovarta-session-token", "") or request.cookies.get("mv_session_token", "")
+
+
+def _authorized_session(request: Request, session_id: str) -> ChatSession:
+    session = store.get(session_id)
+    if session is None:
+        raise HTTPException(status_code=404, detail="Session not found or expired.")
+    if runtime_config.require_session_token:
+        token = _session_token_from_request(request)
+        if not token or not secrets.compare_digest(token, session.access_token):
+            raise HTTPException(status_code=403, detail="Session authorization failed.")
+    return session
+
+
+def _require_any_session(request: Request) -> ChatSession:
+    token = _session_token_from_request(request)
+    session = store.get_by_access_token(token) if token else None
+    if session is None:
+        raise HTTPException(status_code=403, detail="Start a session before using voice features.")
+    return session
+
+
+def _set_session_cookie(response: Response, session: ChatSession) -> None:
+    response.set_cookie(
+        key="mv_session_token",
+        value=session.access_token,
+        max_age=runtime_config.session_ttl_seconds,
+        httponly=True,
+        secure=runtime_config.is_production,
+        samesite="strict",
+        path="/",
+    )
 
 
 def _warm_runtime_backends() -> list[str]:
@@ -397,7 +503,8 @@ def index() -> HTMLResponse:
 
 
 @app.get("/review", include_in_schema=False)
-def review() -> Response:
+def review(request: Request) -> Response:
+    _require_operator_key(request)
     review_path = WEB_DIR / "review.html"
     if review_path.exists():
         return FileResponse(review_path)
@@ -406,12 +513,14 @@ def review() -> Response:
 
 @app.get("/health")
 def health() -> dict:
-    return {"status": "ok", "active_sessions": store.size()}
+    return {"status": "ok", "service": "manovarta-runtime", "version": app.version}
 
 
 @app.get("/runtime/config")
-def runtime_settings() -> dict:
+def runtime_settings(request: Request) -> dict:
+    _require_operator_key(request)
     return {
+        "environment": runtime_config.environment,
         "provider": runtime_config.model_provider,
         "chat_provider": runtime_config.chat_model_provider,
         "extraction_provider": runtime_config.extraction_model_provider,
@@ -436,7 +545,6 @@ def runtime_settings() -> dict:
         "huggingface_enabled": runtime_config.huggingface_enabled,
         "self_hosted_inference_enabled": runtime_config.local_inference_enabled,
         "vertex_enabled": runtime_config.vertex_enabled,
-        "vertex_project": runtime_config.vertex_project,
         "vertex_location": runtime_config.vertex_location,
         "vertex_chat_location": runtime_config.resolved_vertex_chat_location,
         "vertex_chat_fallback_location": runtime_config.resolved_vertex_chat_fallback_location,
@@ -453,7 +561,6 @@ def runtime_settings() -> dict:
         "semantic_safety_model": runtime_config.semantic_safety_model,
         "hybrid_safety_enabled": bool(runtime_config.local_safety_checkpoint),
         "local_safety_checkpoint_enabled": bool(runtime_config.local_safety_checkpoint),
-        "local_safety_checkpoint_path": runtime_config.local_safety_checkpoint,
         "remote_safety_fallback_enabled": bool(hf_safety_assessor and hf_safety_assessor.enabled),
         "live_chat_llm_analysis_enabled": runtime_config.live_chat_llm_analysis_enabled,
         "async_scoring_enabled": runtime_config.async_scoring_enabled,
@@ -465,8 +572,17 @@ def runtime_settings() -> dict:
     }
 
 
+@app.get("/agentic/architecture")
+def agentic_architecture(request: Request) -> dict:
+    _require_operator_key(request)
+    return AGENTIC_ARCHITECTURE
+
+
 @app.get("/demo/bootstrap")
-def demo_bootstrap() -> dict:
+def demo_bootstrap(request: Request) -> dict:
+    _require_operator_key(request)
+    if runtime_config.is_production and not runtime_config.demo_tools_enabled:
+        raise HTTPException(status_code=404, detail="Not found.")
     profiles = []
     for profile in load_seed_profiles():
         background = profile.get("background_profile", {}) or {}
@@ -486,8 +602,8 @@ def demo_bootstrap() -> dict:
         )
 
     return {
-        "health": {"status": "ok", "active_sessions": store.size()},
-        "runtime": runtime_settings(),
+        "health": health(),
+        "runtime": runtime_settings(request),
         "profiles": profiles,
         "links": [
             {"label": "Health", "href": "/health", "description": "Service heartbeat and active session count"},
@@ -501,7 +617,8 @@ def demo_bootstrap() -> dict:
 
 
 @app.get("/questionnaires")
-def questionnaires() -> dict:
+def questionnaires(request: Request) -> dict:
+    _require_operator_key(request)
     return {
         name: [item.__dict__ for item in items]
         for name, items in grouped_items().items()
@@ -509,27 +626,33 @@ def questionnaires() -> dict:
 
 
 @app.get("/knowledge/base")
-def knowledge_base() -> dict:
+def knowledge_base(request: Request) -> dict:
+    _require_operator_key(request)
     return SCREENING_KNOWLEDGE_BASE
 
 
 @app.get("/profiles")
-def profiles() -> list:
+def profiles(request: Request) -> list:
+    _require_operator_key(request)
+    if runtime_config.is_production and not runtime_config.demo_tools_enabled:
+        raise HTTPException(status_code=404, detail="Not found.")
     return load_seed_profiles()
 
 
 @app.post("/chat/sessions", response_model=StartSessionResponse)
-def start_session(payload: StartSessionRequest) -> StartSessionResponse:
+def start_session(payload: StartSessionRequest, request: Request, response: Response) -> StartSessionResponse:
+    _enforce_rate_limit(request, "session", limit=12)
     session = store.create(payload.language, payload.profile)
+    _set_session_cookie(response, session)
     opening_text = planner.opening_prompt(payload.language, payload.profile)
     assistant_turn = store.add_turn(session.session_id, "assistant", opening_text, payload.language)
     return StartSessionResponse(session_id=session.session_id, assistant_turn=assistant_turn)
 
 
 @app.post("/chat/sessions/{session_id}/turns", response_model=ChatTurnResponse)
-def add_turn(session_id: str, payload: ChatTurnRequest) -> ChatTurnResponse:
-    if store.get(session_id) is None:
-        raise HTTPException(status_code=404, detail="Session not found.")
+def add_turn(session_id: str, payload: ChatTurnRequest, request: Request) -> ChatTurnResponse:
+    _enforce_rate_limit(request, "turn", limit=30)
+    _authorized_session(request, session_id)
 
     with store.locked(session_id) as session:
         duplicate_reply = _recent_duplicate_retry(session, payload.text, from_voice=payload.from_voice)
@@ -542,6 +665,7 @@ def add_turn(session_id: str, payload: ChatTurnRequest) -> ChatTurnResponse:
                 snapshot=snapshot,
                 summary=_safe_summary(session, snapshot),
                 rows=_safe_rows(snapshot),
+                agent_run=agent_orchestrator.record(snapshot, response_source="idempotent_replay"),
             )
 
         previous_snapshot = None
@@ -620,34 +744,29 @@ def add_turn(session_id: str, payload: ChatTurnRequest) -> ChatTurnResponse:
             snapshot=snapshot,
             summary=_safe_summary(session, snapshot),
             rows=_safe_rows(snapshot),
+            agent_run=agent_orchestrator.record(snapshot, response_source=source),
         )
 
 
 @app.get("/chat/sessions/{session_id}", response_model=SessionDetailResponse)
-def get_session(session_id: str) -> SessionDetailResponse:
-    session = store.get(session_id)
-    if session is None:
-        raise HTTPException(status_code=404, detail="Session not found.")
+def get_session(session_id: str, request: Request) -> SessionDetailResponse:
+    session = _authorized_session(request, session_id)
     snapshot = _safe_analyze(session.turns, session.language)
     snapshot.coverage = planner.build_plan(snapshot, session)
     return SessionDetailResponse(session_id=session_id, profile=session.profile, turns=session.turns, snapshot=snapshot)
 
 
 @app.get("/chat/sessions/{session_id}/summary", response_model=SummaryResponse)
-def get_summary(session_id: str) -> SummaryResponse:
-    session = store.get(session_id)
-    if session is None:
-        raise HTTPException(status_code=404, detail="Session not found.")
+def get_summary(session_id: str, request: Request) -> SummaryResponse:
+    session = _authorized_session(request, session_id)
     snapshot = _safe_analyze(session.turns, session.language)
     snapshot.coverage = planner.build_plan(snapshot, session)
     return SummaryResponse(session_id=session_id, summary=_safe_summary(session, snapshot), snapshot=snapshot)
 
 
 @app.get("/chat/sessions/{session_id}/export", response_model=SessionExportResponse)
-def export_session(session_id: str) -> SessionExportResponse:
-    session = store.get(session_id)
-    if session is None:
-        raise HTTPException(status_code=404, detail="Session not found.")
+def export_session(session_id: str, request: Request) -> SessionExportResponse:
+    session = _authorized_session(request, session_id)
     snapshot = _safe_analyze(session.turns, session.language)
     snapshot.coverage = planner.build_plan(snapshot, session)
     return SessionExportResponse(
@@ -662,20 +781,26 @@ def export_session(session_id: str) -> SessionExportResponse:
 
 
 @app.post("/screen/transcript")
-def score_transcript(payload: TranscriptScoreRequest) -> dict:
+def score_transcript(payload: TranscriptScoreRequest, request: Request) -> dict:
+    _require_operator_key(request)
+    _enforce_rate_limit(request, "batch-score", limit=8)
     snapshot = _safe_analyze(payload.turns, payload.language)
     return {"mode": snapshot.mode, "snapshot": snapshot.model_dump()}
 
 
 @app.post("/screen/transcript/heuristic")
-def score_transcript_heuristic(payload: TranscriptScoreRequest) -> dict:
+def score_transcript_heuristic(payload: TranscriptScoreRequest, request: Request) -> dict:
+    _require_operator_key(request)
+    _enforce_rate_limit(request, "batch-score", limit=8)
     safety_flag = _safe_rule_safety_flag(payload.turns)
     snapshot = scorer.analyze(payload.turns, payload.language, safety_flag)
     return {"mode": snapshot.mode, "snapshot": snapshot.model_dump()}
 
 
 @app.post("/screen/transcript/llm")
-def score_transcript_with_llm(payload: TranscriptScoreRequest) -> dict:
+def score_transcript_with_llm(payload: TranscriptScoreRequest, request: Request) -> dict:
+    _require_operator_key(request)
+    _enforce_rate_limit(request, "batch-score", limit=8)
     if not extractor.enabled:
         raise HTTPException(status_code=503, detail="Extractor runtime is not configured.")
 
@@ -690,7 +815,9 @@ def score_transcript_with_llm(payload: TranscriptScoreRequest) -> dict:
 
 
 @app.post("/screen/transcript/async", response_model=AsyncScoreResponse)
-def enqueue_transcript_score(payload: AsyncTranscriptScoreRequest) -> AsyncScoreResponse:
+def enqueue_transcript_score(payload: AsyncTranscriptScoreRequest, request: Request) -> AsyncScoreResponse:
+    _require_operator_key(request)
+    _enforce_rate_limit(request, "batch-score", limit=8)
     if not runtime_config.async_scoring_enabled:
         raise HTTPException(status_code=503, detail="Asynchronous scoring is not configured.")
     job = async_scoring_store.enqueue(payload)
@@ -698,12 +825,11 @@ def enqueue_transcript_score(payload: AsyncTranscriptScoreRequest) -> AsyncScore
 
 
 @app.post("/chat/sessions/{session_id}/score_async", response_model=AsyncScoreResponse)
-def enqueue_session_score(session_id: str) -> AsyncScoreResponse:
+def enqueue_session_score(session_id: str, request: Request) -> AsyncScoreResponse:
+    _require_operator_key(request)
     if not runtime_config.async_scoring_enabled:
         raise HTTPException(status_code=503, detail="Asynchronous scoring is not configured.")
-    session = store.get(session_id)
-    if session is None:
-        raise HTTPException(status_code=404, detail="Session not found.")
+    session = _authorized_session(request, session_id)
     payload = AsyncTranscriptScoreRequest(
         language=session.language,
         turns=session.turns,
@@ -716,7 +842,8 @@ def enqueue_session_score(session_id: str) -> AsyncScoreResponse:
 
 
 @app.get("/screen/requests/{request_id}", response_model=AsyncScoreResponse)
-def get_async_score(request_id: str) -> AsyncScoreResponse:
+def get_async_score(request_id: str, request: Request) -> AsyncScoreResponse:
+    _require_operator_key(request)
     try:
         return async_scoring_store.get(request_id)
     except FileNotFoundError as exc:
@@ -724,11 +851,18 @@ def get_async_score(request_id: str) -> AsyncScoreResponse:
 
 
 @app.post("/voice/transcribe")
-async def transcribe_voice(language: str, audio: UploadFile = File(...)) -> dict:
+async def transcribe_voice(request: Request, language: str, audio: UploadFile = File(...)) -> dict:
+    _require_any_session(request)
+    _enforce_rate_limit(request, "voice", limit=10)
     if not voice_runtime.speech_to_text:
         raise HTTPException(status_code=503, detail="Cloud speech-to-text is not configured.")
-
-    content = await audio.read()
+    if language not in {"en", "hi", "hinglish"}:
+        raise HTTPException(status_code=422, detail="Unsupported language.")
+    if audio.content_type not in {"audio/webm", "audio/ogg", "audio/wav", "audio/x-wav", "audio/mpeg"}:
+        raise HTTPException(status_code=415, detail="Unsupported audio type.")
+    content = await audio.read(runtime_config.max_voice_bytes + 1)
+    if len(content) > runtime_config.max_voice_bytes:
+        raise HTTPException(status_code=413, detail="Audio upload is too large.")
     try:
         transcript = transcribe_audio(content, language=language, mime_type=audio.content_type or "audio/webm")
     except Exception as exc:  # pragma: no cover
@@ -737,9 +871,13 @@ async def transcribe_voice(language: str, audio: UploadFile = File(...)) -> dict
 
 
 @app.post("/voice/speak")
-def speak_voice(payload: ChatTurnRequest, language: str = "en") -> Response:
+def speak_voice(payload: ChatTurnRequest, request: Request, language: str = "en") -> Response:
+    _require_any_session(request)
+    _enforce_rate_limit(request, "voice", limit=10)
     if not voice_runtime.text_to_speech:
         raise HTTPException(status_code=503, detail="Cloud text-to-speech is not configured.")
+    if language not in {"en", "hi", "hinglish"}:
+        raise HTTPException(status_code=422, detail="Unsupported language.")
 
     try:
         audio_content, media_type = synthesize_speech(payload.text, language=language)

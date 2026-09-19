@@ -2663,49 +2663,31 @@ async function launchProfile(profile) {
 }
 
 async function fetchBootstrap() {
+  const privacySafeRuntime = {
+    provider: "managed",
+    chat_model: "protected",
+    extraction_model: "protected",
+    self_hosted_inference_enabled: false,
+    hybrid_safety_enabled: true,
+    semantic_safety_enabled: false,
+    cloud_voice_enabled: false,
+    speech_to_text_enabled: false,
+    text_to_speech_enabled: false,
+  };
   try {
-    const response = await fetch("/demo/bootstrap");
-    if (!response.ok) {
-      throw new Error(`Bootstrap failed: ${response.status}`);
-    }
-    const payload = await response.json();
-    renderRuntime(payload.runtime);
-    setServiceHealthState(payload.health.status);
-    state.profiles = payload.profiles || [];
-    renderProfiles(state.profiles);
-    renderApiLinks(payload.links || []);
-    return;
+    const response = await fetch("/health");
+    const healthPayload = response.ok ? await response.json() : { status: "warming" };
+    setServiceHealthState(healthPayload.status);
   } catch (error) {
     console.error(error);
+    setServiceHealthState("warming");
   }
-
-  const [runtimeResponse, healthResponse, profilesResponse] = await Promise.all([
-    fetch("/runtime/config"),
-    fetch("/health"),
-    fetch("/profiles"),
+  renderRuntime(privacySafeRuntime);
+  state.profiles = [];
+  renderProfiles([]);
+  renderApiLinks([
+    { label: "Health", href: "/health", description: "Service heartbeat" },
   ]);
-  const runtimePayload = await runtimeResponse.json();
-  const healthPayload = await healthResponse.json();
-  const profilesPayload = await profilesResponse.json();
-  renderRuntime(runtimePayload);
-  setServiceHealthState(healthPayload.status);
-  state.profiles = (profilesPayload || []).map((profile) => {
-    const background = profile.background_profile || {};
-    const symptoms = profile.symptom_profile || {};
-    return {
-      patient_id: profile.patient_id,
-      language: profile.language,
-      age: profile.age,
-      occupation: profile.occupation,
-      context: background.context || "",
-      depression_level: symptoms.depression_level || "unknown",
-      anxiety_level: symptoms.anxiety_level || "unknown",
-      notes: profile.notes || "",
-      nuance_tags: profile.nuance_tags || [],
-    };
-  });
-  renderProfiles(state.profiles);
-  renderApiLinks([]);
 }
 
 function applyLanguageDefaults(language) {

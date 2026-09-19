@@ -55,9 +55,24 @@ OPENING_PROMPTS = {
 }
 
 SAFETY_MESSAGES = {
-    "en": "I’m concerned by what you just shared. I’m pausing the screening flow and marking this for urgent human review.",
-    "hi": "आपने जो बताया उससे तुरंत चिंता हो रही है। मैं सामान्य जाँच-प्रवाह रोककर इसे तत्काल मानवीय समीक्षा के लिए चिह्नित कर रहा हूँ।",
-    "hinglish": "Jo aapne share kiya usse concern ho raha hai. Main normal screening pause karke ise urgent human review ke liye mark kar raha hoon.",
+    "en": (
+        "I’m concerned by what you shared, so I’m stopping the screening questions. "
+        "If you might act on these thoughts or are in immediate danger, call your local emergency number now or go to the nearest emergency department. "
+        "In the U.S. and its territories, call or text 988; in India, call Tele-MANAS at 14416 or 1-800-891-4416. "
+        "If you can, move away from anything you could use to hurt yourself and contact a trusted person who can stay with you."
+    ),
+    "hi": (
+        "आपने जो बताया उससे चिंता हो रही है, इसलिए मैं अभी सामान्य जाँच के सवाल रोक रहा हूँ। "
+        "अगर आपको लगता है कि आप खुद को नुकसान पहुँचा सकते हैं या तुरंत खतरा है, तो अभी स्थानीय आपातकालीन सेवा को कॉल करें या नज़दीकी आपात विभाग जाएँ। "
+        "भारत में Tele-MANAS: 14416 या 1-800-891-4416 पर कॉल करें। "
+        "अगर संभव हो, तो नुकसान पहुँचाने वाली चीज़ों से दूर जाएँ और किसी भरोसेमंद व्यक्ति को अपने साथ रहने के लिए कहें।"
+    ),
+    "hinglish": (
+        "Jo aapne share kiya usse concern ho raha hai, isliye main normal screening questions abhi rok raha hoon. "
+        "Agar lagta hai ki aap khud ko hurt kar sakte ho ya immediate danger hai, to abhi local emergency service ko call karo ya nearest emergency department jao. "
+        "India mein Tele-MANAS: 14416 ya 1-800-891-4416. "
+        "Agar possible ho, harmful cheezon se door ho jao aur kisi trusted person ko apne paas rehne ke liye bolo."
+    ),
 }
 
 CLOSING_MESSAGES = {

@@ -1,6 +1,6 @@
 # ManoVarta
 
-ManoVarta is a multilingual conversational screening system for mental-health check-ins. Instead of presenting PHQ-9 and GAD-7 as a rigid questionnaire, it runs a guided conversation, extracts symptom evidence from the dialogue, updates item-level scores, and routes safety-sensitive cases through a separate escalation path.
+ManoVarta is a multilingual, agentic screening-support system for mental-health check-ins. Instead of presenting PHQ-9 and GAD-7 as a rigid questionnaire, it runs a guided conversation, extracts item-level evidence from the dialogue, updates evidence-bound scores, and routes safety-sensitive cases through a separate escalation path.
 
 This repository contains the application code, training workflows, evaluation tests, and report source for the final project implementation.
 
@@ -41,16 +41,15 @@ ManoVarta is a screening-support prototype. It is not a therapy product, not a d
 
 ## Architecture summary
 
-ManoVarta uses a controller-led stack:
+ManoVarta uses a controller-led multi-agent stack. The agents are bounded workflow roles, not autonomous clinical actors:
 
-1. The web client collects typed or spoken user input.
-2. The API runtime maintains session state and exposes live endpoints.
-3. The dialogue planner chooses the next topic and follow-up.
-4. The scoring engine updates PHQ-9 / GAD-7 evidence state.
-5. The safety stack checks for review or urgent risk.
-6. Model backends generate live phrasing and structured extraction.
+1. **Safety Guardian** independently checks rules and safety-model signals and can pause the workflow.
+2. **Evidence Analyst** builds typed PHQ-9/GAD-7 evidence spans; it does not diagnose.
+3. **Dialogue Supervisor** chooses a constrained next question from the controller state.
+4. **Response Editor** may phrase only an approved response; urgent cases use a fixed crisis protocol instead of free-form generation.
+5. **Human handoff** is required for urgent signals. No agent can clear an urgent flag, write to a health record, prescribe, or diagnose.
 
-The important design decision is that the application owns the screening flow. The models help with phrasing, extraction, and scoring, but they do not control the full workflow end-to-end.
+Each chat response includes an auditable `agent_run` handoff trace. The application owns the screening flow; models help with phrasing and extraction but do not control the workflow end-to-end.
 
 More detail:
 
@@ -77,6 +76,17 @@ Useful runtime endpoints:
 More detail:
 
 - [docs/deployment.md](docs/deployment.md)
+
+## Production safety and privacy controls
+
+- Session IDs use 128-bit randomness, with an HttpOnly, secure session capability cookie required for turns, summaries, and exports.
+- Sessions expire after 30 minutes and the public Cloud Run service uses one concurrent request per instance to avoid split in-memory conversation state.
+- Public batch-scoring, runtime diagnostics, seed profiles, and presenter tools are operator-only in production.
+- Input and audio uploads are bounded; public expensive routes have process-local rate limits. Cloud Armor or an API gateway should add fleet-wide rate limits before a real rollout.
+- The public deployment uses Vertex extraction. The optional remote Aya extractor is intentionally not used until it has service-to-service authentication.
+- For an urgent safety signal, the screening flow stops and gives immediate local-emergency guidance plus U.S. 988 and India Tele-MANAS resources. This is a routing protocol, not an emergency response service.
+
+The production runtime is intentionally ephemeral: it does not retain conversations across a Cloud Run restart. This reduces data retention but means it is not a clinical record system.
 
 ## Data and training
 

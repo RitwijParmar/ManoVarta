@@ -25,12 +25,13 @@ NudgeOutcome = Literal["unknown", "helpful", "unhelpful"]
 AsyncScoreStatus = Literal["pending", "running", "completed", "failed"]
 DomainTrack = Literal["phq", "gad", "safety", "rapport"]
 SnapshotAnalysisStatus = Literal["llm_backed", "heuristic_only", "degraded"]
+AgentStageStatus = Literal["completed", "blocked", "handoff_required", "degraded"]
 
 
 class Turn(BaseModel):
     turn_id: int
     speaker: Speaker
-    text: str
+    text: str = Field(min_length=1, max_length=4000)
     language_tag: LanguageCode
     notes: Optional[str] = None
     created_at: datetime = Field(default_factory=datetime.utcnow)
@@ -205,13 +206,13 @@ class ScreeningSnapshot(BaseModel):
 
 
 class UserProfileContext(BaseModel):
-    preferred_name: Optional[str] = None
+    preferred_name: Optional[str] = Field(default=None, max_length=80)
     age: Optional[int] = Field(default=None, ge=1, le=120)
-    occupation: Optional[str] = None
-    living_situation: Optional[str] = None
-    support_system: Optional[str] = None
-    context_note: Optional[str] = None
-    recent_checkins: List[Dict[str, object]] = Field(default_factory=list)
+    occupation: Optional[str] = Field(default=None, max_length=120)
+    living_situation: Optional[str] = Field(default=None, max_length=200)
+    support_system: Optional[str] = Field(default=None, max_length=200)
+    context_note: Optional[str] = Field(default=None, max_length=800)
+    recent_checkins: List[Dict[str, object]] = Field(default_factory=list, max_length=6)
 
 
 class NudgeEvent(BaseModel):
@@ -236,6 +237,9 @@ class ChatSession(BaseModel):
     blocked_items: List[str] = Field(default_factory=list)
     nudge_events: List[NudgeEvent] = Field(default_factory=list)
     created_at: datetime = Field(default_factory=datetime.utcnow)
+    updated_at: datetime = Field(default_factory=datetime.utcnow)
+    expires_at: Optional[datetime] = None
+    access_token: str = Field(default="", exclude=True)
 
 
 class StartSessionRequest(BaseModel):
@@ -250,7 +254,7 @@ class StartSessionResponse(BaseModel):
 
 
 class ChatTurnRequest(BaseModel):
-    text: str = Field(min_length=1)
+    text: str = Field(min_length=1, max_length=4000)
     nudge_id: Optional[str] = None
     nudge_strategy: Optional[str] = None
     nudge_title: Optional[str] = None
@@ -263,6 +267,20 @@ class ChatTurnResponse(BaseModel):
     snapshot: ScreeningSnapshot
     summary: Optional[str] = None
     rows: List[dict] = Field(default_factory=list)
+    agent_run: Optional["AgentRun"] = None
+
+
+class AgentHandoff(BaseModel):
+    agent: str
+    status: AgentStageStatus
+    artifact: str
+    authority_boundary: str
+
+
+class AgentRun(BaseModel):
+    run_id: str
+    outcome: Literal["continue", "review", "urgent_handoff", "degraded"]
+    handoffs: List[AgentHandoff]
 
 
 class SessionDetailResponse(BaseModel):
@@ -274,7 +292,7 @@ class SessionDetailResponse(BaseModel):
 
 class TranscriptScoreRequest(BaseModel):
     language: LanguageCode
-    turns: List[Turn]
+    turns: List[Turn] = Field(min_length=1, max_length=80)
 
 
 class AsyncTranscriptScoreRequest(TranscriptScoreRequest):
